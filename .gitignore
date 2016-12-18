@@ -21,6 +21,9 @@
 !/src/
 !/src/document/
 !/src/document/*.doccls
+!/src/class/
 !/src/class/*.cls
+!/src/module/
 !/src/module/*.bas
+!/src/form/
 !/src/form/*.frm
