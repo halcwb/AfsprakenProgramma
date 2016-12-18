@@ -43,3 +43,35 @@ Public Function GetComponentFileName(vbcComp As VBComponent) As String
 
 End Function
 
+Public Sub RunShell(strCmd As String, strArgs() As String)
+
+    Dim strPath As String
+    Dim dblExit As Double
+    Dim strArg As Variant
+    
+    strPath = ModGlobal.GetAfsprakenProgramFilePath()
+    
+    For Each strArg In strArgs
+        strCmd = strCmd & " " & strArg
+    Next strArg
+    
+    Let dblExit = Shell(strPath & "\" & strCmd, vbNormalFocus)
+    
+    If dblExit > 0 Then
+        MsgBox "Succesfully ran: " & strCmd
+    Else
+        MsgBox strCmd & " did not end successfully"
+    End If
+
+End Sub
+
+Public Sub RunTestCmd()
+    Dim strArgs(1) As String
+    
+    strArgs(0) = "git"
+    strArgs(1) = "status"
+
+    RunShell "run.cmd", strArgs
+
+End Sub
+
