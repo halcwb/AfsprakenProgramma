@@ -1,0 +1,26 @@
+# Ignore all files using an opt-inn approach
+*
+
+# Add .gitignore and .gitattributes
+!.gitignore
+!.gitattributes
+
+# Add license
+!LICENSE.txt
+
+# Add todo list
+!ToDo.txt
+
+# Add md files
+!*.md
+
+# Add Excel program file
+!Afspraken*.xlsm
+
+# Add source files
+!/src/
+!/src/document/
+!/src/document/*.doccls
+!/src/class/*.cls
+!/src/module/*.bas
+!/src/form/*.frm
