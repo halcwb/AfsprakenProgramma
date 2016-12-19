@@ -1,0 +1,80 @@
+"$D$2: 	=AfspraakDatum
+$G$2: 	=OpnDatum
+$H$2: 	=""ICU-dag: ""&AfspraakDatum-OpnDatum+1
+$I$2: 	=""Gewicht: ""&Gewicht/10&"" kg""
+$D$3: 	=_AchterNaam&"", ""&_VoorNaam
+$G$3: 	=GebDatum
+$I$3: 	=""Lengte: ""&Lengte&"" cm""
+$D$4: 	=PatNummer
+$G$4: 	=TRUNC((AfspraakDatum-GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-GebDatum)-365*TRUNC((AfspraakDatum-GebDatum)/365,0))/30,0)&"" maand(-en)""
+$I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(Gewicht/10,0.425)*POWER(((Lengte/100)*100),0.725)*0.007184,2)&"" m2""
+$D$5: 	=BedNummer
+$C$9: 	=IF(ber_PO!M2<>0,ber_PO!J2&"" dd"","""")
+$D$9: 	=IF(ber_PO!M2<>0,ber_PO!L2&"" ml"","""")
+$G$9: 	=IF(C9=""24 dd"",""continue drip"","""")
+$H$9: 	=IF(ber_PO!N2>1,ber_PO!M2&"" ml per dag"","""")
+$N$9: 	=ber_PO!H2
+$N$10: 	=ber_PO!H3
+$C$11: 	=IF(ber_PO!N3>1,ber_PO!J3&"" dd"","""")
+$D$11: 	=IF(ber_PO!N3>1,ber_PO!L3&"" gram"","""")
+$H$11: 	=IF(ber_PO!N3>1,ber_PO!M3&"" gram/dag"","""")
+$I$11: 	=IF(AND(ber_PO!M3<>0,ber_PO!M2<>0),""= ""&ROUND(ber_PO!M3*100/ber_PO!M2,1)&""% extra"","""")
+$N$11: 	=ber_PO!H4
+$C$12: 	=IF(ber_PO!N4>1,ber_PO!J4&"" dd"","""")
+$D$12: 	=IF(ber_PO!N4>1,ber_PO!L4&"" gram"","""")
+$H$12: 	=IF(ber_PO!N4>1,ber_PO!M4&"" gram per dag"","""")
+$I$12: 	=IF(AND(ber_PO!M4<>0,ber_PO!M3<>0),""= ""&ROUND(ber_PO!M4*100/ber_PO!M2,1)&""% extra"","""")
+$N$12: 	=ber_PO!H5
+$C$13: 	=IF(ber_PO!N5>1,ber_PO!J5&"" dd"","""")
+$D$13: 	=IF(ber_PO!N5>1,ber_PO!L5&"" gram"","""")
+$H$13: 	=IF(ber_PO!N5>1,ber_PO!M5&"" gram per dag"","""")
+$I$13: 	=IF(AND(ber_PO!M5<>0,ber_PO!M4<>0),""= ""&ROUND(ber_PO!M5*100/ber_PO!M2,1)&""% extra"","""")
+$N$13: 	=ber_PO!H6
+$N$14: 	=ber_PO!H7
+$D$15: 	=ber_Opm!C15
+$N$15: 	=ber_PO!H8
+$N$16: 	=ber_PO!H9
+$D$17: 	=IF(ber_TPN!F3<>0,IF(ber_TPN!F3/24>=10,ROUND(ber_TPN!F3/24,1),ROUND(ber_TPN!F3/24,1))&"" ml/uur"","""")
+$E$17: 	=IF(D17<>"""",ber_TPN!F3&"" ml per dag"","""")
+$I$17: 	=IF(ber_TPN!D19<>0,ber_TPN!E19&"" ml/uur"","""")
+$J$17: 	=IF(I17<>"""",ber_TPN!F19&"" ml per dag"","""")
+$N$17: 	=ber_PO!H10
+$E$18: 	=IF(AND(ber_TPN!E4<>0,ber_TPN!E4<>"""",ber_TPN!B4<>1,ber_TPN!F4<>0),ber_TPN!F4&"" ml"","""")
+$F$18: 	=IF(AND(Gewicht/10>=16,TPN=2),""Peditrace"","""")
+$G$18: 	=IF(AND(Gewicht/10>=16,ber_TPN!F5>0),ber_TPN!F5&"" ml"","""")
+$E$19: 	=IF(ber_TPN!F6<>0,ROUND(ber_TPN!F6,1)&"" ml"","""")
+$F$19: 	=IF(AND(Gewicht/10>50,TPN=2),""in 100 ml glucose 10%, ""&ROUND((ber_TPN!F5+ber_TPN!F17)/24,1)&"" ml/uur"","""")
+$J$19: 	=IF(ber_TPN!F20<>0,ROUND(ber_TPN!F20,1)&"" ml"","""")
+$E$20: 	=IF(ber_TPN!C7,ber_TPN!F7&"" ml"","""")
+$J$20: 	=IF(ber_TPN!C21,ber_TPN!F21&"" ml"","""")
+$E$21: 	=IF(ber_TPN!C8,ber_TPN!F8&"" ml"","""")
+$J$21: 	=IF(ber_TPN!C22,ber_TPN!F22&"" ml"","""")
+$E$23: 	=IF(ber_TPN!C9,ber_TPN!D9&"" ml"","""")
+$G$23: 	=IF(AND(Gewicht/10<=50,SSTglucose<11,TPN=2),""in ""&ber_TPN!F17&"" ml glucose 10% =""&ROUND((ber_TPN!F17+ber_TPN!F10+ber_TPN!F9)/24,1)&"" ml/uur"","""")
+$E$24: 	=IF(ber_TPN!C10,ber_TPN!D10&"" ml"","""")
+$E$26: 	=IF(ber_TPN!C11,ber_TPN!F11&"" ml"","""")
+$G$26: 	=IF(ber_TPN!F11>0,ROUND(ber_TPN!F11*1.5/(Gewicht/10),2)&"" mmol/kg"","""")
+$H$26: 	=IF(ber_TPN!F11>0,""plus ""&(ROUND(ber_TPN!F11*1.5/(Gewicht/10)/24/0.01,1)*24-ber_TPN!F11)&"" ml gluc 5%, ""&((ROUND(ber_TPN!F11*1.5/(Gewicht/10)/24/0.01,1)*24-ber_TPN!F11)+ber_TPN!F11)/24&"" ml/uur"","""")
+$D$27: 	=IF(ber_TPN!D12<>0,ber_TPN!E12&"" ml/uur"","""")
+$H$27: 	=IF(ber_TPN!F12<>0,ber_TPN!F12&"" ml per dag"","""")
+$E$28: 	=IF(ber_TPN!F13<>0,ROUND(ber_TPN!F13,0)&"" ml"","""")
+$E$29: 	=IF(ber_TPN!C14,ber_TPN!F14&"" ml"","""")
+$E$30: 	=IF(ber_TPN!C15,ber_TPN!F15&"" ml"","""")
+$D$32: 	=ber_Opm!C9
+$D$34: 	=ROUND(ber_totalen!C2,0)&"" ml/kg""
+$E$34: 	=ROUND(ber_normaal!$A$18,0)&"" ml/kg""
+$F$34: 	=""= ""&ROUND(ber_totalen!C2*Gewicht/10,0)&"" ml/dag""
+$I$34: 	=ROUND(ber_totalen!$C$9,1)&""  gram/kg""
+$J$34: 	=IF(Gewicht/10<30,""2-2,5 g/kg"",""1,5 g/kg"")
+$D$35: 	=ROUND(ber_totalen!E44,0)&"" kCal/kg""
+$E$35: 	=ber_normaal!$A$21&"" kCal/kg""
+$I$35: 	=ROUND(ber_totalen!$C$13,1)&"" gram/kg""
+$J$35: 	=IF(Gewicht/10<30,""4 g/kg"",""2 g/kg"")
+$D$36: 	=ROUND(ber_totalen!C5,1)&"" g/kg""
+$F$36: 	=""= ""&ROUND(ber_totalen!C5/1.4,1)&"" mg/kg/min""
+$I$36: 	=ROUND(ber_totalen!$C$27,1)&"" mmol/kg""
+$D$37: 	=ROUND(ber_totalen!C17,1)&"" mmol/kg""
+$I$37: 	=ROUND(ber_totalen!$C$33,1)&"" mmol/kg""
+$D$38: 	=ROUND(ber_totalen!C23,1)&"" mmol/kg""
+$I$38: 	=ROUND(ber_totalen!$C$30,1)&"" mmol/kg""
+"

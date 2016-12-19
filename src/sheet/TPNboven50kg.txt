@@ -1,0 +1,32 @@
+"$B$3: 	=TODAY()
+$F$3: 	=PatNummer
+$B$4: 	=BedNummer
+$F$4: 	=_AchterNaam&"",  ""&_VoorNaam
+$F$5: 	=GebDatum
+$G$6: 	=Gewicht/10&"" kg""
+$A$9: 	=IF(Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
+$C$9: 	=ber_TPN!F24
+$A$13: 	=IF(G15<>0,ROUND(G15/24,1)&"" ml/u"","""")
+$G$13: 	=IF(TPN<>1,ber_TPN!F4,"""")
+$G$15: 	=SUM(G13:G14)
+$A$17: 	=IF(G19<>0,ROUND(G19/24,1)&"" ml/u"","""")
+$G$17: 	=IF(AND(OR(SSTglucose<11,Gewicht/10>50),TPN<>1),ROUND(ber_TPN!F5,0),0)
+$G$18: 	=IF(G17>0,100,0)
+$G$19: 	=SUM(G17:G18)
+$A$21: 	=IF(G24<>0,ROUND(G24/24,1)&"" ml/u"","""")
+$G$21: 	=ROUND(ber_TPN!F13,0)
+$G$22: 	=ROUND(ber_TPN!F14,0)
+$G$23: 	=ROUND(ber_TPN!F15,0)
+$G$24: 	=SUM(G21:G23)
+$A$27: 	=IF(G35<>0,ROUND(G35/24,1)&"" ml/u"","""")
+$G$27: 	=IF(AND(OR(TPN=1,Gewicht/10>50,AND(TPN=2,SSTglucose>10))),ROUND(ber_TPN!F7,0),"""")
+$G$28: 	=IF(AND(OR(TPN=1,Gewicht/10>50,AND(TPN=2,SSTglucose>10))),ROUND(ber_TPN!F8,0),"""")
+$G$29: 	=ber_TPN!F9
+$G$30: 	=ber_TPN!F10
+$G$31: 	=IF(Gewicht/10<=50,ber_TPN!F17,0)+IF(OR(AND(SSTglucose=2,TPN=1),AND(SSTglucose=2,Gewicht/10>50)),ROUND(ber_TPN!F6,0),0)
+$B$32: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10)),SSTglucose<>2,SSTglucose<>12,SSTglucose<>13),INDEX(tblSSTGlucose,SSTglucose,1),""Glucose       %"")
+$G$32: 	=IF(AND(SSTglucose<>2,SSTglucose<>12,SSTglucose<>13),ber_TPN!F6,"""")
+$G$33: 	=IF(AND(SSTglucose=12),ROUND(ber_TPN!F6,0),"""")
+$G$34: 	=IF(AND(SSTglucose=13),ROUND(ber_TPN!F6,0),"""")
+$G$35: 	=SUM(G27:G34)
+"

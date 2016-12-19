@@ -1,0 +1,27 @@
+"$C$2: 	=AfspraakDatum
+$F$2: 	=OpnDatum
+$G$2: 	=""ICU-dag: ""&AfspraakDatum-OpnDatum+1
+$J$2: 	=BedNummer
+$C$3: 	=_AchterNaam&"", ""&_VoorNaam
+$F$3: 	=GebDatum
+$G$3: 	=""Gewicht: ""&Gewicht/10&"" kg""
+$I$3: 	=""Lengte: ""&Lengte&"" cm""
+$C$4: 	=PatNummer
+$F$4: 	=TRUNC((AfspraakDatum-GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-GebDatum)-365*TRUNC((AfspraakDatum-GebDatum)/365,0))/30,0)&"" maand(-en)""
+$I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(Gewicht/10,0.425)*POWER(((Lengte/100)*100),0.725)*0.007184,2)&"" m2""
+$C$8: 	=IF(ber_AanvullendeAfsprakenPed!C7=0,"""",ber_AanvullendeAfsprakenPed!C7)
+$C$9: 	=IF(ber_AanvullendeAfsprakenPed!C8=0,"""",ber_AanvullendeAfsprakenPed!C8)
+$G$9: 	=CONCATENATE(""à "",ber_AanvullendeAfsprakenPed!G16,"" uur"")
+$C$10: 	=IF(ber_AanvullendeAfsprakenPed!C9=0,"""",ber_AanvullendeAfsprakenPed!C9)
+$G$10: 	=CONCATENATE(""à "",ber_AanvullendeAfsprakenPed!G18,"" uur"")
+$I$10: 	=IF(Aanvullend_Verliezen_Ped=0,"""",Aanvullend_Verliezen_Ped)
+$C$11: 	=CONCATENATE(ber_AanvullendeAfsprakenPed!$B$12,"" dd"")
+$C$18: 	=CONCATENATE(ber_AanvullendeAfsprakenPed!$C$42,"" dd"")
+$F$18: 	=IF(Aanvullend_Overige_Ped=0,"""",Aanvullend_Overige_Ped)
+$C$19: 	=CONCATENATE(ber_AanvullendeAfsprakenPed!$C$43,"" dd"")
+$D$35: 	=ber_AanvullendeAfsprakenPed!D40
+$C$41: 	=IFERROR(LEFT(_Aanvullend_Controles_Ped,LEN(_Aanvullend_Controles_Ped)-3),"""")
+$C$42: 	=IFERROR(LEFT(_Aanvullend_Onderzoek_Ped,LEN(_Aanvullend_Onderzoek_Ped)-3),"""")
+$C$43: 	=IFERROR(LEFT(_Aanvullend_Instellingen_Ped,LEN(_Aanvullend_Instellingen_Ped)-3),"""")
+$C$44: 	=IFERROR(LEFT(_Aanvullend_Overig_Ped,LEN(_Aanvullend_Overig_Ped)-3),"""")
+"

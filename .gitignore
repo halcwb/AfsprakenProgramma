@@ -30,3 +30,7 @@
 !/src/module/*.bas
 !/src/form/
 !/src/form/*.frm
+
+# Add sheet formulas
+!/src/sheet/
+!/src/sheet/*.txt

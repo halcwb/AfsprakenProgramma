@@ -1,7 +1,51 @@
 Attribute VB_Name = "ModUtils"
 Option Explicit
 
-Public Sub ExportForms()
+
+Public Sub ExportForSourceControl()
+
+    Dim strPath As String
+    
+    strPath = ModGlobal.GetAfsprakenProgramFilePath & "\src\"
+
+    ExportFormulas
+    ExportVbaCode
+    
+    MsgBox "All code and formulas has been exported to: " & strPath
+
+End Sub
+
+Public Sub ExportFormulas()
+
+    Dim shtSheet As Worksheet
+    Dim objCell As Range
+    Dim strText, strPath As String
+    
+    strPath = ModGlobal.GetAfsprakenProgramFilePath() & "\src\sheet\"
+    
+    For Each shtSheet In ActiveWorkbook.Sheets
+    
+        strText = ""
+    
+        shtSheet.Unprotect ModGlobal.CONST_PASSWORD
+    
+        For Each objCell In shtSheet.Range("A1:AX200")
+            
+            If objCell.HasFormula Then
+                strText = strText & objCell.AddressLocal & ": " & vbTab & objCell.Formula & vbNewLine
+            End If
+        
+        Next
+        
+        If strText <> vbNullString Then ModFile.WriteToFile strPath & shtSheet.Name & ".txt", strText
+        
+        shtSheet.Protect ModGlobal.CONST_PASSWORD
+        
+    Next shtSheet
+
+End Sub
+
+Public Sub ExportVbaCode()
 
     Dim vbcItem As VBComponent
     Dim strFile As String

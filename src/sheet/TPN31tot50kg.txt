@@ -1,0 +1,36 @@
+"$B$3: 	=TODAY()
+$F$3: 	=PatNummer
+$B$4: 	=BedNummer
+$F$4: 	=_AchterNaam&"",  ""&_VoorNaam
+$F$5: 	=GebDatum
+$G$6: 	=Gewicht/10&"" kg""
+$C$9: 	=ber_TPN!F24
+$A$13: 	=IF(G22<>0,ROUND(G22/24,1)&"" ml/u"","""")
+$G$13: 	=IF(AND(TPN<>1,G15<>0),ROUND(ber_TPN!F7,0),"""")
+$G$14: 	=IF(AND(TPN<>1,G15<>0),ROUND(ber_TPN!F8,0),"""")
+$G$15: 	=IF(TPN<>1,ber_TPN!F4,"""")
+$G$16: 	=IF(AND(SSTglucose<11,TPN<>1),ROUND(ber_TPN!F5,0),"""")
+$G$17: 	=IF(AND(SSTglucose=2,TPN<>1),ROUND(ber_TPN!F6,0),"""")
+$G$18: 	=IF(AND(SSTglucose=6,TPN<>1),ROUND(ber_TPN!F6,0),"""")
+$G$19: 	=IF(AND(SSTglucose=7,TPN<>1),ROUND(ber_TPN!F6,0),"""")
+$G$20: 	=IF(AND(SSTglucose=9,TPN<>1),ROUND(ber_TPN!F6,0),"""")
+$B$21: 	=IF(AND(TPN=2,SSTglucose<>2,SSTglucose<>6,SSTglucose<>7,SSTglucose<>9,SSTglucose<11),INDEX(tblSSTGlucose,SSTglucose,1),""Glucose       %"")
+$G$21: 	=IF(AND(TPN<>1,B19<>""""),IF(AND(SSTglucose<>2,SSTglucose<>6,SSTglucose<>7,SSTglucose<>9,SSTglucose<11),ROUND(ber_TPN!F6,0),""""),"""")
+$G$22: 	=SUM(G13:G21)
+$A$24: 	=IF(G27<>0,ROUND(G27/24,1)&"" ml/u"","""")
+$G$24: 	=ROUND(ber_TPN!F13,0)
+$G$25: 	=ROUND(ber_TPN!F14,0)
+$G$26: 	=ROUND(ber_TPN!F15,0)
+$G$27: 	=SUM(G24:G26)
+$A$30: 	=IF(G38<>0,ROUND(G38/24,1)&"" ml/u"","""")
+$G$30: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10))),ROUND(ber_TPN!F7,0),"""")
+$G$31: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10))),ROUND(ber_TPN!F8,0),"""")
+$G$32: 	=ber_TPN!F9
+$G$33: 	=ber_TPN!F10
+$G$34: 	=ber_TPN!F17+IF(AND(SSTglucose=2,TPN=1),ROUND(ber_TPN!F6,0),0)
+$B$35: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10)),SSTglucose<>2,SSTglucose<>12,SSTglucose<>13),INDEX(tblSSTGlucose,SSTglucose,1),""Glucose       %"")
+$G$35: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10)),SSTglucose<>2,SSTglucose<>12,SSTglucose<>13),ber_TPN!F6,"""")
+$G$36: 	=IF(AND(SSTglucose=12),ROUND(ber_TPN!F6,0),"""")
+$G$37: 	=IF(AND(SSTglucose=13),ROUND(ber_TPN!F6,0),"""")
+$G$38: 	=SUM(G30:G37)
+"

@@ -1,0 +1,154 @@
+"$C$1: 	=AfsprakenCMV!F2&"" geb: ""&TEXT(AfsprakenCMV!F3,""dd-mmm-jj"")&"". Gewicht: ""&ROUND(Gewicht/10,1)&"" kg""
+$C$2: 	=_AchterNaam
+$C$3: 	=_VoorNaam
+$C$4: 	=TEXT(AfsprakenCMV!F3,""dd-mmm-jj"")
+$C$5: 	=PatNummer
+$C$6: 	=IF(AfsprakenCMV!C51<>0,AfsprakenCMV!C51&"" ""&AfsprakenCMV!E51&"" ""&AfsprakenCMV!F51&"" ""&AfsprakenCMV!G51&"", totaal ""&AfsprakenCMV!J51&"" ""&AfsprakenCMV!I51,"""")
+$C$7: 	=IF(AfsprakenCMV!C52<>0,AfsprakenCMV!C52&"" ""&AfsprakenCMV!E52&"" ""&AfsprakenCMV!F52&"" ""&AfsprakenCMV!G52&"", totaal ""&AfsprakenCMV!J52&"" ""&AfsprakenCMV!I52,"""")
+$C$8: 	=IF(AfsprakenCMV!C53<>0,AfsprakenCMV!C53&"" ""&AfsprakenCMV!E53&"" ""&AfsprakenCMV!F53&"" ""&AfsprakenCMV!G53&"", totaal ""&AfsprakenCMV!J53&"" ""&AfsprakenCMV!I53,"""")
+$C$9: 	=IF(AfsprakenCMV!C54<>0,AfsprakenCMV!C54&"" ""&AfsprakenCMV!E54&"" ""&AfsprakenCMV!F54&"" ""&AfsprakenCMV!G54&"", totaal ""&AfsprakenCMV!J54&"" ""&AfsprakenCMV!I54,"""")
+$C$10: 	=IF(AfsprakenCMV!C55<>0,AfsprakenCMV!C55&"" ""&AfsprakenCMV!E55&"" ""&AfsprakenCMV!F55&"" ""&AfsprakenCMV!G55&"", totaal ""&AfsprakenCMV!J55&"" ""&AfsprakenCMV!I55,"""")
+$C$11: 	=IF(AfsprakenCMV!C56<>0,AfsprakenCMV!C56&"" ""&AfsprakenCMV!E56&"" ""&AfsprakenCMV!F56&"" ""&AfsprakenCMV!G56&"", totaal ""&AfsprakenCMV!J56&"" ""&AfsprakenCMV!I56,"""")
+$C$12: 	=IF(AfsprakenCMV!C57<>0,AfsprakenCMV!C57&"" ""&AfsprakenCMV!E57&"" ""&AfsprakenCMV!F57&"" ""&AfsprakenCMV!G57&"", totaal ""&AfsprakenCMV!J57&"" ""&AfsprakenCMV!I57,"""")
+$C$13: 	=IF(AfsprakenCMV!C58<>0,AfsprakenCMV!C58&"" ""&AfsprakenCMV!E58&"" ""&AfsprakenCMV!F58&"" ""&AfsprakenCMV!G58&"", totaal ""&AfsprakenCMV!J58&"" ""&AfsprakenCMV!I58,"""")
+$C$14: 	=IF(AfsprakenCMV!C59<>0,AfsprakenCMV!C59&"" ""&AfsprakenCMV!E59&"" ""&AfsprakenCMV!F59&"" ""&AfsprakenCMV!G59&"", totaal ""&AfsprakenCMV!J59&"" ""&AfsprakenCMV!I59,"""")
+$C$15: 	=IF(AfsprakenCMV!C60<>0,AfsprakenCMV!C60&"" ""&AfsprakenCMV!E60&"" ""&AfsprakenCMV!F60&"" ""&AfsprakenCMV!G60&"", totaal ""&AfsprakenCMV!J60&"" ""&AfsprakenCMV!I60,"""")
+$C$16: 	=IF(AfsprakenCMV!C61<>0,AfsprakenCMV!C61&"" ""&AfsprakenCMV!E61&"" ""&AfsprakenCMV!F61&"" ""&AfsprakenCMV!G61&"", totaal ""&AfsprakenCMV!J61&"" ""&AfsprakenCMV!I61,"""")
+$C$17: 	=IF(AfsprakenCMV!C62<>0,AfsprakenCMV!C62&"" ""&AfsprakenCMV!E62&"" ""&AfsprakenCMV!F62&"" ""&AfsprakenCMV!G62&"", totaal ""&AfsprakenCMV!J62&"" ""&AfsprakenCMV!I62,"""")
+$C$18: 	=IF(AfsprakenCMV!C63<>0,AfsprakenCMV!C63&"" ""&AfsprakenCMV!E63&"" ""&AfsprakenCMV!F63&"" ""&AfsprakenCMV!G63&"", totaal ""&AfsprakenCMV!J63&"" ""&AfsprakenCMV!I63,"""")
+$C$19: 	=IF(AfsprakenCMV!C64<>0,AfsprakenCMV!C64&"" ""&AfsprakenCMV!E64&"" ""&AfsprakenCMV!F64&"" ""&AfsprakenCMV!G64&"", totaal ""&AfsprakenCMV!J64&"" ""&AfsprakenCMV!I64,"""")
+$C$20: 	=IF(AfsprakenCMV!C65<>0,AfsprakenCMV!C65&"" ""&AfsprakenCMV!E65&"" ""&AfsprakenCMV!F65&"" ""&AfsprakenCMV!G65&"", totaal ""&AfsprakenCMV!J65&"" ""&AfsprakenCMV!I65,"""")
+$C$21: 	=IF(ber_Opm!C4<>0,AfsprakenCMV!C67&"" ""&ber_Opm!C4,"""")
+$C$22: 	=ber_Med_disc!AC2
+$C$23: 	=ber_Med_disc!AC3
+$C$24: 	=ber_Med_disc!AC4
+$C$25: 	=ber_Med_disc!AC5
+$C$26: 	=ber_Med_disc!AC6
+$C$27: 	=ber_Med_disc!AC7
+$C$28: 	=ber_Med_disc!AC8
+$C$29: 	=ber_Med_disc!AC9
+$C$30: 	=ber_Med_disc!AC10
+$C$31: 	=ber_Med_disc!AC11
+$C$32: 	=ber_Med_disc!AC12
+$C$33: 	=ber_Med_disc!AC13
+$C$34: 	=ber_Med_disc!AC14
+$C$35: 	=ber_Med_disc!AC15
+$C$36: 	=ber_Med_disc!AC16
+$C$37: 	=ber_Med_disc!AC17
+$C$38: 	=ber_Med_disc!AC18
+$C$39: 	=ber_Med_disc!AC19
+$C$40: 	=ber_Med_disc!AC20
+$C$41: 	=ber_Med_disc!AC21
+$C$42: 	=ber_Med_disc!AC22
+$C$43: 	=ber_Med_disc!AC23
+$C$44: 	=ber_Med_disc!AC24
+$C$45: 	=ber_Med_disc!AC25
+$C$46: 	=ber_Med_disc!AC26
+$C$47: 	=ber_Med_disc!AC27
+$C$48: 	=ber_Med_disc!AC28
+$C$49: 	=ber_Med_disc!AC29
+$C$50: 	=ber_Med_disc!AC30
+$C$51: 	=ber_Med_disc!AC31
+$C$52: 	=IF('Aanvullende afspraken Ped'!C41="""","""",CONCATENATE('Aanvullende afspraken Ped'!B41,"": "",'Aanvullende afspraken Ped'!C41))
+$C$53: 	=IF('Aanvullende afspraken Ped'!C42="""","""",CONCATENATE('Aanvullende afspraken Ped'!B42,"": "",'Aanvullende afspraken Ped'!C42))
+$C$54: 	=IF('Aanvullende afspraken Ped'!C43="""","""",CONCATENATE('Aanvullende afspraken Ped'!B43,"": "",'Aanvullende afspraken Ped'!C43))
+$C$55: 	=IF('Aanvullende afspraken Ped'!C44="""","""",CONCATENATE('Aanvullende afspraken Ped'!B44,"": "",'Aanvullende afspraken Ped'!C44))
+$C$56: 	=IF(AfsprakenCMV!C39<>0,AfsprakenCMV!C39,"""")
+$C$57: 	=IF(AfsprakenCMV!C40<>0,AfsprakenCMV!C40,"""")
+$C$58: 	=IF(AfsprakenCMV!C41<>0,AfsprakenCMV!C41,"""")
+$C$59: 	=IF(AfsprakenCMV!C42<>0,AfsprakenCMV!C42,"""")
+$C$60: 	=IF(AfsprakenCMV!C43<>0,AfsprakenCMV!C43,"""")
+$C$61: 	=IF(AfsprakenCMV!C44<>0,AfsprakenCMV!C44,"""")
+$C$62: 	=IF(AfsprakenCMV!D67<>0,""Opmerkingen: ""&AfsprakenCMV!D67,"""")
+$C$63: 	=IF(ber_Infusen!D2>1,""Pacemaker: ""&INDEX(tblPacemakerPositie,ber_Infusen!D2)&"", Modus:""&INDEX(tblPacemakerModus,ber_Infusen!E2)&""; Frequentie:""&ber_Infusen!G1&"", Atriale output:""&ber_Infusen!G2&"", Ventr. Output:""&ber_Infusen!G3&"", AV interval:""&ber_Infusen!G4&"", Atriale sens.:""&ber_Infusen!G5&"", Ventr. sens.:""&ber_Infusen!G6,"""")
+$C$64: 	=IF(AfsprakenCMV!G6<>"""",AfsprakenCMV!G6&"": "","""")&IF(AfsprakenCMV!C7<>0,AfsprakenCMV!C7&"" "","""")&AfsprakenCMV!G7&IF(AfsprakenCMV!D8<>"""","" ""&AfsprakenCMV!D8,"""")&IF(AfsprakenCMV!D9<>"""","" en ""&AfsprakenCMV!D9,"""")&IF(AfsprakenCMV!D10<>"""","" en ""&AfsprakenCMV!D10,"""")
+$C$65: 	=IF(AfsprakenCMV!D12<>0,""Opmerkingen: ""&AfsprakenCMV!D12,"""")
+$C$66: 	=IF(AfsprakenCMV!E70<>"""",AfsprakenCMV!D70&"": ""&AfsprakenCMV!E70,"""")&IF(AfsprakenCMV!F71<>"""","" met ""&AfsprakenCMV!D71&"" ""&AfsprakenCMV!F71,"""")&IF(AfsprakenCMV!F73<>"""","", ""&AfsprakenCMV!D73&"" ""&AfsprakenCMV!F73,"""")&IF(AfsprakenCMV!F74<>"""","", ""&AfsprakenCMV!D74&"" ""&AfsprakenCMV!F74,"""")&IF(AfsprakenCMV!F75<> """","", ""&AfsprakenCMV!D75&"" ""&AfsprakenCMV!F75,"""")&IF(AfsprakenCMV!E72<> """","", ""&AfsprakenCMV!D72&"" ""&AfsprakenCMV!E72,"""")
+$C$67: 	=IF(AfsprakenCMV!E77<>"""",AfsprakenCMV!D77&"": ""&AfsprakenCMV!E77,"""")&IF(AfsprakenCMV!F78<>"""","", ""&AfsprakenCMV!D78&"" ""&AfsprakenCMV!F78,"""")&IF(AfsprakenCMV!F79<>"""","", ""&AfsprakenCMV!D79&"" ""&AfsprakenCMV!F79,"""")&IF(AfsprakenCMV!F80<>"""","", ""&AfsprakenCMV!D80&"" ""&AfsprakenCMV!F80,"""")&IF(AfsprakenCMV!F81<>"""","", ""&AfsprakenCMV!D81&"" ""&AfsprakenCMV!F81,"""")&IF(AfsprakenCMV!F82<>"""","", ""&AfsprakenCMV!D82&"" ""&AfsprakenCMV!F82,"""")&IF(AfsprakenCMV!F83<>"""","", ""&AfsprakenCMV!D83&"" ""&AfsprakenCMV!F83,"""")
+$C$68: 	=IF(AfsprakenCMV!E85<>"" "",AfsprakenCMV!D85&"": ""&AfsprakenCMV!E85,"""")
+$C$69: 	=IF(AfsprakenCMV!E87<>"""",AfsprakenCMV!D87&"": ""&AfsprakenCMV!E87,"""")&IF(AfsprakenCMV!F88<>"""","", ""&AfsprakenCMV!D88&"" ""&AfsprakenCMV!F88,"""")&IF(AfsprakenCMV!F89<>"""","", ""&AfsprakenCMV!D89&"" ""&AfsprakenCMV!F89,"""")&IF(AfsprakenCMV!F90<>"""","", ""&AfsprakenCMV!D90&"" ""&AfsprakenCMV!F90,"""")
+$C$70: 	=IF(AfsprakenCMV!I70<>"""",AfsprakenCMV!H70&"": ""&AfsprakenCMV!I70,"""")&IF(AfsprakenCMV!J71<>"""","", ""&AfsprakenCMV!H71&"" ""&AfsprakenCMV!J71,"""")&IF(AfsprakenCMV!J72<>"""","", ""&AfsprakenCMV!H72&"" ""&AfsprakenCMV!J72,"""")&IF(AfsprakenCMV!J73<>"""","", ""&AfsprakenCMV!H73&"" ""&AfsprakenCMV!J73,"""")
+$C$71: 	=IF(Intake!D32<>0,""Opmerkingen: ""&Intake!D32,"""")
+$C$72: 	=IF(AfsprakenCMV!D15<>"""",AfsprakenCMV!C15&"": ""&AfsprakenCMV!D15,"""")
+$C$73: 	=IF(AfsprakenCMV!D16<>"""",AfsprakenCMV!C16&"": ""&AfsprakenCMV!D16,"""")
+$C$74: 	=IF(AfsprakenCMV!D17<>"""",AfsprakenCMV!C17&"": ""&AfsprakenCMV!D17,"""")
+$C$75: 	=IF(AfsprakenCMV!D18<>"""",AfsprakenCMV!C18&"": ""&AfsprakenCMV!D18,"""")
+$C$76: 	=IF(AfsprakenCMV!D19<>"""",AfsprakenCMV!C19&"": ""&AfsprakenCMV!D19,"""")
+$C$77: 	=IF(AfsprakenCMV!D20<>0,AfsprakenCMV!C20&"": ""&AfsprakenCMV!D20,"""")
+$C$78: 	=AfsprakenCMV!C96&"": ""&AfsprakenCMV!D96
+$C$79: 	=AfsprakenCMV!C97&"": ""&AfsprakenCMV!D97
+$C$80: 	=AfsprakenCMV!C98&"": ""&AfsprakenCMV!D98
+$C$81: 	=AfsprakenCMV!E96&"": ""&AfsprakenCMV!F96
+$C$82: 	=AfsprakenCMV!E97&"": ""&AfsprakenCMV!F97
+$C$83: 	=AfsprakenCMV!G96&"": ""&AfsprakenCMV!H96
+$C$84: 	=AfsprakenCMV!G97&"": ""&AfsprakenCMV!H97
+$C$85: 	=AfsprakenCMV!G98&"": ""&AfsprakenCMV!H98
+$C$86: 	=AfsprakenCMV!I96&"": ""&AfsprakenCMV!J96
+$C$87: 	=AfsprakenCMV!I97&"": ""&AfsprakenCMV!J97
+$C$88: 	=Afspraken!H15
+$C$89: 	=IF(Berekeningen!B20>1,INDEX(Medicamenten,Berekeningen!B20, 1)&"" ""&Afspraken!C32&"" ""&Afspraken!D32&"" ""& INDEX(Opl,Berekeningen!E20,1)&"" "" & Afspraken!G32&"" (=""&Afspraken!H32&"" ""&Afspraken!I32&""), inlooptijd: ""&Afspraken!N32,"""")
+$C$90: 	=IF(Berekeningen!B21>1,INDEX(Medicamenten,Berekeningen!B21, 1)&"" ""&Afspraken!C33&"" ""&Afspraken!D33&"" ""& INDEX(Opl,Berekeningen!E21,1)&"" "" & Afspraken!G33&"" (=""&Afspraken!H33&"" ""&Afspraken!I33&""), inlooptijd: ""&Afspraken!N33,"""")
+$C$91: 	=IF(Berekeningen!B22>1,INDEX(Medicamenten,Berekeningen!B22, 1)&"" ""&Afspraken!C34&"" ""&Afspraken!D34&"" ""& INDEX(Opl,Berekeningen!E22,1)&"" "" & Afspraken!G34&"" (=""&Afspraken!H34&"" ""&Afspraken!I34&""), inlooptijd: ""&Afspraken!N34,"""")
+$C$92: 	=IF(Berekeningen!B23>1,INDEX(Medicamenten,Berekeningen!B23, 1)&"" ""&Afspraken!C35&"" ""&Afspraken!D35&"" ""& INDEX(Opl,Berekeningen!E23,1)&"" "" & Afspraken!G35&"" (=""&Afspraken!H35&"" ""&Afspraken!I35&""), inlooptijd: ""&Afspraken!N35,"""")
+$C$93: 	=IF(Berekeningen!B24>1,INDEX(Medicamenten,Berekeningen!B24, 1)&"" ""&Afspraken!C36&"" ""&Afspraken!D36&"" ""& INDEX(Opl,Berekeningen!E24,1)&"" "" & Afspraken!G36&"" (=""&Afspraken!H36&"" ""&Afspraken!I36&""), inlooptijd: ""&Afspraken!N36,"""")
+$C$94: 	=IF(Berekeningen!B25>1,INDEX(Medicamenten,Berekeningen!B25, 1)&"" ""&Afspraken!C37&"" ""&Afspraken!D37&"" ""& INDEX(Opl,Berekeningen!E25,1)&"" "" & Afspraken!G37&"" (=""&Afspraken!H37&"" ""&Afspraken!I37&""), inlooptijd: ""&Afspraken!N37,"""")
+$C$95: 	=IF(Berekeningen!B26>1,INDEX(Medicamenten,Berekeningen!B26, 1)&"" ""&Afspraken!C38&"" ""&Afspraken!D38&"" ""& INDEX(Opl,Berekeningen!E26,1)&"" "" & Afspraken!G38&"" (=""&Afspraken!H38&"" ""&Afspraken!I38&""), inlooptijd: ""&Afspraken!N38,"""")
+$C$96: 	=IF(Berekeningen!B27>1,INDEX(Medicamenten,Berekeningen!B27, 1)&"" ""&Afspraken!C39&"" ""&Afspraken!D39&"" ""& INDEX(Opl,Berekeningen!E27,1)&"" "" & Afspraken!G39&"" (=""&Afspraken!H39&"" ""&Afspraken!I39&""), inlooptijd: ""&Afspraken!N39,"""")
+$C$97: 	=IF(Berekeningen!B28>1,INDEX(Medicamenten,Berekeningen!B28, 1)&"" ""&Afspraken!C40&"" ""&Afspraken!D40&"" ""& INDEX(Opl,Berekeningen!E28,1)&"" "" & Afspraken!G40&"" (=""&Afspraken!H40&"" ""&Afspraken!I40&""), inlooptijd: ""&Afspraken!N40,"""")
+$C$98: 	=IF(Berekeningen!B32="""","""",Berekeningen!B32)
+$C$99: 	=IF(Berekeningen!B33="""","""",Berekeningen!B33)
+$C$100: 	=IF(Berekeningen!E29<>0, Afspraken!B42&"": ""& INDEX(Opl,Berekeningen!$E29,1)&"" "" & Afspraken!G42,"""")
+$C$101: 	=IF(Berekeningen!E30<>0, Afspraken!B43&"": ""& INDEX(Opl,Berekeningen!$E30,1)&"" "" & Afspraken!G43,"""")
+$C$102: 	=IF(Berekeningen!E31<>0, Afspraken!B44&"": ""& INDEX(Opl,Berekeningen!$E31,1)&"" "" & Afspraken!G44,"""")
+$C$103: 	=IF(_WerkbriefActueelIntravasaleToegangStand<>"""",CONCATENATE(_WerkbriefActueelIntravasaleToegangTekst,"" "",_WerkbriefActueelIntravasaleToegangStand, "" ml/uur""),"""")
+$C$104: 	=IF(Berekeningen!C35<>0,CONCATENATE(INDEX(lijstIntralipidSmof,SelectedIntralipidSmof),"" "",ROUNDUP(Berekeningen!C35/24,1),"" ml/uur""),"""")
+$C$105: 	=IF(_WerkbriefActueelTPNStand<>"""",CONCATENATE(""TPN: "",_WerkbriefActueelTPNStand, "" ml/uur""),"""")
+$C$106: 	=IF(_WerkbriefActueelTPNStand<>"""",CONCATENATE(""TPN Totaal: "",_WerkbriefActueelTPNTotaalGeheel,"","", _WerkbriefActueelTPNTotaalBreuk, "" ml""),"""")
+$C$107: 	=IF(OR(_WerkbriefActueelTPNNaClGeheel<>"""",_WerkbriefActueelTPNNaClBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNNaCLTekst,"" "",_WerkbriefActueelTPNNaClGeheel,"","", _WerkbriefActueelTPNNaClBreuk, "" ml""),"""")
+$C$108: 	=IF(OR(_WerkbriefActueelTPNKacetaatGeheel<>"""",_WerkbriefActueelTPNKacetaatBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNKacetaatTekst,"" "",_WerkbriefActueelTPNKacetaatGeheel,"","", _WerkbriefActueelTPNKacetaatBreuk, "" ml""),"""")
+$C$109: 	=IF(OR(_WerkbriefActueelTPNCaClGeheel<>"""",_WerkbriefActueelTPNCaClBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNCaClTekst,"" "",_WerkbriefActueelTPNCaClGeheel,"","", _WerkbriefActueelTPNCaClBreuk, "" ml""),"""")
+$C$110: 	=IF(OR(_WerkbriefActueelTPNMgClGeheel<>"""",_WerkbriefActueelTPNMgClBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNMgClTekst,"" "",_WerkbriefActueelTPNMgClGeheel,"","", _WerkbriefActueelTPNMgClBreuk, "" ml""),"""")
+$C$111: 	=IF(OR(_WerkbriefActueelTPNSoluvitGeheel<>"""",_WerkbriefActueelTPNSoluvitBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNSoluvitTekst,"" "",_WerkbriefActueelTPNSoluvitGeheel,"","", _WerkbriefActueelTPNSoluvitBreuk, "" ml""),"""")
+$C$112: 	=IF(OR(_WerkbriefActueelTPNPrimeneGeheel<>"""",_WerkbriefActueelTPNPrimeneBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNPrimeneTekst,"" "",_WerkbriefActueelTPNPrimeneGeheel,"","", _WerkbriefActueelTPNPrimeneBreuk, "" ml""),"""")
+$C$113: 	=IF(OR(_WerkbriefActueelTPNNICUmixGeheel<>"""",_WerkbriefActueelTPNNICUmixBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNNICUmixTekst,"" "",_WerkbriefActueelTPNNICUmixGeheel,"","", _WerkbriefActueelTPNNICUmixBreuk, "" ml""),"""")
+$C$114: 	=IF(OR(_WerkbriefActueelTPNSamBGeheel<>"""",_WerkbriefActueelTPNSamBBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNSamBTekst,"" "",_WerkbriefActueelTPNSamBGeheel,"","", _WerkbriefActueelTPNSamBBreuk, "" ml""),"""")
+$C$115: 	=IF(OR(_WerkbriefActueelTPNGlucGeheel<>"""",_WerkbriefActueelTPNGlucBreuk<>""""),CONCATENATE(_WerkbriefActueelTPNGlucTekst,"" "",_WerkbriefActueelTPNGlucGeheel,"","", ROUND(_WerkbriefActueelTPNGlucBreuk,2), "" ml""),"""")
+$C$116: 	=IF(_NeoVoeding2<>"""",_NeoVoeding2,"""")
+$C$117: 	=IF(_NeoVoeding3<>"""",_NeoVoeding3,"""")
+$C$118: 	=IF(_NeoVoeding4<>"""",_NeoVoeding4,"""")
+$C$119: 	=IF(_NeoVoeding5<>"""",_NeoVoeding5,"""")
+$C$120: 	=IF(_NeoVoeding6<>"""",_NeoVoeding6,"""")
+$C$121: 	=IF(_NeoVoeding7<>"""",_NeoVoeding7,"""")
+$C$122: 	=IF(_NeoVoeding8<>"""",_NeoVoeding8,"""")
+$C$123: 	=IF(_NeoVoeding9<>"""",_NeoVoeding9,"""")
+$C$124: 	=IF(_NeoVoeding10<>"""",_NeoVoeding10,"""")
+$C$125: 	=IF(_NeoVoeding11<>"""",_NeoVoeding11,"""")
+$C$126: 	=IF(_NeoVoeding12<>"""",_NeoVoeding12,"""")
+$C$127: 	=IF(_NeoVoeding13<>"""",_NeoVoeding13,"""")
+$C$128: 	=IF('Aanvullende afspraken Neo'!C45="""","""",CONCATENATE('Aanvullende afspraken Neo'!B45,"": "",'Aanvullende afspraken Neo'!C45))
+$C$129: 	=IF('Aanvullende afspraken Neo'!C46="""","""",CONCATENATE('Aanvullende afspraken Neo'!B46,"": "",'Aanvullende afspraken Neo'!C46))
+$C$130: 	=IF('Aanvullende afspraken Neo'!C47="""","""",CONCATENATE('Aanvullende afspraken Neo'!B47,"": "",'Aanvullende afspraken Neo'!C47))
+$C$131: 	=IF('Aanvullende afspraken Neo'!C48="""","""",CONCATENATE('Aanvullende afspraken Neo'!B48,"": "",'Aanvullende afspraken Neo'!C48))
+$C$132: 	=IF('Aanvullende afspraken Neo'!C49="""","""",CONCATENATE('Aanvullende afspraken Neo'!B49,"": "",'Aanvullende afspraken Neo'!C49))
+$C$133: 	=IF(Afspraken!D65<>"""",Afspraken!C65&"": ""&Afspraken!D65,"""")
+$C$134: 	=IF(Afspraken!D66<>"""",Afspraken!C66&"": ""&Afspraken!D66,"""")
+$C$135: 	=IF(Afspraken!D67<>"""",Afspraken!C67&"": ""&Afspraken!D67,"""")
+$C$136: 	=IF(Afspraken!D68<>"""",Afspraken!C68&"": ""&Afspraken!D68,"""")
+$C$137: 	=IF(Afspraken!D69<>"""",Afspraken!C69&"": ""&Afspraken!D69,"""")
+$C$138: 	=IF(Afspraken!D70<>"""",Afspraken!C70&"": ""&Afspraken!D70,"""")
+$C$139: 	=IF(Afspraken!D71<>"""",Afspraken!C71&"" ""&Afspraken!D71,"""")
+$C$140: 	=IF(Afspraken!D72<>"""",Afspraken!C72&"" ""&Afspraken!D72,"""")
+$C$141: 	=IF(Afspraken!D73<>"""",Afspraken!C73&"" ""&Afspraken!D73,"""")
+$C$142: 	=CONCATENATE(Afspraken!B3,""        : "",Afspraken!$C$2,"" - "",Afspraken!C3,""; "",Afspraken!$D$2,"" - "",Afspraken!D3,""; "",Afspraken!$E$2,"" - "",Afspraken!E3,"";"")
+$C$143: 	=CONCATENATE(Afspraken!B4,""            : "",Afspraken!C2,"" - "",Afspraken!C4,""; "",Afspraken!$D$2,"" - "",Afspraken!D4,""; "",Afspraken!$E$2,"" - "",Afspraken!E4,"";"")
+$C$144: 	=CONCATENATE(Afspraken!B5,""              : "",Afspraken!$C$2,"" - "",Afspraken!C5,""; "",Afspraken!$D$2,"" - "",Afspraken!D5,""; "",Afspraken!$E$2,"" - "",Afspraken!E5,"";"")
+$C$145: 	=CONCATENATE(Afspraken!B6,""       : "",Afspraken!$C$2,"" - "",Afspraken!C6,""; "",Afspraken!$D$2,"" - "",Afspraken!D6,""; "",Afspraken!$E$2,"" - "",Afspraken!E6,"";"")
+$C$146: 	=CONCATENATE(Afspraken!B7,""        : "",Afspraken!$C$2,"" - "",Afspraken!C7,""; "",Afspraken!$D$2,"" - "",Afspraken!D7,""; "",Afspraken!$E$2,"" - "",Afspraken!E7,"";"")
+$C$147: 	=CONCATENATE(Afspraken!B8,""            : "",Afspraken!$C$2,"" - "",Afspraken!C8,""; "",Afspraken!$D$2,"" - "",Afspraken!D8,""; "",Afspraken!$E$2,"" - "",Afspraken!E8,"";"")
+$C$148: 	=CONCATENATE(Afspraken!G3,""        : "",Afspraken!$H$2,"" - "",Afspraken!H3,""; "",Afspraken!$I$2,"" - "",Afspraken!I3,""; "",Afspraken!$J$2,"" - "",Afspraken!J3,"";"")
+$C$149: 	=CONCATENATE(Afspraken!G4,""         : "",Afspraken!$H$2,"" - "",Afspraken!H4,""; "",Afspraken!$I$2,"" - "",Afspraken!I4,""; "",Afspraken!$J$2,"" - "",Afspraken!J4,"";"")
+$C$150: 	=CONCATENATE(Afspraken!G5,""       : "",Afspraken!$H$2,"" - "",Afspraken!H5,""; "",Afspraken!$I$2,"" - "",Afspraken!I5,""; "",Afspraken!$J$2,"" - "",Afspraken!J5,"";"")
+$C$151: 	=CONCATENATE(Afspraken!G6,""  : "",Afspraken!$H$2,"" - "",Afspraken!H6,""; "",Afspraken!$I$2,"" - "",Afspraken!I6,""; "",Afspraken!$J$2,"" - "",Afspraken!J6,"";"")
+$C$152: 	=CONCATENATE(Afspraken!G7,""          : "",Afspraken!$H$2,"" - "",Afspraken!H7,""; "",Afspraken!$I$2,"" - "",Afspraken!I7,""; "",Afspraken!$J$2,"" - "",Afspraken!J7,"";"")
+$C$153: 	=CONCATENATE(Afspraken!G8,""         : "",Afspraken!$H$2,"" - "",Afspraken!H8,""; "",Afspraken!$I$2,"" - "",Afspraken!I8,""; "",Afspraken!$J$2,"" - "",Afspraken!J8,"";"")
+"

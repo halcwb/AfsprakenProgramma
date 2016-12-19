@@ -1,0 +1,37 @@
+"$B$2: 	=""Patient: ""&_AchterNaam&"", ""&_VoorNaam
+$B$3: 	=""Geb datum.: ""
+$C$3: 	=GebDatum
+$C$5: 	=_Weken
+$D$5: 	=_Dagen
+$E$5: 	=_Gewicht
+$D$7: 	=""Maat: ""&IF(_Gewicht<1,2.5,IF(AND(_Gewicht>=1,_Gewicht<2),3,3.5))
+$D$8: 	=""Nasaal: ""&(_Gewicht+6)*1.2
+$D$9: 	=""Oraal: ""&(_Gewicht+6)
+$D$10: 	=(1.5*_Gewicht)+5.5
+$D$11: 	=(4*_Gewicht)+7
+$D$12: 	=IF(ROUND((E5)*4,0)>150,150,VLOOKUP(ROUND(E5*4,0),S2:T347,2))&"" Joules Asynchroon""
+$D$13: 	=IF(OR(ROUND(0.01*(E5),2)>1,C5>=18),""1 mg iv"",ROUND(0.01*(E5),2)&"" mg iv"")
+$E$13: 	=""= ""&IF(ROUND(0.01*(E5),2)>1,""1 ml van 1mg = 10 ml (1:10.000)"",ROUND(0.1*(E5),2)&"" ml van 1mg = 10 ml (1:10.000)"")
+$D$14: 	=IF(0.2*E5<=25,0.2*E5&"" gram iv"",""25 gram iv"")
+$E$14: 	=""=""&"" ""&IF(2*E5<=250,ROUND(2*E5,2)&"" ml Glucose 10%"",""250 ml Glucose 10%"")
+$D$15: 	=IF(ROUND(20*E5/10,0)*10>500,500,ROUND(20*E5/10,0)*10)&"" ml NaCl 0,9% iv per bolus""
+$D$17: 	=IF(0.1*E5>2,""2 mg iv"",0.1*E5&"" mg iv"")
+$E$17: 	=""= ""&IF(0.1*E5>2,""0,1 ml van een 10 mg/ml oplossing"",ROUND(0.1*E5,2)&"" ml van een 10 mg/ml oplossing"")
+$D$19: 	=0.1*E5&"" mg iv""
+$E$19: 	=""= ""&ROUND((0.1*E5),2)&"" ml van Anexate 0,1 mg/ml""
+$D$20: 	=IF(0.01*E5>0.4,""0,4 mg iv"",0.01*E5&"" mg iv"")
+$E$20: 	=""= ""&IF(0.01*E5>0.4,""20 ml van Naloxon 20 mcg/ml of ""&""1 ml van 0,4 mg/ml"",ROUND((0.01*E5)/0.02,1)&"" ml van Naloxon 20 mcg/ml of ""&ROUND((0.01*E5)/0.4,1)&"" ml van 0,4 mg/ml"")
+$D$23: 	=CONCATENATE(0.0144*_Gewicht, "" mg in 12 ml glucose 10%"")
+$D$24: 	=CONCATENATE(7.2*_Gewicht, "" mg in 12 ml glucose 10%"")
+$D$25: 	=CONCATENATE(0.072*_Gewicht, "" mg in 12 ml glucose 10%"")
+$D$27: 	=CONCATENATE(0.1*_Gewicht, "" mg"")
+$E$27: 	=""= ""&0.02*_Gewicht&"" ml van Midazolam 5mg/ml oplossing""
+$D$28: 	=CONCATENATE(20*_Gewicht, "" mg"")
+$E$28: 	=""= ""&0.4*_Gewicht&"" ml van Fenobarbital 50mg/ml oplossing""
+$D$30: 	=CONCATENATE(0.225*_Gewicht,"" (mmol IV)"")
+$E$30: 	=""= ""&1*_Gewicht&"" ml IV van Calcium gluconaat 10%""
+$D$31: 	=CONCATENATE(0.1*_Gewicht,"" mg"")
+$E$31: 	=""= ""&0.1*_Gewicht&"" ml van Morfine 1mg/1ml oplossing""
+$D$32: 	=CONCATENATE(0.6*_Gewicht,"" mg"")
+$E$32: 	=""= ""&0.06*_Gewicht&"" ml van Rocorium 10mg/1ml oplossing""
+"
