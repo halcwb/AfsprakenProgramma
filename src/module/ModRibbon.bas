@@ -1,173 +1,141 @@
 Attribute VB_Name = "ModRibbon"
 Option Explicit
 
-Public Sub ButtonOnAction(control As IRibbonControl)
+Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
 '
 ' Code for onAction callback. Ribbon control button
 '
 
     Application.ScreenUpdating = False
     
-    Select Case control.ID
+    Select Case ctrlMenuItem.ID
         'GroupAfspraken
         Case "btnAfsluiten"
             Afsluiten
         Case "btnAfsprakenVerwijderen"
-            clearPat True
-            OpenStartSheet
+            ClearPatient True
+            SelectPedOrNeoStartSheet
         'GroupBedden
         Case "btnBedOpenen"
-            PaPatientenLijst
+            OpenPatientLijst
         Case "btnBedOpslaan"
-            BeSluitBed
-            OpenStartSheet
+            ModBedden.SluitBed
+            SelectPedOrNeoStartSheet
         Case "btnGegevensInvoeren"
             NieuwePatient
         'grpPediatrie
         Case "btnPContinueivmedicatie"
-            gaNaarMedicatieIV
-            Range("A6").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiMedIV, "A6"
         Case "btnPDiscontinuemedicatie"
-            gaNaarMedicatieOverig
-            Range("A6").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiMedDisc, "A6"
         Case "btnPInfusen"
-            gaNaarInfusen
-            Range("A6").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiPMenIV, "A6"
         Case "btnPIntake"
-            gaNaarIntake
-            Range("A6").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiEntTPN, "A6"
         Case "btnPLaboratoriumbepalingen"
-            gaNaarLab
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiLab, "A1"
         Case "btnPAanvullendeAfspraken"
-            gaNaarAanvullendeAfspraken
-            Range("A6").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiAfsprExta, "A6"
         'grpNeonatologie
         Case "btnNInfuusbrief"
-            GaNaarAfspraken
-            Range("A9").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoGuiAfspraken, "A9"
         Case "btnNDiscontinuemedicatie"
-            gaNaarMedicatieOverig
-            Range("A6").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiMedDisc, "A6"
         Case "btnNAanvullendeAfspraken"
-            gaNaarAanvullendeAfsprakenNeo
-            Range("A6").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoGuiAfsprExtra, "A6"
         Case "btnNTPNadvies"
             TPNAdviesNEO
         Case "btnNLaboratoriumbepalingen"
-            gaNaarLabNeo
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoGuiLab, "A1"
         Case "btnNAfspraken1700"
-            gaNaarAfspraken1700Neo
-            Range("A9").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoGuiAfspr1700, "A9"
         'grpGegevensVerwijderen -> Acties
         Case "btnNAfspraken1700Overzetten"
             ModAfspraken1700.CopyToActueel
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
         Case "btnNActueleAfsprakenOverzetten"
             ModAfspraken.AfsprakenOvernemen
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
         Case "btnLabVerwijderen"
             VerwijderLab
-            OpenLabSheet
+            SelectPedOrNeoLabSheet
         Case "btnAanvullendVerwijderen"
             VerwijderAanvullendeAfspraken
-            OpenAanvullendeSheet
+            SelectPedOrNeoAfsprExtraSheet
         'grpPrintPediatrie
         Case "btnPAcuteBlad"
-            gaNaarAcuteOpvang
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedGuiAcuut, "A1"
         Case "btnPPrintAfspraken"
-            gaNaarAfspraakBlad
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedPrtAfspr, "A1"
         Case "btnPMedicatie"
-            gaNaarMedicatie
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtPedPrtMedDisc, "A1"
         Case "btnPTPN"
-            gaNaarTPNblad
+            SelectPedTPNPrint
         'grpPrintNeonatologie
         Case "btnNAcuteBlad"
-            gaNaarAcuteOpvangNeo
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoGuiAcuut, "A1"
         Case "btnNAfspraken"
-            GaNaarPrint
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoPrtAfspr, "A1"
         Case "btnNMedicatie"
-            gaNaarMedicatieNeo
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoPrtMedDisc, "A1"
         Case "btnNTPN"
             TPNAdviesNEO
         Case "btnNApotheek"
-            GaNaarApotheek
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoPrtApoth, "A1"
         Case "btnNWerkbrief"
-            GaNaarWerkBrief
-            Range("A1").Select
-            ActiveWindow.ScrollRow = 1
+            ModSheets.GoToSheet shtNeoPrtWerkbr, "A1"
         'grpDeveloper2
         Case "btnDeveloperMode"
             SetToDevelopmentMode
+        Case "btnNaamGeven"
+            ModMenuItems.GiveNameToRange
         Case "btnToggleLogging"
     End Select
 
-    HideBars
+    ' Waarom wordt dit aangeroepen na een menu item keuze???
+    ' HideBars
     
     Application.ScreenUpdating = True
+    
 End Sub
 
-Sub GetVisiblePed(control As IRibbonControl, ByRef visible)
-Dim strPath As String
+Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
+
+    Dim strPath As String
 
     strPath = LCase(Application.ActiveWorkbook.Path)
     
     If InStr(1, strPath, LCase(CONST_PELI_FOLDERNAME)) > 0 Or InStr(1, strPath, LCase(CONST_DEVELOP_FOLDERNAME)) > 0 Then
-        visible = True
+        blnVisible = True
     Else
-        visible = False
+        blnVisible = False
     End If
+    
 End Sub
 
-Sub GetVisibleNeo(control As IRibbonControl, ByRef visible)
-Dim strPath As String
+Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
+    
+    Dim strPath As String
 
     strPath = LCase(Application.ActiveWorkbook.Path)
     
     If InStr(1, strPath, LCase(CONST_NEO_FOLDERNAME)) > 0 Or InStr(1, strPath, LCase(CONST_DEVELOP_FOLDERNAME)) > 0 Then
-        visible = True
+        blnVisible = True
     Else
-        visible = False
+        blnVisible = False
     End If
+    
 End Sub
 
-Sub GetVisibleDeveloper(control As IRibbonControl, ByRef visible)
-Dim strPath As String
+Sub GetVisibleDeveloper(control As IRibbonControl, ByRef blnVisible)
+
+    Dim strPath As String
 
     strPath = LCase(Application.ActiveWorkbook.Path)
     
     If InStr(1, strPath, LCase(CONST_DEVELOP_FOLDERNAME)) > 0 Then
-        visible = True
+        blnVisible = True
     Else
-        visible = False
+        blnVisible = False
     End If
+    
 End Sub
 

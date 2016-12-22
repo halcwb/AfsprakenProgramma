@@ -1,0 +1,37 @@
+"$B$3: 	=TODAY()
+$F$3: 	=PatNummer
+$F$4: 	=_AchterNaam&"",  ""&_VoorNaam
+$F$5: 	=GebDatum
+$B$6: 	=BedNummer
+$G$6: 	=Gewicht/10&"" kg""
+$A$10: 	=IF(Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
+$C$10: 	=PedBerTPN!F24
+$A$14: 	=IF(TPN<>1,ROUND(G22/24,1)&"" ml/u"","""")
+$G$14: 	=IF(AND(TPN<>1,G16<>0),ROUND(PedBerTPN!F7,0),"""")
+$G$15: 	=IF(AND(TPN<>1,G16<>0),ROUND(PedBerTPN!F8,0),"""")
+$G$16: 	=IF(TPN<>1,PedBerTPN!F4,"""")
+$G$17: 	=IF(AND(SSTglucose=2,TPN<>1),ROUND(PedBerTPN!F6,0),"""")
+$G$18: 	=IF(AND(SSTglucose=6,TPN<>1),ROUND(PedBerTPN!F6,0),"""")
+$G$19: 	=IF(AND(SSTglucose=8,TPN<>1,Gewicht/10<=10),ROUND(PedBerTPN!F6,0),"""")
+$G$20: 	=IF(AND(SSTglucose=8,TPN<>1,Gewicht/10>10),ROUND(PedBerTPN!F6,0),"""")
+$B$21: 	=IF(AND(TPN=2,SSTglucose<>2,SSTglucose<>6,SSTglucose<>8,SSTglucose<11),INDEX(tblSSTGlucose,SSTglucose,1),""Glucose       %"")
+$G$21: 	=IF(AND(TPN<>1,B20<>""""),IF(AND(SSTglucose<>2,SSTglucose<>6,SSTglucose<>8,SSTglucose<11),ROUND(PedBerTPN!F6,0),""""),"""")
+$G$22: 	=SUM(G14:G21)
+$A$24: 	=IF(G27>0,ROUND(G27/24,1)&"" ml/u"","""")
+$G$24: 	=ROUND(PedBerTPN!F13,0)
+$G$25: 	=ROUND(PedBerTPN!F14,0)
+$G$26: 	=ROUND(PedBerTPN!F15,0)
+$G$27: 	=SUM(G24:G26)
+$A$30: 	=IF(G33>0,ROUND(G39/24,1)&"" ml/u"","""")
+$G$30: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10))),ROUND(PedBerTPN!F7,0),0)
+$G$31: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10))),ROUND(PedBerTPN!F8,0),0)
+$G$32: 	=PedBerTPN!F9
+$G$33: 	=PedBerTPN!F10
+$G$34: 	=PedBerTPN!F17+IF(AND(SSTglucose=2,TPN=1),ROUND(PedBerTPN!F6,0),0)
+$B$35: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10)),SSTglucose<>2,SSTglucose<>11,SSTglucose<>12,SSTglucose<>13),INDEX(tblSSTGlucose,SSTglucose,1),""Glucose       %"")
+$G$35: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10)),SSTglucose<>2,SSTglucose<>11,SSTglucose<>12,SSTglucose<>13),ROUND(PedBerTPN!F6,0),"""")
+$G$36: 	=IF(OR(SSTglucose=11),ROUND(PedBerTPN!F6,0),"""")
+$G$37: 	=IF(AND(SSTglucose=12),ROUND(PedBerTPN!F6,0),"""")
+$G$38: 	=IF(AND(SSTglucose=13),ROUND(PedBerTPN!F6,0),"""")
+$G$39: 	=SUM(G30:G38)
+"

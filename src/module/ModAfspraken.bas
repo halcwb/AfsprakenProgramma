@@ -1,140 +1,164 @@
 Attribute VB_Name = "ModAfspraken"
 Option Explicit
+
 ' ToDo: Add comment
 Public Sub AfsprakenOvernemen()
-    VoedingOvernemen
-    ContMedOvernemen
-    TPNOvernemen
+
+    CopyRangeNamesToRangeNames GetVoedingItems(), Get1700Items(GetVoedingItems())
+    CopyRangeNamesToRangeNames GetIVAfsprItems(), Get1700Items(GetIVAfsprItems())
+    CopyRangeNamesToRangeNames GetTPNItems(), Get1700Items(GetTPNItems())
+    
 End Sub
 
-Private Sub VoedingOvernemen()
-    Range("_Voeding1700").Value = Range("_Voeding").Value
+Public Function GetVoedingItems() As String()
+
+    Dim arrItems() As String
+    ReDim arrItems(0)
+        
+    arrItems(0) = "_Voeding"
+    AddItemsToArray arrItems, "_Frequentie", 1, 2
+    AddItemsToArray arrItems, "_Fototherapie", 1, 1
+    AddItemsToArray arrItems, "_Parenteraal", 1, 1
+    AddItemsToArray arrItems, "_Toevoeging", 1, 8
+    AddItemsToArray arrItems, "_PercentageKeuze", 0, 8
+    AddItemsToArray arrItems, "_IntakePerKg", 1, 1
+    AddItemsToArray arrItems, "_Extra", 1, 1
     
-    Range("_Frequentie1700_1").Value = Range("_Frequentie_1").Value
-    Range("_Hoeveelheid1700_1").Value = Range("_Hoeveelheid_1").Value
-    Range("_Frequentie1700_2").Value = Range("_Frequentie_2").Value
-    Range("_Hoeveelheid1700_2").Value = Range("_Hoeveelheid_2").Value
+    GetVoedingItems = arrItems
 
-    Range("_Fototherapie1700").Value = Range("_Fototherapie").Value
-    Range("_Parenteraal1700").Value = Range("_Parenteraal").Value
+End Function
 
-    Range("_Toevoeging1700_1").Value = Range("_Toevoeging_1").Value
-    Range("_Toevoeging1700_2").Value = Range("_Toevoeging_2").Value
-    Range("_Toevoeging1700_3").Value = Range("_Toevoeging_3").Value
-    Range("_Toevoeging1700_4").Value = Range("_Toevoeging_4").Value
+Public Function GetIVAfsprItems() As String()
 
-    Range("_Toevoeging1700_5").Value = Range("_Toevoeging_5").Value
-    Range("_Toevoeging1700_6").Value = Range("_Toevoeging_6").Value
-    Range("_Toevoeging1700_7").Value = Range("_Toevoeging_7").Value
-    Range("_Toevoeging1700_8").Value = Range("_Toevoeging_8").Value
+    Dim arrItems() As String
+    ReDim arrItems(0)
+        
+    arrItems(0) = "_ArtLijn"
+    AddItemsToArray arrItems, "_Medicament", 1, 9
+    AddItemsToArray arrItems, "_MedSterkte", 1, 9
+    AddItemsToArray arrItems, "_OplHoev", 1, 9
+    AddItemsToArray arrItems, "_Oplossing", 1, 12
+    AddItemsToArray arrItems, "_Stand", 1, 12
+    AddItemsToArray arrItems, "_Extra", 1, 12
+    AddItemsToArray arrItems, "_MedTekst", 1, 2
+    
+    GetIVAfsprItems = arrItems
 
-    Range("_PercentageKeuze1700_0").Value = Range("_PercentageKeuze_0").Value
-    Range("_PercentageKeuze1700_1").Value = Range("_PercentageKeuze_1").Value
-    Range("_PercentageKeuze1700_2").Value = Range("_PercentageKeuze_2").Value
-    Range("_PercentageKeuze1700_3").Value = Range("_PercentageKeuze_3").Value
-    Range("_PercentageKeuze1700_4").Value = Range("_PercentageKeuze_4").Value
+End Function
 
-    Range("_PercentageKeuze1700_5").Value = Range("_PercentageKeuze_5").Value
-    Range("_PercentageKeuze1700_6").Value = Range("_PercentageKeuze_6").Value
-    Range("_PercentageKeuze1700_7").Value = Range("_PercentageKeuze_7").Value
-    Range("_PercentageKeuze1700_8").Value = Range("_PercentageKeuze_8").Value
+Public Function GetTPNItems() As String()
 
-    Range("_IntakePerKg1700").Value = Range("_IntakePerKg").Value
+    Dim arrItems() As String
+    ReDim arrItems(0)
+    
+    arrItems(0) = "_Parenteraal"
+    AddItemsToArray arrItems, "_IntraLipid", 1, 1
+    AddItemsToArray arrItems, "_DagKeuze", 1, 1
+    
+    AddItemsToArray arrItems, "_NaCl", 1, 1
+    AddItemsToArray arrItems, "_KCl", 1, 1
+    AddItemsToArray arrItems, "_CaCl2", 1, 1
+    AddItemsToArray arrItems, "_MgCl2", 1, 1
+    AddItemsToArray arrItems, "_SoluVit", 1, 1
+    AddItemsToArray arrItems, "_Primene", 1, 1
+    AddItemsToArray arrItems, "_NICUMix", 1, 1
+    AddItemsToArray arrItems, "_SSTB", 1, 1
+    AddItemsToArray arrItems, "_GlucSterkte", 1, 1
+    
+    GetTPNItems = arrItems
+    
+End Function
 
-    Range("_Extra1700").Value = Range("_Extra").Value
+Public Sub AddItemToArray(arrItems() As String, strItem As String)
+
+    Dim intU As Integer
+    
+    intU = UBound(arrItems) + 1
+    ReDim Preserve arrItems(0 To intU)
+    
+    arrItems(intU) = strItem
+
 End Sub
 
-Private Sub ContMedOvernemen()
-    Range("_ArtLijn1700").Value = Range("_ArtLijn").Value
+Public Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As Integer, intStop)
+
+    Dim intC As Integer
+    Dim intU As Integer
     
-    Range("_Medicament1700_1").Value = Range("_Medicament_1").Value
-    Range("_Medicament1700_2").Value = Range("_Medicament_2").Value
-    Range("_Medicament1700_3").Value = Range("_Medicament_3").Value
-    Range("_Medicament1700_4").Value = Range("_Medicament_4").Value
-    Range("_Medicament1700_5").Value = Range("_Medicament_5").Value
-    Range("_Medicament1700_6").Value = Range("_Medicament_6").Value
-    Range("_Medicament1700_7").Value = Range("_Medicament_7").Value
-    Range("_Medicament1700_8").Value = Range("_Medicament_8").Value
-    Range("_Medicament1700_9").Value = Range("_Medicament_9").Value
-
-    Range("_MedSterkte1700_1").Value = Range("_MedSterkte_1").Value
-    Range("_MedSterkte1700_2").Value = Range("_MedSterkte_2").Value
-    Range("_MedSterkte1700_3").Value = Range("_MedSterkte_3").Value
-    Range("_MedSterkte1700_4").Value = Range("_MedSterkte_4").Value
-    Range("_MedSterkte1700_5").Value = Range("_MedSterkte_5").Value
-    Range("_MedSterkte1700_6").Value = Range("_MedSterkte_6").Value
-    Range("_MedSterkte1700_7").Value = Range("_MedSterkte_7").Value
-    Range("_MedSterkte1700_8").Value = Range("_MedSterkte_8").Value
-    Range("_MedSterkte1700_9").Value = Range("_MedSterkte_9").Value
+    If intStart = intStop Then
+        AddItemToArray arrItems, strItem
+    Else
+        intU = UBound(arrItems)
+        ReDim Preserve arrItems(0 To intU + intStop - intStart + 1)
+        
+        For intC = intStart To intStop
+            intU = intU + 1
+            arrItems(intU) = strItem & "_" & intC
+        Next intC
+    End If
     
-    Range("_OplHoev1700_1").Value = Range("_OplHoev_1").Value
-    Range("_OplHoev1700_2").Value = Range("_OplHoev_2").Value
-    Range("_OplHoev1700_3").Value = Range("_OplHoev_3").Value
-    Range("_OplHoev1700_4").Value = Range("_OplHoev_4").Value
-    Range("_OplHoev1700_5").Value = Range("_OplHoev_5").Value
-    Range("_OplHoev1700_6").Value = Range("_OplHoev_6").Value
-    Range("_OplHoev1700_7").Value = Range("_OplHoev_7").Value
-    Range("_OplHoev1700_8").Value = Range("_OplHoev_8").Value
-    Range("_OplHoev1700_9").Value = Range("_OplHoev_9").Value
-
-    Range("_Oplossing1700_1").Value = Range("_Oplossing_1").Value
-    Range("_Oplossing1700_2").Value = Range("_Oplossing_2").Value
-    Range("_Oplossing1700_3").Value = Range("_Oplossing_3").Value
-    Range("_Oplossing1700_4").Value = Range("_Oplossing_4").Value
-    Range("_Oplossing1700_5").Value = Range("_Oplossing_5").Value
-    Range("_Oplossing1700_6").Value = Range("_Oplossing_6").Value
-    Range("_Oplossing1700_7").Value = Range("_Oplossing_7").Value
-    Range("_Oplossing1700_8").Value = Range("_Oplossing_8").Value
-    Range("_Oplossing1700_9").Value = Range("_Oplossing_9").Value
-    Range("_Oplossing1700_10").Value = Range("_Oplossing_10").Value
-    Range("_Oplossing1700_11").Value = Range("_Oplossing_11").Value
-    Range("_Oplossing1700_12").Value = Range("_Oplossing_12").Value
-
-    Range("_Stand1700_1").Value = Range("_Stand_1").Value
-    Range("_Stand1700_2").Value = Range("_Stand_2").Value
-    Range("_Stand1700_3").Value = Range("_Stand_3").Value
-    Range("_Stand1700_4").Value = Range("_Stand_4").Value
-    Range("_Stand1700_5").Value = Range("_Stand_5").Value
-    Range("_Stand1700_6").Value = Range("_Stand_6").Value
-    Range("_Stand1700_7").Value = Range("_Stand_7").Value
-    Range("_Stand1700_8").Value = Range("_Stand_8").Value
-    Range("_Stand1700_9").Value = Range("_Stand_9").Value
-    Range("_Stand1700_10").Value = Range("_Stand_10").Value
-    Range("_Stand1700_11").Value = Range("_Stand_11").Value
-    Range("_Stand1700_12").Value = Range("_Stand_12").Value
-
-    Range("_Extra1700_1").Value = Range("_Extra_1").Value
-    Range("_Extra1700_2").Value = Range("_Extra_2").Value
-    Range("_Extra1700_3").Value = Range("_Extra_3").Value
-    Range("_Extra1700_4").Value = Range("_Extra_4").Value
-    Range("_Extra1700_5").Value = Range("_Extra_5").Value
-    Range("_Extra1700_6").Value = Range("_Extra_6").Value
-    Range("_Extra1700_7").Value = Range("_Extra_7").Value
-    Range("_Extra1700_8").Value = Range("_Extra_8").Value
-    Range("_Extra1700_9").Value = Range("_Extra_9").Value
-    Range("_Extra1700_10").Value = Range("_Extra_10").Value
-    Range("_Extra1700_11").Value = Range("_Extra_11").Value
-    Range("_Extra1700_12").Value = Range("_Extra_12").Value
-
-    Range("_MedTekst1700_1").Value = Range("_MedTekst_1").Value
-    Range("_MedTekst1700_2").Value = Range("_MedTekst_2").Value
 End Sub
 
-Private Sub TPNOvernemen()
-    Range("_Parenteraal1700").Value = Range("_Parenteraal").Value
-    Range("_IntraLipid1700").Value = Range("_IntraLipid").Value
+Public Function Get1700Items(arrItems() As String) As String()
     
-    Range("_DagKeuze1700").Value = Range("_DagKeuze").Value
+    Dim arr1700Items() As String
+    Dim varItem As Variant
+    Dim arrSplit() As String
+    Dim strAfspr, strAfspr1700 As String
+    Dim strNum As String
+    Dim intN As Integer
     
-    Range("_NaCl1700").Value = Range("_NaCl").Value
-    Range("_KCl1700").Value = Range("_KCl").Value
-    Range("_CaCl21700").Value = Range("_CaCl2").Value
-    Range("_MgCl21700").Value = Range("_MgCl2").Value
-    Range("_SoluVit1700").Value = Range("_SoluVit").Value
-    Range("_Primene1700").Value = Range("_Primene").Value
-    Range("_NICUMix1700").Value = Range("_NICUMix").Value
-    Range("_SSTB1700").Value = Range("_SSTB").Value
-    Range("_GlucSterkte1700").Value = Range("_GlucSterkte").Value
+    ReDim arr1700Items(UBound(arrItems))
+    
+    For Each varItem In arrItems
+        arrSplit = Split(varItem, "_")
+        strAfspr = arrSplit(1)
+        
+        If UBound(arrSplit) = 2 Then
+            strNum = arrSplit(2)
+        Else
+            strNum = ""
+        End If
+        
+        If strNum = vbNullString Then
+            strAfspr1700 = "_" & strAfspr & "1700"
+        Else
+            strAfspr1700 = "_" & strAfspr & "1700" & "_" & strNum
+        End If
+        
+        If strAfspr1700 = vbNullString Then Err.Raise 1004, "Get1700Items", "Afspraken 1700 cannot be empty string"
+        
+        arr1700Items(intN) = strAfspr1700
+        intN = intN + 1
+        
+    Next varItem
+    
+    Get1700Items = arr1700Items
+
+End Function
+
+Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
+    
+    Dim objRange As Range
+    Dim intN As Integer
+    
+    For intN = 0 To UBound(arrFrom)
+        Range(arrTo(intN)).Value = Range(arrFrom(intN)).Value
+    Next intN
+    
 End Sub
 
+Private Sub test()
+    
+    Dim varItem As Variant
+    Dim arr1700Items() As String
+    Dim intN As Integer
+    
+    arr1700Items = Get1700Items(GetIVAfsprItems())
+    For Each varItem In GetIVAfsprItems()
+        MsgBox varItem & ", " & arr1700Items(intN)
+        intN = intN + 1
+    Next varItem
+
+End Sub
 

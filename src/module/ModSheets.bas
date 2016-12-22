@@ -8,29 +8,33 @@ Public Function GetUserInterfaceSheets() As Collection
     Dim col As New Collection
         
     With col
-        .Add Item:=shtGuiAcuteOpvang
-        .Add Item:=shtGuiInfusen
-        .Add Item:=shtGuiIntake
-        .Add Item:=shtGuiLab
-        .Add Item:=shtGuiMedDisc
-        .Add Item:=shtGuiMedicatieIV
-        .Add Item:=shtPrtAfspraken
-        .Add Item:=shtPrtMedicatie
-        .Add Item:=shtPrtTPN16tot30kg
-        .Add Item:=shtPrtTPN2tot6kg
-        .Add Item:=shtPrtTPN31tot50kg
-        .Add Item:=shtPrtTPN7tot15kg
-        .Add Item:=shtPrtTPNboven50kg
-    
-        .Add Item:=shtAanvullendeAfspraken
-        .Add Item:=shtAanvullendeAfsprakenPed
-        .Add Item:=shtGuiAfspraken
-        .Add Item:=shtGuiAfspraken1700
-        .Add Item:=shtApotheek
-        .Add Item:=shtGuiAcuteOpvangNeo
-        .Add Item:=shtGuiLabNeo
-        .Add Item:=shtPrint
-        .Add Item:=shtGuiWerkBrief
+        ' Ped GUI sheets
+        .Add Item:=shtPedGuiAcuut
+        .Add Item:=shtPedGuiMedIV
+        .Add Item:=shtPedGuiMedDisc
+        .Add Item:=shtPedGuiPMenIV
+        .Add Item:=shtPedGuiEntTPN
+        .Add Item:=shtPedGuiLab
+        .Add Item:=shtPedGuiAfsprExta
+        ' Ped Print sheets
+        .Add Item:=shtPedPrtAfspr
+        .Add Item:=shtPedPrtMedDisc
+        .Add Item:=shtPedPrtTPN16tot30
+        .Add Item:=shtPedPrtTPN2tot6
+        .Add Item:=shtPedPrtTPN31tot50
+        .Add Item:=shtPedPrtTPN7tot15
+        .Add Item:=shtPedPrtTPN50
+        ' Neo GUI sheets
+        .Add Item:=shtNeoGuiAcuut
+        .Add Item:=shtNeoGuiAfspraken
+        .Add Item:=shtNeoGuiAfspr1700
+        .Add Item:=shtNeoGuiLab
+        .Add Item:=shtNeoGuiAfsprExtra
+        ' Neo Print sheets
+        .Add Item:=shtNeoPrtAfspr
+        .Add Item:=shtNeoPrtWerkbr
+        .Add Item:=shtNeoPrtWerkbrAct
+        .Add Item:=shtNeoPrtApoth
     
     End With
     
@@ -46,46 +50,48 @@ Public Function GetNonInterfaceSheets() As Collection
     Dim col As New Collection
     
     With col
-        .Add Item:=shtBerConversie
-        .Add Item:=shtBerInfusen
-        .Add Item:=shtBerIVMed
-        .Add Item:=shtBerLab
-        .Add Item:=shtBerMedDisc
-        .Add Item:=shtBerNormaal
-        .Add Item:=shtBerOpm
-        .Add Item:=shtBerPO
-        .Add Item:=shtBerTemp
-        .Add Item:=shtBerTijden
-        .Add Item:=shtBerTotalen
-        .Add Item:=shtBerTPN
-        .Add Item:=shtPatAfsprakenTekst
+        ' Global Berekening sheets
+        .Add Item:=shtGlobBerConv
+        .Add Item:=shtGlobBerNorm
+        .Add Item:=shtGlobBerOpm
+        .Add Item:=shtGlobTemp
+        ' Pat Data sheets
         .Add Item:=shtPatDetails
         .Add Item:=shtPatData
-        .Add Item:=shtTblHeightNL
-        .Add Item:=shtTblWeigthNL
-        .Add Item:=shtBerTijdenNeo
-        .Add Item:=shtTblMedDisc
-        .Add Item:=shtTblInfusen
-    
-        .Add Item:=shtTblMedicatieIV
-        .Add Item:=shtTblMedicatieIVNeo
-        .Add Item:=shtTblTPOSheet1
-        .Add Item:=shtBerekeningen
-        .Add Item:=shtBerekeningen1700
-        .Add Item:=shtBerLabNeo
-        .Add Item:=shtAanvullendeTbl
-        .Add Item:=shtAanvullendeBer
-        .Add Item:=shtAanvullendeBerPed
-        .Add Item:=shtAdvies
-        .Add Item:=shtLijsten
-        .Add Item:=shtTblTPOSheet1
-        .Add Item:=shtTblVoeding
-        
+        .Add Item:=shtPatDataText
+        ' Ped Berekening sheets
+        .Add Item:=shtPedBerIVenPM
+        .Add Item:=shtPedBerMedIV
+        .Add Item:=shtPedBerLab
+        .Add Item:=shtPedBerMedDisc
+        .Add Item:=shtPedBerTot
+        .Add Item:=shtPedBerEnt
+        .Add Item:=shtPedBerTPN
+        .Add Item:=shtPedBerExtraAfspr
+        ' Ped Table sheets
+        .Add Item:=shtPedTblMedIV
+        .Add Item:=shtPedTblMedDisc
+        .Add Item:=shtPedTblIV
+        .Add Item:=shtPedTblTijden
+        .Add Item:=shtPedTblVoed
+        .Add Item:=shtPedTblLengte
+        .Add Item:=shtPedTblGewicht
+        .Add Item:=shtPedTblAfsprExtra
+        ' Neo Berekening sheets
+        .Add Item:=shtNeoBerAfspr
+        .Add Item:=shtNeoBerIV
+        .Add Item:=shtNeoBer1700
+        .Add Item:=shtNeoBerLab
+        .Add Item:=shtNeoBerAdvies
+        ' Neo Table sheets
+        .Add Item:=shtNeoTblMedIV
+        .Add Item:=shtNeoTblTijden
+        .Add Item:=shtNeoTblLijst
+        .Add Item:=shtNeoTblVoed
+        ' Divider sheets
         .Add Item:=shtDivPediatrie
         .Add Item:=shtDivNeo
         .Add Item:=shtDivPatient
-        .Add Item:=shtWerkBriefActueel
-        
         
     End With
 
@@ -93,7 +99,7 @@ Public Function GetNonInterfaceSheets() As Collection
 
 End Function
 
-Private Sub HideAndUnProtectNonUserInterfaceSheets()
+Public Sub HideAndUnProtectNonUserInterfaceSheets()
 
     Dim col As New Collection
     Dim intCount As Integer
@@ -102,7 +108,7 @@ Private Sub HideAndUnProtectNonUserInterfaceSheets()
     
     For intCount = 1 To col.Count
         With col(intCount)
-            .visible = xlVeryHidden
+            .Visible = xlVeryHidden
             .Unprotect PASSWORD:=CONST_PASSWORD
         End With
     Next intCount
@@ -111,7 +117,35 @@ Private Sub HideAndUnProtectNonUserInterfaceSheets()
 
 End Sub
 
-Private Sub UnhideNonUserInterfaceSheets()
+Public Sub UnprotectUserInterfaceSheets()
+
+    Dim objItem As Worksheet
+    
+    For Each objItem In GetUserInterfaceSheets()
+        With objItem
+            .EnableSelection = xlNoRestrictions
+            .Unprotect ModConst.CONST_PASSWORD
+        End With
+        
+    Next objItem
+            
+End Sub
+
+Public Sub ProtectUserInterfaceSheets()
+            
+    Dim objItem As Worksheet
+    
+    For Each objItem In GetUserInterfaceSheets()
+        With objItem
+            .EnableSelection = xlNoRestrictions
+            .Protect ModConst.CONST_PASSWORD
+        End With
+        
+    Next objItem
+
+End Sub
+
+Public Sub UnhideNonUserInterfaceSheets()
 
     Dim col As New Collection
     Dim intCount As Integer
@@ -120,10 +154,19 @@ Private Sub UnhideNonUserInterfaceSheets()
     
     For intCount = 1 To col.Count
         With col(intCount)
-            .visible = True
+            .Visible = True
         End With
     Next intCount
 
     Set col = Nothing
 
 End Sub
+
+Public Sub GoToSheet(shtSheet As Worksheet, strRange As String)
+
+    shtSheet.Select
+    shtSheet.Range(strRange).Select
+    ActiveWindow.ScrollRow = 1
+
+End Sub
+

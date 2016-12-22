@@ -1,12 +1,16 @@
 Attribute VB_Name = "ModUtils"
 Option Explicit
 
-
+' Exports all vba source code and
+' formulas in sheets to source tree
+' to facilitate source control
 Public Sub ExportForSourceControl()
 
     Dim strPath As String
     
-    strPath = ModGlobal.GetAfsprakenProgramFilePath & "\src\"
+    strPath = ModConst.GetAfsprakenProgramFilePath & "\src\"
+    
+    DeleteSourceFiles
 
     ExportFormulas
     ExportVbaCode
@@ -15,19 +19,34 @@ Public Sub ExportForSourceControl()
 
 End Sub
 
+Public Sub DeleteSourceFiles()
+
+    Dim strPath As String
+    
+    strPath = ModConst.GetAfsprakenProgramFilePath() & "\src\"
+    
+    ModFile.DeleteAllFilesInDir strPath & "sheet\"
+    ModFile.DeleteAllFilesInDir strPath & "class\"
+    ModFile.DeleteAllFilesInDir strPath & "document\"
+    ModFile.DeleteAllFilesInDir strPath & "form\"
+    ModFile.DeleteAllFilesInDir strPath & "module\"
+
+End Sub
+
+
 Public Sub ExportFormulas()
 
     Dim shtSheet As Worksheet
     Dim objCell As Range
     Dim strText, strPath As String
     
-    strPath = ModGlobal.GetAfsprakenProgramFilePath() & "\src\sheet\"
+    strPath = ModConst.GetAfsprakenProgramFilePath() & "\src\sheet\"
     
     For Each shtSheet In ActiveWorkbook.Sheets
     
         strText = ""
     
-        shtSheet.Unprotect ModGlobal.CONST_PASSWORD
+        shtSheet.Unprotect ModConst.CONST_PASSWORD
     
         For Each objCell In shtSheet.Range("A1:AX200")
             
@@ -39,7 +58,7 @@ Public Sub ExportFormulas()
         
         If strText <> vbNullString Then ModFile.WriteToFile strPath & shtSheet.Name & ".txt", strText
         
-        shtSheet.Protect ModGlobal.CONST_PASSWORD
+        shtSheet.Protect ModConst.CONST_PASSWORD
         
     Next shtSheet
 
@@ -51,7 +70,7 @@ Public Sub ExportVbaCode()
     Dim strFile As String
     Dim strPath As String
     
-    strPath = ModGlobal.GetAfsprakenProgramFilePath()
+    strPath = ModConst.GetAfsprakenProgramFilePath()
 
     For Each vbcItem In ActiveWorkbook.VBProject.VBComponents
         strFile = GetComponentFileName(vbcItem)
@@ -93,7 +112,7 @@ Public Sub RunShell(strCmd As String, strArgs() As String)
     Dim dblExit As Double
     Dim strArg As Variant
     
-    strPath = ModGlobal.GetAfsprakenProgramFilePath()
+    strPath = ModConst.GetAfsprakenProgramFilePath()
     
     For Each strArg In strArgs
         strCmd = strCmd & " " & strArg
@@ -108,6 +127,35 @@ Public Sub RunShell(strCmd As String, strArgs() As String)
     End If
 
 End Sub
+
+' Check key ascii and make sure it is a valid number character
+' Use both dot and comma as decimal separators.
+Public Function CorrectNumberAscii(ByVal intKey As Integer) As Integer
+
+    Dim intDot As Integer
+    Dim intComma As Integer
+    
+    intDot = 46
+    intComma = 44
+    
+    If intKey = intDot Or intKey = intComma Then
+        ' Use both dot as comma as decimal separator
+        intKey = Asc(Application.DecimalSeparator)
+    Else
+        If intKey >= 48 And intKey <= 57 Then
+            ' Key ascii is OK
+            ' Key ascii remains the same
+        Else
+            ' Any other value ignore key and beep
+            intKey = 0
+            Beep
+        End If
+    End If
+    
+    CorrectNumberAscii = intKey
+
+End Function
+
 
 Public Sub RunTestCmd()
     Dim strArgs(1) As String

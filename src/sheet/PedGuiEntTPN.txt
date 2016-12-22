@@ -1,0 +1,80 @@
+"$D$2: 	=AfspraakDatum
+$G$2: 	=OpnDatum
+$H$2: 	=""ICU-dag: ""&AfspraakDatum-OpnDatum+1
+$I$2: 	=""Gewicht: ""&Gewicht/10&"" kg""
+$D$3: 	=_AchterNaam&"", ""&_VoorNaam
+$G$3: 	=GebDatum
+$I$3: 	=""Lengte: ""&Lengte&"" cm""
+$D$4: 	=PatNummer
+$G$4: 	=TRUNC((AfspraakDatum-GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-GebDatum)-365*TRUNC((AfspraakDatum-GebDatum)/365,0))/30,0)&"" maand(-en)""
+$I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(Gewicht/10,0.425)*POWER(((Lengte/100)*100),0.725)*0.007184,2)&"" m2""
+$D$5: 	=BedNummer
+$C$9: 	=IF(PedBerEnt!M2<>0,PedBerEnt!J2&"" dd"","""")
+$D$9: 	=IF(PedBerEnt!M2<>0,PedBerEnt!L2&"" ml"","""")
+$G$9: 	=IF(C9=""24 dd"",""continue drip"","""")
+$H$9: 	=IF(PedBerEnt!N2>1,PedBerEnt!M2&"" ml per dag"","""")
+$N$9: 	=PedBerEnt!H2
+$N$10: 	=PedBerEnt!H3
+$C$11: 	=IF(PedBerEnt!N3>1,PedBerEnt!J3&"" dd"","""")
+$D$11: 	=IF(PedBerEnt!N3>1,PedBerEnt!L3&"" gram"","""")
+$H$11: 	=IF(PedBerEnt!N3>1,PedBerEnt!M3&"" gram/dag"","""")
+$I$11: 	=IF(AND(PedBerEnt!M3<>0,PedBerEnt!M2<>0),""= ""&ROUND(PedBerEnt!M3*100/PedBerEnt!M2,1)&""% extra"","""")
+$N$11: 	=PedBerEnt!H4
+$C$12: 	=IF(PedBerEnt!N4>1,PedBerEnt!J4&"" dd"","""")
+$D$12: 	=IF(PedBerEnt!N4>1,PedBerEnt!L4&"" gram"","""")
+$H$12: 	=IF(PedBerEnt!N4>1,PedBerEnt!M4&"" gram per dag"","""")
+$I$12: 	=IF(AND(PedBerEnt!M4<>0,PedBerEnt!M3<>0),""= ""&ROUND(PedBerEnt!M4*100/PedBerEnt!M2,1)&""% extra"","""")
+$N$12: 	=PedBerEnt!H5
+$C$13: 	=IF(PedBerEnt!N5>1,PedBerEnt!J5&"" dd"","""")
+$D$13: 	=IF(PedBerEnt!N5>1,PedBerEnt!L5&"" gram"","""")
+$H$13: 	=IF(PedBerEnt!N5>1,PedBerEnt!M5&"" gram per dag"","""")
+$I$13: 	=IF(AND(PedBerEnt!M5<>0,PedBerEnt!M4<>0),""= ""&ROUND(PedBerEnt!M5*100/PedBerEnt!M2,1)&""% extra"","""")
+$N$13: 	=PedBerEnt!H6
+$N$14: 	=PedBerEnt!H7
+$D$15: 	=GlobBerOpm!C15
+$N$15: 	=PedBerEnt!H8
+$N$16: 	=PedBerEnt!H9
+$D$17: 	=IF(PedBerTPN!F3<>0,IF(PedBerTPN!F3/24>=10,ROUND(PedBerTPN!F3/24,1),ROUND(PedBerTPN!F3/24,1))&"" ml/uur"","""")
+$E$17: 	=IF(D17<>"""",PedBerTPN!F3&"" ml per dag"","""")
+$I$17: 	=IF(PedBerTPN!D19<>0,PedBerTPN!E19&"" ml/uur"","""")
+$J$17: 	=IF(I17<>"""",PedBerTPN!F19&"" ml per dag"","""")
+$N$17: 	=PedBerEnt!H10
+$E$18: 	=IF(AND(PedBerTPN!E4<>0,PedBerTPN!E4<>"""",PedBerTPN!B4<>1,PedBerTPN!F4<>0),PedBerTPN!F4&"" ml"","""")
+$F$18: 	=IF(AND(Gewicht/10>=16,TPN=2),""Peditrace"","""")
+$G$18: 	=IF(AND(Gewicht/10>=16,PedBerTPN!F5>0),PedBerTPN!F5&"" ml"","""")
+$E$19: 	=IF(PedBerTPN!F6<>0,ROUND(PedBerTPN!F6,1)&"" ml"","""")
+$F$19: 	=IF(AND(Gewicht/10>50,TPN=2),""in 100 ml glucose 10%, ""&ROUND((PedBerTPN!F5+PedBerTPN!F17)/24,1)&"" ml/uur"","""")
+$J$19: 	=IF(PedBerTPN!F20<>0,ROUND(PedBerTPN!F20,1)&"" ml"","""")
+$E$20: 	=IF(PedBerTPN!C7,PedBerTPN!F7&"" ml"","""")
+$J$20: 	=IF(PedBerTPN!C21,PedBerTPN!F21&"" ml"","""")
+$E$21: 	=IF(PedBerTPN!C8,PedBerTPN!F8&"" ml"","""")
+$J$21: 	=IF(PedBerTPN!C22,PedBerTPN!F22&"" ml"","""")
+$E$23: 	=IF(PedBerTPN!C9,PedBerTPN!D9&"" ml"","""")
+$G$23: 	=IF(AND(Gewicht/10<=50,SSTglucose<11,TPN=2),""in ""&PedBerTPN!F17&"" ml glucose 10% =""&ROUND((PedBerTPN!F17+PedBerTPN!F10+PedBerTPN!F9)/24,1)&"" ml/uur"","""")
+$E$24: 	=IF(PedBerTPN!C10,PedBerTPN!D10&"" ml"","""")
+$E$26: 	=IF(PedBerTPN!C11,PedBerTPN!F11&"" ml"","""")
+$G$26: 	=IF(PedBerTPN!F11>0,ROUND(PedBerTPN!F11*1.5/(Gewicht/10),2)&"" mmol/kg"","""")
+$H$26: 	=IF(PedBerTPN!F11>0,""plus ""&(ROUND(PedBerTPN!F11*1.5/(Gewicht/10)/24/0.01,1)*24-PedBerTPN!F11)&"" ml gluc 5%, ""&((ROUND(PedBerTPN!F11*1.5/(Gewicht/10)/24/0.01,1)*24-PedBerTPN!F11)+PedBerTPN!F11)/24&"" ml/uur"","""")
+$D$27: 	=IF(PedBerTPN!D12<>0,PedBerTPN!E12&"" ml/uur"","""")
+$H$27: 	=IF(PedBerTPN!F12<>0,PedBerTPN!F12&"" ml per dag"","""")
+$E$28: 	=IF(PedBerTPN!F13<>0,ROUND(PedBerTPN!F13,0)&"" ml"","""")
+$E$29: 	=IF(PedBerTPN!C14,PedBerTPN!F14&"" ml"","""")
+$E$30: 	=IF(PedBerTPN!C15,PedBerTPN!F15&"" ml"","""")
+$D$32: 	=GlobBerOpm!C9
+$D$34: 	=ROUND(PedBerTot!C2,0)&"" ml/kg""
+$E$34: 	=ROUND(GlobBerNorm!$A$18,0)&"" ml/kg""
+$F$34: 	=""= ""&ROUND(PedBerTot!C2*Gewicht/10,0)&"" ml/dag""
+$I$34: 	=ROUND(PedBerTot!$C$9,1)&""  gram/kg""
+$J$34: 	=IF(Gewicht/10<30,""2-2,5 g/kg"",""1,5 g/kg"")
+$D$35: 	=ROUND(PedBerTot!E44,0)&"" kCal/kg""
+$E$35: 	=GlobBerNorm!$A$21&"" kCal/kg""
+$I$35: 	=ROUND(PedBerTot!$C$13,1)&"" gram/kg""
+$J$35: 	=IF(Gewicht/10<30,""4 g/kg"",""2 g/kg"")
+$D$36: 	=ROUND(PedBerTot!C5,1)&"" g/kg""
+$F$36: 	=""= ""&ROUND(PedBerTot!C5/1.4,1)&"" mg/kg/min""
+$I$36: 	=ROUND(PedBerTot!$C$27,1)&"" mmol/kg""
+$D$37: 	=ROUND(PedBerTot!C17,1)&"" mmol/kg""
+$I$37: 	=ROUND(PedBerTot!$C$33,1)&"" mmol/kg""
+$D$38: 	=ROUND(PedBerTot!C23,1)&"" mmol/kg""
+$I$38: 	=ROUND(PedBerTot!$C$30,1)&"" mmol/kg""
+"

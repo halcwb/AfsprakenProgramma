@@ -1,4 +1,7 @@
 Attribute VB_Name = "ModConventions"
+Option Explicit
+
+
 ' Name conventions to be used in this project
 '
 ' Naming of variables

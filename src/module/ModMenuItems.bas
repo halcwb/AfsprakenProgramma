@@ -3,61 +3,27 @@ Option Explicit
 
 Dim BAXA As Boolean
 
-Sub gaNaarIntake()
-    
-    shtGuiIntake.Select
-    
-End Sub
-
-Sub gaNaarInfusen()
-    
-    shtGuiInfusen.Select
-
-End Sub
-
-Sub gaNaarLab()
-    
-    shtGuiLab.Select
-
-End Sub
-
-Sub gaNaarLabNeo()
-    
-    shtGuiLabNeo.Select
-
-End Sub
-
-Sub gaNaarAfspraken1700Neo()
-    
-    shtGuiAfspraken1700.Select
-
-End Sub
-
-Sub gaNaarMedicatieIV()
-    
-    shtGuiMedicatieIV.Select
-
-End Sub
-
-Sub gaNaarMedicatieOverig()
-    
-    shtGuiMedDisc.Select
-
-End Sub
-
 Public Sub NieuwePatient()
 
+    Dim frmPatient As New FormPatient
+    
     frmPatient.Show
+    
+    Set frmPatient = Nothing
 
 End Sub
 
 Public Sub PatientenLijst()
 
+    Dim frmPatLijst As New FormPatLijst
+
     frmPatLijst.Show
+    
+    Set frmPatLijst = Nothing
 
 End Sub
 
-Public Function PuPatientSave() As Boolean
+Public Function SavePatient() As Boolean
 
     Dim intN As Integer
     
@@ -69,52 +35,29 @@ Public Function PuPatientSave() As Boolean
         Next intN
     End With
     
+    SavePatient = True
+    
 Hell:
     Resume Next
 End Function
 
-Public Sub gaNaarAfspraakBlad()
+Public Sub ClearPatient(blnShowWarn As Boolean)
     
-    shtPrtAfspraken.Select
-    
-End Sub
-
-Public Sub gaNaarAanvullendeAfspraken()
-    
-    shtAanvullendeAfsprakenPed.Select
-    
-End Sub
-
-Public Sub gaNaarAanvullendeAfsprakenNeo()
-    
-    shtAanvullendeAfspraken.Select
-    
-End Sub
-
-Public Sub clearPat(showWarning As Boolean)
-    
-    Dim intN As Integer, vResp As Variant
+    Dim intN As Integer, objResult As VbMsgBoxResult
             
-    If showWarning Then
-        vResp = MsgBox("Afspraken echt verwijderen?", vbYesNo, "Informedica")
+    If blnShowWarn Then
+        objResult = MsgBox("Afspraken echt verwijderen?", vbYesNo, "Informedica")
     Else
-        vResp = vbYes
+        objResult = vbYes
     End If
     
-    If vResp = vbYes Then
+    If objResult = vbYes Then
         Application.Cursor = xlWait
         With shtPatData
             For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
                 Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 3).Formula
             Next intN
         End With
-'        With shtPatienten
-'            For i = 2 To .Range("A1").CurrentRegion.Rows.Count
-'                On Error Resume Next
-'                If Not i = 4 Then _
-'                    Range(.Cells(i, 1).Value).Formula = .Cells(i, 3).Formula
-'            Next i
-'        End With
         VerwijderLab
         VerwijderAanvullendeAfspraken
         Application.Cursor = xlDefault
@@ -123,7 +66,6 @@ Public Sub clearPat(showWarning As Boolean)
     Range("AfspraakDatum").FormulaLocal = "=Vandaag()"
     SetApplTitle
     
-    Exit Sub
 End Sub
 
 Public Sub StandaardInstellingen()
@@ -196,69 +138,38 @@ Resume Next
 
 End Sub
 
-Public Sub gaNaarAcuteOpvang()
+Public Sub SelectPedTPNPrint()
 
-    shtGuiAcuteOpvang.Select
-    
-End Sub
-
-Public Sub gaNaarAcuteOpvangNeo()
-
-    shtGuiAcuteOpvangNeo.Select
-    
-End Sub
-
-Public Sub gaNaarMedicatie()
-
-    shtPrtMedicatie.Select
-
-End Sub
-
-Public Sub gaNaarMedicatieNeo()
-
-    shtPrtMedicatieNeo.Select
-
-End Sub
-
-Public Sub gaNaarTPNblad()
-'    BAXA = True
-'
-'    If BAXA Then
-        If Val(Range("Gewicht").Text) / 10 >= CONST_TPN_1 _
-        And Val(Range("Gewicht").Text) / 10 <= CONST_TPN_2 Then
-            shtPrtTPN2tot6kg.Select
+        If Val(Range("Gewicht").Text) / 10 >= CONST_TPN_1 And Val(Range("Gewicht").Text) / 10 <= CONST_TPN_2 Then
+            shtPedPrtTPN2tot6.Select
         Else
             If Val(Range("Gewicht").Text) / 10 <= CONST_TPN_3 Then
-                shtPrtTPN7tot15kg.Select
+                shtPedPrtTPN7tot15.Select
             Else
                 If Val(Range("Gewicht").Text) / 10 <= CONST_TPN_4 Then
-                    shtPrtTPN16tot30kg.Select
+                    shtPedPrtTPN16tot30.Select
                 Else
                     If Val(Range("Gewicht").Text) / 10 <= CONST_TPN_5 Then
-                        shtPrtTPN31tot50kg.Select
+                        shtPedPrtTPN31tot50.Select
                     Else
-                        shtPrtTPNboven50kg.Select
+                        shtPedPrtTPN50.Select
                     End If
                 End If
             End If
         End If
-'    Else
-'
-'        If Val(Range("Gewicht").Text) / 10 < 12 Then
-'            'shtTPN2tot11kg.Select
-'        Else
-'            'shtTPN12tot30kg.Select
-'        End If
-'    End If
-    
+        
     Range("A1").Select
 
 End Sub
 
-Public Sub MePrintAfspraken()
+Public Sub SaveAndPrintAfspraken()
 
-    BeSluitBed
+    Dim frmPrintAfspraken As New FormPrintAfspraken
+    
+    ModBedden.SluitBed
     frmPrintAfspraken.Show
+    
+    Set frmPrintAfspraken = Nothing
     
 End Sub
 
@@ -270,8 +181,12 @@ Public Sub AfsprakenVerw()
 End Sub
 
 Public Sub SpecialeVoeding()
+    
+    Dim frmSpecialeVoeding As New FormSpecialeVoeding
 
     frmSpecialeVoeding.Show
+    
+    Set frmSpecialeVoeding = Nothing
 
 End Sub
 
@@ -281,7 +196,7 @@ Public Sub SelectTPN()
 
     dblGewicht = shtPatDetails.Range("Gewicht").Value / 10
 
-    With shtBerTPN
+    With shtPedBerTPN
         If dblGewicht >= 2 And dblGewicht < 7 Then
             .Range("tpnB").Copy
         ElseIf dblGewicht >= 7 And dblGewicht < 15 Then
@@ -300,73 +215,31 @@ Public Sub SelectTPN()
     
 End Sub
 
-Public Sub gaNaarContinueMedicatie()
-
-    shtPrtAfspraken.Select
-    Range("b81").Select
-    
-End Sub
-
-Public Sub gaNaarInfuusBeleid()
-
-    shtPrtAfspraken.Select
-    Range("b70").Select
-    
-End Sub
-
-Public Sub gaNaarAanvullende()
-
-    shtPrtAfspraken.Select
-    Range("b41").Select
-    
-End Sub
-
-Public Sub gaNaarVoeding()
-
-    shtPrtAfspraken.Select
-    Range("b31").Select
-    
-End Sub
-
-Public Sub gaNaarTPN()
-
-    shtPrtAfspraken.Select
-    Range("b98").Select
-
-End Sub
-
-Public Sub gaNaarLaboratorium()
-
-    shtPrtAfspraken.Select
-    Range("b39").Select
-
-End Sub
-
 Public Sub VerwijderLab()
-    shtBerLab.Unprotect CONST_PASSWORD
-    shtBerLab.visible = xlSheetVisible
+    shtPedBerLab.Unprotect CONST_PASSWORD
+    shtPedBerLab.Visible = xlSheetVisible
     Application.GoTo Reference:=CONST_LABDATA
     Selection.ClearContents
     
     If Not BlnIsDevelopment Then
-        shtBerLab.visible = xlSheetVeryHidden
-        shtBerLab.Protect CONST_PASSWORD
+        shtPedBerLab.Visible = xlSheetVeryHidden
+        shtPedBerLab.Protect CONST_PASSWORD
     End If
     
-    shtBerLabNeo.Unprotect CONST_PASSWORD
-    shtBerLabNeo.visible = xlSheetVisible
+    shtNeoBerLab.Unprotect CONST_PASSWORD
+    shtNeoBerLab.Visible = xlSheetVisible
     Application.GoTo Reference:=CONST_LABDATA_NEO
     Selection.ClearContents
     
     If Not BlnIsDevelopment Then
-        shtBerLabNeo.visible = xlSheetVeryHidden
-        shtBerLabNeo.Protect CONST_PASSWORD
+        shtNeoBerLab.Visible = xlSheetVeryHidden
+        shtNeoBerLab.Protect CONST_PASSWORD
     End If
 End Sub
 
 Public Sub VerwijderAanvullendeAfspraken()
-    shtAanvullendeBer.Unprotect CONST_PASSWORD
-    shtAanvullendeBer.visible = xlSheetVisible
+    shtNeoBerAfspr.Unprotect CONST_PASSWORD
+    shtNeoBerAfspr.Visible = xlSheetVisible
     Application.GoTo Reference:=CONST_AANVULLEND_BOOLEANS
     Selection.ClearContents
     Application.GoTo Reference:=CONST_AANVULLEND_DATA
@@ -375,20 +248,20 @@ Public Sub VerwijderAanvullendeAfspraken()
     Selection.Value = 50
     
     If Not BlnIsDevelopment Then
-        shtAanvullendeBer.visible = xlSheetVeryHidden
-        shtAanvullendeBer.Protect CONST_PASSWORD
+        shtNeoBerAfspr.Visible = xlSheetVeryHidden
+        shtNeoBerAfspr.Protect CONST_PASSWORD
     End If
 
-    shtAanvullendeBerPed.Unprotect CONST_PASSWORD
-    shtAanvullendeBerPed.visible = xlSheetVisible
+    shtPedBerExtraAfspr.Unprotect CONST_PASSWORD
+    shtPedBerExtraAfspr.Visible = xlSheetVisible
     Application.GoTo Reference:=CONST_AANVULLEND_BOOLEANS_PED
     Selection.ClearContents
     Application.GoTo Reference:=CONST_AANVULLEND_DATA_PED
     Selection.ClearContents
     
     If Not BlnIsDevelopment Then
-        shtAanvullendeBerPed.visible = xlSheetVeryHidden
-        shtAanvullendeBerPed.Protect CONST_PASSWORD
+        shtPedBerExtraAfspr.Visible = xlSheetVeryHidden
+        shtPedBerExtraAfspr.Protect CONST_PASSWORD
     End If
 End Sub
 
@@ -739,21 +612,21 @@ End Sub
 
 Public Sub AfsprakenPrinten()
 
-    shtPrint.PrintPreview
+    shtNeoPrtAfspr.PrintPreview
 
 End Sub
 
 Public Sub WerkBriefPrinten()
         
-    With shtGuiWerkBrief
-        .Unprotect ModGlobal.CONST_PASSWORD
+    With shtNeoPrtWerkbr
+        .Unprotect ModConst.CONST_PASSWORD
         .PrintPreview
-        .Protect ModGlobal.CONST_PASSWORD
+        .Protect ModConst.CONST_PASSWORD
     End With
 
 End Sub
 
-Public Sub clearPat2()
+Public Sub ClearPat2()
     'TODO: Samenvoegen met clearPat
     Dim i As Integer, vResp As Variant
     Dim shtPatienten As Worksheet
@@ -796,7 +669,7 @@ On Error GoTo Hell:
 '   Werkbalken weer herstellen
     For nPiTeller = 1 To Toolbars.Count
         If shtTemp.Cells(20, nPiTeller).Value Then
-            Toolbars(nPiTeller).visible = True
+            Toolbars(nPiTeller).Visible = True
         End If
     Next nPiTeller
 
@@ -813,7 +686,7 @@ On Error GoTo Hell:
         .DisplayWorkbookTabs = True
     End With
  
-    Toolbars("Afspraken").visible = False
+    Toolbars("Afspraken").Visible = False
     
     With Application
          .Caption = vbNullString
@@ -883,7 +756,7 @@ Sub Openen2()
 
 End Sub
 
-Public Sub BeSluitBed2()
+Public Sub SluitBed2()
 'TODO: Samenvoegen met BeSluitBed
 ''''    Dim sFileName As String, sBookName As String, sRange As String, sBed As String
 ''''    Dim sPrompt As String, vReply As Variant
@@ -943,31 +816,8 @@ Public Sub SetApplTitle()
 
 End Sub
 
-Public Sub GaNaarAfspraken()
-
-    shtGuiAfspraken.Select
-
-End Sub
-
-Public Sub GaNaarPrint()
-
-    shtPrint.Select
-
-End Sub
-
-Public Sub GaNaarWerkBrief()
-
-    shtGuiWerkBrief.Select
-
-End Sub
-
-Public Sub GaNaarApotheek()
-
-    shtApotheek.Select
-
-End Sub
-
 Public Sub TPNAdviesNEO()
+
     Range("_DagKeuze").Value = IIf(Range("Dag").Value < 4, 1, 2)
     Range("_IntakePerKg").Value = 5000
     Range("_IntraLipid").Value = 5000
@@ -980,7 +830,23 @@ Public Sub TPNAdviesNEO()
     Range("_NICUMix").Value = 5000
     Range("_SSTB").Value = 5000
     
-    GaNaarAfspraken
-    Range("A9").Select
+    ModSheets.GoToSheet shtNeoGuiAfspraken, "A9"
+
+End Sub
+
+' Shows the frmNaamGeven to give a range a
+' sequential naming of "Name_" + a number
+' When runnig this from the visual basic editor
+' it works as expected. When running from the ribbon
+' menu, the selection in the sheet is not visible.
+' But it works as otherwise.
+Public Sub GiveNameToRange()
+
+    Dim frmNaamGeven As New FormNaamGeven
+    
+    frmNaamGeven.Show vbModal
+    
+    Set frmNaamGeven = Nothing
+
 End Sub
 

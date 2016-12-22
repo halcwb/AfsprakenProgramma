@@ -19,6 +19,7 @@ Sub SetTablePerOs()
 End Sub
 
 Sub SetTablePoeder()
+
     Dim intStart As Integer
     Dim intEnd As Integer
     Dim strRange As String
@@ -31,10 +32,12 @@ Sub SetTablePoeder()
     
     strRange = "=tblPO!R" & intStart & "C3:R" & intEnd - 1 & "C12"
     ActiveWorkbook.Names.Add Name:=strNamedRangeTablePoeder, RefersToR1C1:=strRange
+    
 End Sub
 
 Function GetRow(sheetName As String, searchString As String)
-Dim currentRow As Integer
+
+    Dim currentRow As Integer
 
     Sheets(sheetName).Select
     currentRow = 1
@@ -44,8 +47,8 @@ Dim currentRow As Integer
     Loop
     
     GetRow = currentRow
+    
 End Function
-
 
 Public Sub TestNamedRange()
 
@@ -62,6 +65,5 @@ Public Sub TestNamedRange()
         MsgBox intN & ". " & objName.Name, vbOKOnly
     
     Next objName
-    
 
 End Sub

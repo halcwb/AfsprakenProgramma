@@ -7,29 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-'=============================================================
-' Program      :    Afspraken programma
-'
-' Filename     :    N/A
-'
-' Module Name  :    N/A
-'
-' Author       :    C.W. Bollen
-'                   Informedica
-'
-' Date         :    2000
-'
-' Description  :    Roept de procedures aan voor het openen en afsluiten
-'                   van het afspraken programma
-'
-' Revision History
-'
-' 16-feb-2001 C.W. Bollen
-' Naming conventions toegepast. Opmaak aangepast
-'=============================================================
-
 Option Explicit
-
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
     
@@ -38,16 +16,18 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
 End Sub
 
 Private Sub Workbook_Open()
+    
     SetDeveloperMode
 '    frmTimerForm.Show
 '    frmTimerForm.Hide
-    OpenStartSheet
+    SelectPedOrNeoStartSheet
     
     Application.ScreenUpdating = False
     
     Openen                          'Mopenen
     
-    OpenStartSheet
+    SelectPedOrNeoStartSheet
     
     Application.ScreenUpdating = True
+    
 End Sub

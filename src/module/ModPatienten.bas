@@ -4,13 +4,14 @@ Option Explicit
 Private colPiPatienten As Collection
 Private intCount As Integer
 
-Public Sub PaPatientenLijst()
+Public Sub OpenPatientLijst()
     
     Dim strIndex As String
+    Dim frmPatLijst As New FormPatLijst
     
     Set colPiPatienten = New Collection
     
-    Set colPiPatienten = oPuPatientenCollectie
+    Set colPiPatienten = GetPatients
     
     With frmPatLijst
         Application.Cursor = xlWait
@@ -23,14 +24,15 @@ Public Sub PaPatientenLijst()
         If .lstPatienten.ListIndex > -1 Then
             Application.Cursor = xlWait
             strIndex = VBA.Left$(.lstPatienten.Text, CONST_BEDNAME_LENGTH)
-            Call BeOpenenBed(strIndex)
+            ModBedden.OpenBed strIndex
             Application.Cursor = xlDefault
         End If
         .lstPatienten.Clear
     End With
     
     Set colPiPatienten = Nothing
+    Set frmPatLijst = Nothing
     
-    OpenStartSheet
+    SelectPedOrNeoStartSheet
     
 End Sub

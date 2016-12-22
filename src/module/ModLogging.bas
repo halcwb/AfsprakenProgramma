@@ -43,7 +43,7 @@ End Function
 Public Sub LogTest(enmLevel As LogLevel, strMsg As String)
     Dim strFile As String
 
-    strFile = ModGlobal.GetAfsprakenProgramFilePath() + ModGlobal.CONST_TEST_CONST_LOGPATH
+    strFile = ModConst.GetAfsprakenProgramFilePath() + ModConst.CONST_TEST_CONST_LOGPATH
     ModLogging.LogToFile strFile, enmLevel, strMsg
     
 End Sub
@@ -54,7 +54,7 @@ Public Sub LogActionStart(strAction As String, strParams() As Variant)
 
     strMsg = "Begin " + strAction + ": " + Join(strParams, ", ")
 
-    strFile = ModGlobal.GetAfsprakenProgramFilePath() + ModGlobal.CONST_LOGPATH
+    strFile = ModConst.GetAfsprakenProgramFilePath() + ModConst.CONST_LOGPATH
     LogToFile strFile, Info, strMsg
     
 End Sub
@@ -65,7 +65,7 @@ Public Sub LogActionEnd(strAction As String)
 
     strMsg = "End " + strAction
 
-    strFile = ModGlobal.GetAfsprakenProgramFilePath() + ModGlobal.CONST_LOGPATH
+    strFile = ModConst.GetAfsprakenProgramFilePath() + ModConst.CONST_LOGPATH
     LogToFile strFile, Info, strMsg
     
 End Sub

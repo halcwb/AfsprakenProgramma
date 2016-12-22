@@ -8,23 +8,20 @@ Public blnDontClose As Boolean
 Public Sub SetToDevelopmentMode()
 
     Dim objSheet As Worksheet
-    Dim colSheets As Collection
     
     blnDontClose = True
         
-    InterfaceSheetsUnprotect
-    UnhideNonUserInterfaceSheets
+    ModSheets.UnprotectUserInterfaceSheets
+    ModSheets.UnhideNonUserInterfaceSheets
     
     Application.DisplayFormulaBar = True
     
-    Set colSheets = GetNonInterfaceSheets()
-    For Each objSheet In colSheets
+    For Each objSheet In ModSheets.GetNonInterfaceSheets()
         objSheet.Activate
         SetWindowToClose Windows(1)
     Next
     
-    Set colSheets = GetUserInterfaceSheets()
-    For Each objSheet In colSheets
+    For Each objSheet In ModSheets.GetUserInterfaceSheets()
         objSheet.Activate
         SetWindowToClose Windows(1)
     Next
@@ -41,7 +38,8 @@ Public Sub Afsluiten()
     Dim strAction As String, strParams() As Variant
     strAction = "Afsluiten"
     strParams = Array()
-    LogActionStart strAction, strParams
+    
+    ModLogging.LogActionStart strAction, strParams
     
     Dim objWindow As Window
 
@@ -52,7 +50,7 @@ Public Sub Afsluiten()
         SetWindowToClose objWindow
     Next
  
-    Toolbars("Afspraken").visible = False
+    Toolbars("Afspraken").Visible = False
     
     With Application
          .Caption = vbNullString
@@ -61,7 +59,7 @@ Public Sub Afsluiten()
          If Not blnDontClose Then .Quit
     End With
     
-    LogActionEnd "Afsluiten"
+    ModLogging.LogActionEnd "Afsluiten"
             
 End Sub
 
@@ -103,18 +101,19 @@ Attribute Openen.VB_ProcData.VB_Invoke_Func = " \n14"
     Dim strAction As String, strParams() As Variant
     strAction = "Openen"
     strParams = Array()
-    LogActionStart strAction, strParams
+    
+    ModLogging.LogActionStart strAction, strParams
     
     Dim objWindow As Window
     
     Application.Cursor = xlWait
     Workbooks(CONST_WORKBOOKNAME).Activate
 
-    ProtectUserInterfaceSheets
-    HideAndUnProtectNonUserInterfaceSheets
+    ModSheets.ProtectUserInterfaceSheets
+    ModSheets.HideAndUnProtectNonUserInterfaceSheets
 
 '   Knoppen en balken verwijderen
-    HideBars
+    SetCaptionHideBars
     ActiveWindow.DisplayWorkbookTabs = BlnIsDevelopment
 
     For Each objWindow In Application.Windows
@@ -126,7 +125,7 @@ Attribute Openen.VB_ProcData.VB_Invoke_Func = " \n14"
     Range("AfspraakDatum").FormulaLocal = "=Vandaag()"
     
 '   verwijder afspraken
-    shtGuiAcuteOpvang.Unprotect CONST_PASSWORD 'ICT2014
+    shtPedGuiAcuut.Unprotect CONST_PASSWORD 'ICT2014
     
     With shtPatData
             
@@ -138,182 +137,18 @@ Attribute Openen.VB_ProcData.VB_Invoke_Func = " \n14"
     
     Range("AfsprakenVersie").Value = vbNullString
     
-    shtGuiAcuteOpvang.Protect CONST_PASSWORD 'ICT2014
-    shtGuiAcuteOpvang.Activate
+    shtPedGuiAcuut.Protect CONST_PASSWORD 'ICT2014
+    shtPedGuiAcuut.Activate
     
     BlnEnableDevelop = False
     
     Application.Cursor = xlDefault
     
-    LogActionEnd "Openen"
+    ModLogging.LogActionEnd "Openen"
 
 End Sub
 
-Private Sub InterfaceSheetsUnprotect()
-            
-    Dim col As New Collection, intCount As Integer
-        
-    Set col = GetUserInterfaceSheets()
-    
-    For intCount = 1 To col.Count
-    
-        With col(intCount)
-            .EnableSelection = xlNoRestrictions
-            .Unprotect PASSWORD:=CONST_PASSWORD
-       End With
-       
-    Next intCount
-
-    Set col = Nothing
-
-End Sub
-
-Private Sub ProtectUserInterfaceSheets()
-            
-    Dim col As New Collection, intCount As Integer
-        
-    Set col = GetUserInterfaceSheets()
-    
-    For intCount = 1 To col.Count
-    
-        With col(intCount)
-            .EnableSelection = xlNoSelection
-            .Protect PASSWORD:=CONST_PASSWORD
-            .DisplayPageBreaks = False
-       End With
-       
-    Next intCount
-
-    Set col = Nothing
-
-End Sub
-
-' Get all sheets that act as a User Interface
-' Must be visible and protected
-Public Function GetUserInterfaceSheets() As Collection
-'TODO: Update list of Interface sheets
-    Dim col As New Collection
-        
-    With col
-        .Add Item:=shtGuiAcuteOpvang
-        .Add Item:=shtGuiInfusen
-        .Add Item:=shtGuiIntake
-        .Add Item:=shtGuiLab
-        .Add Item:=shtGuiMedDisc
-        .Add Item:=shtGuiMedicatieIV
-        .Add Item:=shtPrtAfspraken
-        .Add Item:=shtPrtMedicatie
-        .Add Item:=shtPrtTPN16tot30kg
-        .Add Item:=shtPrtTPN2tot6kg
-        .Add Item:=shtPrtTPN31tot50kg
-        .Add Item:=shtPrtTPN7tot15kg
-        .Add Item:=shtPrtTPNboven50kg
-    
-        .Add Item:=shtAanvullendeAfspraken
-        .Add Item:=shtAanvullendeAfsprakenPed
-        .Add Item:=shtGuiAfspraken
-        .Add Item:=shtGuiAfspraken1700
-        .Add Item:=shtApotheek
-        .Add Item:=shtGuiAcuteOpvangNeo
-        .Add Item:=shtGuiLabNeo
-        .Add Item:=shtPrint
-        .Add Item:=shtGuiWerkBrief
-    
-    End With
-    
-    Set GetUserInterfaceSheets = col
-
-End Function
-
-' Get all sheets that do work and are not User Interface
-' Must be hidden and not protected
-Public Function GetNonInterfaceSheets() As Collection
-'TODO: Update list of Calculation sheets
-
-    Dim col As New Collection
-    
-    With col
-        .Add Item:=shtBerConversie
-        .Add Item:=shtBerInfusen
-        .Add Item:=shtBerIVMed
-        .Add Item:=shtBerLab
-        .Add Item:=shtBerMedDisc
-        .Add Item:=shtBerNormaal
-        .Add Item:=shtBerOpm
-        .Add Item:=shtBerPO
-        .Add Item:=shtBerTemp
-        .Add Item:=shtBerTijden
-        .Add Item:=shtBerTotalen
-        .Add Item:=shtBerTPN
-        .Add Item:=shtPatAfsprakenTekst
-        .Add Item:=shtPatDetails
-        .Add Item:=shtPatData
-        .Add Item:=shtTblHeightNL
-        .Add Item:=shtTblWeigthNL
-        .Add Item:=shtBerTijdenNeo
-        .Add Item:=shtTblMedDisc
-        .Add Item:=shtTblInfusen
-    
-        .Add Item:=shtTblMedicatieIV
-        .Add Item:=shtTblMedicatieIVNeo
-        .Add Item:=shtTblTPOSheet1
-        .Add Item:=shtBerekeningen
-        .Add Item:=shtBerekeningen1700
-        .Add Item:=shtBerLabNeo
-        .Add Item:=shtAanvullendeTbl
-        .Add Item:=shtAanvullendeBer
-        .Add Item:=shtAanvullendeBerPed
-        .Add Item:=shtAdvies
-        .Add Item:=shtLijsten
-        .Add Item:=shtTblTPOSheet1
-        .Add Item:=shtTblVoeding
-        
-        .Add Item:=shtDivPediatrie
-        .Add Item:=shtDivNeo
-        .Add Item:=shtDivPatient
-        .Add Item:=shtWerkBriefActueel
-        
-        
-    End With
-
-    Set GetNonInterfaceSheets = col
-
-End Function
-
-Private Sub HideAndUnProtectNonUserInterfaceSheets()
-
-    Dim col As New Collection
-    
-    Set col = GetNonInterfaceSheets()
-    
-    For intCount = 1 To col.Count
-        With col(intCount)
-            .visible = xlVeryHidden
-            .Unprotect PASSWORD:=CONST_PASSWORD
-        End With
-    Next intCount
-
-    Set col = Nothing
-
-End Sub
-
-Private Sub UnhideNonUserInterfaceSheets()
-
-    Dim col As New Collection
-    
-    Set col = GetNonInterfaceSheets()
-    
-    For intCount = 1 To col.Count
-        With col(intCount)
-            .visible = True
-        End With
-    Next intCount
-
-    Set col = Nothing
-
-End Sub
-
-Sub HideBars()
+Private Sub SetCaptionHideBars()
 '   Knoppen en balken verwijderen
     With Application
          .Caption = "Informedica 2015 Afspraken programma"
@@ -322,53 +157,46 @@ Sub HideBars()
          .DisplayScrollBars = True
          .DisplayFormulaBar = BlnIsDevelopment
     End With
+    
 End Sub
 
 ' Determine the sheet to open with
-' If peli or developper then shtGUIMedicatieIV
-' Else shtAfspraken
-Sub OpenStartSheet()
+' If peli or developper then ped sheet
+' Else neo sheet
+Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet)
 
     Dim strPath As String
     Dim strPeli As String
 
-    SetDeveloperMode
+    ModConst.SetDeveloperMode
     
     strPath = Application.ActiveWorkbook.Path
-    strPeli = ModGlobal.CONST_PELI_FOLDERNAME
+    strPeli = ModConst.CONST_PELI_FOLDERNAME
     
     If ModString.StringContainsCaseInsensitive(strPath, strPeli) Or BlnIsDevelopment Then
-        shtGuiMedicatieIV.Select
+        shtPed.Select
     Else
-        shtGuiAfspraken.Select
+        shtNeo.Select
     End If
     
 End Sub
 
-Sub OpenLabSheet()
-Dim strPath As String
+Public Sub SelectPedOrNeoStartSheet()
 
-    SetDeveloperMode
+    SelectNeoOrPedSheet shtPedGuiMedIV, shtNeoGuiAfspraken
     
-    strPath = LCase(Application.ActiveWorkbook.Path)
-    If InStr(1, strPath, LCase(CONST_PELI_FOLDERNAME)) > 0 Or BlnIsDevelopment > 0 Then
-        shtGuiLab.Select
-    Else
-        shtGuiLabNeo.Select
-    End If
 End Sub
 
-Sub OpenAanvullendeSheet()
-Dim strPath As String
-
-    SetDeveloperMode
+Public Sub SelectPedOrNeoLabSheet()
     
-    strPath = LCase(Application.ActiveWorkbook.Path)
-    If InStr(1, strPath, LCase(CONST_PELI_FOLDERNAME)) > 0 Or BlnIsDevelopment > 0 Then
-        shtAanvullendeAfsprakenPed.Select
-    Else
-        shtAanvullendeAfspraken.Select
-    End If
+    SelectNeoOrPedSheet shtPedGuiLab, shtNeoGuiLab
+        
+End Sub
+
+Public Sub SelectPedOrNeoAfsprExtraSheet()
+    
+    SelectNeoOrPedSheet shtPedGuiAfsprExta, shtNeoGuiAfsprExtra
+        
 End Sub
 
 

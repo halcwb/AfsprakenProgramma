@@ -1,0 +1,165 @@
+"$B$1: 	=IF(E60<0,""Te weinig volume voor TPN!"","""")
+$C$3: 	=ROUND(NeoBer1700!L50/_Gewicht,0)&"" ml/kg""
+$D$3: 	=ROUND(NeoBer1700!L49/_Gewicht,0)&"" ml/kg""
+$E$3: 	=ROUND(NeoBer1700!L47/_Gewicht,0)&"" ml/kg  ""&""= ""&ROUND(NeoBer1700!L47,0)&"" ml""
+$H$3: 	=ROUND(NeoBer1700!M50/_Gewicht,1)&"" mmol/kg""
+$I$3: 	=ROUND(NeoBer1700!M49/_Gewicht,1)&"" mmol/kg""
+$J$3: 	=ROUND(NeoBer1700!M47/_Gewicht,1)&"" mmol/kg""
+$C$4: 	=ROUND(NeoBer1700!R50/_Gewicht,1)&"" g/kg""
+$D$4: 	=ROUND(NeoBer1700!R49/_Gewicht,1)&"" g/kg""
+$E$4: 	=ROUND(NeoBer1700!R47/_Gewicht,1)&"" g/kg""
+$H$4: 	=ROUND(NeoBer1700!N50/_Gewicht,1)&"" mmol/kg""
+$I$4: 	=ROUND(NeoBer1700!N49/_Gewicht,1)&"" mmol/kg""
+$J$4: 	=ROUND(NeoBer1700!N47/_Gewicht,1)&"" mmol/kg""
+$C$5: 	=ROUND(NeoBer1700!T50/_Gewicht,1)&"" g/kg""
+$D$5: 	=ROUND(NeoBer1700!T49/_Gewicht,1)&"" g/kg""
+$E$5: 	=ROUND(NeoBer1700!T47/_Gewicht,1)&"" g/kg""
+$H$5: 	=ROUND(NeoBer1700!O50/_Gewicht,1)&"" mmol/kg""
+$I$5: 	=ROUND(NeoBer1700!O49/_Gewicht,1)&"" mmol/kg""
+$J$5: 	=ROUND(NeoBer1700!O47/_Gewicht,1)&"" mmol/kg""
+$C$6: 	=ROUND(1000*NeoBer1700!S50/_Gewicht/1440,1)&"" mg/kg/min""
+$D$6: 	=ROUND(1000*NeoBer1700!S49/_Gewicht/1440,1)&"" mg/kg/min""
+$E$6: 	=ROUND(1000*NeoBer1700!S47/_Gewicht/1440,1)&"" mg/kg/min""
+$H$6: 	=ROUND(NeoBer1700!P50/_Gewicht,1)&"" mmol/kg""
+$I$6: 	=ROUND(NeoBer1700!P49/_Gewicht,1)&"" mmol/kg""
+$J$6: 	=ROUND(NeoBer1700!P47/_Gewicht,1)&"" mmol/kg""
+$C$7: 	=ROUND(NeoBer1700!U50/_Gewicht,1)& "" kcal/kg""
+$D$7: 	=ROUND(NeoBer1700!U49/_Gewicht,1)& "" kcal/kg""
+$E$7: 	=ROUND(NeoBer1700!U47/_Gewicht,1)& "" kcal/kg""
+$H$7: 	=ROUND(NeoBer1700!V50/_Gewicht,1)&"" mmol/kg""
+$I$7: 	=ROUND(NeoBer1700!V49/_Gewicht,1)&"" mmol/kg""
+$J$7: 	=ROUND(NeoBer1700!V47/_Gewicht,1)&"" mmol/kg""
+$C$8: 	=ROUND(NeoBer1700!W50,0)& "" IE/ml""
+$D$8: 	=ROUND(NeoBer1700!W49,0)& "" IE/ml""
+$E$8: 	=ROUND(NeoBer1700!W47,0)& "" IE/ml""
+$H$8: 	=ROUND(NeoBer1700!Q50/_Gewicht,1)&"" mmol/kg""
+$I$8: 	=ROUND(NeoBer1700!Q49/_Gewicht,1)&"" mmol/kg""
+$J$8: 	=ROUND(NeoBer1700!Q47/_Gewicht,1)&"" mmol/kg""
+$I$10: 	=PatNummer
+$I$11: 	=_AchterNaam &"",  ""&_VoorNaam
+$I$12: 	=NeoBer1700!B3-NeoBer1700!C3
+$J$12: 	=""=dag ""&NeoBer1700!B6
+$H$13: 	=NeoBerIV!D4
+$J$13: 	=NeoBerIV!D5
+$C$14: 	=NeoBer1700!B5
+$C$15: 	=BedNummer
+$H$15: 	=TRUNC((H13*7+J13+NeoBer1700!B6-1)/7)&"" weken en ""& H13*7+J13+NeoBer1700!B6-1-TRUNC((H13*7+J13+NeoBer1700!B6-1)/7)*7&"" dag(-en)""
+$H$16: 	=NeoBerIV!B4&"" kg""
+$E$18: 	=IF(NeoBer1700!B17,NeoBer1700!C16,ROUND(NeoBer1700!L47/_Gewicht,1))
+$K$18: 	=ROUND(NeoBer1700!B16,0)&"" ml/ kg/ 24 uur""
+$E$21: 	=IF(_Voeding1700>1,NeoBer1700!D10,"""")
+$G$21: 	=IF(_Voeding1700>1,NeoBer1700!D11/10&"" ml"","""")
+$E$22: 	=IF(_Voeding1700>1,NeoBer1700!D12,"""")
+$G$22: 	=IF(_Voeding1700>1,NeoBer1700!D13/10&"" ml"","""")
+$K$23: 	=INDEX(_VoedingBMFWaarden,NeoBer1700!L52)&"" %""
+$K$24: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L53)&"" %""
+$O$24: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L58)&"" %""
+$K$25: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L54)&"" %""
+$O$25: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L59)&"" %""
+$K$26: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L55)&"" %""
+$O$26: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L60)&"" %""
+$K$27: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L56)&"" %""
+$O$27: 	=INDEX(_VoedingToevoegingenWaarden,NeoBer1700!L61)&"" %""
+$E$28: 	=IF(NeoBer1700!B17,NeoBer1700!C17,NeoBer1700!L50)
+$G$30: 	=NeoBer1700!B18/10&"" ml/uur""
+$C$32: 	=IF(NeoBer1700!C20>0,IF(NeoBer1700!B20<>5,NeoBer1700!C20/10&"" mg"",NeoBer1700!C20/10&"" ml""),"""")
+$D$32: 	=IF(NeoBer1700!D20>0,""in ""&NeoBer1700!D20&"" ml"","""")
+$G$32: 	=IF(NeoBer1700!F20/10>0,NeoBer1700!F20/10&"" ml/uur"","""")
+$H$32: 	=IF(AND(NeoBer1700!I20>0),ROUND(NeoBer1700!I20,2),"""")
+$I$32: 	=IF(_Medicament1700_1>1,INDEX(Medicamenten,NeoBer1700!B20,6),"""")
+$K$32: 	=INDEX(Medicamenten,NeoBer1700!B20,2)
+$N$32: 	=IF(NeoBer1700!I20>0,IF(NeoBer1700!Y20*10>1,NeoBer1700!X20&"" uren"",NeoBer1700!X20&"" minuten""),"""")
+$C$33: 	=IF(NeoBer1700!C21>0,NeoBer1700!C21/10&"" mg"","""")
+$D$33: 	=IF(NeoBer1700!D21>0,""in ""&NeoBer1700!D21&"" ml"","""")
+$G$33: 	=IF(NeoBer1700!F21/10>0,NeoBer1700!F21/10&"" ml/uur"","""")
+$H$33: 	=IF(AND(NeoBer1700!I21>0),ROUND(NeoBer1700!I21,2),"""")
+$I$33: 	=IF(_Medicament1700_2>1,INDEX(Medicamenten,NeoBer1700!B21,6),"""")
+$K$33: 	=INDEX(Medicamenten,NeoBer1700!B21,2)
+$N$33: 	=IF(NeoBer1700!I21>0,IF(NeoBer1700!Y21*10>1,NeoBer1700!X21&"" uren"",NeoBer1700!X21&"" minuten""),"""")
+$C$34: 	=IF(NeoBer1700!C22>0,NeoBer1700!C22/10&"" mg"","""")
+$D$34: 	=IF(NeoBer1700!D22>0,""in ""&NeoBer1700!D22&"" ml"","""")
+$G$34: 	=IF(NeoBer1700!F22/10>0,NeoBer1700!F22/10&"" ml/uur"","""")
+$H$34: 	=IF(AND(NeoBer1700!I22>0),ROUND(NeoBer1700!I22,2),"""")
+$I$34: 	=IF(_Medicament1700_3>1,INDEX(Medicamenten,NeoBer1700!B22,6),"""")
+$K$34: 	=INDEX(Medicamenten,NeoBer1700!B22,2)
+$N$34: 	=IF(NeoBer1700!I22>0,IF(NeoBer1700!Y22*10>1,NeoBer1700!X22&"" uren"",NeoBer1700!X22&"" minuten""),"""")
+$C$35: 	=IF(NeoBer1700!C23>0,NeoBer1700!C23/10&"" mg"","""")
+$D$35: 	=IF(NeoBer1700!D23>0,""in ""&NeoBer1700!D23&"" ml"","""")
+$G$35: 	=IF(NeoBer1700!F23/10>0,NeoBer1700!F23/10&"" ml/uur"","""")
+$H$35: 	=IF(AND(NeoBer1700!I23>0),ROUND(NeoBer1700!I23,2),"""")
+$I$35: 	=IF(_Medicament1700_4>1,INDEX(Medicamenten,NeoBer1700!B23,6),"""")
+$K$35: 	=INDEX(Medicamenten,NeoBer1700!B23,2)
+$N$35: 	=IF(NeoBer1700!I23>0,IF(NeoBer1700!Y23*10>1,NeoBer1700!X23&"" uren"",NeoBer1700!X23&"" minuten""),"""")
+$C$36: 	=IF(NeoBer1700!C24>0,NeoBer1700!C24/10&"" mg"","""")
+$D$36: 	=IF(NeoBer1700!D24>0,""in ""&NeoBer1700!D24&"" ml"","""")
+$G$36: 	=IF(NeoBer1700!F24/10>0,NeoBer1700!F24/10&"" ml/uur"","""")
+$H$36: 	=IF(AND(NeoBer1700!I24>0),ROUND(NeoBer1700!I24,2),"""")
+$I$36: 	=IF(_Medicament1700_5>1,INDEX(Medicamenten,NeoBer1700!B24,6),"""")
+$K$36: 	=INDEX(Medicamenten,NeoBer1700!B24,2)
+$N$36: 	=IF(NeoBer1700!I24>0,IF(NeoBer1700!Y24*10>1,NeoBer1700!X24&"" uren"",NeoBer1700!X24&"" minuten""),"""")
+$C$37: 	=IF(NeoBer1700!C25>0,NeoBer1700!C25/10&"" mg"","""")
+$D$37: 	=IF(NeoBer1700!D25>0,""in ""&NeoBer1700!D25&"" ml"","""")
+$G$37: 	=IF(NeoBer1700!F25/10>0,NeoBer1700!F25/10&"" ml/uur"","""")
+$H$37: 	=IF(AND(NeoBer1700!I25>0),ROUND(NeoBer1700!I25,2),"""")
+$I$37: 	=IF(_Medicament1700_6>1,INDEX(Medicamenten,NeoBer1700!B25,6),"""")
+$K$37: 	=INDEX(Medicamenten,NeoBer1700!B25,2)
+$N$37: 	=IF(NeoBer1700!I25>0,IF(NeoBer1700!Y25*10>1,NeoBer1700!X25&"" uren"",NeoBer1700!X25&"" minuten""),"""")
+$C$38: 	=IF(NeoBer1700!C26>0,NeoBer1700!C26/10&"" mg"","""")
+$D$38: 	=IF(NeoBer1700!D26>0,""in ""&NeoBer1700!D26&"" ml"","""")
+$G$38: 	=IF(NeoBer1700!F26/10>0,NeoBer1700!F26/10&"" ml/uur"","""")
+$H$38: 	=IF(AND(NeoBer1700!I26>0),ROUND(NeoBer1700!I26,2),"""")
+$I$38: 	=IF(_Medicament1700_7>1,INDEX(Medicamenten,NeoBer1700!B26,6),"""")
+$K$38: 	=INDEX(Medicamenten,NeoBer1700!B26,2)
+$N$38: 	=IF(NeoBer1700!I26>0,IF(NeoBer1700!Y26*10>1,NeoBer1700!X26&"" uren"",NeoBer1700!X26&"" minuten""),"""")
+$C$39: 	=IF(NeoBer1700!C27>0,NeoBer1700!C27/10&"" mg"","""")
+$D$39: 	=IF(NeoBer1700!D27>0,""in ""&NeoBer1700!D27&"" ml"","""")
+$G$39: 	=IF(NeoBer1700!F27/10>0,NeoBer1700!F27/10&"" ml/uur"","""")
+$H$39: 	=IF(AND(NeoBer1700!I27>0),ROUND(NeoBer1700!I27,2),"""")
+$I$39: 	=IF(_Medicament1700_8>1,INDEX(Medicamenten,NeoBer1700!B27,6),"""")
+$K$39: 	=INDEX(Medicamenten,NeoBer1700!B27,2)
+$N$39: 	=IF(NeoBer1700!I27>0,IF(NeoBer1700!Y27*10>1,NeoBer1700!X27&"" uren"",NeoBer1700!X27&"" minuten""),"""")
+$C$40: 	=IF(NeoBer1700!C28>0,NeoBer1700!C28/10&"" mg"","""")
+$D$40: 	=IF(NeoBer1700!D28>0,""in ""&NeoBer1700!D28&"" ml"","""")
+$G$40: 	=IF(NeoBer1700!F28/10>0,NeoBer1700!F28/10&"" ml/uur"","""")
+$H$40: 	=IF(AND(NeoBer1700!I28>0),ROUND(NeoBer1700!I28,2),"""")
+$I$40: 	=IF(_Medicament1700_9>1,INDEX(Medicamenten,NeoBer1700!B28,6),"""")
+$K$40: 	=INDEX(Medicamenten,NeoBer1700!B28,2)
+$N$40: 	=IF(NeoBer1700!I28>0,IF(NeoBer1700!Y28*10>1,NeoBer1700!X28&"" uren"",NeoBer1700!X28&"" minuten""),"""")
+$G$42: 	=IF(NeoBer1700!F29/10>0,NeoBer1700!F29/10&"" ml/uur"","""")
+$H$42: 	=IF(NeoBer1700!I32>0,""= ""&ROUND(NeoBer1700!I32,2),"""")
+$G$43: 	=IF(NeoBer1700!F30/10>0,NeoBer1700!F30/10&"" ml/uur"","""")
+$H$43: 	=IF(NeoBer1700!I33>0,""= ""&ROUND(NeoBer1700!I33,2),"""")
+$G$44: 	=IF(NeoBer1700!F31/10>0,NeoBer1700!F31/10&"" ml/uur"","""")
+$H$44: 	=IF(NeoBer1700!I34>0,""= ""&ROUND(NeoBer1700!I34,2),"""")
+$B$45: 	=IF(_MedTekst1700_1="""","""",_MedTekst1700_1)
+$B$46: 	=IF(_MedTekst1700_2="""","""",_MedTekst1700_2)
+$E$48: 	=IF(NeoBer1700!C35>0,NeoBer1700!C35&"" ml"","""")
+$F$48: 	=IF(E48<>"""",ROUND(NeoBer1700!C35/_Gewicht,0)&"" ml/ kg"","""")
+$K$48: 	=IF(NeoBer1700!B35>0,NeoBer1700!B35&"" ml"","""")
+$E$52: 	=IF(NeoBer1700!$D$36=1,NeoBer1700!C37&"" ml"","""")
+$I$52: 	=IF(NeoBer1700!$D$36=3,NeoBer1700!C37&"" ml"","""")
+$K$52: 	=IF(NeoBer1700!B37>0,NeoBer1700!B37&"" ml"","""")
+$E$53: 	=IF(NeoBer1700!$D$36=1,NeoBer1700!C38&"" ml"","""")
+$I$53: 	=IF(NeoBer1700!$D$36=3,NeoBer1700!C38&"" ml"","""")
+$K$53: 	=IF(NeoBer1700!B38>0,NeoBer1700!B38&"" ml"","""")
+$E$54: 	=IF(NeoBer1700!$D$36=1,NeoBer1700!C39&"" ml"","""")
+$K$54: 	=IF(NeoBer1700!B39>0,NeoBer1700!B39&"" ml"","""")
+$E$55: 	=IF(NeoBer1700!$D$36=1,NeoBer1700!C40&"" ml"","""")
+$K$55: 	=IF(NeoBer1700!B40>0,NeoBer1700!B40&"" ml"","""")
+$E$56: 	=IF(NeoBer1700!$D$36=1,NeoBer1700!C41&"" ml"","""")
+$K$56: 	=IF(NeoBer1700!B41>0,NeoBer1700!B41&"" ml"","""")
+$E$57: 	=IF(NeoBer1700!$D$36=1,NeoBer1700!C42&"" ml"","""")
+$K$57: 	=IF(NeoBer1700!B42>0,NeoBer1700!B42&"" ml"","""")
+$G$58: 	=IF(NeoBer1700!D36=2,NeoBer1700!C43&"" ml"","""")
+$H$58: 	=IF(G58<>"""",""(""&ROUND(NeoBer1700!C43/_Gewicht,0)&"" ml/kg)"","""")
+$K$58: 	=IF(NeoBer1700!B43>0,NeoBer1700!B43&"" ml"","""")
+$I$59: 	=IF(NeoBer1700!$D$36=3,NeoBer1700!C44&"" ml"","""")
+$J$59: 	=IF(I59<>"""",""(""&ROUND(1000*NeoBer1700!C44/_Gewicht,0)&"" ml/kg)"","""")
+$K$59: 	=IF(NeoBer1700!B44>0,NeoBer1700!B44&"" ml"","""")
+$E$60: 	=IF(NeoBer1700!D36=1,NeoBer1700!L45,"""")
+$F$60: 	=IF(E60<>"""",""ml"","""")
+$G$60: 	=IF(NeoBer1700!D36=2,NeoBer1700!L45,"""")
+$H$60: 	=IF(G60<>"""",""ml"","""")
+$I$60: 	=IF(NeoBer1700!D36=3,NeoBer1700!L45,"""")
+$J$60: 	=IF(I60<>"""",""ml"","""")
+"

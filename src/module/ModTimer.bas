@@ -5,6 +5,9 @@ Public Const TimerValue As String = "00:00:05"
 Public Const TimerCount As Integer = 10
 
 Public Sub OnTimerMacro()
+
+    Dim frmTimerForm As New FormTimerForm
+    
     frmTimerForm.lblTimer.Caption = CInt(frmTimerForm.lblTimer.Caption) - 1
     'frmTimerForm.Repaint
     
@@ -25,7 +28,7 @@ Public Sub OnTimerMacro()
                 strMsg = strMsg & "opnieuw in"
                 MsgBox strMsg, vbCritical
                 
-                Call PaPatientenLijst
+                OpenPatientLijst
             End If
         End If
         
@@ -36,5 +39,8 @@ Public Sub OnTimerMacro()
         Application.OnTime Time + TimeValue(ModTimer.TimerValue), "OnTimerMacro"
     
     End If
+    
+    Set frmTimerForm = Nothing
+    
 End Sub
 

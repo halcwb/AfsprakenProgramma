@@ -2,12 +2,12 @@ Attribute VB_Name = "ModInvoer"
 Option Explicit
 Dim intN As Integer, dblVol As Double
 
-Public Sub InGewicht()
+Public Sub VoerGewichtIn()
 
-    Dim frmGewichtInvoer As New frmInvoerNumeriek
-    Dim objPatient As New clsPatient
+    Dim frmGewichtInvoer As New FormInvoerNumeriek
+    Dim objPatient As New ClassPatient
     
-    With frmInvoerNumeriek
+    With frmGewichtInvoer
         .Caption = "Gewicht invoeren ..."
         .lblParameter.Caption = "Gewicht:"
         .lblEenheid = "kg"
@@ -31,12 +31,12 @@ Public Sub InGewicht()
 
 End Sub
 
-Public Sub InLengte()
+Public Sub VoerLengteIn()
 
-    Dim frmLengteInvoer As New frmInvoerNumeriek
-    Dim objPatient As New clsPatient
+    Dim frmLengteInvoer As New FormInvoerNumeriek
+    Dim objPatient As New ClassPatient
     
-    With frmInvoerNumeriek
+    With frmLengteInvoer
         .Caption = "Lengte invoeren ..."
         .lblParameter.Caption = "Lengte:"
         .lblEenheid = "cm"
@@ -58,7 +58,67 @@ End Sub
 
 Public Sub NaamGeven()
     
-    frmNaamGeven.Show
+    Dim frmNaam As New FormNaamGeven
+    
+    frmNaam.Show
+    
+    Set frmNaam = Nothing
+
+End Sub
+
+Private Sub MedicamentInvoeren(intN)
+
+    Dim frmMedicament As New FormMedicament
+    Dim strMed As String
+    Dim strGeneric As String
+    
+    With frmMedicament
+        
+        If Range("RecNo_" & intN).Value > 0 Then
+            .LoadGPK CStr(Range("RecNo_" & intN).Value)
+        Else
+            .cboGeneriek.Text = Range("Generic_" & intN).Value
+            .txtSterkte = vbNullString
+            .txtSterkteEenheid = vbNullString
+            
+            
+        End If
+        .txtDosisEenheid = Range("Eenheid_" & intN).Value
+        .txtDosis = Range("StandDos_" & intN).Value
+        .cboRoute = Range("MedToed_" & intN).Value
+        .Show
+        
+        If .lblCancel.Caption = "OK" Then
+            strMed = .lblEtiket.Caption
+            strGeneric = .cboGeneriek.Text
+            If strMed = vbNullString And .txtSterkte <> vbNullString Then
+                strMed = strGeneric & " " & .txtSterkte & " " & .txtSterkteEenheid
+            End If
+            Range("MedKeuze_" & intN).Value = strMed
+            Range("Generic_" & intN).Value = strGeneric
+            Range("StandDos_" & intN).Value = Val(Replace(.txtDosis.Value, ",", "."))
+            Range("Eenheid_" & intN).Value = .txtDosisEenheid.Text
+            Range("medtoed_" & intN).Value = .cboRoute.Text
+            Range("RecNo_" & intN).Value = CLng(.GetGPK())
+            
+        Else
+            If .lblCancel.Caption = "Clear" Then
+                Range("MedKeuze_" & intN).Value = vbNullString
+                Range("StandDos_" & intN).Value = vbNullString
+                Range("Eenheid_" & intN).Value = vbNullString
+                Range("MedToed_" & intN).Value = vbNullString
+                Range("OpmMedDisc__" & intN).Value = vbNullString
+                Range("DosHoev_" & intN).Value = vbNullString
+                Range("MedTijden_" & intN).Value = 1
+                Range("MedOplVol_" & intN).Value = 0
+                Range("MedOpl_" & intN).Value = 0
+                Range("MedInloop_" & intN).Value = 0
+                Range("RecNo_" & intN).Value = 0
+            End If
+        End If
+    End With
+    
+    Set frmMedicament = Nothing
 
 End Sub
 
@@ -243,779 +303,433 @@ Public Sub Medicament_30()
 
 End Sub
 
-Public Sub MedicamentInvoeren(intN)
-    Dim strMed As String
-    Dim strGeneric As String
-    
-    With frmMedicament
-        
-        If Range("RecNo_" & intN).Value > 0 Then
-            .LoadGPK CStr(Range("RecNo_" & intN).Value)
-        Else
-            .cboGeneriek.Text = Range("Generic_" & intN).Value
-            .txtSterkte = vbNullString
-            .txtSterkteEenheid = vbNullString
-            
-        End If
-        .txtDosisEenheid = Range("Eenheid_" & intN).Value
-        .txtDosis = Range("StandDos_" & intN).Value
-        .cboRoute = Range("MedToed_" & intN).Value
-        .Show
-        
-        If .lblCancel.Caption = "OK" Then
-            strMed = .lblEtiket.Caption
-            strGeneric = .cboGeneriek.Text
-            If strMed = vbNullString And .txtSterkte <> vbNullString Then
-                strMed = strGeneric & " " & .txtSterkte & " " & .txtSterkteEenheid
-            End If
-            Range("MedKeuze_" & intN).Value = strMed
-            Range("Generic_" & intN).Value = strGeneric
-            Range("StandDos_" & intN).Value = Val(Replace(.txtDosis.Value, ",", "."))
-            Range("Eenheid_" & intN).Value = .txtDosisEenheid.Text
-            Range("medtoed_" & intN).Value = .cboRoute.Text
-            Range("RecNo_" & intN).Value = CLng(.GetGPK())
-            
-        Else
-            If .lblCancel.Caption = "Clear" Then
-                Range("MedKeuze_" & intN).Value = vbNullString
-                Range("StandDos_" & intN).Value = vbNullString
-                Range("Eenheid_" & intN).Value = vbNullString
-                Range("MedToed_" & intN).Value = vbNullString
-                Range("opmMedDisc__" & intN).Value = vbNullString
-                Range("DosHoev_" & intN).Value = vbNullString
-                Range("MedTijden_" & intN).Value = 1
-                Range("MedOplVol_" & intN).Value = 0
-                Range("MedOpl_" & intN).Value = 0
-                Range("MedInloop_" & intN).Value = 0
-                Range("RecNo_" & intN).Value = 0
-            End If
-        End If
-    End With
+Private Sub MedIVInvoer(intN As Integer)
 
+    Dim strMed As String, strSterkte As String
+    Dim frmMedIV As New FormMedIV
+    
+    frmMedIV.Show
+    
+    strMed = frmMedIV.txtMedicament.Text
+    strSterkte = frmMedIV.txtSterkte.Text
+    Range("MedIVKeuze_" & intN).Value = strMed
+    Range("MedIVSterkte_" & intN).Value = strSterkte
+    
+    Set frmMedIV = Nothing
+        
 End Sub
 
 Public Sub MedIV_11()
 
-        Dim strMed As String, strSterkte As String
-        frmMedIV.Show
-        strMed = frmMedIV.txtMedicament.Text
-        strSterkte = frmMedIV.txtSterkte.Text
-        Range("MedIVKeuze_11").Value = strMed
-        Range("MedIVSterkte_11").Value = strSterkte
+    MedIVInvoer (11)
         
 End Sub
 
 Public Sub MedIV_12()
     
-    Dim strMed As String, strSterkte As String
-    frmMedIV.Show
-    strMed = frmMedIV.txtMedicament.Text
-    strSterkte = frmMedIV.txtSterkte.Text
-    Range("MedIVKeuze_12").Value = strMed
-    Range("MedIVSterkte_12").Value = strSterkte
+    MedIVInvoer (12)
 
 End Sub
 
 Public Sub MedIV_13()
     
-    Dim strMed As String, strSterkte As String
-    frmMedIV.Show
-    strMed = frmMedIV.txtMedicament.Text
-    strSterkte = frmMedIV.txtSterkte.Text
-    Range("MedIVKeuze_13").Value = strMed
-    Range("MedIVSterkte_13").Value = strSterkte
+    MedIVInvoer (13)
 
 End Sub
 
 Public Sub MedIV_14()
     
-    Dim strMed As String, strSterkte As String
-    frmMedIV.Show
-    strMed = frmMedIV.txtMedicament.Text
-    strSterkte = frmMedIV.txtSterkte.Text
-    Range("MedIVKeuze_14").Value = strMed
-    Range("MedIVSterkte_14").Value = strSterkte
+    MedIVInvoer (14)
 
 End Sub
 
 Public Sub MedIV_15()
     
-    Dim strMed As String, strSterkte As String
-    frmMedIV.Show
-    strMed = frmMedIV.txtMedicament.Text
-    strSterkte = frmMedIV.txtSterkte.Text
-    Range("MedIVKeuze_15").Value = strMed
-    Range("MedIVSterkte_15").Value = strSterkte
+    MedIVInvoer (15)
 
 End Sub
 
-Public Sub opmAfsprBeademing()
+Private Sub EnterOpmAfspr(intN As Integer)
+
+    Dim strN As String
+    Dim frmOpmerking As New FormOpmerking
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__1").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__1").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-
-Public Sub opmAfsprInfusen()
+    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__" & intN).Value
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__2").Value
     frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__2").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-
-Public Sub opmAfsprMedIV_1()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__3").Value
-    frmOpmerking.Show
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__3").Value = frmOpmerking.txtOpmerking.Text
+        Range("opmAfsprBlad__" & intN).Value = frmOpmerking.txtOpmerking.Text
     End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-Public Sub opmAfsprMedIV_2()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__4").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__4").Value = frmOpmerking.txtOpmerking.Text
-    End If
     frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-Public Sub opmAfsprMedIV_3()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__5").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__5").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    Set frmOpmerking = Nothing
 
 End Sub
-Public Sub opmAfsprMedIV_4()
+
+Public Sub OpmAfsprInfusen()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__6").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__6").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-Public Sub opmAfsprMedIV_5()
+    EnterOpmAfspr (2)
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__7").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__7").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+End Sub
+
+Public Sub OpmAfsprMedIV_1()
+    
+    EnterOpmAfspr (3)
 
 End Sub
+
+Public Sub OpmAfsprMedIV_2()
+    
+    EnterOpmAfspr (4)
+
+End Sub
+
+Public Sub OpmAfsprMedIV_3()
+    
+    EnterOpmAfspr (5)
+
+End Sub
+
+Public Sub OpmAfsprMedIV_4()
+    
+    EnterOpmAfspr (6)
+    
+End Sub
+
+Public Sub OpmAfsprMedIV_5()
+    
+    EnterOpmAfspr (7)
+
+End Sub
+
 Public Sub opmIntakeMedIV()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__8").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__8").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    EnterOpmAfspr (8)
 
 End Sub
+
 Public Sub opmOverig_1()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__9").Formula
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__9").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    EnterOpmAfspr (9)
     
 End Sub
+
 Public Sub opmOverig_2()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__10").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__10").Value = frmOpmerking.txtOpmerking.Text
-        
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    EnterOpmAfspr (10)
 
 End Sub
+
 Public Sub opmOverig_3()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__11").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__11").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    EnterOpmAfspr (11)
     
 End Sub
+
 Public Sub opmOverig_4()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__12").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__12").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    EnterOpmAfspr (12)
     
 End Sub
+
 Public Sub opmOverig_5()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__13").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__13").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    EnterOpmAfspr (13)
     
 End Sub
-Public Sub opmOverig_6()
-    
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__15").Formula
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__15").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-    
-End Sub
+
 Public Sub opmVoedPO()
     
-    frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__14").Value
+    EnterOpmAfspr (14)
+    
+End Sub
+
+Public Sub opmOverig_6()
+    
+    EnterOpmAfspr (15)
+    
+End Sub
+
+Private Sub OpmMedDisc(intN As Integer)
+    
+    Dim frmOpmerking As New FormOpmerking
+    Dim strRange As String
+    
+    strRange = shtGlobBerOpm.Name & "!c" & intN
+
+    frmOpmerking.txtOpmerking.Text = Range(strRange).Value
     frmOpmerking.Show
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("opmAfsprBlad__14").Value = frmOpmerking.txtOpmerking.Text
+        Range(strRange).Value = frmOpmerking.txtOpmerking.Text
     End If
     frmOpmerking.txtOpmerking.Text = vbNullString
     
-End Sub
-
-Public Sub medDiscBijz()
-    
-    With Sheets("ber_med_disc")
-'        frmMedDiscBijz.txtMedDiscBijz.text = Sheets("dbform").Cells(.Cells(25, 2).Value + 1, 9).Value
-        frmMedDiscBijz.Show
-        If frmMedDiscBijz.txtMedDiscBijz.Text <> vbNullString Then
-            Sheets("dbform").Cells(.Cells(25, 2).Value + 1, 9).Formula = _
-            frmMedDiscBijz.txtMedDiscBijz.Text
-        End If
-    End With
+    Set frmOpmerking = Nothing
 
 End Sub
 
-Public Sub medDiscDos()
+Public Sub OpmMedDisc_1()
     
-    With Sheets("ber_med_disc")
-'        frmMedDiscDos.txtMedDiscDos.text = Sheets("dbform").Cells(.Cells(25, 2).Value + 1, 8).Value
-        frmMedDiscDos.Show
-        If frmMedDiscDos.txtMedDiscDos.Text <> vbNullString Then
-            Sheets("dbform").Cells(.Cells(25, 2).Value + 1, 8).Formula = _
-            frmMedDiscDos.txtMedDiscDos.Text
-        End If
-    End With
+    OpmMedDisc (16)
+    
+End Sub
+
+Public Sub OpmMedDisc_2()
+    
+    OpmMedDisc (17)
 
 End Sub
 
-Public Sub opmMedDisc_1()
+Public Sub OpmMedDisc_3()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c16").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c16").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (18)
+
+End Sub
+Public Sub OpmMedDisc_4()
+    
+    OpmMedDisc (19)
 
 End Sub
 
-Public Sub opmMedDisc_2()
+Public Sub OpmMedDisc_5()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c17").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c17").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (20)
 
 End Sub
-Public Sub opmMedDisc_3()
+Public Sub OpmMedDisc_6()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c18").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c18").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (21)
 
 End Sub
-Public Sub opmMedDisc_4()
+Public Sub OpmMedDisc_7()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c19").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c19").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (22)
 
 End Sub
-
-Public Sub opmMedDisc_5()
+Public Sub OpmMedDisc_8()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c20").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c20").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (23)
 
 End Sub
-Public Sub opmMedDisc_6()
+Public Sub OpmMedDisc_9()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c21").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c21").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (24)
 
 End Sub
-Public Sub opmMedDisc_7()
+Public Sub OpmMedDisc_10()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c22").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c22").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (25)
 
 End Sub
-Public Sub opmMedDisc_8()
+Public Sub OpmMedDisc_11()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c23").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c23").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (26)
 
 End Sub
-Public Sub opmMedDisc_9()
+Public Sub OpmMedDisc_12()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c24").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c24").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (27)
 
 End Sub
-Public Sub opmMedDisc_10()
+Public Sub OpmMedDisc_13()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c25").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c25").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (28)
 
 End Sub
-Public Sub opmMedDisc_11()
+Public Sub OpmMedDisc_14()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c26").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c26").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (29)
 
 End Sub
-Public Sub opmMedDisc_12()
+Public Sub OpmMedDisc_15()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c27").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c27").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (30)
 
 End Sub
-Public Sub opmMedDisc_13()
+Public Sub OpmMedDisc_16()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c28").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c28").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (31)
 
 End Sub
-Public Sub opmMedDisc_14()
+Public Sub OpmMedDisc_17()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c29").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c29").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (32)
 
 End Sub
-Public Sub opmMedDisc_15()
+Public Sub OpmMedDisc_18()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c30").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c30").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (33)
 
 End Sub
-Public Sub opmMedDisc_16()
+Public Sub OpmMedDisc_19()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c31").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c31").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (34)
 
 End Sub
-Public Sub opmMedDisc_17()
+Public Sub OpmMedDisc_20()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c32").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c32").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-Public Sub opmMedDisc_18()
-    
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c33").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c33").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-Public Sub opmMedDisc_19()
-    
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c34").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c34").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-Public Sub opmMedDisc_20()
-    
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c35").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c35").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (35)
 
 End Sub
 
-Public Sub opmMedDisc_21()
+Public Sub OpmMedDisc_21()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c37").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c37").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (36)
 
 End Sub
 
-Public Sub opmMedDisc_22()
+Public Sub OpmMedDisc_22()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c38").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c38").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (37)
 
 End Sub
 
-Public Sub opmMedDisc_23()
+Public Sub OpmMedDisc_23()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c39").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c39").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (38)
 
 End Sub
 
-Public Sub opmMedDisc_24()
+Public Sub OpmMedDisc_24()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c40").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c40").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (39)
 
 End Sub
 
-Public Sub opmMedDisc_25()
+Public Sub OpmMedDisc_25()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c41").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c41").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (40)
 
 End Sub
 
-Public Sub opmMedDisc_26()
+Public Sub OpmMedDisc_26()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c42").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c42").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (41)
 
 End Sub
 
-Public Sub opmMedDisc_27()
+Public Sub OpmMedDisc_27()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c43").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c43").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (42)
 
 End Sub
 
-Public Sub opmMedDisc_28()
+Public Sub OpmMedDisc_28()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c44").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c44").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (43)
 
 End Sub
 
-Public Sub opmMedDisc_29()
+Public Sub OpmMedDisc_29()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c45").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c45").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
+    OpmMedDisc (44)
 
 End Sub
 
-Public Sub opmMedDisc_30()
+Public Sub OpmMedDisc_30()
     
-    frmOpmerking.txtOpmerking.Text = Range("ber_opm!c46").Value
-    frmOpmerking.Show
-    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-        Range("Ber_Opm!c46").Value = frmOpmerking.txtOpmerking.Text
-    End If
-    frmOpmerking.txtOpmerking.Text = vbNullString
-
-End Sub
-
-Public Sub medDiscToeding()
-    
-    With Sheets("ber_med_disc")
-        frmMedDiscToediening.txtMedDiscToediening.Text = _
-        Sheets("dbform").Cells(.Cells(25, 2).Value + 1, 7).Value
-        frmMedDiscToediening.Show
-        If frmMedDiscToediening.txtMedDiscToediening.Text <> vbNullString Then
-            Sheets("dbform").Cells(.Cells(25, 2).Value + 1, 7).Formula _
-            = frmMedDiscToediening.txtMedDiscToediening.Text
-        End If
-    End With
+    OpmMedDisc (45)
 
 End Sub
 
 Public Sub Nutriflex()
 
-    shtBerTPN.Range("TPNVol").Value = Val(InputBox(prompt:="Voer de hoeveelheid in ...", _
+    shtPedBerTPN.Range("TPNVol").Value = Val(InputBox(prompt:="Voer de hoeveelheid in ...", _
     Title:="Informedica 2000"))
 
 End Sub
-Public Sub NaCL()
+
+Private Sub EnterHoeveelheid(strItem As String)
+
+    Dim dblVol As Double
 
     dblVol = Val(InputBox(prompt:="Voer de hoeveelheid in ...", _
     Title:="Informedica 2000"))
-    If dblVol < 5 Then
-        shtBerTPN.Range("NaClVol").Value = dblVol
-    Else
-        shtBerTPN.Range("NaClVol").Value = dblVol
-    End If
+        
+    shtPedBerTPN.Range(strItem).Value = dblVol
+
+End Sub
+
+Public Sub NaCL()
+
+    EnterHoeveelheid "NaClVol"
 
 End Sub
 Public Sub KCl()
 
-    dblVol = Val(InputBox(prompt:="Voer de hoeveelheid in ...", _
-    Title:="Informedica 2000"))
-    If dblVol < 5 Then
-        shtBerTPN.Range("KClVol").Value = dblVol
-    Else
-        shtBerTPN.Range("KClVol").Value = dblVol
-    End If
+    EnterHoeveelheid "KClVol"
 
 End Sub
 
 Public Sub CaGlucVol()
 
-    dblVol = Val(InputBox(prompt:="Voer de hoeveelheid in ...", _
-    Title:="Informedica 2000"))
-    If dblVol < 5 Then
-        shtBerTPN.Range("CaGlucVol").Value = dblVol
-    Else
-        shtBerTPN.Range("CaGlucVol").Value = dblVol
-    End If
+    EnterHoeveelheid "CaGlucVol"
 
 End Sub
 Public Sub MgCl()
 
-    dblVol = Val(InputBox(prompt:="Voer de hoeveelheid in ...", _
-    Title:="Informedica 2000"))
-    If dblVol < 5 Then
-        shtBerTPN.Range("MgClVol").Value = dblVol
-    Else
-        shtBerTPN.Range("MgClVol").Value = dblVol
-    End If
+    EnterHoeveelheid "MgClVol"
 
 End Sub
 
 Public Sub PaceMaker()
 
-    shtBerInfusen.Range("PM_Standaard").Copy
-    shtBerInfusen.Range("PM_Instelling").PasteSpecial xlPasteValues
+    shtPedBerIVenPM.Range("PM_Standaard").Copy
+    shtPedBerIVenPM.Range("PM_Instelling").PasteSpecial xlPasteValues
 
 End Sub
 
-'Public Sub Med11Tekst()
-'    frmOpmerking.Caption = "Voer tekst in voor medicatie 13"
-'    frmOpmerking.txtOpmerking.Text = Range("_MedTekst_1").Formula
-'    frmOpmerking.Show
-'    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-'        Range("_MedTekst_1").Value = frmOpmerking.txtOpmerking.Text
-'    End If
-'    frmOpmerking.txtOpmerking.Text = ""
-'End Sub
-'
-'Public Sub Med12Tekst()
-'    frmOpmerking.Caption = "Voer tekst in voor medicatie 14"
-'    frmOpmerking.txtOpmerking.Text = Range("_MedTekst_2").Formula
-'    frmOpmerking.Show
-'    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
-'        Range("_MedTekst_2").Value = frmOpmerking.txtOpmerking.Text
-'    End If
-'    frmOpmerking.txtOpmerking.Text = ""
-'End Sub
+Private Sub TekstInvoer(strCaption As String, strName As String, strRange As String)
 
-Public Sub Med11Tekst()
-
-    Dim frmInvoer As New frmTekstInvoer
+    Dim frmInvoer As New FormTekstInvoer
     
     With frmInvoer
-        .Caption = "Voer tekst in ..."
-        .lblNaam.Caption = "Tekst voor medicatie 13"
-        .Tekst = Range("_MedTekst_1").Value
+        .Caption = strCaption
+        .lblNaam.Caption = strName
+        .Tekst = Range(strRange).Value
         .Show
-        If .IsOK Then Range("_MedTekst_1") = .Tekst
+        If .IsOK Then Range(strRange) = .Tekst
     End With
     
     Set frmInvoer = Nothing
+
+End Sub
+
+Public Sub Med11Tekst()
+
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst_1"
 
 End Sub
 
 Public Sub Med12Tekst()
 
-    Dim frmInvoer As New frmTekstInvoer
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst_2"
     
-    With frmInvoer
-        .Caption = "Voer tekst in ..."
-        .lblNaam.Caption = "Tekst voor medicatie 14"
-        .Tekst = Range("_MedTekst_2").Value
-        .Show
-        If .IsOK Then Range("_MedTekst_2") = .Tekst
-    End With
-    
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Sub MedTekstWondkweek()
 
-    Dim frmInvoer As New frmTekstInvoer
-    
-    With frmInvoer
-        .Caption = "Voer tekst in"
-        .lblNaam.Caption = "Voer locatie wond(en) in"
-        .Tekst = Range("Aanvullend_WondkweekTekst").Value
-        .Show
-        If .IsOK Then Range("Aanvullend_WondkweekTekst") = .Tekst
-    End With
-    
-    Set frmInvoer = Nothing
+    TekstInvoer "Voer tekst in ...", "Voer locatie wond(en) in", "Aanvullend_WondkweekTekst"
 
 End Sub
 
 Public Sub MedTekstVerliezenCompenseren()
 
-    Dim frmInvoer As New frmTekstInvoer
-    
-    With frmInvoer
-        .Caption = "Voer tekst in"
-        .lblNaam.Caption = "Voer verliezen compenseren in"
-        .Tekst = Range("Aanvullend_VerliezenTekst").Value
-        .Show
-        If .IsOK Then Range("Aanvullend_VerliezenTekst") = .Tekst
-    End With
-    
-    Set frmInvoer = Nothing
+    TekstInvoer "Voer tekst in ...", "Voer verliezen compenseren in", "Aanvullend_VerliezenTekst"
 
 End Sub
 
 Public Sub MedTekstAanvullendeAfsprakenOverigePed()
 
-    Dim frmInvoer As New frmTekstInvoer
+    TekstInvoer "Voer tekst in ...", "Voer overige aanvullende afspraken in", "Aanvullend_Overige_Ped"
     
-    With frmInvoer
-        .Caption = "Voer tekst in"
-        .lblNaam.Caption = "Voer overige aanvullende afspraken in"
-        .Tekst = Range("Aanvullend_Overige_Ped").Value
-        .Show
-        If .IsOK Then Range("Aanvullend_Overige_Ped") = .Tekst
-    End With
-    
-    Set frmInvoer = Nothing
-
 End Sub
 
-Public Sub opmLabNeo()
+Public Sub OpmLabNeo()
+    
+    Dim frmOpmerking As New FormOpmerking
     
     frmOpmerking.txtOpmerking.Text = Range("LabNeoOpmerkingen").Formula
     frmOpmerking.Show
@@ -1024,53 +738,25 @@ Public Sub opmLabNeo()
     End If
     frmOpmerking.txtOpmerking.Text = vbNullString
     
+    Set frmOpmerking = Nothing
+    
 End Sub
 
 Public Sub MedTekstAanvullendeAfsprakenVerliezenPed()
 
-    Dim frmInvoer As New frmTekstInvoer
-    
-    With frmInvoer
-        .Caption = "Voer tekst in"
-        .lblNaam.Caption = "Voer compensatie vloeistof in"
-        .Tekst = Range("Aanvullend_Verliezen_Ped").Value
-        .Show
-        If .IsOK Then Range("Aanvullend_Verliezen_Ped") = .Tekst
-    End With
-    
-    Set frmInvoer = Nothing
+    TekstInvoer "Voer tekst in ...", "Voer compensatie vloeistof in", "Aanvullend_Verliezen_Ped"
 
 End Sub
 
 Public Sub Med11Tekst1700()
 
-    Dim frmInvoer As New frmTekstInvoer
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst1700_1"
     
-    With frmInvoer
-        .Caption = "Voer tekst in ..."
-        .lblNaam.Caption = "Tekst voor medicatie 13"
-        .Tekst = Range("_MedTekst1700_1").Value
-        .Show
-        If .IsOK Then Range("_MedTekst1700_1") = .Tekst
-    End With
-    
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Sub Med12Tekst1700()
 
-    Dim frmInvoer As New frmTekstInvoer
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst1700_2"
     
-    With frmInvoer
-        .Caption = "Voer tekst in ..."
-        .lblNaam.Caption = "Tekst voor medicatie 14"
-        .Tekst = Range("_MedTekst1700_2").Value
-        .Show
-        If .IsOK Then Range("_MedTekst1700_2") = .Tekst
-    End With
-    
-    Set frmInvoer = Nothing
-
 End Sub
 
