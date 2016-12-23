@@ -5,89 +5,137 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
 '
 ' Code for onAction callback. Ribbon control button
 '
-
     Application.ScreenUpdating = False
     
     Select Case ctrlMenuItem.ID
-        'GroupAfspraken
-        Case "btnAfsluiten"
+    
+        'grpAfspraken                                       ' -- AFSPRAKEN --
+        
+        Case "btnClose"                                     ' -> Programma Afsluiten
             Afsluiten
-        Case "btnAfsprakenVerwijderen"
+        
+        Case "btnClear"                                     ' -> Alles Verwijderen
             ClearPatient True
             SelectPedOrNeoStartSheet
-        'GroupBedden
-        Case "btnBedOpenen"
+        
+        'grpBedden                                          ' -- BEDDEN --
+        
+        Case "btnOpenBed"                                   ' -> Bed Openen
             OpenPatientLijst
-        Case "btnBedOpslaan"
+        
+        Case "btnSaveBed"                                   ' -> Bed Opslaan
             ModBedden.SluitBed
             SelectPedOrNeoStartSheet
-        Case "btnGegevensInvoeren"
+        
+        Case "btnEnterPatient"                              ' -> Patient Gegevens
             NieuwePatient
-        'grpPediatrie
-        Case "btnPContinueivmedicatie"
+            
+        'grpPediatrie                                       ' -- PEDIATRIE --
+        
+        Case "btnPedMedIV"                                  ' -> Continue IV Medicatie
             ModSheets.GoToSheet shtPedGuiMedIV, "A6"
-        Case "btnPDiscontinuemedicatie"
+        
+        Case "btnPedMedDisc"                                ' -> Discontinue Medicatie
             ModSheets.GoToSheet shtPedGuiMedDisc, "A6"
-        Case "btnPInfusen"
+        
+        Case "btnPedIVandPM"                                ' -> Lijnen en PM
             ModSheets.GoToSheet shtPedGuiPMenIV, "A6"
-        Case "btnPIntake"
+        
+        Case "btnPedEntTPN"                                 ' -> Voeding en TPN
             ModSheets.GoToSheet shtPedGuiEntTPN, "A6"
-        Case "btnPLaboratoriumbepalingen"
+        
+        Case "btnPedLab"                                    ' -> Lab Aanvragen
             ModSheets.GoToSheet shtPedGuiLab, "A1"
-        Case "btnPAanvullendeAfspraken"
+        
+        Case "btnPedExtra"                                  ' -> Afspraken en Controles
             ModSheets.GoToSheet shtPedGuiAfsprExta, "A6"
-        'grpNeonatologie
-        Case "btnNInfuusbrief"
+            
+        'grpNeonatologie                                    ' -- NEONATOLOGIE --
+        
+        Case "btnNeoMedIV"                                  ' -> Infuusbrief
             ModSheets.GoToSheet shtNeoGuiAfspraken, "A9"
-        Case "btnNDiscontinuemedicatie"
+        
+        Case "btnNeoMedDisc"                                ' -> Discontinue Medicatie
             ModSheets.GoToSheet shtPedGuiMedDisc, "A6"
-        Case "btnNAanvullendeAfspraken"
+        
+        Case "btnNeoExtra"                                  ' -> Afspraken en Controles
             ModSheets.GoToSheet shtNeoGuiAfsprExtra, "A6"
+        
         Case "btnNTPNadvies"
             TPNAdviesNEO
-        Case "btnNLaboratoriumbepalingen"
+        
+        Case "btnNeoLab"                                    ' -> Lab Aanvragen
             ModSheets.GoToSheet shtNeoGuiLab, "A1"
-        Case "btnNAfspraken1700"
+        
+        Case "btnNeo1700"                                   ' -> Infuusbrief 17:00
             ModSheets.GoToSheet shtNeoGuiAfspr1700, "A9"
-        'grpGegevensVerwijderen -> Acties
-        Case "btnNAfspraken1700Overzetten"
-            ModAfspraken1700.CopyToActueel
-        Case "btnNActueleAfsprakenOverzetten"
-            ModAfspraken.AfsprakenOvernemen
-        Case "btnLabVerwijderen"
+        
+        'grpRemoveData                                      ' -- ACTIES --
+                
+        Case "btnRemoveLab"                                 ' Lab Verwijderen
             VerwijderLab
             SelectPedOrNeoLabSheet
-        Case "btnAanvullendVerwijderen"
+        
+        Case "btnRemoveExtra"                               ' Afspraken Controles Verwijderen
             VerwijderAanvullendeAfspraken
             SelectPedOrNeoAfsprExtraSheet
-        'grpPrintPediatrie
-        Case "btnPAcuteBlad"
+        
+        ' grpNeoActions                                     ' -- INFUUSBRIEF OVERZETTEN --
+        
+        Case "btnCopy1700"                                  ' -> 17:00 uur Overzetten
+            ModAfspraken1700.CopyToActueel
+        
+        Case "btnCopyCurrent"                               ' -> Actueel Overzetten
+            ModAfspraken.AfsprakenOvernemen
+            
+        'grpPedPrint                                        ' -- PRINT PEDIATRIE --
+        
+        Case "btnPedPrintAcuut"                             ' -> Acute Blad
             ModSheets.GoToSheet shtPedGuiAcuut, "A1"
-        Case "btnPPrintAfspraken"
+        
+        Case "btnPedPrintMedIV"                             ' -> Medicatie IV
             ModSheets.GoToSheet shtPedPrtAfspr, "A1"
-        Case "btnPMedicatie"
+        
+        Case "btnPedPrintMedDisc"                           ' -> Medicatie Discontinu
             ModSheets.GoToSheet shtPedPrtMedDisc, "A1"
-        Case "btnPTPN"
+        
+        Case "btnPedPrintTPN"                               ' -> TPN Brief
             SelectPedTPNPrint
-        'grpPrintNeonatologie
-        Case "btnNAcuteBlad"
+            
+        'grpNeoPrint                                        ' -- PRINT NEO ---
+        
+        Case "btnNeoPrintAcuut"                             ' -> Acute Blad
             ModSheets.GoToSheet shtNeoGuiAcuut, "A1"
-        Case "btnNAfspraken"
+        
+        Case "btnNeoPrintMedIV"                             ' -> Infuus Brief
             ModSheets.GoToSheet shtNeoPrtAfspr, "A1"
-        Case "btnNMedicatie"
+        
+        Case "btnNeoPrintMedDisc"                           ' -> Medicatie Discontinu
             ModSheets.GoToSheet shtNeoPrtMedDisc, "A1"
+        
         Case "btnNTPN"
             TPNAdviesNEO
-        Case "btnNApotheek"
+        
+        Case "btnNeoPrintApoth"                             ' -> Apotheek
             ModSheets.GoToSheet shtNeoPrtApoth, "A1"
-        Case "btnNWerkbrief"
+        
+        Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
             ModSheets.GoToSheet shtNeoPrtWerkbr, "A1"
-        'grpDeveloper2
-        Case "btnDeveloperMode"
+            
+        'grpDevelopment                                     ' -- DEVELOPMENT --
+        
+        Case "btnDevMode"                                   ' -> Development Mode
             SetToDevelopmentMode
-        Case "btnNaamGeven"
+        
+        Case "btnToggleLogging"                             ' -> Toggle Logging
+    
+        Case "btnRangeNames"                                ' -> Range Names
             ModMenuItems.GiveNameToRange
-        Case "btnToggleLogging"
+        
+        Case Else
+            MsgBox ctrlMenuItem.ID & " has no select case", vbCritical
+            
+        
     End Select
 
     ' Waarom wordt dit aangeroepen na een menu item keuze???
@@ -125,7 +173,7 @@ Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
     
 End Sub
 
-Sub GetVisibleDeveloper(control As IRibbonControl, ByRef blnVisible)
+Sub GetVisibleDevelopment(control As IRibbonControl, ByRef blnVisible)
 
     Dim strPath As String
 

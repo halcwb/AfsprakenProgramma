@@ -17,6 +17,17 @@ End Sub
 
 Private Sub Workbook_Open()
     
+    Dim lngCmdRaw As Long
+    Dim strCmdLine As String
+    Dim strParam As String
+    
+    lngCmdRaw = GetCommandLine
+    strCmdLine = CmdToSTr(lngCmdRaw)
+    
+    strParam = Right(strCmdLine, 6)
+    
+    MsgBox strParam
+    
     SetDeveloperMode
 '    frmTimerForm.Show
 '    frmTimerForm.Hide
