@@ -2,8 +2,13 @@ Attribute VB_Name = "ModOpenClose"
 Option Explicit
 
 Private intCount As Integer
+Private blnDontClose As Boolean
 
-Public blnDontClose As Boolean
+Public Sub SetDontClose(blnClose As Boolean)
+    
+    blnDontClose = blnClose
+
+End Sub
 
 Public Sub SetToDevelopmentMode()
 
@@ -27,7 +32,7 @@ Public Sub SetToDevelopmentMode()
     Next
     
     blnDontClose = False
-    BlnEnableDevelop = True ' BlnIsDevelopment
+    ModSettings.SetDevelopmentMode True
     
     Application.Cursor = xlDefault
 
@@ -66,19 +71,23 @@ End Sub
 Private Sub SetWindow(objWindow As Window, blnReset As Boolean)
 
     With objWindow
-        If BlnIsDevelopment Then
+    
+        If ModSettings.IsDevelopmentMode() Then
             .DisplayWorkbookTabs = True
             .DisplayGridlines = True
             .DisplayHeadings = True
             .DisplayOutline = True
             .DisplayZeros = True
+            
         Else
             .DisplayGridlines = blnReset
             .DisplayHeadings = blnReset
             .DisplayOutline = blnReset
             .DisplayZeros = blnReset
             .DisplayWorkbookTabs = blnReset
+            
         End If
+        
     End With
 
 End Sub
@@ -114,7 +123,7 @@ Attribute Openen.VB_ProcData.VB_Invoke_Func = " \n14"
 
 '   Knoppen en balken verwijderen
     SetCaptionHideBars
-    ActiveWindow.DisplayWorkbookTabs = BlnIsDevelopment
+    ActiveWindow.DisplayWorkbookTabs = ModSettings.IsDevelopmentMode()
 
     For Each objWindow In Application.Windows
         SetWindowToOpen objWindow
@@ -140,7 +149,7 @@ Attribute Openen.VB_ProcData.VB_Invoke_Func = " \n14"
     shtPedGuiAcuut.Protect CONST_PASSWORD 'ICT2014
     shtPedGuiAcuut.Activate
     
-    BlnEnableDevelop = False
+    ModSettings.SetDevelopmentMode False
     
     Application.Cursor = xlDefault
     
@@ -149,13 +158,17 @@ Attribute Openen.VB_ProcData.VB_Invoke_Func = " \n14"
 End Sub
 
 Private Sub SetCaptionHideBars()
+
+    Dim blnIsDevelop As Boolean
+    
+    blnIsDevelop = ModSettings.IsDevelopmentMode()
 '   Knoppen en balken verwijderen
     With Application
          .Caption = "Informedica 2015 Afspraken programma"
-         .DisplayFormulaBar = BlnIsDevelopment
-         .DisplayStatusBar = BlnIsDevelopment
+         .DisplayFormulaBar = blnIsDevelop
+         .DisplayStatusBar = blnIsDevelop
          .DisplayScrollBars = True
-         .DisplayFormulaBar = BlnIsDevelopment
+         .DisplayFormulaBar = blnIsDevelop
     End With
     
 End Sub
@@ -167,13 +180,13 @@ Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet)
 
     Dim strPath As String
     Dim strPeli As String
-
-    ModConst.SetDeveloperMode
+    Dim blnIsDevelop As Boolean
     
     strPath = Application.ActiveWorkbook.Path
-    strPeli = ModConst.CONST_PELI_FOLDERNAME
+    strPeli = ModSettings.GetPedDir()
+    blnIsDevelop = ModSettings.IsDevelopmentMode()
     
-    If ModString.StringContainsCaseInsensitive(strPath, strPeli) Or BlnIsDevelopment Then
+    If ModString.StringContainsCaseInsensitive(strPath, strPeli) Or blnIsDevelop Then
         shtPed.Select
     Else
         shtNeo.Select

@@ -54,6 +54,7 @@ Public Function GetNonInterfaceSheets() As Collection
         .Add Item:=shtGlobBerConv
         .Add Item:=shtGlobBerNorm
         .Add Item:=shtGlobBerOpm
+        .Add Item:=shtGlobSettings
         .Add Item:=shtGlobTemp
         ' Pat Data sheets
         .Add Item:=shtPatDetails

@@ -11,7 +11,7 @@ Option Explicit
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
     
-    Afsluiten                       'MAfsluiten
+    ModOpenClose.Afsluiten                       'MAfsluiten
 
 End Sub
 
@@ -26,18 +26,12 @@ Private Sub Workbook_Open()
     
     strParam = Right(strCmdLine, 6)
     
-    MsgBox strParam
-    
-    SetDeveloperMode
-'    frmTimerForm.Show
-'    frmTimerForm.Hide
-    SelectPedOrNeoStartSheet
+    'MsgBox strParam
     
     Application.ScreenUpdating = False
     
-    Openen                          'Mopenen
-    
-    SelectPedOrNeoStartSheet
+    ModOpenClose.Openen
+    ModOpenClose.SelectPedOrNeoStartSheet
     
     Application.ScreenUpdating = True
     

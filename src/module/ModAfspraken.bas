@@ -148,7 +148,7 @@ Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
     
 End Sub
 
-Private Sub test()
+Private Sub Test()
     
     Dim varItem As Variant
     Dim arr1700Items() As String

@@ -3,7 +3,10 @@ Option Explicit
 
 Public Function GetPatientDataPath() As String
 
-    GetPatientDataPath = GetRelativePath(CONST_PATIENT_DATAFOLDER)
+    Dim strDir As String
+    
+    strDir = ModSettings.GetDataDir
+    GetPatientDataPath = GetRelativePath(strDir)
 
 End Function
 

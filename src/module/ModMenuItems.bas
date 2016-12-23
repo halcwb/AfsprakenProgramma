@@ -215,54 +215,48 @@ Public Sub SelectTPN()
     
 End Sub
 
+Private Sub ClearContentsSheetRange(shtSheet As Worksheet, strRange As String)
+
+    Dim blnIsDevelop As Boolean
+    Dim strPw As String
+    
+    blnIsDevelop = ModSettings.IsDevelopmentMode()
+    strPw = ModConst.CONST_PASSWORD
+    
+    shtSheet.Unprotect strPw
+    shtSheet.Visible = xlSheetVisible
+    
+    Application.GoTo Reference:=strRange
+    Selection.ClearContents
+    
+    If strRange = ModConst.CONST_AANVULLEND_MRI_VERTREKTIJD Then
+        Selection.Value = 50
+    End If
+    
+    If Not blnIsDevelop Then
+        shtSheet.Visible = xlSheetVeryHidden
+        shtSheet.Protect strPw
+    End If
+
+
+End Sub
+
 Public Sub VerwijderLab()
-    shtPedBerLab.Unprotect CONST_PASSWORD
-    shtPedBerLab.Visible = xlSheetVisible
-    Application.GoTo Reference:=CONST_LABDATA
-    Selection.ClearContents
     
-    If Not BlnIsDevelopment Then
-        shtPedBerLab.Visible = xlSheetVeryHidden
-        shtPedBerLab.Protect CONST_PASSWORD
-    End If
+    ClearContentsSheetRange shtPedBerLab, ModConst.CONST_LABDATA
+    ClearContentsSheetRange shtNeoBerLab, ModConst.CONST_LABDATA_NEO
     
-    shtNeoBerLab.Unprotect CONST_PASSWORD
-    shtNeoBerLab.Visible = xlSheetVisible
-    Application.GoTo Reference:=CONST_LABDATA_NEO
-    Selection.ClearContents
-    
-    If Not BlnIsDevelopment Then
-        shtNeoBerLab.Visible = xlSheetVeryHidden
-        shtNeoBerLab.Protect CONST_PASSWORD
-    End If
 End Sub
 
 Public Sub VerwijderAanvullendeAfspraken()
-    shtNeoBerAfspr.Unprotect CONST_PASSWORD
-    shtNeoBerAfspr.Visible = xlSheetVisible
-    Application.GoTo Reference:=CONST_AANVULLEND_BOOLEANS
-    Selection.ClearContents
-    Application.GoTo Reference:=CONST_AANVULLEND_DATA
-    Selection.ClearContents
-    Application.GoTo Reference:=CONST_AANVULLEND_MRI_VERTREKTIJD
-    Selection.Value = 50
-    
-    If Not BlnIsDevelopment Then
-        shtNeoBerAfspr.Visible = xlSheetVeryHidden
-        shtNeoBerAfspr.Protect CONST_PASSWORD
-    End If
 
-    shtPedBerExtraAfspr.Unprotect CONST_PASSWORD
-    shtPedBerExtraAfspr.Visible = xlSheetVisible
-    Application.GoTo Reference:=CONST_AANVULLEND_BOOLEANS_PED
-    Selection.ClearContents
-    Application.GoTo Reference:=CONST_AANVULLEND_DATA_PED
-    Selection.ClearContents
+    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_AANVULLEND_BOOLEANS
+    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_AANVULLEND_DATA
+    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_AANVULLEND_MRI_VERTREKTIJD
     
-    If Not BlnIsDevelopment Then
-        shtPedBerExtraAfspr.Visible = xlSheetVeryHidden
-        shtPedBerExtraAfspr.Protect CONST_PASSWORD
-    End If
+    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_AANVULLEND_BOOLEANS_PED
+    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_AANVULLEND_DATA_PED
+
 End Sub
 
 Private Sub TPNAdvies(Dag As Integer)

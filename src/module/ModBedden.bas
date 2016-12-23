@@ -42,7 +42,7 @@ ErrorOpenBed:
     MsgBox prompt:=ModConst.CONST_DEFAULTERROR_MSG, Buttons:=vbExclamation, Title:="Infornmedica 2000"
     Application.Cursor = xlDefault
     ModLogging.EnableLogging
-    ModLogging.LogToFile ModConst.GetAfsprakenProgramFilePath() + ModConst.CONST_LOGPATH, Error, Err.Description
+    ModLogging.LogToFile ModConst.GetAfsprakenProgramFilePath() + ModSettings.GetLogDir(), Error, Err.Description
     ModLogging.DisableLogging
 End Sub
 

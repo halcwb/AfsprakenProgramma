@@ -128,6 +128,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             SetToDevelopmentMode
         
         Case "btnToggleLogging"                             ' -> Toggle Logging
+            ModSettings.ToggleLogging
     
         Case "btnRangeNames"                                ' -> Range Names
             ModMenuItems.GiveNameToRange
@@ -147,11 +148,14 @@ End Sub
 
 Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
 
-    Dim strPath As String
+    Dim strPath, strPedDir As String
+    Dim blnIsDevelop
 
-    strPath = LCase(Application.ActiveWorkbook.Path)
+    blnIsDevelop = ModSettings.IsDevelopmentMode()
+    strPath = Application.ActiveWorkbook.Path
+    strPedDir = ModSettings.GetPedDir()
     
-    If InStr(1, strPath, LCase(CONST_PELI_FOLDERNAME)) > 0 Or InStr(1, strPath, LCase(CONST_DEVELOP_FOLDERNAME)) > 0 Then
+    If ModString.StringContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
         blnVisible = True
     Else
         blnVisible = False
@@ -161,11 +165,14 @@ End Sub
 
 Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
     
-    Dim strPath As String
+    Dim strPath, strPedDir As String
+    Dim blnIsDevelop
 
-    strPath = LCase(Application.ActiveWorkbook.Path)
+    blnIsDevelop = ModSettings.IsDevelopmentMode()
+    strPath = Application.ActiveWorkbook.Path
+    strPedDir = ModSettings.GetNeoDir()
     
-    If InStr(1, strPath, LCase(CONST_NEO_FOLDERNAME)) > 0 Or InStr(1, strPath, LCase(CONST_DEVELOP_FOLDERNAME)) > 0 Then
+    If ModString.StringContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
         blnVisible = True
     Else
         blnVisible = False
@@ -175,15 +182,7 @@ End Sub
 
 Sub GetVisibleDevelopment(control As IRibbonControl, ByRef blnVisible)
 
-    Dim strPath As String
-
-    strPath = LCase(Application.ActiveWorkbook.Path)
-    
-    If InStr(1, strPath, LCase(CONST_DEVELOP_FOLDERNAME)) > 0 Then
-        blnVisible = True
-    Else
-        blnVisible = False
-    End If
+    blnVisible = ModSettings.IsDevelopmentMode()
     
 End Sub
 

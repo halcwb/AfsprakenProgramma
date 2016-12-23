@@ -12,7 +12,7 @@ Public Sub RunTests()
     ' Make sure that error messages are not displayed and
     ' program is not closed
     blnDontDisplay = True
-    blnDontClose = True
+    ModOpenClose.SetDontClose True
     
     ' Run the tests
     Test_Open
@@ -30,10 +30,10 @@ Public Sub RunTests()
     MsgBox "All tests ran!", vbExclamation
     
     ' Set the program to the initial state
-    Openen
+    ModOpenClose.Openen
     
     ' Set program to close and messages to display again
-    blnDontClose = False
+    ModOpenClose.SetDontClose False
     blnDontDisplay = False
 
 End Sub
@@ -441,7 +441,7 @@ BeOpenenBedError:
            Buttons:=vbExclamation, Title:="Infornmedica 2000"
     Application.Cursor = xlDefault
     ModLogging.EnableLogging
-    ModLogging.LogToFile ModConst.GetAfsprakenProgramFilePath() + ModConst.CONST_LOGPATH, Error, Err.Description
+    ModLogging.LogToFile ModConst.GetAfsprakenProgramFilePath() + ModSettings.GetLogDir(), Error, Err.Description
     ModLogging.DisableLogging
 End Sub
 
@@ -475,4 +475,10 @@ End Sub
 
 Sub TestVerwijderen()
     ClearPatient True
+End Sub
+
+Public Sub TestWorkBookName()
+
+    MsgBox ActiveWorkbook.Name
+
 End Sub

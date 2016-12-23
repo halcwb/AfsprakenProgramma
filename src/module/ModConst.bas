@@ -1,11 +1,6 @@
 Attribute VB_Name = "ModConst"
 Option Explicit
 
-' Boolean to enable or disable developper mode
-Public BlnEnableDevelop As Boolean
-' Set logging on or off
-Public BlnEnableLogging As Boolean
-
 ' Number of interface sheets
 Public Const CONST_INTERFACESHEET_COUNT = 13
 ' Number of calculation sheets
@@ -13,25 +8,11 @@ Public Const CONST_CALCULATIONSHEET_COUNT = 17
 
 ' Current name of the workbook
 Public Const CONST_WORKBOOKNAME = "Afspraken2015.xlsm"
-'Department Folder Names
-Public Const CONST_NEO_FOLDERNAME = "Neo"
-Public Const CONST_PELI_FOLDERNAME = "Pelikaan"
-'Development Folder Name
-Public Const CONST_DEVELOP_FOLDERNAME = "Testomgeving"
-' Relative path to the testlog file
-Public Const CONST_TEST_CONST_LOGPATH = "\logs\TestLog.txt"
-' Relative path to the log file
-Public Const CONST_LOGPATH = "\logs\Log.txt"
-' Relative path to the data files
-Public Const CONST_PATIENT_DATAFOLDER = "\..\ICAP Data\"
 ' Password to protect code and sheets
 Public Const CONST_PASSWORD = "hla"
 
 'Length bedname
 Public Const CONST_BEDNAME_LENGTH As Integer = 8
-
-'Developer Mode
-Public BlnIsDevelopment As Boolean
 
 'Default error message
 Public Const CONST_DEFAULTERROR_MSG = "Er is een fout opgetreden. Neem contact op met uw functioneel beheerder."
@@ -80,20 +61,6 @@ Public Function GetFormulariumDatabasePath() As String
     GetFormulariumDatabasePath = strPath & "db\"
 
 End Function
-
-' Set the workbook in developper mode
-' showing all ribbon tabs and worksheets
-Sub SetDeveloperMode()
-    
-    Dim strPath As String
-    Dim strValue As String
-    
-    strPath = Application.ActiveWorkbook.Path
-    strValue = CONST_DEVELOP_FOLDERNAME
-
-    BlnIsDevelopment = ModString.StringContainsCaseInsensitive(strPath, strValue)
-
-End Sub
 
 Public Sub SetApplicationCursorToDefault()
 
