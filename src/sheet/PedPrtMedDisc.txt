@@ -1,6 +1,6 @@
-"$B$1: 	=""Naam: ""&_AchterNaam&"", ""&_VoorNaam
+"$B$1: 	=""Naam: ""&__2_AchterNaam&"", ""&__3_VoorNaam
 $D$1: 	=""Geboortedatum: ""
-$F$1: 	=GebDatum
+$F$1: 	=__4_GebDatum
 $I$1: 	=""Gewicht: ""&ROUND(Gewicht/10,1)&""kg""
 $AB$1: 	=TODAY()
 $C$3: 	=IF(PedBerMedDisc!C2<>"""",IF(PedBerMedDisc!C2>1,TRIM(PedBerMedDisc!C2)&"", ""&GlobBerOpm!C16&"" (""&PedBerMedDisc!M2&"" ""&PedBerMedDisc!F2&""/kg/dag)"",TRIM(PedBerMedDisc!C2)&"", ""&GlobBerOpm!C16),"""")

@@ -2,12 +2,12 @@
 $F$2: 	=OpnDatum
 $G$2: 	=""ICU-dag: ""&AfspraakDatum-OpnDatum+1
 $J$2: 	=BedNummer
-$C$3: 	=_AchterNaam&"", ""&_VoorNaam
-$F$3: 	=GebDatum
+$C$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
+$F$3: 	=__4_GebDatum
 $G$3: 	=""Gewicht: ""&Gewicht/10&"" kg""
 $I$3: 	=""Lengte: ""&Lengte&"" cm""
-$C$4: 	=PatNummer
-$F$4: 	=TRUNC((AfspraakDatum-GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-GebDatum)-365*TRUNC((AfspraakDatum-GebDatum)/365,0))/30,0)&"" maand(-en)""
+$C$4: 	=__0_PatNum
+$F$4: 	=TRUNC((AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-__4_GebDatum)-365*TRUNC((AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
 $H$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(Gewicht/10,0.425)*POWER(((Lengte/100)*100),0.725)*0.007184,2)&"" m2""
 $F$8: 	=IF(INDEX(tblInfusenBer,PedBerIVenPM!B2,2)<>0,INDEX(tblInfusenBer,PedBerIVenPM!B2,2)&"" ml"","""")
 $I$8: 	=IF(INDEX(tblInfusenBer,PedBerIVenPM!B2,2)<>0,INDEX(tblInfusenBer,PedBerIVenPM!B2,3))

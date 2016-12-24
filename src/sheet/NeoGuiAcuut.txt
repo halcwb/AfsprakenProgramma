@@ -1,6 +1,6 @@
-"$B$2: 	=""Patient: ""&_AchterNaam&"", ""&_VoorNaam
+"$B$2: 	=""Patient: ""&__2_AchterNaam&"", ""&__3_VoorNaam
 $B$3: 	=""Geb datum.: ""
-$C$3: 	=GebDatum
+$C$3: 	=__4_GebDatum
 $C$5: 	=_Weken
 $D$5: 	=_Dagen
 $E$5: 	=_Gewicht

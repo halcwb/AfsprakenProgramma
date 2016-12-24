@@ -2,11 +2,11 @@
 $G$2: 	=OpnDatum
 $H$2: 	=""ICU-dag: ""&AfspraakDatum-OpnDatum+1
 $I$2: 	=""Gewicht: ""&Gewicht/10&"" kg""
-$D$3: 	=_AchterNaam&"", ""&_VoorNaam
-$G$3: 	=GebDatum
+$D$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
+$G$3: 	=__4_GebDatum
 $I$3: 	=""Lengte: ""&Lengte&"" cm""
-$D$4: 	=PatNummer
-$G$4: 	=TRUNC((AfspraakDatum-GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-GebDatum)-365*TRUNC((AfspraakDatum-GebDatum)/365,0))/30,0)&"" maand(-en)""
+$D$4: 	=__0_PatNum
+$G$4: 	=TRUNC((AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-__4_GebDatum)-365*TRUNC((AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
 $I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(Gewicht/10,0.425)*POWER(((Lengte/100)*100),0.725)*0.007184,2)&"" m2""
 $D$5: 	=BedNummer
 $C$9: 	=IF(PedBerEnt!M2<>0,PedBerEnt!J2&"" dd"","""")

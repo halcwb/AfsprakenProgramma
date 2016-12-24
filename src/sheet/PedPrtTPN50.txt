@@ -1,8 +1,8 @@
 "$B$3: 	=TODAY()
-$F$3: 	=PatNummer
+$F$3: 	=__0_PatNum
 $B$4: 	=BedNummer
-$F$4: 	=_AchterNaam&"",  ""&_VoorNaam
-$F$5: 	=GebDatum
+$F$4: 	=__2_AchterNaam&"",  ""&__3_VoorNaam
+$F$5: 	=__4_GebDatum
 $G$6: 	=Gewicht/10&"" kg""
 $A$9: 	=IF(Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
 $C$9: 	=PedBerTPN!F24

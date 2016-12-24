@@ -17,6 +17,7 @@ Private m_Gewicht As Variant
 Private m_Lengte As Variant
 Private m_Jaren As Variant
 Private m_Maanden As Variant
+Private m_Bed As String
 
 Const c_MaxJaren = 100
 Const c_MinJaren = 0
@@ -27,6 +28,17 @@ Const c_MinGewicht = 0
 Const c_MaxLengte = 250
 Const c_MinLengte = 25
 
+Public Property Get Bed() As String
+
+    Bed = m_Bed
+
+End Property
+
+Public Property Let Bed(ByVal v_Bed As String)
+
+    m_Bed = v_Bed
+
+End Property
 
 Public Property Get AchterNaam() As Variant
 

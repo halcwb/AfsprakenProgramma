@@ -1,4 +1,4 @@
-Attribute VB_Name = "ModLogging"
+Attribute VB_Name = "ModLog"
 Option Explicit
 
 Public Enum LogLevel
@@ -12,19 +12,19 @@ Public Sub ToggleLogging()
     Dim strPw As Variant
     
     strPw = CStr(InputBox("Voer wachtwoord in"))
-    If strPw = CONST_PASSWORD Then ModSettings.ToggleLogging
+    If strPw = CONST_PASSWORD Then ModSetting.ToggleLogging
 
 End Sub
 
 Public Sub EnableLogging()
 
-    ModSettings.SetEnableLogging True
+    ModSetting.SetEnableLogging True
 
 End Sub
 
 Public Sub DisableLogging()
     
-    ModSettings.SetEnableLogging False
+    ModSetting.SetEnableLogging False
 
 End Sub
 
@@ -44,7 +44,7 @@ End Function
 Public Sub LogTest(enmLevel As LogLevel, strMsg As String)
     Dim strFile As String
 
-    strFile = ModConst.GetAfsprakenProgramFilePath() + ModSettings.GetTestLogDir()
+    strFile = WbkAfspraken.Path + ModSetting.GetTestLogDir()
     LogToFile strFile, enmLevel, strMsg
     
 End Sub
@@ -55,7 +55,7 @@ Public Sub LogActionStart(strAction As String, strParams() As Variant)
 
     strMsg = "Begin " + strAction + ": " + Join(strParams, ", ")
 
-    strFile = ModConst.GetAfsprakenProgramFilePath() + ModSettings.GetLogDir()
+    strFile = WbkAfspraken.Path + ModSetting.GetLogDir()
     LogToFile strFile, Info, strMsg
     
 End Sub
@@ -66,14 +66,14 @@ Public Sub LogActionEnd(strAction As String)
 
     strMsg = "End " + strAction
 
-    strFile = ModConst.GetAfsprakenProgramFilePath() + ModSettings.GetLogDir()
+    strFile = WbkAfspraken.Path + ModSetting.GetLogDir()
     LogToFile strFile, Info, strMsg
     
 End Sub
 
 Public Sub LogToFile(strFile As String, enmLevel As LogLevel, strMsg As String)
     
-    If Not ModSettings.GetEnableLogging() Then Exit Sub
+    If Not ModSetting.GetEnableLogging() Then Exit Sub
 
     strMsg = Replace(strMsg, vbNewLine, ". ")
     AppendToFile strFile, Format(DateTime.Now, vbNullString) + ": " + LogLevelToString(enmLevel) + ": " + strMsg

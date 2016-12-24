@@ -12,73 +12,73 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpAfspraken                                       ' -- AFSPRAKEN --
         
         Case "btnClose"                                     ' -> Programma Afsluiten
-            Afsluiten
+            CloseAfspraken
         
         Case "btnClear"                                     ' -> Alles Verwijderen
-            ClearPatient True
-            SelectPedOrNeoStartSheet
+            ModPatient.ClearPatient True
+            ModSheet.SelectPedOrNeoStartSheet
         
         'grpBedden                                          ' -- BEDDEN --
         
         Case "btnOpenBed"                                   ' -> Bed Openen
-            OpenPatientLijst
+            ModBed.OpenBed ModPatient.OpenPatientLijst("Kies een patient...")
         
         Case "btnSaveBed"                                   ' -> Bed Opslaan
-            ModBedden.SluitBed
-            SelectPedOrNeoStartSheet
+            ModBed.SluitBed
+            ModSheet.SelectPedOrNeoStartSheet
         
         Case "btnEnterPatient"                              ' -> Patient Gegevens
-            NieuwePatient
+            ModPatient.EnterPatient
             
         'grpPediatrie                                       ' -- PEDIATRIE --
         
         Case "btnPedMedIV"                                  ' -> Continue IV Medicatie
-            ModSheets.GoToSheet shtPedGuiMedIV, "A6"
+            ModSheet.GoToSheet shtPedGuiMedIV, "A6"
         
         Case "btnPedMedDisc"                                ' -> Discontinue Medicatie
-            ModSheets.GoToSheet shtPedGuiMedDisc, "A6"
+            ModSheet.GoToSheet shtPedGuiMedDisc, "A6"
         
         Case "btnPedIVandPM"                                ' -> Lijnen en PM
-            ModSheets.GoToSheet shtPedGuiPMenIV, "A6"
+            ModSheet.GoToSheet shtPedGuiPMenIV, "A6"
         
         Case "btnPedEntTPN"                                 ' -> Voeding en TPN
-            ModSheets.GoToSheet shtPedGuiEntTPN, "A6"
+            ModSheet.GoToSheet shtPedGuiEntTPN, "A6"
         
         Case "btnPedLab"                                    ' -> Lab Aanvragen
-            ModSheets.GoToSheet shtPedGuiLab, "A1"
+            ModSheet.GoToSheet shtPedGuiLab, "A1"
         
         Case "btnPedExtra"                                  ' -> Afspraken en Controles
-            ModSheets.GoToSheet shtPedGuiAfsprExta, "A6"
+            ModSheet.GoToSheet shtPedGuiAfsprExta, "A6"
             
         'grpNeonatologie                                    ' -- NEONATOLOGIE --
         
         Case "btnNeoMedIV"                                  ' -> Infuusbrief
-            ModSheets.GoToSheet shtNeoGuiAfspraken, "A9"
+            ModSheet.GoToSheet shtNeoGuiAfspraken, "A9"
         
         Case "btnNeoMedDisc"                                ' -> Discontinue Medicatie
-            ModSheets.GoToSheet shtPedGuiMedDisc, "A6"
+            ModSheet.GoToSheet shtPedGuiMedDisc, "A6"
         
         Case "btnNeoExtra"                                  ' -> Afspraken en Controles
-            ModSheets.GoToSheet shtNeoGuiAfsprExtra, "A6"
+            ModSheet.GoToSheet shtNeoGuiAfsprExtra, "A6"
         
         Case "btnNTPNadvies"
             TPNAdviesNEO
         
         Case "btnNeoLab"                                    ' -> Lab Aanvragen
-            ModSheets.GoToSheet shtNeoGuiLab, "A1"
+            ModSheet.GoToSheet shtNeoGuiLab, "A1"
         
         Case "btnNeo1700"                                   ' -> Infuusbrief 17:00
-            ModSheets.GoToSheet shtNeoGuiAfspr1700, "A9"
+            ModSheet.GoToSheet shtNeoGuiAfspr1700, "A9"
         
         'grpRemoveData                                      ' -- ACTIES --
                 
         Case "btnRemoveLab"                                 ' Lab Verwijderen
             VerwijderLab
-            SelectPedOrNeoLabSheet
+            ModSheet.SelectPedOrNeoLabSheet
         
         Case "btnRemoveExtra"                               ' Afspraken Controles Verwijderen
             VerwijderAanvullendeAfspraken
-            SelectPedOrNeoAfsprExtraSheet
+            ModSheet.SelectPedOrNeoAfsprExtraSheet
         
         ' grpNeoActions                                     ' -- INFUUSBRIEF OVERZETTEN --
         
@@ -91,13 +91,13 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpPedPrint                                        ' -- PRINT PEDIATRIE --
         
         Case "btnPedPrintAcuut"                             ' -> Acute Blad
-            ModSheets.GoToSheet shtPedGuiAcuut, "A1"
+            ModSheet.GoToSheet shtPedGuiAcuut, "A1"
         
         Case "btnPedPrintMedIV"                             ' -> Medicatie IV
-            ModSheets.GoToSheet shtPedPrtAfspr, "A1"
+            ModSheet.GoToSheet shtPedPrtAfspr, "A1"
         
         Case "btnPedPrintMedDisc"                           ' -> Medicatie Discontinu
-            ModSheets.GoToSheet shtPedPrtMedDisc, "A1"
+            ModSheet.GoToSheet shtPedPrtMedDisc, "A1"
         
         Case "btnPedPrintTPN"                               ' -> TPN Brief
             SelectPedTPNPrint
@@ -105,30 +105,30 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpNeoPrint                                        ' -- PRINT NEO ---
         
         Case "btnNeoPrintAcuut"                             ' -> Acute Blad
-            ModSheets.GoToSheet shtNeoGuiAcuut, "A1"
+            ModSheet.GoToSheet shtNeoGuiAcuut, "A1"
         
         Case "btnNeoPrintMedIV"                             ' -> Infuus Brief
-            ModSheets.GoToSheet shtNeoPrtAfspr, "A1"
+            ModSheet.GoToSheet shtNeoPrtAfspr, "A1"
         
         Case "btnNeoPrintMedDisc"                           ' -> Medicatie Discontinu
-            ModSheets.GoToSheet shtNeoPrtMedDisc, "A1"
+            ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
         
         Case "btnNTPN"
             TPNAdviesNEO
         
         Case "btnNeoPrintApoth"                             ' -> Apotheek
-            ModSheets.GoToSheet shtNeoPrtApoth, "A1"
+            ModSheet.GoToSheet shtNeoPrtApoth, "A1"
         
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
-            ModSheets.GoToSheet shtNeoPrtWerkbr, "A1"
+            ModSheet.GoToSheet shtNeoPrtWerkbr, "A1"
             
         'grpDevelopment                                     ' -- DEVELOPMENT --
         
         Case "btnDevMode"                                   ' -> Development Mode
-            SetToDevelopmentMode
+            ModApplication.SetToDevelopmentMode
         
         Case "btnToggleLogging"                             ' -> Toggle Logging
-            ModSettings.ToggleLogging
+            ModSetting.ToggleLogging
     
         Case "btnRangeNames"                                ' -> Range Names
             ModMenuItems.GiveNameToRange
@@ -151,11 +151,11 @@ Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
     Dim strPath, strPedDir As String
     Dim blnIsDevelop
 
-    blnIsDevelop = ModSettings.IsDevelopmentMode()
+    blnIsDevelop = ModSetting.IsDevelopmentMode()
     strPath = Application.ActiveWorkbook.Path
-    strPedDir = ModSettings.GetPedDir()
+    strPedDir = ModSetting.GetPedDir()
     
-    If ModString.StringContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
+    If ModString.ContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
         blnVisible = True
     Else
         blnVisible = False
@@ -168,11 +168,11 @@ Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
     Dim strPath, strPedDir As String
     Dim blnIsDevelop
 
-    blnIsDevelop = ModSettings.IsDevelopmentMode()
+    blnIsDevelop = ModSetting.IsDevelopmentMode()
     strPath = Application.ActiveWorkbook.Path
-    strPedDir = ModSettings.GetNeoDir()
+    strPedDir = ModSetting.GetNeoDir()
     
-    If ModString.StringContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
+    If ModString.ContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
         blnVisible = True
     Else
         blnVisible = False
@@ -182,7 +182,7 @@ End Sub
 
 Sub GetVisibleDevelopment(control As IRibbonControl, ByRef blnVisible)
 
-    blnVisible = ModSettings.IsDevelopmentMode()
+    blnVisible = ModSetting.IsDevelopmentMode()
     
 End Sub
 

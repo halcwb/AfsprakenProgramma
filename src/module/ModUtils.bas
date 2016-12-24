@@ -8,14 +8,14 @@ Public Sub ExportForSourceControl()
 
     Dim strPath As String
     
-    strPath = ModConst.GetAfsprakenProgramFilePath & "\src\"
+    strPath = WbkAfspraken.Path & "\src\"
     
     DeleteSourceFiles
 
     ExportFormulas
     ExportVbaCode
     
-    MsgBox "All code and formulas has been exported to: " & strPath
+    ModMessage.ShowMsgBoxInfo "All code and formulas has been exported to: " & strPath
 
 End Sub
 
@@ -23,7 +23,7 @@ Public Sub DeleteSourceFiles()
 
     Dim strPath As String
     
-    strPath = ModConst.GetAfsprakenProgramFilePath() & "\src\"
+    strPath = WbkAfspraken.Path & "\src\"
     
     ModFile.DeleteAllFilesInDir strPath & "sheet\"
     ModFile.DeleteAllFilesInDir strPath & "class\"
@@ -40,7 +40,7 @@ Public Sub ExportFormulas()
     Dim objCell As Range
     Dim strText, strPath As String
     
-    strPath = ModConst.GetAfsprakenProgramFilePath() & "\src\sheet\"
+    strPath = WbkAfspraken.Path & "\src\sheet\"
     
     For Each shtSheet In ActiveWorkbook.Sheets
     
@@ -70,7 +70,7 @@ Public Sub ExportVbaCode()
     Dim strFile As String
     Dim strPath As String
     
-    strPath = ModConst.GetAfsprakenProgramFilePath()
+    strPath = WbkAfspraken.Path
 
     For Each vbcItem In ActiveWorkbook.VBProject.VBComponents
         strFile = GetComponentFileName(vbcItem)
@@ -112,7 +112,7 @@ Public Sub RunShell(strCmd As String, strArgs() As String)
     Dim dblExit As Double
     Dim strArg As Variant
     
-    strPath = ModConst.GetAfsprakenProgramFilePath()
+    strPath = WbkAfspraken.Path
     
     For Each strArg In strArgs
         strCmd = strCmd & " " & strArg

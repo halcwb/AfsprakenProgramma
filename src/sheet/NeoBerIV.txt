@@ -1,5 +1,4 @@
-"$B$3: 	=GebDatum
-$B$5: 	=OpnDatum
+"$B$5: 	=OpnDatum
 $B$6: 	=TODAY()-B3+1+C3
 $C$6: 	=IF(B6<7,B6,6)
 $L$14: 	=IF(AND(_Extra=2,_Voeding>1),(D10*D11+D12*D13)/10,0)

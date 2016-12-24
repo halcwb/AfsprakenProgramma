@@ -1,4 +1,4 @@
-Attribute VB_Name = "ModSettings"
+Attribute VB_Name = "ModSetting"
 Option Explicit
 
 Private Const CONST_DEVMODE = "SettingDevMode"
@@ -11,21 +11,21 @@ Private Const CONST_LOGDIR = "SettingLogDir"
 Private Const CONST_DATADIR = "SettingDataDir"
 Private Const CONST_DBDIR = "SettingDbDir"
 
-Private Function GetSetting(strSetting As String) As Variant
+Private Function GetSetting(strSetting As String, varDefault As Variant) As Variant
 
-    GetSetting = Range(strSetting).Value2
+    GetSetting = ModRange.GetRangeValue(strSetting, varDefault)
 
 End Function
 
 Private Sub SetSetting(strSetting As String, varValue As Variant)
 
-    Range(strSetting).Value2 = varValue
+    ModRange.SetRangeValue strSetting, varValue
     
 End Sub
 
 Public Function GetDevelopmentMode() As Boolean
 
-    GetDevelopmentMode = CBool(GetSetting(CONST_DEVMODE))
+    GetDevelopmentMode = CBool(GetSetting(CONST_DEVMODE, False))
 
 End Function
 
@@ -34,8 +34,8 @@ Public Function IsDevelopmentMode() As Boolean
     Dim blnDevDir As Boolean
     Dim strActDir As String
     
-    strActDir = ModConst.GetAfsprakenProgramFilePath()
-    blnDevDir = ModString.StringContainsCaseInsensitive(strActDir, GetDevelopmentDir)
+    strActDir = WbkAfspraken.Path
+    blnDevDir = ModString.ContainsCaseInsensitive(strActDir, GetDevelopmentDir)
     
     IsDevelopmentMode = GetDevelopmentMode() Or blnDevDir
 
@@ -49,7 +49,7 @@ End Sub
 
 Public Function GetEnableLogging() As Boolean
 
-    GetEnableLogging = CBool(GetSetting(CONST_LOGGING))
+    GetEnableLogging = CBool(GetSetting(CONST_LOGGING, False))
 
 End Function
 
@@ -67,7 +67,7 @@ End Sub
 
 Public Function GetNeoDir() As String
 
-    GetNeoDir = CStr(GetSetting(CONST_NEODIR))
+    GetNeoDir = CStr(GetSetting(CONST_NEODIR, ""))
 
 End Function
 
@@ -79,7 +79,7 @@ End Sub
 
 Public Function GetPedDir() As String
 
-    GetPedDir = CStr(GetSetting(CONST_PEDDIR))
+    GetPedDir = CStr(GetSetting(CONST_PEDDIR, ""))
 
 End Function
 
@@ -91,7 +91,7 @@ End Sub
 
 Public Function GetDevelopmentDir() As String
 
-    GetDevelopmentDir = CStr(GetSetting(CONST_DEVDIR))
+    GetDevelopmentDir = CStr(GetSetting(CONST_DEVDIR, ""))
 
 End Function
 
@@ -103,7 +103,7 @@ End Sub
 
 Public Function GetTestLogDir() As String
 
-    GetTestLogDir = CStr(GetSetting(CONST_TESTLOGDIR))
+    GetTestLogDir = CStr(GetSetting(CONST_TESTLOGDIR, ""))
 
 End Function
 
@@ -113,9 +113,15 @@ Public Sub SetTestLogDir(strDir As String)
 
 End Sub
 
+Public Function GetTestLogPath() As String
+
+    GetTestLogPath = WbkAfspraken.Path & "\" & GetTestLogDir()
+
+End Function
+
 Public Function GetLogDir() As String
 
-    GetLogDir = CStr(GetSetting(CONST_LOGDIR))
+    GetLogDir = CStr(GetSetting(CONST_LOGDIR, ""))
 
 End Function
 
@@ -125,9 +131,15 @@ Public Sub SetLogDir(strDir As String)
 
 End Sub
 
+Public Function GetLogPath() As String
+
+    GetLogPath = WbkAfspraken.Path & "\" & GetLogDir()
+
+End Function
+
 Public Function GetDataDir() As String
 
-    GetDataDir = CStr(GetSetting(CONST_DATADIR))
+    GetDataDir = CStr(GetSetting(CONST_DATADIR, ""))
 
 End Function
 
@@ -139,7 +151,7 @@ End Sub
 
 Public Function GetFormDbDir() As String
 
-    GetFormDbDir = CStr(GetSetting(CONST_DBDIR))
+    GetFormDbDir = CStr(GetSetting(CONST_DBDIR, ""))
 
 End Function
 
@@ -151,9 +163,8 @@ End Sub
 
 Private Sub Test()
 
-    MsgBox GetDevelopmentMode()
-    SetDevelopmentMode False
-    MsgBox GetDevelopmentMode()
-    MsgBox IsDevelopmentMode()
-
+    MsgBox GetEnableLogging()
+    SetEnableLogging True
+    MsgBox GetEnableLogging()
+    
 End Sub

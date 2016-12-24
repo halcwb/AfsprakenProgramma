@@ -12,9 +12,9 @@ Option Explicit
 Private Sub Worksheet_Activate()
     Dim objWindow As Window
     
-    If Not ModSettings.IsDevelopmentMode() Then
+    If Not ModSetting.IsDevelopmentMode() Then
         Set objWindow = Windows(1)
-        SetWindowToOpen objWindow
+        SetWindowToOpenApp objWindow
     End If
     
 End Sub

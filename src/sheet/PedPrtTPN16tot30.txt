@@ -1,8 +1,8 @@
 "$B$3: 	=TODAY()
-$F$3: 	=PatNummer
+$F$3: 	=__0_PatNum
 $B$4: 	=BedNummer
-$F$4: 	=_AchterNaam&"",  ""&_VoorNaam
-$F$5: 	=GebDatum
+$F$4: 	=__2_AchterNaam&"",  ""&__3_VoorNaam
+$F$5: 	=__4_GebDatum
 $G$6: 	=Gewicht/10&"" kg""
 $C$10: 	=PedBerTPN!F24
 $A$14: 	=IF(TPN<>1,ROUND(G22/24,1)&"" ml/u"","""")

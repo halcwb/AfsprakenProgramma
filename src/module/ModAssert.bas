@@ -28,7 +28,7 @@ End Sub
 
 Public Sub DisplayAssert(strMsg As String)
 
-    MsgBox strMsg, vbExclamation, "Informedica 2015"
+    ModMessage.ShowMsgBoxExclam strMsg
 
 End Sub
 

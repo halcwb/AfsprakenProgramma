@@ -1,2 +1,2 @@
-"$B$2: 	=Vandaag()
+"$B$2: 	= TODAY()
 "

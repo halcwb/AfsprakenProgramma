@@ -35,8 +35,8 @@ $E$8: 	=ROUND(NeoBerIV!W47,0)& "" IE""
 $H$8: 	=ROUND(NeoBerIV!Q50/_Gewicht,1)&"" mmol/kg""
 $I$8: 	=ROUND(NeoBerIV!Q49/_Gewicht,1)&"" mmol/kg""
 $J$8: 	=ROUND(NeoBerIV!Q47/_Gewicht,1)&"" mmol/kg""
-$I$10: 	=PatNummer
-$I$11: 	=_AchterNaam &"",  ""&_VoorNaam
+$I$10: 	=__0_PatNum
+$I$11: 	=__2_AchterNaam &"",  ""&__3_VoorNaam
 $I$12: 	=NeoBerIV!B3-NeoBerIV!C3
 $J$12: 	=""=dag ""&NeoBerIV!B6
 $H$13: 	=NeoBerIV!D4

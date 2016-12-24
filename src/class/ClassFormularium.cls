@@ -71,7 +71,7 @@ Public Sub GetMedicamenten()
     
     Application.DisplayAlerts = False
 
-    strFileName = GetFormulariumDatabasePath() + sName
+    strFileName = ModFormularium.GetFormulariumDatabasePath() + sName
 
     Workbooks.Open strFileName, True, True
     

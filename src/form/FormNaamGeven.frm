@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormNaamGeven
    ClientHeight    =   1799
    ClientLeft      =   42
    ClientTop       =   329
-   ClientWidth     =   6608
+   ClientWidth     =   6972
    OleObjectBlob   =   "FormNaamGeven.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -26,19 +26,29 @@ Private Sub cmdCancel_Click()
 End Sub
 
 Private Sub cmdOk_Click()
-    Dim sRef As String, sNaam As String, intAant As Integer, i As Integer, intStart As Integer
+
+    Dim strRes As String
+    Dim strName As String
+    Dim strGroup As String
+    Dim intRows As Integer
+    Dim intMax As Integer
+    Dim intN As Integer
+    Dim intStart As Integer
     
     RefNaam.SetFocus
     Range(RefNaam.Text).Select
     
-    sNaam = txtNaam.Text
-    intStart = txtStart.Text
+    strName = txtNaam.Text
+    strGroup = txtGroup.Text
+    intStart = CInt(txtStart.Text)
     
     With Selection
-        intAant = .Rows.Count
-        For i = 1 To intAant
-            .Cells(i, 1).Name = sNaam & "_" & i + intStart - 1
-        Next i
+        intRows = .Rows.Count
+        intMax = intStart + intRows - 1
+        For intN = 1 To intRows
+            strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax)
+            ModRange.SetNameToRange strRes, .Cells(intN, 1)
+        Next intN
     End With
     
     txtNaam.Text = vbNullString

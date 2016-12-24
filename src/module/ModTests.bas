@@ -12,7 +12,7 @@ Public Sub RunTests()
     ' Make sure that error messages are not displayed and
     ' program is not closed
     blnDontDisplay = True
-    ModOpenClose.SetDontClose True
+    ModApplication.SetDontClose True
     
     ' Run the tests
     Test_Open
@@ -30,10 +30,10 @@ Public Sub RunTests()
     MsgBox "All tests ran!", vbExclamation
     
     ' Set the program to the initial state
-    ModOpenClose.Openen
+    ModApplication.InitializeAfspraken
     
     ' Set program to close and messages to display again
-    ModOpenClose.SetDontClose False
+    ModApplication.SetDontClose False
     blnDontDisplay = False
 
 End Sub
@@ -50,7 +50,7 @@ End Sub
 Public Sub Test_Open()
 
     On Error GoTo Assert:
-    Openen
+    InitializeAfspraken
     
 Assert:
 
@@ -62,7 +62,7 @@ End Sub
 Public Sub Test_Sluit()
 
     On Error GoTo Assert:
-    Afsluiten
+    CloseAfspraken
 
 Assert:
     
@@ -123,7 +123,7 @@ Public Sub Test_OpenBed()
 
     Dim strBed As String
     
-    ModBedden.OpenBed "2.9"
+    ModBed.OpenBed "2.9"
     strBed = Range("Bednummer").Formula
     
     AssertEqual "2.9", strBed, "Bed 2.9 should be opened, but strBed: " + strBed + " was open", Not blnDontDisplay
@@ -148,7 +148,7 @@ Public Sub Test_CanOpenCloseWorkbook()
     intCount = Workbooks.Count
     
     strName = "Formularium.xlsx"
-    strFileName = ModConst.GetAfsprakenProgramFilePath() + "\db\" + strName
+    strFileName = WbkAfspraken.Path + "\db\" + strName
     Workbooks.Open strFileName, True, True
     
     AssertTrue Workbooks.Count = intCount + 1, "After opening the count of workbooks should be +1", Not blnDontDisplay
@@ -180,9 +180,9 @@ Public Sub Test_CountInterfaceSheets()
 
     Dim intCount As Integer
     
-    intCount = ModSheets.GetUserInterfaceSheets().Count
+    intCount = ModSheet.GetUserInterfaceSheets().Count
     
-    AssertEqual intCount, CONST_INTERFACESHEET_COUNT, "Wrong number of interaces sheets", Not blnDontDisplay
+    AssertEqual intCount, ModSheet.GetInterfaceSheetCount, "Wrong number of interaces sheets", Not blnDontDisplay
 
 End Sub
 
@@ -190,9 +190,9 @@ Public Sub Test_CountCalculationSheets()
 
     Dim intCount As Integer
     
-    intCount = ModSheets.GetNonInterfaceSheets().Count
+    intCount = ModSheet.GetNonInterfaceSheets().Count
     
-    AssertEqual intCount, CONST_CALCULATIONSHEET_COUNT, "Wrong number of calculation sheets", Not blnDontDisplay
+    AssertEqual intCount, ModSheet.GetNonInterfaceSheetCount, "Wrong number of calculation sheets", Not blnDontDisplay
 
 End Sub
 
@@ -338,8 +338,8 @@ Private Sub TestPatientVerhuizen()
                     Range("Bednummer").Value = strBed
                     Set colPatienten = Nothing
                     Set oFrmPatientLijst = Nothing
-                    ModBedden.SluitBed
-                    ModBedden.OpenBed strBedOld
+                    ModBed.SluitBed
+                    ModBed.OpenBed strBedOld
                     ClearPatient (False)
                     'TODO: Opslaan zonder meldingen->Call BeSluitBed
                     strFileNameOld = GetPatientDataFile(strBedOld)
@@ -348,7 +348,7 @@ Private Sub TestPatientVerhuizen()
                     strBookNameOld = "Patient" + strBedOld + ".xls"
                     strTekstBookNameOld = "Patient" + strBedOld + "_AfsprakenTekst.xls"
                     SaveBedToFile strFileNameOld, strBookNameOld, strTekstFileOld, strTekstBookNameOld
-                    ModBedden.OpenBed strBed
+                    ModBed.OpenBed strBed
                     'TODO:Patient verwijderen van oude bed
                     'Oude strBed bewaren, oude gegevens bestanden leeg maken ==> NIEUWE SUB
                     'Open old bed: Open Patient-file
@@ -394,55 +394,13 @@ Sub TestOpenPatient()
         If .lstPatienten.ListIndex > -1 Then
             Application.Cursor = xlWait
             strIndex = VBA.Left$(.lstPatienten.Text, CONST_BEDNAME_LENGTH) 'intBednameLength=8
-            ModBedden.OpenBed strIndex
+            ModBed.OpenBed strIndex
             Application.Cursor = xlDefault
         End If
         .lstPatienten.Clear
     End With
     
     Set objPatienten = Nothing
-End Sub
-
-Public Sub TestBeOpenenBed(strBed As String)
-    On Error GoTo BeOpenenBedError
-
-    Dim strAction As String, strParams() As Variant
-    Dim intCount As Integer
-    
-    strAction = "BeOpenenBed"
-    strParams = Array(strBed)
-    LogActionStart strAction, strParams
-    
-    Dim strFileName As String, strBookName As String, strRange As String
-    
-    strFileName = GetPatientDataFile(strBed)
-    strBookName = GetPatientWorkBookName(strBed)
-    strRange = "a1:b1"
-    
-    If CopyWorkBookRangeToTempSheet(strFileName, strBookName, strRange) Then
-        Range("BedNummer").Value = strBed
-        shtPedGuiLab.Unprotect (CONST_PASSWORD)
-        With shtGlobTemp
-            On Error Resume Next
-            For intCount = 2 To .Range("A1").CurrentRegion.Rows.Count
-                Range(.Cells(intCount, 1).Value).Formula = .Cells(intCount, 2).Formula
-            Next intCount
-        End With
-        shtPedGuiLab.Protect (CONST_PASSWORD)
-    End If
-
-    SelectTPN
-
-    LogActionEnd "BeOpenBed"
-    Exit Sub
-
-BeOpenenBedError:
-    MsgBox prompt:=CONST_DEFAULTERROR_MSG, _
-           Buttons:=vbExclamation, Title:="Infornmedica 2000"
-    Application.Cursor = xlDefault
-    ModLogging.EnableLogging
-    ModLogging.LogToFile ModConst.GetAfsprakenProgramFilePath() + ModSettings.GetLogDir(), Error, Err.Description
-    ModLogging.DisableLogging
 End Sub
 
 Sub GetAllNamedRangesOnCurrentWorksheet()

@@ -3,71 +3,6 @@ Option Explicit
 
 Dim BAXA As Boolean
 
-Public Sub NieuwePatient()
-
-    Dim frmPatient As New FormPatient
-    
-    frmPatient.Show
-    
-    Set frmPatient = Nothing
-
-End Sub
-
-Public Sub PatientenLijst()
-
-    Dim frmPatLijst As New FormPatLijst
-
-    frmPatLijst.Show
-    
-    Set frmPatLijst = Nothing
-
-End Sub
-
-Public Function SavePatient() As Boolean
-
-    Dim intN As Integer
-    
-    On Error GoTo Hell
-    
-    With Sheets("Patienten")
-        For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
-            .Cells(intN, 4).Formula = Range(.Cells(intN, 1).Value).Formula
-        Next intN
-    End With
-    
-    SavePatient = True
-    
-Hell:
-    Resume Next
-End Function
-
-Public Sub ClearPatient(blnShowWarn As Boolean)
-    
-    Dim intN As Integer, objResult As VbMsgBoxResult
-            
-    If blnShowWarn Then
-        objResult = MsgBox("Afspraken echt verwijderen?", vbYesNo, "Informedica")
-    Else
-        objResult = vbYes
-    End If
-    
-    If objResult = vbYes Then
-        Application.Cursor = xlWait
-        With shtPatData
-            For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
-                Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 3).Formula
-            Next intN
-        End With
-        VerwijderLab
-        VerwijderAanvullendeAfspraken
-        Application.Cursor = xlDefault
-    End If
-    
-    Range("AfspraakDatum").FormulaLocal = "=Vandaag()"
-    SetApplTitle
-    
-End Sub
-
 Public Sub StandaardInstellingen()
 
     Dim intN As Integer
@@ -166,7 +101,7 @@ Public Sub SaveAndPrintAfspraken()
 
     Dim frmPrintAfspraken As New FormPrintAfspraken
     
-    ModBedden.SluitBed
+    ModBed.SluitBed
     frmPrintAfspraken.Show
     
     Set frmPrintAfspraken = Nothing
@@ -220,7 +155,7 @@ Private Sub ClearContentsSheetRange(shtSheet As Worksheet, strRange As String)
     Dim blnIsDevelop As Boolean
     Dim strPw As String
     
-    blnIsDevelop = ModSettings.IsDevelopmentMode()
+    blnIsDevelop = ModSetting.IsDevelopmentMode()
     strPw = ModConst.CONST_PASSWORD
     
     shtSheet.Unprotect strPw
@@ -229,7 +164,7 @@ Private Sub ClearContentsSheetRange(shtSheet As Worksheet, strRange As String)
     Application.GoTo Reference:=strRange
     Selection.ClearContents
     
-    If strRange = ModConst.CONST_AANVULLEND_MRI_VERTREKTIJD Then
+    If strRange = ModConst.CONST_RANGE_NEOMRI Then
         Selection.Value = 50
     End If
     
@@ -243,19 +178,19 @@ End Sub
 
 Public Sub VerwijderLab()
     
-    ClearContentsSheetRange shtPedBerLab, ModConst.CONST_LABDATA
-    ClearContentsSheetRange shtNeoBerLab, ModConst.CONST_LABDATA_NEO
+    ClearContentsSheetRange shtPedBerLab, ModConst.CONST_RANGE_PEDLAB
+    ClearContentsSheetRange shtNeoBerLab, ModConst.CONST_RANGE_NEOLAB
     
 End Sub
 
 Public Sub VerwijderAanvullendeAfspraken()
 
-    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_AANVULLEND_BOOLEANS
-    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_AANVULLEND_DATA
-    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_AANVULLEND_MRI_VERTREKTIJD
+    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEOBOOL
+    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEODATA
+    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEOMRI
     
-    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_AANVULLEND_BOOLEANS_PED
-    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_AANVULLEND_DATA_PED
+    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_RANGE_PEDBOOL
+    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_RANGE_PEDDATA
 
 End Sub
 
@@ -285,7 +220,7 @@ Private Sub TPNAdvies(Dag As Integer)
             
             dblVitIntra = dblGewicht
             Range("VitIntra").Value = True
-            Range("VitIntraVol").Value = IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
+            Range("ModSetting").Value = IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
             
             Select Case Dag
                 Case 1
@@ -620,196 +555,6 @@ Public Sub WerkBriefPrinten()
 
 End Sub
 
-Public Sub ClearPat2()
-    'TODO: Samenvoegen met clearPat
-    Dim i As Integer, vResp As Variant
-    Dim shtPatienten As Worksheet
-
-    On Error GoTo Hell
-
-    vResp = MsgBox("Afspraken echt verwijderen?", vbYesNo, "Informedica")
-
-    If vResp = vbYes Then
-        Application.Cursor = xlWait
-        With shtPatienten
-            For i = 2 To .Range("A1").CurrentRegion.Rows.Count
-                If Not i = 4 Then _
-                    Range(.Cells(i, 1).Value).Formula = .Cells(i, 3).Formula
-            Next i
-        End With
-        Application.Cursor = xlDefault
-    End If
-
-    SetApplTitle
-
-    Exit Sub
-
-Hell:
-
-    Resume Next
-
-End Sub
-
-Public Sub Afsluiten2()
-    Dim nPiTeller As Integer
-    Dim shtTemp As Worksheet
-
-    'TODO: Samenvoegen met Afsluiten
-    Application.Cursor = xlWait
-    Application.DisplayAlerts = False
-
-On Error GoTo Hell:
-
-'   Werkbalken weer herstellen
-    For nPiTeller = 1 To Toolbars.Count
-        If shtTemp.Cells(20, nPiTeller).Value Then
-            Toolbars(nPiTeller).Visible = True
-        End If
-    Next nPiTeller
-
-'   Menubalk activeren
-    For nPiTeller = 1 To MenuBars(xlWorksheet).Menus.Count
-        MenuBars(xlWorksheet).Menus(nPiTeller).Enabled = True
-    Next nPiTeller
-    
-    With ActiveWindow
-        .DisplayGridlines = True
-        .DisplayHeadings = True
-        .DisplayOutline = True
-        .DisplayZeros = True
-        .DisplayWorkbookTabs = True
-    End With
- 
-    Toolbars("Afspraken").Visible = False
-    
-    With Application
-         .Caption = vbNullString
-         .DisplayFormulaBar = True
-         .Cursor = xlDefault
-         .Quit
-    End With
-    
-Exit Sub
-    
-Hell:
-
-    Resume Next:
-
-End Sub
-
-Sub Openen2()
-'TODO: Samenvoegen met Openen
-'''''    Dim bPuGlToolbars() As Boolean
-'''''
-'''''    On Error Resume Next
-'''''
-'''''    Application.Cursor = xlWait
-'''''
-'''''    InterfaceBladenBeveiligen
-'''''    RekenBladenVerbergen
-'''''    shtAfspraken.Activate
-''''''   Knoppen en balken verwijderen
-'''''    With Application
-'''''         .Caption = "Informedica 2000 NICU programma "
-'''''         .DisplayFormulaBar = False
-'''''         .DisplayStatusBar = False
-'''''         .DisplayScrollBars = True
-'''''         .DisplayFormulaBar = False
-'''''    End With
-'''''
-''''''   Werkbalken weghalen behalve de Afspraken balk
-'''''    ReDim bPuGlToolbars(Toolbars.Count)
-'''''    For nPiTeller = 1 To Toolbars.Count
-'''''        If Toolbars(nPiTeller).Visible = True Then
-'''''            shtTemp.Cells(20, nPiTeller).Value = True
-'''''        Else
-'''''            shtTemp.Cells(20, nPiTeller).Value = False
-'''''        End If
-'''''        If Toolbars(nPiTeller).Name <> "NICU" Then
-'''''            Toolbars(nPiTeller).Visible = False
-'''''        End If
-'''''    Next nPiTeller
-'''''    Toolbars("'NICU").Visible = True
-'''''
-''''''   Menubalk leegmaken
-'''''    For nPiTeller = 1 To MenuBars(xlWorksheet).Menus.Count
-'''''        MenuBars(xlWorksheet).Menus(nPiTeller).Enabled = False
-'''''    Next nPiTeller
-'''''
-'''''    With ActiveWindow
-'''''        .DisplayHorizontalScrollBar = False
-'''''        .DisplayVerticalScrollBar = True
-'''''        .DisplayGridlines = False
-'''''        .DisplayZeros = False
-'''''        .DisplayWorkbookTabs = False
-'''''        .DisplayHeadings = False
-'''''    End With
-'''''
-'''''    Application.Cursor = xlDefault
-'''''    PaPatientenLijst
-
-End Sub
-
-Public Sub SluitBed2()
-'TODO: Samenvoegen met BeSluitBed
-''''    Dim sFileName As String, sBookName As String, sRange As String, sBed As String
-''''    Dim sPrompt As String, vReply As Variant
-''''
-''''    Dim colPatienten As Collection
-''''    Dim oFrmPatientLijst As frmPatLijst
-''''
-''''    sBed = Range("_Bed").Formula
-''''    sFileName = "\\fs04.ds.umcutrecht.nl\PGGroups$\Groups\Infuusbrief\Patient" + sBed + ".xls"
-''''    sBookName = "Patient" + sBed + ".xls"
-''''
-''''    sPrompt = "Patient " & Range("_VoorNaam").Value & ", " & Range("_AchterNaam") _
-''''    & " opslaan op bed: " & sBed & "?"
-''''    vReply = MsgBox(prompt:=sPrompt, Buttons:=vbYesNo, Title:="Informedica 200")
-''''
-''''    If vReply = vbYes Then
-''''        Application.Cursor = xlWait
-''''        If bPuBedOpslaan(sFileName, sBookName) Then
-''''            MsgBox "Patient is opgeslagen", vbInformation, "Informedica"
-''''        End If
-''''        Application.Cursor = xlDefault
-''''    Else
-''''        vReply = MsgBox("Op een ander bed opslaan?", vbYesNo, "Informedica")
-''''        If vReply = vbYes Then
-''''            Set colPatienten = oPuPatientenCollectie
-''''            Set oFrmPatientLijst = New frmPatLijst
-''''            oFrmPatientLijst.Caption = "Selecteer de patient die vervangen moet worden ..."
-''''            With oFrmPatientLijst.lstPatienten
-''''                .Clear
-''''                For nPiTeller = 1 To colPatienten.Count
-''''                    .AddItem colPatienten(nPiTeller)
-''''                Next nPiTeller
-''''                oFrmPatientLijst.Show
-''''                If .ListIndex > -1 Then
-''''                    sBed = VBA.Left$(.Text, 3)
-''''                    Range("_Bed").Value = sBed
-''''                    Set colPatienten = Nothing
-''''                    Set oFrmPatientLijst = Nothing
-''''                    Call BeSluitBed
-''''                Else
-''''                    Set colPatienten = Nothing
-''''                    Set oFrmPatientLijst = Nothing
-''''                    Exit Sub
-''''                End If
-''''            End With
-''''        End If
-''''    End If
-''''
-''''    SetApplTitle
-''''    shtAfspraken.Select
-
-End Sub
-
-Public Sub SetApplTitle()
-
-    Application.Caption = "Patient: " & Range("_VoorNaam") & " " & Range("_AchterNaam") & ", op bed " & Range("_bed")
-
-End Sub
-
 Public Sub TPNAdviesNEO()
 
     Range("_DagKeuze").Value = IIf(Range("Dag").Value < 4, 1, 2)
@@ -824,7 +569,7 @@ Public Sub TPNAdviesNEO()
     Range("_NICUMix").Value = 5000
     Range("_SSTB").Value = 5000
     
-    ModSheets.GoToSheet shtNeoGuiAfspraken, "A9"
+    ModSheet.GoToSheet shtNeoGuiAfspraken, "A9"
 
 End Sub
 

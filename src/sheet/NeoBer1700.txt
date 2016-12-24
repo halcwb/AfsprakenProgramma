@@ -1,4 +1,4 @@
-"$B$3: 	=GebDatum
+"$B$3: 	=__4_GebDatum
 $B$4: 	=_Gewicht
 $B$5: 	=OpnDatum
 $B$6: 	=TODAY()-B3+1+C3

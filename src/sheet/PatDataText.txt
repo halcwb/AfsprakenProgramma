@@ -1,8 +1,8 @@
 "$C$1: 	=PedPrtAfspr!F2&"" geb: ""&TEXT(PedPrtAfspr!F3,""dd-mmm-jj"")&"". Gewicht: ""&ROUND(Gewicht/10,1)&"" kg""
-$C$2: 	=_AchterNaam
-$C$3: 	=_VoorNaam
+$C$2: 	=__2_AchterNaam
+$C$3: 	=__3_VoorNaam
 $C$4: 	=TEXT(PedPrtAfspr!F3,""dd-mmm-jj"")
-$C$5: 	=PatNummer
+$C$5: 	=__0_PatNum
 $C$6: 	=IF(PedPrtAfspr!C51<>0,PedPrtAfspr!C51&"" ""&PedPrtAfspr!E51&"" ""&PedPrtAfspr!F51&"" ""&PedPrtAfspr!G51&"", totaal ""&PedPrtAfspr!J51&"" ""&PedPrtAfspr!I51,"""")
 $C$7: 	=IF(PedPrtAfspr!C52<>0,PedPrtAfspr!C52&"" ""&PedPrtAfspr!E52&"" ""&PedPrtAfspr!F52&"" ""&PedPrtAfspr!G52&"", totaal ""&PedPrtAfspr!J52&"" ""&PedPrtAfspr!I52,"""")
 $C$8: 	=IF(PedPrtAfspr!C53<>0,PedPrtAfspr!C53&"" ""&PedPrtAfspr!E53&"" ""&PedPrtAfspr!F53&"" ""&PedPrtAfspr!G53&"", totaal ""&PedPrtAfspr!J53&"" ""&PedPrtAfspr!I53,"""")

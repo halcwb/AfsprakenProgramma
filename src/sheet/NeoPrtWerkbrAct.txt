@@ -1,5 +1,5 @@
 "$M$1: 	=_Bed
-$C$2: 	=_VoorNaam&"" ""&_AchterNaam
+$C$2: 	=__3_VoorNaam&"" ""&__2_AchterNaam
 $I$2: 	=TODAY()
 $M$2: 	=NOW()
 $C$3: 	=_Gewicht
