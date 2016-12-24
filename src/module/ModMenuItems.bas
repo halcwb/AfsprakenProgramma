@@ -31,6 +31,8 @@ Public Sub StandaardInstellingen()
     
     Application.Cursor = xlDefault
     
+    Exit Sub
+    
 Exit Sub
 
 Hell:
@@ -66,7 +68,7 @@ Public Sub InstellingenKlein()
     
     Application.Cursor = xlDefault
     
-Exit Sub
+    Exit Sub
 
 Hell:
 Resume Next
@@ -161,7 +163,7 @@ Private Sub ClearContentsSheetRange(shtSheet As Worksheet, strRange As String)
     shtSheet.Unprotect strPw
     shtSheet.Visible = xlSheetVisible
     
-    Application.GoTo Reference:=strRange
+    Application.Goto Reference:=strRange
     Selection.ClearContents
     
     If strRange = ModConst.CONST_RANGE_NEOMRI Then

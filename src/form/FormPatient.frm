@@ -81,6 +81,7 @@ Private Sub cmdOk_Click()
 End Sub
 
 Private Sub txtGebDat_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
+
     On Error GoTo Hell
     
     If Not IsDate(txtGebDat.Value) Then
@@ -113,6 +114,8 @@ Private Sub txtGebDat_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
             End If
         End If
     End If
+    
+    Exit Sub
     
 Hell:
 End Sub
@@ -147,6 +150,8 @@ Private Sub txtOpnDat_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
             End If
         End If
     End If
+    
+    Exit Sub
 
 Hell:
 End Sub
@@ -171,6 +176,8 @@ Private Sub Toevoegen()
             .Cells(intI, intEmpty).Formula = Range(.Cells(intI, 1).Value).Value
         Next intI
     End With
+    
+    Exit Sub
     
 Hell:
     Resume Next

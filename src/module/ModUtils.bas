@@ -33,7 +33,6 @@ Public Sub DeleteSourceFiles()
 
 End Sub
 
-
 Public Sub ExportFormulas()
 
     Dim shtSheet As Worksheet
@@ -46,7 +45,9 @@ Public Sub ExportFormulas()
     
         strText = ""
     
-        shtSheet.Unprotect ModConst.CONST_PASSWORD
+        If ModSheet.IsUserInterface(shtSheet) Then
+            shtSheet.Unprotect ModConst.CONST_PASSWORD
+        End If
     
         For Each objCell In shtSheet.Range("A1:AX200")
             
@@ -58,7 +59,9 @@ Public Sub ExportFormulas()
         
         If strText <> vbNullString Then ModFile.WriteToFile strPath & shtSheet.Name & ".txt", strText
         
-        shtSheet.Protect ModConst.CONST_PASSWORD
+        If ModSheet.IsUserInterface(shtSheet) Then
+            shtSheet.Protect ModConst.CONST_PASSWORD
+        End If
         
     Next shtSheet
 

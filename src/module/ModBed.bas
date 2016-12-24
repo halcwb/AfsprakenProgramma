@@ -31,7 +31,7 @@ Public Sub OpenBed(strBed As String)
 
     ModLog.LogActionEnd strAction
     
-Exit Sub
+    Exit Sub
 
 ErrorOpenBed:
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG

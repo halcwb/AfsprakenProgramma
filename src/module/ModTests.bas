@@ -50,7 +50,10 @@ End Sub
 Public Sub Test_Open()
 
     On Error GoTo Assert:
+    
     InitializeAfspraken
+    
+    Exit Sub
     
 Assert:
 
@@ -63,6 +66,8 @@ Public Sub Test_Sluit()
 
     On Error GoTo Assert:
     CloseAfspraken
+    
+    Exit Sub
 
 Assert:
     
@@ -76,6 +81,8 @@ Public Sub Test_ClearPatient()
 
     On Error GoTo Assert:
     ClearPatient True
+    
+    Exit Sub
 
 Assert:
 
@@ -134,6 +141,8 @@ Public Sub Test_SluitBed()
 
     On Error GoTo Assert:
     SluitBed
+    
+    Exit Sub
 
 Assert:
 

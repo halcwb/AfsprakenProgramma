@@ -1,40 +1,6 @@
 Attribute VB_Name = "ModRange"
 Option Explicit
 
-Sub SetTablePerOs()
-    
-    Dim intStart As Integer
-    Dim intEnd As Integer
-    Dim strRange As String
-    Dim strStartPO As String
-    Dim strEndPO As String
-    Dim strNamedRangeTablePerOs As String
-
-    intStart = GetRow("tblPO", strStartPO)
-    intEnd = GetRow("tblPO", strEndPO)
-    
-    strRange = "=tblPO!R" & intStart & "C3:R" & intEnd - 1 & "C12"
-    ActiveWorkbook.Names.Add Name:=strNamedRangeTablePerOs, RefersToR1C1:=strRange
-
-End Sub
-
-Sub SetTablePoeder()
-
-    Dim intStart As Integer
-    Dim intEnd As Integer
-    Dim strRange As String
-    Dim strStartPoeder As String
-    Dim strEndPoeder As String
-    Dim strNamedRangeTablePoeder As String
-
-    intStart = GetRow("tblPO", strStartPoeder)
-    intEnd = GetRow("tblPO", strEndPoeder)
-    
-    strRange = "=tblPO!R" & intStart & "C3:R" & intEnd - 1 & "C12"
-    ActiveWorkbook.Names.Add Name:=strNamedRangeTablePoeder, RefersToR1C1:=strRange
-    
-End Sub
-
 Function GetRow(sheetName As String, searchString As String)
 
     Dim currentRow As Integer
@@ -69,17 +35,28 @@ Public Sub SetNameToRange(strName As String, objRange As Range)
 
     ModAssert.AssertTrue objRange.Rows.Count = 1 And objRange.Columns.Count = 1, "Name cannot be set to multi cell", True
     
-    If NameExists(strName) Then
-        WbkAfspraken.Names(strName).Delete
-    End If
+    If NameExists(strName) Then WbkAfspraken.Names(strName).Delete
     
-    If NameExists(objRange.Name) Then
-        WbkAfspraken.Names(objRange.Name).Name = strName
+    If RangeHasName(objRange) Then
+        objRange.Name.Name = strName
     Else
-        WbkAfspraken.Names.Add Name:=strName, RefersToR1C1:=objRange.Address
+        WbkAfspraken.Names.Add Name:=strName, RefersTo:=GetCellAddress(objRange)
     End If
 
 End Sub
+
+Public Function RangeHasName(objRange As Range) As Boolean
+    
+    On Error GoTo NoName
+
+    RangeHasName = objRange.Name <> vbNullString
+    
+    Exit Function
+    
+NoName:
+    RangeHasName = False
+
+End Function
 
 Public Function NameExists(strName As String) As Boolean
 
@@ -98,18 +75,23 @@ Public Function NameExists(strName As String) As Boolean
 
 End Function
 
-Public Function CreateName(strName As String, strGroup As String, intN As Integer, intMax As Integer) As String
+Public Function CreateName(ByVal strName As String, ByVal strGroup As String, ByVal intN As Integer, ByVal intMax As Integer) As String
 
     Dim strInt As String
+    Dim strResult As String
 
-    strName = strGroup & "_" & strName & "_"
+    If strGroup = vbNullString Then
+        strResult = "_" & strName & "_"
+    Else
+        strResult = "_" & strGroup & "_" & strName & "_"
+    End If
     
     strInt = CStr(intN)
     Do While Len(strInt) < Len(CStr(intMax))
         strInt = "0" & strInt
     Loop
     
-    CreateName = strName & strInt
+    CreateName = strResult & strInt
 
 End Function
 
@@ -138,10 +120,9 @@ Public Function GetRangeValue(strRange As String, varDefault As Variant) As Vari
 
 End Function
 
-Private Sub Test()
+Public Function GetCellAddress(objRange As Range) As String
 
-    MsgBox NameExists("KCl")
+    GetCellAddress = "=" & "'" & objRange.Parent.Name & "'!" & objRange.Address(External:=False)
 
-End Sub
-
+End Function
 
