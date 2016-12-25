@@ -8,8 +8,9 @@
 # Add license
 !LICENSE.txt
 
-# Add todo list
-!ToDo.txt
+# Add text files
+!todo.txt
+!changes.txt
 
 # Add md files
 !*.md
@@ -34,3 +35,7 @@
 # Add sheet formulas
 !/src/sheet/
 !/src/sheet/*.txt
+
+# Add range names
+!/src/name/
+!/src/name/*.txt

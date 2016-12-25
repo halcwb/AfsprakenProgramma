@@ -1,0 +1,64 @@
+Veranderingen t.o.v. eerdere versies:
+
+- Naam geving veranderd van:
+	- Werkbladen: beginnen met 'sht', dan 'Div', 'Glob', 'Ped' of 'Neo', dan 'Ber', 'Gui', 'Tbl' of 'Prt', dan de naam. Alleen shtGlobSettings and shtGlobTemp hebben een afwijkende naam.
+	- Formulieren beginnen met 'Form'.
+	- Modules beginnen met 'Mod'.
+	- Classes beginnen met 'Class'.
+	- Alle functies en subs beginnen met een hoofdletter. Indien een sub of functie niet in dezelfde module zit is het gebruik: 'ModNaam.SubNaam' of 'ModNaam.FunctieNaam'
+	- Alle variabelen beginnen met een type aanduiding voorvoegsel: b.v. str, int, lng, bln, obj, sht, frm etc...
+	- Constanten beginnen met 'CONST_' en zijn volledig in hoofdletters.
+	- Namen van ranges beginnen met '_' indien patient data gevolgd door 'Glob', 'Ped' of 'Neo' indien voor globaal gebruik (Ped en Neo) of alleen voor pediatrie of neonatologie. Ranges beginnen met 'tbl' indien het tabulaire data betreft.
+
+- Ribbon:
+	- Menu namen zo kort mogelijk houden. 
+	- Icons toegevoegd bij menu items om deze beter te onderscheiden.
+	- Menu code beter gestructureerd, zodat het een beter overzicht verschaft.
+
+- Alle 'dode' code verwijderd. Code die niet meer werd gebruikt of niet meer functioneel was.
+- Alle 'copy paste' code vervangen door meer generieke code.
+
+- Refactoring en toevoeging van code:
+	- ModAfspraken: I.p.v. herhaalde aanroepen om afspraak items naar 17:00 items om te zetten en vice versa, worden namen van 17:00 items automatisch gegenereerd. Indien naamgeving wordt aangepast hoeven alleen de 'root' namen worden aangepast in de code
+	- ModAfspraken1700: zie hierboven.
+	- ModApplication: Komt van ModOpenClose. Naamgeving aangepast zodat code beter weergeeft wat het doet.
+	- ModBed: Voorheen ModBedden. Alle Functies en procedures hierin verzamelt voor het openen en sluiten van een bed. Niet werkende code verwijderd.
+	- ModConst: Bevat nu alleen constanten.
+	- ModConventions: Toegevoegd, in commentaar blok code conventies.
+	- ModFile: Toegevoegd, code voor file handling, schrijven en lezen van bestanden, verwijderen van bestanden, opsommen van directories.
+	- ModFormularium: Toegevoegd, code voor het handlen van het formularium
+	- ModInfuusbrief: Nagenoeg gelijk
+	- ModInvoer: Met name dubbele code verwijderd en opgelost met generieke functies.
+	- ModLog: Voorheen ModLogging, nagenoeg gelijk.
+	- ModMenuItems: Alle ga naar code verwijderd. Zie ModSheet. Moet uiteindelijk samen gaan met ModRibbon
+	- ModMessage: Toegevoegd, genereert applicatie wijde zelfde soort MsgBox
+	- ModPatient: Voorheen ModPatienten. Bevat alle patient specifieke code.
+	- ModPedContIV: Nagenoeg gelijk.
+	- ModPedIntake: Gelijk
+	- ModRange: Voor het handlen van Range objecten.
+	- ModRibbon: Overzichterlijker gemaakt. Verschillende menu items en groepen staan nu overzichterlijker.
+	- ModSetting: Toegevoegd. Voor het lezen van schrijven van applicatie settings.
+	- ModSheet: Toegevoegd. Voor het handlen van sheet objecten. Met name code voor het verzamelen van Gui en PRT sheets t.o.v. berekening en tabllen sheets is nu sterk verbeterd aangezien de code uit de naamgeving kan herleiden wat voor type sheet het is.
+	- ModString: Toegevoegd voor string handling. Bevat code voor het vergelijken van strings. 
+	- ModTests: Nagenoeg gelijk.
+	- ModUtils: Toegevoegd, bevat code voor source control. Schrijft alle name, formules, sheet code, formulieren, modules en classses weg naar een source tree.
+	- ModWorkBoook: Toegevoegd. Bevat code voor handling van Workbook objecten.
+	
+- Classes: Alle niet bebruikte classes verwijderd.
+	
+- Bug Fixes:
+	- Formule voor 'vandaag' is taalafhankelijk gemaakt zodat deze werkt voor Engels en Nederlands
+	- Veilig lezen en schrijven van Range objecten. Range('niet bestaande naam').Value, kon de boel laten crashen. Vervangen door veilige ModRange.GetRangeValue en SetRangeValue. Indien een range naam niet meer bestaat wordt dit weggeschreven al error in de log file.
+	- In plaats van globale variabelen nu een settings. Daardoor blijft in stand of b.v. de applicatie in development modus zit of in gebruiker modus.
+	- Code om numerieke waarden in te lezen kunnen gebruik maken van ModUtils.CorrectNumberAscii, deze functie zorgt ervoor dat zowel punten als kommas omgezet worden naar een decimaal teken wat past bij de instellingen van de computer.
+	- NaamGeef formulier werkt nu correct. Genereert gestructureerde namen voor patient data. Zorgt ervoor dat als een naam al voor een andere verwijzing bestaat deze omgezet wordt naar de juiste verwijzing en dat indien er al namen bestaan voor de selectie, deze namen ook gewijzigd worden. Dit voorkomt dubbele naamgeving (meerdere namen voor dezelfde cel selectie). Niet gebruiken voor naam geving van tabllen of meercellige ranges.
+	- Formulier medicatie discontinue werkt nu met GPK nummers. Kan indicaties en routes automatisch bepalen en keuze lijsten genereren.
+	- Patient data voor Patienten.xls komt nu automatisch boven aan te staan op vast posities: 
+		__0_PatNum:	=PatDetails!$A$2
+		__1_Bed:	=PatDetails!$J$2
+		__2_AchterNaam:	=PatDetails!$D$2
+		__3_VoorNaam:	=PatDetails!$E$2
+		__4_GebDatum:	=PatDetails!$F$2	
+	
+	
+	
