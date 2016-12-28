@@ -19,6 +19,7 @@ Private Sub cmdCancel_Click()
 
     txtNaam.Text = vbNullString
     txtStart.Text = vbNullString
+    txtGroup.Text = vbNullString
     RefNaam.Text = vbNullString
     
     Me.Hide
@@ -36,24 +37,41 @@ Private Sub cmdOk_Click()
     Dim intStart As Integer
     
     RefNaam.SetFocus
+    
+    If RefNaam.Text = vbNullString Then Exit Sub
+    
     Range(RefNaam.Text).Select
     
     strName = txtNaam.Text
     strGroup = txtGroup.Text
-    intStart = CInt(txtStart.Text)
+    
+    If txtStart.Text = vbNullString Then
+        intStart = 0
+    Else
+        intStart = CInt(txtStart.Text)
+    End If
+    
+    If strName = vbNullString Or strGroup = vbNullString Then Exit Sub
     
     With Selection
         intRows = .Rows.Count
-        intMax = intStart + intRows - 1
-        For intN = 1 To intRows
-            strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax)
-            ModRange.SetNameToRange strRes, .Cells(intN, 1)
-        Next intN
+        If intRows = 1 Then
+            strRes = "_" & strGroup & "_" & strName
+            ModRange.SetNameToRange strRes, .Cells(1, 1)
+        Else
+            intMax = intStart + intRows - 1
+            For intN = 1 To intRows
+                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax)
+                ModRange.SetNameToRange strRes, .Cells(intN, 1)
+            Next intN
+        End If
     End With
     
     txtNaam.Text = vbNullString
     txtStart.Text = vbNullString
     RefNaam.Text = vbNullString
+    
+    Me.Hide
     
 End Sub
 

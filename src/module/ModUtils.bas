@@ -8,12 +8,16 @@ Public Sub ExportForSourceControl()
 
     Dim strPath As String
     
+    Application.Cursor = xlWait
+    
     strPath = WbkAfspraken.Path & "\src\"
     
     DeleteSourceFiles
 
     ExportFormulas
     ExportVbaCode
+    
+    Application.Cursor = xlDefault
     
     ModMessage.ShowMsgBoxInfo "All code and formulas has been exported to: " & strPath
 
@@ -30,6 +34,7 @@ Public Sub DeleteSourceFiles()
     ModFile.DeleteAllFilesInDir strPath & "document\"
     ModFile.DeleteAllFilesInDir strPath & "form\"
     ModFile.DeleteAllFilesInDir strPath & "module\"
+    ModFile.DeleteAllFilesInDir strPath & "name\"
 
 End Sub
 
@@ -64,6 +69,22 @@ Public Sub ExportFormulas()
         End If
         
     Next shtSheet
+
+End Sub
+
+Public Sub ExportNames()
+
+    Dim objName As Name
+    Dim strText As String
+    Dim strPath As String
+    
+    strPath = WbkAfspraken.Path & "\src\name\names.txt"
+    
+    For Each objName In WbkAfspraken.Names
+        strText = strText & objName.NameLocal & ":" & vbTab & objName.RefersTo & vbNewLine
+    Next objName
+    
+    ModFile.WriteToFile strPath, strText
 
 End Sub
 

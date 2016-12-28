@@ -98,12 +98,15 @@ Public Sub SetWindowToOpenApp(objWindow As Window)
 
 End Sub
 
-Sub InitializeAfspraken()
+Public Sub InitializeAfspraken()
 
+    Dim strError As String
+    Dim blnLog As Boolean
     Dim strAction As String
     Dim strParams() As Variant
-    Dim intCount As Integer
     Dim objWindow As Window
+    
+    On Error GoTo InitializeError
     
     strAction = "ModApplication.InitializeAfspraken"
     strParams = Array()
@@ -136,12 +139,27 @@ Sub InitializeAfspraken()
     Application.Cursor = xlDefault
     
     ModLog.LogActionEnd strAction
+    
+    Exit Sub
+    
+InitializeError:
+    
+    Application.Cursor = xlDefault
 
+    strError = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & " Kan de applicatie niet opstarten"
+    ModMessage.ShowMsgBoxError strError
+    
+    blnLog = ModSetting.GetEnableLogging
+    ModLog.EnableLogging
+    strError = strError & vbNewLine & strAction
+    ModLog.LogToFile ModSetting.GetLogPath(), Error, strError
+    If Not blnLog Then ModLog.DisableLogging
+    
 End Sub
 
 Public Sub SetDateToDayFormula()
 
-    Range("AfspraakDatum").FormulaLocal = GetToDayFormula()
+    ModRange.SetRangeFormula "AfspraakDatum", GetToDayFormula()
 
 End Sub
 

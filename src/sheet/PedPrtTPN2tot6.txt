@@ -2,32 +2,32 @@
 $F$3: 	=__0_PatNum
 $F$4: 	=__2_AchterNaam&"",  ""&__3_VoorNaam
 $F$5: 	=__4_GebDatum
-$B$6: 	=BedNummer
-$G$6: 	=Gewicht/10&"" kg""
-$A$10: 	=IF(Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
+$B$6: 	=Var_Glob_Bed
+$G$6: 	=_Pat__Gewicht/10&"" kg""
+$A$10: 	=IF(_Pat__Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
 $C$10: 	=PedBerTPN!F24
-$A$14: 	=IF(TPN<>1,ROUND(G21/24,1)&"" ml/u"","""")
-$G$14: 	=IF(AND(TPN<>1,G16<>0,Gewicht/10<=50),ROUND(PedBerTPN!F7,0),"""")
-$G$15: 	=IF(AND(TPN<>1,G16<>0,Gewicht/10<=50),ROUND(PedBerTPN!F8,0),"""")
-$G$16: 	=IF(TPN<>1,PedBerTPN!F4,"""")
-$G$17: 	=IF(AND(SSTglucose=2,TPN<>1,Gewicht/10<=50),ROUND(PedBerTPN!F6,0),"""")
-$G$18: 	=IF(AND(SSTglucose=3,TPN<>1,Gewicht/10<=50),ROUND(PedBerTPN!F6,0),"""")
-$G$19: 	=IF(AND(SSTglucose=5,TPN<>1,Gewicht/10<=50),ROUND(PedBerTPN!F6,0),"""")
-$B$20: 	=IF(AND(TPN=2,SSTglucose<>2,SSTglucose<>3,SSTglucose<>5,SSTglucose<11),INDEX(tblSSTGlucose,SSTglucose,1),""Glucose       %"")
-$G$20: 	=IF(AND(TPN<>1,B20<>"""",Gewicht/10<=50),IF(AND(SSTglucose<>2,SSTglucose<>3,SSTglucose<>5,SSTglucose<11),ROUND(PedBerTPN!F6,0),""""),"""")
-$G$21: 	=SUM(G14:G20)+IF(AND(Gewicht/10>=16,Gewicht/10<=50),PedBerTPN!F5,0)
+$A$14: 	=IF(_Ped_TPNKeuze<>1,ROUND(G21/24,1)&"" ml/u"","""")
+$G$14: 	=IF(AND(_Ped_TPNKeuze<>1,G16<>0,_Pat__Gewicht/10<=50),ROUND(PedBerTPN!F7,0),"""")
+$G$15: 	=IF(AND(_Ped_TPNKeuze<>1,G16<>0,_Pat__Gewicht/10<=50),ROUND(PedBerTPN!F8,0),"""")
+$G$16: 	=IF(_Ped_TPNKeuze<>1,PedBerTPN!F4,"""")
+$G$17: 	=IF(AND(_Ped_TPNSST1Keuze=2,_Ped_TPNKeuze<>1,_Pat__Gewicht/10<=50),ROUND(PedBerTPN!F6,0),"""")
+$G$18: 	=IF(AND(_Ped_TPNSST1Keuze=3,_Ped_TPNKeuze<>1,_Pat__Gewicht/10<=50),ROUND(PedBerTPN!F6,0),"""")
+$G$19: 	=IF(AND(_Ped_TPNSST1Keuze=5,_Ped_TPNKeuze<>1,_Pat__Gewicht/10<=50),ROUND(PedBerTPN!F6,0),"""")
+$B$20: 	=IF(AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze<>2,_Ped_TPNSST1Keuze<>3,_Ped_TPNSST1Keuze<>5,_Ped_TPNSST1Keuze<11),INDEX(tblSSTGlucose,_Ped_TPNSST1Keuze,1),""Glucose       %"")
+$G$20: 	=IF(AND(_Ped_TPNKeuze<>1,B20<>"""",_Pat__Gewicht/10<=50),IF(AND(_Ped_TPNSST1Keuze<>2,_Ped_TPNSST1Keuze<>3,_Ped_TPNSST1Keuze<>5,_Ped_TPNSST1Keuze<11),ROUND(PedBerTPN!F6,0),""""),"""")
+$G$21: 	=SUM(G14:G20)+IF(AND(_Pat__Gewicht/10>=16,_Pat__Gewicht/10<=50),PedBerTPN!F5,0)
 $A$23: 	=IF(G26>0,ROUND(G26/24,1)&"" ml/u"","""")
 $G$23: 	=ROUND(PedBerTPN!F13,0)
 $G$24: 	=ROUND(PedBerTPN!F14,0)
 $G$26: 	=SUM(G23:G25)
 $A$29: 	=IF(G36>0,ROUND(G36/24,1)&"" ml/u"","""")
-$G$29: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10),Gewicht/10>50)),ROUND(PedBerTPN!F7,0),0)
-$G$30: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10),Gewicht/10>50)),ROUND(PedBerTPN!F8,0),0)
+$G$29: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10),_Pat__Gewicht/10>50)),ROUND(PedBerTPN!F7,0),0)
+$G$30: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10),_Pat__Gewicht/10>50)),ROUND(PedBerTPN!F8,0),0)
 $G$31: 	=PedBerTPN!F9
 $G$32: 	=PedBerTPN!F10
-$G$33: 	=IF(Gewicht/10<=50,PedBerTPN!F17,0)+IF(AND(SSTglucose=2,TPN=1,Gewicht/10<=50),ROUND(PedBerTPN!F6,0),0)
-$B$34: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10)),SSTglucose<>11,SSTglucose<>2),INDEX(tblSSTGlucose,SSTglucose,1),""Glucose       %"")
-$G$34: 	=IF(AND(OR(TPN=1,AND(TPN=2,SSTglucose>10),Gewicht/10>50),SSTglucose<>2,SSTglucose<>11),ROUND(PedBerTPN!F6,0),"""")
-$G$35: 	=IF(AND(SSTglucose=11),ROUND(PedBerTPN!F6,0),"""")
+$G$33: 	=IF(_Pat__Gewicht/10<=50,PedBerTPN!F17,0)+IF(AND(_Ped_TPNSST1Keuze=2,_Ped_TPNKeuze=1,_Pat__Gewicht/10<=50),ROUND(PedBerTPN!F6,0),0)
+$B$34: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10)),_Ped_TPNSST1Keuze<>11,_Ped_TPNSST1Keuze<>2),INDEX(tblSSTGlucose,_Ped_TPNSST1Keuze,1),""Glucose       %"")
+$G$34: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10),_Pat__Gewicht/10>50),_Ped_TPNSST1Keuze<>2,_Ped_TPNSST1Keuze<>11),ROUND(PedBerTPN!F6,0),"""")
+$G$35: 	=IF(AND(_Ped_TPNSST1Keuze=11),ROUND(PedBerTPN!F6,0),"""")
 $G$36: 	=SUM(G29:G35)
 "

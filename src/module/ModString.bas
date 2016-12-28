@@ -27,3 +27,22 @@ Public Function ContainsCaseSensitive(ByVal strString As String, ByVal strValue 
     
 End Function
 
+Public Function StartsWith(ByVal strString, strValue As String) As Boolean
+
+    StartsWith = InStr(1, strString, strValue) = 1
+
+End Function
+
+Private Sub Test()
+    Dim strString As String
+    Dim strStart As String
+    
+    strString = "_ Test"
+    strStart = " "
+
+    MsgBox StartsWith(strString, strStart)
+
+End Sub
+
+
+

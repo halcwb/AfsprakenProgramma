@@ -139,7 +139,6 @@ End Function
 
 Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
     
-    Dim objRange As Range
     Dim intN As Integer
     
     For intN = 0 To UBound(arrFrom)

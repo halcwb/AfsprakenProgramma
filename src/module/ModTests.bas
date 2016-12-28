@@ -77,8 +77,6 @@ End Sub
 
 Public Sub Test_ClearPatient()
 
-    Dim objCursor As XlMousePointer
-
     On Error GoTo Assert:
     ClearPatient True
     
@@ -295,122 +293,6 @@ Private Sub UnlockAllA1Cells()
     Next
 End Sub
 
-Private Sub TestPatientVerhuizen()
-
-    Dim strFileName As String, strBookName As String, strRange As String, strBed As String, strTekstFile, strTekstBookName
-    Dim strFileNameOld As String, strBookNameOld As String, strTekstFileOld, strTekstBookNameOld
-    Dim strPrompt As String, varReply As Variant
-    Dim intCount As Integer
-    
-    Dim colPatienten As Collection
-    Dim oFrmPatientLijst As FormPatLijst
-    Dim strBedOld As String
-    
-    strBed = Range("Bednummer").Formula
-    strFileName = GetPatientDataFile(strBed)
-    strTekstFile = Replace(strFileName, ".xls", "_AfsprakenTekst.xls")
-    
-    strBookName = "Patient" + strBed + ".xls"
-    strTekstBookName = "Patient" + strBed + "_AfsprakenTekst.xls"
-
-    Dim strAction As String, strParams() As Variant
-    strAction = "BeSluitBed"
-    strParams = Array(strFileName, strBookName, strBed, strTekstFile, strTekstBookName)
-    LogActionStart strAction, strParams
-    
-    strPrompt = "Patient " & Range("_VoorNaam").Value & ", " & Range("_AchterNaam") _
-              & " opslaan op bed: " & strBed & "?"
-    varReply = MsgBox(prompt:=strPrompt, Buttons:=vbYesNo, Title:="Informedica 200")
-    
-    If varReply = vbYes Then
-        Application.Cursor = xlWait
-        If SaveBedToFile(strFileName, strBookName, strTekstFile, strTekstBookName) Then
-            MsgBox "Patient is opgeslagen", vbInformation, "Informedica"
-        End If
-        Application.Cursor = xlDefault
-    Else
-        varReply = MsgBox("Op een ander bed opslaan?", vbYesNo, "Informedica")
-        If varReply = vbYes Then
-            strBedOld = strBed
-            Set colPatienten = GetPatients
-            Set oFrmPatientLijst = New FormPatLijst
-            oFrmPatientLijst.Caption = "Selecteer de patient die vervangen moet worden ..."
-            With oFrmPatientLijst.lstPatienten
-                .Clear
-                For intCount = 1 To colPatienten.Count
-                    .AddItem colPatienten(intCount)
-                Next intCount
-                    
-                oFrmPatientLijst.Show
-                If .ListIndex > -1 Then
-                    strBed = VBA.Left$(.Text, CONST_BEDNAME_LENGTH)
-                    Range("Bednummer").Value = strBed
-                    Set colPatienten = Nothing
-                    Set oFrmPatientLijst = Nothing
-                    ModBed.SluitBed
-                    ModBed.OpenBed strBedOld
-                    ClearPatient (False)
-                    'TODO: Opslaan zonder meldingen->Call BeSluitBed
-                    strFileNameOld = GetPatientDataFile(strBedOld)
-                    strTekstFileOld = Replace(strFileName, ".xls", "_AfsprakenTekst.xls")
-                    
-                    strBookNameOld = "Patient" + strBedOld + ".xls"
-                    strTekstBookNameOld = "Patient" + strBedOld + "_AfsprakenTekst.xls"
-                    SaveBedToFile strFileNameOld, strBookNameOld, strTekstFileOld, strTekstBookNameOld
-                    ModBed.OpenBed strBed
-                    'TODO:Patient verwijderen van oude bed
-                    'Oude strBed bewaren, oude gegevens bestanden leeg maken ==> NIEUWE SUB
-                    'Open old bed: Open Patient-file
-                    'Clear old bed: Copy Blanc patient to file
-                    'Save old bed: Save Patient-file
-                    'Open old bed: Open PatientAfspraken-file
-                    'Clear old bed: Copy Blanc patientAfspraken to file
-                    'Save old bed: Save PatientAfspraken-file
-                    'Open new bed
-                Else
-                    Set colPatienten = Nothing
-                    Set oFrmPatientLijst = Nothing
-                    Exit Sub
-                End If
-            End With
-        End If
-    End If
-
-    LogActionEnd "BeSluitBed"
-    Application.Cursor = xlDefault
-    
-End Sub
-
-Sub TestOpenPatient()
-
-    Dim strIndex As String
-    Dim objPatienten
-    Dim intCount As Integer
-    Dim frmPatLijst As New FormPatLijst
-    
-    Set objPatienten = New Collection
-    
-    Set objPatienten = GetPatients
-    
-    With frmPatLijst
-        Application.Cursor = xlWait
-        .lstPatienten.Clear
-        For intCount = 1 To objPatienten.Count
-            .lstPatienten.AddItem objPatienten(intCount)
-        Next intCount
-        Application.Cursor = xlDefault
-        .Show
-        If .lstPatienten.ListIndex > -1 Then
-            Application.Cursor = xlWait
-            strIndex = VBA.Left$(.lstPatienten.Text, CONST_BEDNAME_LENGTH) 'intBednameLength=8
-            ModBed.OpenBed strIndex
-            Application.Cursor = xlDefault
-        End If
-        .lstPatienten.Clear
-    End With
-    
-    Set objPatienten = Nothing
-End Sub
 
 Sub GetAllNamedRangesOnCurrentWorksheet()
     Dim curSheet As Worksheet

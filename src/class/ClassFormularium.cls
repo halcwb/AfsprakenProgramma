@@ -61,10 +61,8 @@ Public Sub GetMedicamenten()
     Dim oSheet As Worksheet
     
     Dim strFileName As String
-    Dim sPath As String
     Dim sName As String
     Dim sSheet As String
-    Dim strRange As String
     
     sName = "Formularium.xlsx"
     sSheet = "Table"

@@ -59,6 +59,7 @@ Veranderingen t.o.v. eerdere versies:
 		__2_AchterNaam:	=PatDetails!$D$2
 		__3_VoorNaam:	=PatDetails!$E$2
 		__4_GebDatum:	=PatDetails!$F$2	
+	- Procedures of functies die kunnen crashen krijgen een logging on error goto. Dat zorgt ervoor dat in elk geval de foutmelding in een logfile komt te staan.
 	
 	
 	

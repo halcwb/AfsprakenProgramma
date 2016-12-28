@@ -11,6 +11,10 @@ Public Sub OpenBed(strBed As String)
     Dim strBookName As String
     Dim strRange As String
     
+    Dim blnLog As Boolean
+    
+    blnLog = ModSetting.GetEnableLogging()
+    
     strAction = "ModBed.OpenBed"
     strParams = Array(strBed)
     
@@ -34,11 +38,14 @@ Public Sub OpenBed(strBed As String)
     Exit Sub
 
 ErrorOpenBed:
+
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
     Application.Cursor = xlDefault
+    
     ModLog.EnableLogging
     ModLog.LogToFile WbkAfspraken.Path + ModSetting.GetLogDir(), Error, Err.Description
-    ModLog.DisableLogging
+    If Not blnLog Then ModLog.DisableLogging
+    
 End Sub
 
 Public Sub SluitBed()
@@ -49,11 +56,9 @@ Public Sub SluitBed()
     Dim strTekstFile As String
     Dim strTekstBookName As String
     
-    Dim strRange As String
     Dim strPrompt As String
     Dim strAction As String
     Dim strParams() As Variant
-    Dim intCount As Integer
     
     Dim varReply As VbMsgBoxResult
     Dim colPatienten As Collection

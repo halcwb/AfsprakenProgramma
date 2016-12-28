@@ -123,7 +123,6 @@ Public Function GetInterfaceSheetCount() As Integer
 
     Dim intN As Integer
     Dim shtSheet As Worksheet
-    Dim blnGui As Boolean
     
     For Each shtSheet In ActiveWorkbook.Sheets
     

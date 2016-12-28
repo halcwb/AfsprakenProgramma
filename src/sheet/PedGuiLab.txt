@@ -1,13 +1,13 @@
-"$D$2: 	=AfspraakDatum
-$H$2: 	=OpnDatum
-$I$2: 	=""ICU-dag: ""&AfspraakDatum-OpnDatum+1
-$J$2: 	=""Gewicht: ""&Gewicht/10&"" kg""
+"$D$2: 	=Var_AfspraakDatum
+$H$2: 	=_OpnDatum
+$I$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_OpnDatum+1
+$J$2: 	=""Gewicht: ""&_Pat__Gewicht/10&"" kg""
 $D$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $H$3: 	=__4_GebDatum
-$J$3: 	=""Lengte: ""&Lengte&"" cm""
+$J$3: 	=""Lengte: ""&_Pat__Lengte&"" cm""
 $D$4: 	=__0_PatNum
-$H$4: 	=TRUNC((AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((AfspraakDatum-__4_GebDatum)-365*TRUNC((AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
-$J$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(Gewicht/10,0.425)*POWER(((Lengte/100)*100),0.725)*0.007184,2)&"" m2""
-$D$5: 	=BedNummer
-$C$43: 	=IF(opmAfsprBlad__9=0,"""",opmAfsprBlad__9)
+$H$4: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
+$J$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat__Gewicht/10,0.425)*POWER(((_Pat__Lengte/100)*100),0.725)*0.007184,2)&"" m2""
+$D$5: 	=Var_Glob_Bed
+$C$43: 	=IF(_Ped_LabOpm=0,"""",_Ped_LabOpm)
 "

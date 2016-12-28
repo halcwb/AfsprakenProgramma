@@ -1,6 +1,5 @@
 Attribute VB_Name = "ModInvoer"
 Option Explicit
-Dim intN As Integer, dblVol As Double
 
 Public Sub VoerGewichtIn()
 
@@ -312,8 +311,8 @@ Private Sub MedIVInvoer(intN As Integer)
     
     strMed = frmMedIV.txtMedicament.Text
     strSterkte = frmMedIV.txtSterkte.Text
-    Range("MedIVKeuze_" & intN).Value = strMed
-    Range("MedIVSterkte_" & intN).Value = strSterkte
+    ModRange.SetRangeValue "MedIVKeuze_" & intN, strMed
+    ModRange.SetRangeValue "MedIVSterkte_" & intN, strSterkte
     
     Set frmMedIV = Nothing
         
@@ -351,7 +350,6 @@ End Sub
 
 Private Sub EnterOpmAfspr(intN As Integer)
 
-    Dim strN As String
     Dim frmOpmerking As New FormOpmerking
     
     frmOpmerking.txtOpmerking.Text = Range("opmAfsprBlad__" & intN).Value
@@ -375,32 +373,8 @@ Public Sub OpmAfsprInfusen()
 End Sub
 
 Public Sub OpmAfsprMedIV_1()
-    
+
     EnterOpmAfspr (3)
-
-End Sub
-
-Public Sub OpmAfsprMedIV_2()
-    
-    EnterOpmAfspr (4)
-
-End Sub
-
-Public Sub OpmAfsprMedIV_3()
-    
-    EnterOpmAfspr (5)
-
-End Sub
-
-Public Sub OpmAfsprMedIV_4()
-    
-    EnterOpmAfspr (6)
-    
-End Sub
-
-Public Sub OpmAfsprMedIV_5()
-    
-    EnterOpmAfspr (7)
 
 End Sub
 
@@ -416,39 +390,9 @@ Public Sub opmOverig_1()
     
 End Sub
 
-Public Sub opmOverig_2()
-    
-    EnterOpmAfspr (10)
-
-End Sub
-
-Public Sub opmOverig_3()
-    
-    EnterOpmAfspr (11)
-    
-End Sub
-
-Public Sub opmOverig_4()
-    
-    EnterOpmAfspr (12)
-    
-End Sub
-
-Public Sub opmOverig_5()
-    
-    EnterOpmAfspr (13)
-    
-End Sub
-
 Public Sub opmVoedPO()
     
     EnterOpmAfspr (14)
-    
-End Sub
-
-Public Sub opmOverig_6()
-    
-    EnterOpmAfspr (15)
     
 End Sub
 

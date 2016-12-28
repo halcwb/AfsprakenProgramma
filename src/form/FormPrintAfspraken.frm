@@ -26,7 +26,7 @@ Private Sub cmdOk_Click()
     On Error Resume Next
 
     Application.DisplayAlerts = False
-    Dim strBed As String, oSheet As Worksheet
+    Dim strBed As String
 
     strBed = Range("Bednummer").Formula
 

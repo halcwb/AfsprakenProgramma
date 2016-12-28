@@ -16,14 +16,13 @@ Public Const CONST_BEDNAME_LENGTH As Integer = 8
 Public Const CONST_DEFAULTERROR_MSG = "Er is een fout opgetreden. Neem contact op met uw functioneel beheerder."
 
 'Named ranges constants
-Public Const CONST_RANGE_NEOBOOL = "_Aanvullend_Booleans"
-Public Const CONST_RANGE_NEODATA = "_Aanvullend_Data"
-Public Const CONST_RANGE_NEOMRI = "_Aanvullend_MRIvertrektijd"
-Public Const CONST_RANGE_PEDBOOL = "_Aanvullend_Booleans_Ped"
-Public Const CONST_RANGE_PEDDATA = "_Aanvullend_Data_Ped"
-Public Const CONST_RANGE_PEDMRI = "_Aanvullend_MRIvertrektijd_Ped"
-Public Const CONST_RANGE_PEDLAB = "Lab_Data"
-Public Const CONST_RANGE_NEOLAB = "LabNeo_Data"
+Public Const CONST_RANGE_NEOBOOL = "rngNeoAfsprBlns"
+Public Const CONST_RANGE_NEODATA = "rngNeoAfsprData"
+Public Const CONST_RANGE_NEOMRI = "_Neo_AfsprD_Vertrek"
+Public Const CONST_RANGE_PEDBOOL = "rngPedAfsprBlns"
+Public Const CONST_RANGE_PEDDATA = "rngPedAfsprData"
+Public Const CONST_RANGE_PEDLAB = "rngPedLabData"
+Public Const CONST_RANGE_NEOLAB = "rngNeoLabData"
 
 'TPN ranges
 Public Const CONST_TPN_1 As Integer = 2

@@ -16,7 +16,6 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private mflgIsOK As Boolean
-Private mstrTekst As String
 
 Public Property Get IsOK() As Boolean
 

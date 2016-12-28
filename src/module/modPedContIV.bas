@@ -7,7 +7,13 @@ Sub WijzigContIVMedicament(intRegel As Integer)
     Dim strMedSterkte As String
     Dim strOplHoev As String
     Dim strOplossing As String
+    Dim varOplossing As Variant
     Dim strStand As String
+    Dim blnLog As Boolean
+    
+    blnLog = ModSetting.GetEnableLogging
+    
+    On Error GoTo ChangeMedIVError
 
     strMedicament = "MedIVKeuze_" & intRegel
     strMedSterkte = "MedIVSterkte_" & intRegel
@@ -15,15 +21,24 @@ Sub WijzigContIVMedicament(intRegel As Integer)
     strOplossing = "MedIVOplVlst_" & intRegel
     strStand = "MedIVStand_" & intRegel
     
-    Range(strMedSterkte).Value = 0
-    Range(strOplHoev).Value = 0
-    Range(strStand).Value = 0
+    ModRange.SetRangeValue strMedSterkte, 0
+    ModRange.SetRangeValue strOplHoev, 0
+    ModRange.SetRangeValue strStand, 0
     
-    If Range(strMedicament).Value = 1 Then
-        Range(strOplossing).Value = 1
+    If ModRange.GetRangeValue(strMedicament, 0) = 1 Then
+        ModRange.SetRangeValue strOplossing, 1
     Else
-        Range(strOplossing).Value = Application.VLookup(Range("tblMedicationContIV").Cells(Range(strMedicament).Value, 1), Range("tblMedicationContIV"), 22, False)
+        varOplossing = Application.VLookup(Range("tblMedicationContIV").Cells(Range(strMedicament).Value, 1), Range("tblMedicationContIV"), 22, False)
+        ModRange.SetRangeValue strOplossing, varOplossing
     End If
+    
+    Exit Sub
+    
+ChangeMedIVError:
+
+    ModLog.EnableLogging
+    ModLog.LogToFile ModSetting.GetLogPath, Error, "ModPedContIV: " & " Error for intRegel " & intRegel
+    If Not blnLog Then ModLog.DisableLogging
 
 End Sub
 

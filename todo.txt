@@ -3,6 +3,8 @@
 
 - Refactoring:
 	- Range namen, omzetten zodat alleen patient data beging met een '_' en dat gestructureerd is waar patient data bij hoort: 'Glob', 'Ped' of 'Neo'.
+	- Code voor het ophalen en opslaan van patienten.
+	- Code voor TPN advies.
 	
 - Source Control:
 	- batch script voor automatisch wegschrijven van de source tree.
@@ -11,6 +13,17 @@
 	
 - Applicatie:
 	- Patient data automatisch herkennen aan '_'. Indien namen worden toegevoegd of worden verwijderd dan blijft de applicatie gewoon functioneren.
+	- Zorgen dat applicatie kan worden opgestart met patient selectie. I.e. bed nummer kan op de clipboard worden geplaatst en worden uitgelezen door de applicatie waarna automatische selectie van de juiste patient plaats vind.
 	- Update van Patienten.xls bestand zodat deze werkt met de update van patient data. 
 	- Medicatie formulier laten werken met nieuwe Formularium.xls bestand. Toevoegen van indicaties. Routes laten kiezen uit vast lijsten.
 	- Toevoegen van GPK, ATC, indicatie aan AfsprakenTekst bestanden zodat deze ook kunnen worden ingelezen door MetaVision
+	- Ribbon icons updaten met MetaVision versie.
+	
+- Bug fixing:
+	- Overplaatsen/opslaan van patienten loopt nog niet goed.
+	- Code doorlopen op het onveilig gebruik van range namen.
+	
+- MetaVision:
+	- Aanpassen van code voor ophalen van medicatie. Met name toevoegen van GPK, ATC, indicatie en etiket tekst.
+	- Aanpassen van inplannen van medicatie, toevoegen van originele etiket tekst en GPK nummer.
+	- Updaten van de medicatie services. Met name ophalen van medicatie historie.

@@ -13,13 +13,35 @@ Private Const CONST_DBDIR = "SettingDbDir"
 
 Private Function GetSetting(strSetting As String, varDefault As Variant) As Variant
 
-    GetSetting = ModRange.GetRangeValue(strSetting, varDefault)
+    Dim strMsg As String
+
+    On Error GoTo GetSettingError:
+
+    GetSetting = Range(strSetting).Value2 'ModRange.GetRangeValue(strSetting, varDefault)
+    
+    Exit Function
+    
+GetSettingError:
+
+    strMsg = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & "Kan setting: " & strSetting & " niet ophalen"
+    ModMessage.ShowMsgBoxError strMsg
 
 End Function
 
 Private Sub SetSetting(strSetting As String, varValue As Variant)
 
-    ModRange.SetRangeValue strSetting, varValue
+    Dim strMsg As String
+
+    On Error GoTo SetSettingError:
+
+    Range(strSetting).Value2 = varValue ' ModRange.SetRangeValue strSetting, varValue
+    
+    Exit Sub
+
+SetSettingError:
+
+    strMsg = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & "Kan setting: " & strSetting & " niet opslaan"
+    ModMessage.ShowMsgBoxError strMsg
     
 End Sub
 

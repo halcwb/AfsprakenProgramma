@@ -17,9 +17,6 @@ Option Explicit
 
 Const c_MinLengte = 25
 
-Public curDate As Date, aDate As Date, opnDate As Date, bDate As Date
-'Private objPatientNummer As HL7nawXControl.HL7nawX
-
 Private Sub cmdCancel_Click()
 
     Me.Hide
@@ -28,6 +25,10 @@ End Sub
 
 Private Sub cmdOk_Click()
 
+    Dim dtmDate As Date
+    
+    dtmDate = Now()
+
     If txtOpnDat.Value = vbNullString Or txtANaam.Value = vbNullString Or txtGebDat.Value = vbNullString _
        Or txtGew.Value = vbNullString Or txtLengte.Value = vbNullString Then
         MsgBox prompt:="De opname datum, Achternaam, gewicht en lengte moeten in elk " & _
@@ -35,7 +36,7 @@ Private Sub cmdOk_Click()
         txtOpnDat.SetFocus
     Else
         Range("Opndatum").Formula = DateValue(txtOpnDat.Value)
-        Range("AfspraakDatum").Value = curDate
+        Range("AfspraakDatum").Value = dtmDate
         Range("PatNummer").Value = txtPatNum.Value
         Range("_AchterNaam").Value = txtANaam.Value
         Range("_VoorNaam").Value = txtVNaam.Text
@@ -49,28 +50,6 @@ Private Sub cmdOk_Click()
         Range("Gewicht").Value = txtGew.Value * 10
         Range("_Gewicht").Value = txtGew.Value * 1
         Range("Lengte").Value = txtLengte.Value
-        'Beademing sheets are not in workbook anymore
-        '        If optCMV.Value Then
-        '            Worksheets("BeademingCV").Visible = xlSheetVisible
-        '            Worksheets("BeademingCV").Activate
-        '            Worksheets("BeademingHFO").Visible = xlSheetVeryHidden
-        '            Worksheets("BeademingPLV").Visible = xlSheetVeryHidden
-        '            Range("Beademing").Value = "CMV"
-        '        Else
-        '            If optHFOV.Value Then
-        '                Worksheets("BeademingCV").Visible = xlSheetVeryHidden
-        '                Worksheets("BeademingHFO").Visible = xlSheetVisible
-        '                Worksheets("BeademingHFO").Activate
-        '                Worksheets("BeademingPLV").Visible = xlSheetVeryHidden
-        '                Range("Beademing").Value = "HFOV"
-        '            Else
-        '                Worksheets("BeademingCV").Visible = xlSheetVeryHidden
-        '                Worksheets("BeademingHFO").Visible = xlSheetVeryHidden
-        '                Worksheets("BeademingPLV").Visible = xlSheetVisible
-        '                Worksheets("BeademingPLV").Activate
-        '                Range("Beademing").Value = "PLV"
-        '            End If
-        '        End If
 
         SelectTPN
         
@@ -104,7 +83,7 @@ Private Sub txtGebDat_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
         
         Else
             
-            If DateValue(txtGebDat.Value) > curDate Then
+            If DateValue(txtGebDat.Value) > Now() Then
                 MsgBox prompt:="De geboorte datum kan niet later zijn" & _
                                 " dan de huidige datum", Buttons:=vbCritical, _
                        Title:="Informedica"
@@ -122,8 +101,10 @@ End Sub
 
 Private Sub txtOpnDat_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
+    Dim dtmDate As Date
+
     On Error GoTo Hell
-    curDate = DateTime.Date
+    dtmDate = DateTime.Date
         
     If Not IsDate(txtOpnDat.Value) Then
         MsgBox prompt:="Dit is geen geldige datum", Buttons:=vbCritical, _
@@ -140,7 +121,7 @@ Private Sub txtOpnDat_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
             txtOpnDat.SetFocus
             txtOpnDat.Value = vbNullString
         Else
-            If DateValue(txtOpnDat.Value) > curDate Then
+            If DateValue(txtOpnDat.Value) > dtmDate Then
                 MsgBox prompt:="De opname datum kan niet later zijn " & _
                                 "dan de huidige datum", Buttons:=vbCritical, _
                        Title:="Informedica"
@@ -191,8 +172,7 @@ Private Sub UserForm_Initialize()
 
     txtPatNum.Text = Range("PatNummer").Value
     
-    curDate = DateTime.Date
-    txtOpnDat.Value = curDate
+    txtOpnDat.Value = Now()
     txtANaam.Value = Range("_AchterNaam").Value
     txtVNaam.Value = Range("_VoorNaam").Value
     txtGebDat.Value = CDate(Range("GebDatum").Value)

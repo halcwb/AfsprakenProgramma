@@ -3,10 +3,10 @@ $E$2: 	=""Geschatte lengte: ""&VLOOKUP(C5+D5/12,PedTblLengte!A2:D45,4)&"" cm""
 $B$3: 	=""Geb datum.: ""
 $C$3: 	=__4_GebDatum
 $E$3: 	=""Geschat gewicht: ""&VLOOKUP(C5+D5/12,PedTblGew!A2:T49,20)&"" kg""
-$C$5: 	=TRUNC((AfspraakDatum-__4_GebDatum)/365,0)
-$D$5: 	=TRUNC(((AfspraakDatum-__4_GebDatum)-365*TRUNC((AfspraakDatum-__4_GebDatum)/365,0))/30,0)
-$E$5: 	=Gewicht/10
-$F$5: 	=Lengte
+$C$5: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)
+$D$5: 	=TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)
+$E$5: 	=_Pat__Gewicht/10
+$F$5: 	=_Pat__Lengte
 $G$5: 	=ROUND(POWER(E5,0.425)*POWER(((F5/100)*100),0.725)*0.007184,2)
 $D$7: 	=""Maat: ""&VLOOKUP(C5,L2:N20,3)&"", Lengte: ""&IF(C5>1,ROUND((C5/2+15)/2,0)*2,IF(C5=0,12,15))&"" cm""&"" nasaal, ""&ROUND((C5/2+12)/2,0)*2&"" cm oraal""
 $D$8: 	=IF(ROUND((E5)*4,0)>150,150,VLOOKUP(ROUND(E5*4,0),S2:T362,2))&"" Joules Asynchroon""
@@ -31,7 +31,7 @@ $D$23: 	=IF(C5=0,""0,5 mg in 50 ml NaCl 0.9%"","""")
 $E$23: 	=IF(C5=0,""1 ml/uur = ""&ROUND(1000*(0.5/50)*24/(E5)/1.44,0)&"" nanog/kg/min iv"","""")
 $D$24: 	=IF(E5>5,""200 mg in 50 ml NaCl 0.9%"",ROUND(((E5)*24*60*(10/1000)/(24/50))/50,0)*50&"" mg in 50 ml NaCl 0.9%"")
 $E$24: 	=""1 ml/uur = ""&IF(E5>5,ROUND((200/50/E5/60)*1000,1),ROUND(24*ROUND(((E5)*24*60*(10/1000)/(24/50))/50,0)*50/50/1.44/E5,1))&"" mcg/kg/min""
-$D$25: 	=IF(Gewicht/15>5,""10 mg in 50 ml NaCl 0.9%"",ROUND((E5)*24*60*(0.1/1000)/(24/50)/5,1)*5&"" mg in 50 ml NaCl 0.9%"")
+$D$25: 	=IF(_Pat__Gewicht/15>5,""10 mg in 50 ml NaCl 0.9%"",ROUND((E5)*24*60*(0.1/1000)/(24/50)/5,1)*5&"" mg in 50 ml NaCl 0.9%"")
 $E$25: 	=""1 ml/uur = ""&IF(E5>5,ROUND((10/50/E5/60)*1000,2),ROUND(24*ROUND((E5)*24*60*(0.1/1000)/(24/50)/5,1)*5/50/1.44/E5,2))&"" mcg/kg/min""
 $D$27: 	=IF(ROUND(E5/2,0)*2>50,""300 mg iv"",ROUND(E5*5,0)&"" mg iv"")
 $E$27: 	=IF(ROUND(E5/2,0)*2>50,""6 ml van amiodarone 50 mg/ml iv"",ROUND(E5*0.1,1)&"" ml van amiodarone 50 mg/ml iv"")

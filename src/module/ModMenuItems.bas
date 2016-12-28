@@ -1,8 +1,6 @@
 Attribute VB_Name = "ModMenuItems"
 Option Explicit
 
-Dim BAXA As Boolean
-
 Public Sub StandaardInstellingen()
 
     Dim intN As Integer
@@ -154,8 +152,12 @@ End Sub
 
 Private Sub ClearContentsSheetRange(shtSheet As Worksheet, strRange As String)
 
+    Dim blnLog As Boolean
+    Dim strError As String
     Dim blnIsDevelop As Boolean
     Dim strPw As String
+    
+    On Error GoTo ClearContentError
     
     blnIsDevelop = ModSetting.IsDevelopmentMode()
     strPw = ModConst.CONST_PASSWORD
@@ -174,7 +176,16 @@ Private Sub ClearContentsSheetRange(shtSheet As Worksheet, strRange As String)
         shtSheet.Visible = xlSheetVeryHidden
         shtSheet.Protect strPw
     End If
-
+    
+    Exit Sub
+    
+ClearContentError:
+    
+    strError = "ClearContentSheetRange Sheet: " & shtSheet.Name & " could  not clear content of Range: " & strRange
+    blnLog = ModSetting.GetEnableLogging
+    ModLog.EnableLogging
+    ModLog.LogToFile ModSetting.GetLogPath(), Error, strError
+    If Not blnLog Then ModLog.DisableLogging
 
 End Sub
 
