@@ -73,20 +73,20 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpRemoveData                                      ' -- ACTIES --
                 
         Case "btnRemoveLab"                                 ' Lab Verwijderen
-            VerwijderLab
+            ClearLab
             ModSheet.SelectPedOrNeoLabSheet
         
         Case "btnRemoveExtra"                               ' Afspraken Controles Verwijderen
-            VerwijderAanvullendeAfspraken
+            ClearAfspraken
             ModSheet.SelectPedOrNeoAfsprExtraSheet
         
         ' grpNeoActions                                     ' -- INFUUSBRIEF OVERZETTEN --
         
         Case "btnCopy1700"                                  ' -> 17:00 uur Overzetten
-            ModAfspraken1700.CopyToActueel
+            ModInfuusbrief.CopyToActueel
         
         Case "btnCopyCurrent"                               ' -> Actueel Overzetten
-            ModAfspraken.AfsprakenOvernemen
+            ModInfuusbrief.CopyAfspraken
             
         'grpPedPrint                                        ' -- PRINT PEDIATRIE --
         

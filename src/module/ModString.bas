@@ -44,5 +44,23 @@ Private Sub Test()
 
 End Sub
 
+Public Function StringToDate(ByVal strValue As String) As Date
+
+    Dim dtmDate As Date
+    
+    On Error GoTo StringToDateError
+    
+    dtmDate = CDate(strValue)
+    StringToDate = dtmDate
+    
+    Exit Function
+    
+StringToDateError:
+
+    ModLog.LogError "Cannot convert " & strValue & " to a date time"
+
+End Function
+
+
 
 

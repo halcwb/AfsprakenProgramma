@@ -101,7 +101,6 @@ End Sub
 Public Sub InitializeAfspraken()
 
     Dim strError As String
-    Dim blnLog As Boolean
     Dim strAction As String
     Dim strParams() As Variant
     Dim objWindow As Window
@@ -127,8 +126,8 @@ Public Sub InitializeAfspraken()
     Next
     
 '   Zorg ervoor dat niet per ongeluk een lege patient naar een bed wordt weggeschreven
-    ModRange.SetRangeValue "BedNummer", 0
-    ModRange.SetRangeValue "AfsprakenVersie", vbNullString
+    ModRange.SetRangeValue ModConst.CONST_RANGE_BED, 0
+    ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, vbNullString
     
     SetDateToDayFormula
     
@@ -149,17 +148,14 @@ InitializeError:
     strError = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & " Kan de applicatie niet opstarten"
     ModMessage.ShowMsgBoxError strError
     
-    blnLog = ModSetting.GetEnableLogging
-    ModLog.EnableLogging
     strError = strError & vbNewLine & strAction
-    ModLog.LogToFile ModSetting.GetLogPath(), Error, strError
-    If Not blnLog Then ModLog.DisableLogging
+    ModLog.LogError strError
     
 End Sub
 
 Public Sub SetDateToDayFormula()
 
-    ModRange.SetRangeFormula "AfspraakDatum", GetToDayFormula()
+    ModRange.SetRangeFormula ModConst.CONST_RANGE_DATE, GetToDayFormula()
 
 End Sub
 
@@ -188,9 +184,9 @@ Public Sub SetApplicationTitle()
     Dim strAn As String
     
     strTitle = ModConst.CONST_APPLICATION_NAME
-    strBed = ModRange.GetRangeValue("_bed", "")
-    strVn = ModRange.GetRangeValue("_VoorNaam", "")
-    strAn = ModRange.GetRangeValue("_AchterNaam", "")
+    strBed = ModRange.GetRangeValue(ModConst.CONST_RANGE_BED, "")
+    strVn = ModRange.GetRangeValue(ModConst.CONST_RANGE_VN, "")
+    strAn = ModRange.GetRangeValue(ModConst.CONST_RANGE_AN, "")
     
     If Not strBed = "0" Then
         strTitle = strTitle & " Patient: " & strAn & " " & strVn & ", Bed: " & strBed

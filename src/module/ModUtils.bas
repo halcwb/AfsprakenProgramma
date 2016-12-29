@@ -8,16 +8,12 @@ Public Sub ExportForSourceControl()
 
     Dim strPath As String
     
-    Application.Cursor = xlWait
-    
     strPath = WbkAfspraken.Path & "\src\"
     
     DeleteSourceFiles
 
     ExportFormulas
     ExportVbaCode
-    
-    Application.Cursor = xlDefault
     
     ModMessage.ShowMsgBoxInfo "All code and formulas has been exported to: " & strPath
 
@@ -190,4 +186,6 @@ Public Sub RunTestCmd()
     RunShell "run.cmd", strArgs
 
 End Sub
+
+
 

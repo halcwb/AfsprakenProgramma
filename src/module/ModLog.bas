@@ -41,6 +41,18 @@ Public Function LogLevelToString(enmLevel As LogLevel) As String
     
 End Function
 
+Public Sub LogError(strError As String)
+
+    Dim blnLog
+    
+    blnLog = ModSetting.GetEnableLogging()
+
+    EnableLogging
+    LogToFile ModSetting.GetLogPath(), Error, strError
+    If Not blnLog Then ModLog.DisableLogging
+
+End Sub
+
 Public Sub LogTest(enmLevel As LogLevel, strMsg As String)
     Dim strFile As String
 

@@ -10,11 +10,7 @@ Public Sub OpenBed(strBed As String)
     Dim strFileName As String
     Dim strBookName As String
     Dim strRange As String
-    
-    Dim blnLog As Boolean
-    
-    blnLog = ModSetting.GetEnableLogging()
-    
+        
     strAction = "ModBed.OpenBed"
     strParams = Array(strBed)
     
@@ -25,8 +21,8 @@ Public Sub OpenBed(strBed As String)
     strRange = "a1:b1"
     
     If ModWorkBook.CopyWorkbookRangeToSheet(strFileName, strBookName, strRange, shtGlobTemp) Then
-        Range("AfsprakenVersie").Value = FileSystem.FileDateTime(strFileName)
-        Range("BedNummer").Value = strBed
+        Range(ModConst.CONST_RANGE_VERSIE).Value = FileSystem.FileDateTime(strFileName)
+        Range(ModConst.CONST_RANGE_BED).Value = strBed
         
         ModRange.CopyTempSheetRangeToRange
     End If
@@ -42,9 +38,7 @@ ErrorOpenBed:
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
     Application.Cursor = xlDefault
     
-    ModLog.EnableLogging
-    ModLog.LogToFile WbkAfspraken.Path + ModSetting.GetLogDir(), Error, Err.Description
-    If Not blnLog Then ModLog.DisableLogging
+    ModLog.LogError Err.Description
     
 End Sub
 
@@ -123,7 +117,7 @@ Public Function SaveBedToFile(strFileName As String, strWorkbook As String, strT
     
     If Not Range("BedNummer").Value = 0 Then
         dtmVersion = FileSystem.FileDateTime(strFileName)
-        If Not dtmVersion = Range("AfsprakenVersie").Value Then
+        If Not dtmVersion = Range(ModConst.CONST_RANGE_VERSIE).Value Then
             strMsg = strMsg & "De afspraken zijn inmiddels gewijzig!" & vbNewLine
             strMsg = strMsg & "Wilt u toch de afspraken opslaan?"
             intAnswer = ModMessage.ShowMsgBoxYesNo(strMsg)
@@ -146,7 +140,7 @@ Public Function SaveBedToFile(strFileName As String, strWorkbook As String, strT
             .Save
             .Close
         End With
-        Range("AfsprakenVersie").Value = FileSystem.FileDateTime(strFileName)
+        Range(ModConst.CONST_RANGE_VERSIE).Value = FileSystem.FileDateTime(strFileName)
         
         FileSystem.SetAttr strTekstFile, Attributes:=vbNormal
         Application.Workbooks.Open strTekstFile, True

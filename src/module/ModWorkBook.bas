@@ -40,9 +40,10 @@ Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, s
     Exit Function
     
 ErrFileOpenen:
+
     ModMessage.ShowMsgBoxExclam "Kan " & strFile & " nu niet openen, probeer dadelijk nog een keer"
-    Application.DisplayAlerts = True
     
+    Application.DisplayAlerts = True
     CopyWorkbookRangeToSheet = False
 
 End Function

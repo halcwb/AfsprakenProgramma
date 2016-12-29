@@ -100,18 +100,21 @@ Public Sub ClearPatient(blnShowWarn As Boolean)
     
     If objResult = vbYes Then
         Application.Cursor = xlWait
+        
         With shtPatData
             For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
                 ModRange.SetRangeValue (.Cells(intN, 1).Value2), .Cells(intN, 3).Value2
             Next intN
         End With
-        VerwijderLab
-        VerwijderAanvullendeAfspraken
+        
+        ClearLab
+        ClearAfspraken
+        
+        ModApplication.SetDateToDayFormula
+        ModApplication.SetApplicationTitle
+    
         Application.Cursor = xlDefault
     End If
-    
-    ModApplication.SetDateToDayFormula
-    ModApplication.SetApplicationTitle
     
 End Sub
 

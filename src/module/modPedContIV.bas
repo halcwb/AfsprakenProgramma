@@ -9,9 +9,6 @@ Sub WijzigContIVMedicament(intRegel As Integer)
     Dim strOplossing As String
     Dim varOplossing As Variant
     Dim strStand As String
-    Dim blnLog As Boolean
-    
-    blnLog = ModSetting.GetEnableLogging
     
     On Error GoTo ChangeMedIVError
 
@@ -36,42 +33,104 @@ Sub WijzigContIVMedicament(intRegel As Integer)
     
 ChangeMedIVError:
 
-    ModLog.EnableLogging
-    ModLog.LogToFile ModSetting.GetLogPath, Error, "ModPedContIV: " & " Error for intRegel " & intRegel
-    If Not blnLog Then ModLog.DisableLogging
+    ModLog.LogError "ModPedContIV: " & " Error for intRegel " & intRegel
 
 End Sub
 
-Sub MedicatieIV_Vervolgkeuzelijst2_BijWijzigen()
+Public Sub MedicatieIV_Vervolgkeuzelijst2_BijWijzigen()
+    
     WijzigContIVMedicament 1
+
 End Sub
 
-Sub MedicatieIV_Vervolgkeuzelijst3_BijWijzigen()
+Public Sub MedicatieIV_Vervolgkeuzelijst3_BijWijzigen()
+    
     WijzigContIVMedicament 2
+
 End Sub
-Sub MedicatieIV_Vervolgkeuzelijst4_BijWijzigen()
+
+Public Sub MedicatieIV_Vervolgkeuzelijst4_BijWijzigen()
+    
     WijzigContIVMedicament 3
+
 End Sub
-Sub MedicatieIV_Vervolgkeuzelijst5_BijWijzigen()
+
+Public Sub MedicatieIV_Vervolgkeuzelijst5_BijWijzigen()
+        
     WijzigContIVMedicament 4
+
 End Sub
+
 Sub MedicatieIV_Vervolgkeuzelijst6_BijWijzigen()
     WijzigContIVMedicament 5
 End Sub
-Sub MedicatieIV_Vervolgkeuzelijst7_BijWijzigen()
+
+Public Sub MedicatieIV_Vervolgkeuzelijst7_BijWijzigen()
     WijzigContIVMedicament 6
 End Sub
-Sub Vervolgkeuzelijst8_BijWijzigen()
+
+Public Sub Vervolgkeuzelijst8_BijWijzigen()
     WijzigContIVMedicament 7
 End Sub
-Sub Vervolgkeuzelijst9_BijWijzigen()
+
+Public Sub Vervolgkeuzelijst9_BijWijzigen()
     WijzigContIVMedicament 8
 End Sub
-Sub Vervolgkeuzelijst10_BijWijzigen()
+
+Public Sub Vervolgkeuzelijst10_BijWijzigen()
     WijzigContIVMedicament 9
 End Sub
-Sub Vervolgkeuzelijst76_BijWijzigen()
+
+Public Sub Vervolgkeuzelijst76_BijWijzigen()
     WijzigContIVMedicament 10
+End Sub
+
+Private Sub OpenInvoerNumeriek(intRegel As Integer, strRange As String, strUnit As String, intColumn As Integer)
+
+    Dim frmInvoer As New FormInvoerNumeriek
+    Dim varKeuze As Variant
+    
+    On Error GoTo PedMedOplossingError
+    
+    varKeuze = ModRange.GetRangeValue("MedIVKeuze_" & intRegel, vbNullString)
+    
+    With frmInvoer
+        .Caption = "Medicament " & intRegel
+        .lblParameter = "Oplossing"
+        .lblEenheid = strUnit
+        If ModRange.GetRangeValue("MedIVMlOpl_" & intRegel, 0) = 0 Then
+            .txtWaarde = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), varKeuze, 12)
+        Else
+            .txtWaarde = ModRange.GetRangeValue(strRange & intRegel, vbNullString)
+        End If
+        .Show
+        If IsNumeric(.txtWaarde) Then
+            If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), varKeuze, 12) Then
+                ModRange.SetRangeValue strRange & intRegel, 0
+            Else
+                ModRange.SetRangeValue strRange & intRegel, .txtWaarde
+            End If
+        End If
+    End With
+    
+    Set frmInvoer = Nothing
+    
+    Exit Sub
+    
+PedMedOplossingError:
+
+    ModLog.LogError "Kan oplossing niet invoeren: " & Err.Description
+    Set frmInvoer = Nothing
+
+End Sub
+
+Private Sub PedMedSterkte(intRegel As Integer)
+
+    Dim strUnit As String
+
+    strUnit = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), Range("MedIVKeuze_" & intRegel), 4)
+    OpenInvoerNumeriek intRegel, "MedIVSterkte_", strUnit, 11
+
 End Sub
 
 Public Sub PedMed1Sterkte()
@@ -114,30 +173,9 @@ Public Sub PedMed10Sterkte()
     PedMedSterkte 10
 End Sub
 
-Public Sub PedMedSterkte(intRegel As Integer)
+Private Sub PedMedOplossing(intRegel As Integer)
 
-    Dim frmInvoer As New FormInvoerNumeriek
-    
-    With frmInvoer
-        .Caption = "Medicament " & intRegel
-        .lblParameter = "Sterkte"
-        .lblEenheid = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), Range("MedIVKeuze_" & intRegel), 4)
-        If (Range("MedIVSterkte_" & intRegel).Value = 0) Then
-            .txtWaarde = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), Range("MedIVKeuze_" & intRegel), 11)
-        Else
-            .txtWaarde = Range("MedIVSterkte_" & intRegel).Value
-        End If
-        .Show
-        If IsNumeric(.txtWaarde) Then
-            If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), Range("MedIVKeuze_" & intRegel), 11) Then
-                Range("MedIVSterkte_" & intRegel).Formula = 0
-            Else
-                Range("MedIVSterkte_" & intRegel).Formula = .txtWaarde
-            End If
-        End If
-    End With
-    
-    Set frmInvoer = Nothing
+    OpenInvoerNumeriek intRegel, "MedIVMlOpl_", "mL", 12
 
 End Sub
 
@@ -180,32 +218,4 @@ End Sub
 Public Sub PedMed10Oplossing()
     PedMedOplossing 10
 End Sub
-
-Public Sub PedMedOplossing(intRegel As Integer)
-
-    Dim frmInvoer As New FormInvoerNumeriek
-    
-    With frmInvoer
-        .Caption = "Medicament " & intRegel
-        .lblParameter = "Oplossing"
-        .lblEenheid = "ml"
-        If (Range("MedIVMlOpl_" & intRegel).Value = 0) Then
-            .txtWaarde = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), Range("MedIVKeuze_" & intRegel), 12)
-        Else
-            .txtWaarde = Range("MedIVMlOpl_" & intRegel).Value
-        End If
-        .Show
-        If IsNumeric(.txtWaarde) Then
-            If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), Range("MedIVKeuze_" & intRegel), 12) Then
-                Range("MedIVMlOpl_" & intRegel).Formula = 0
-            Else
-                Range("MedIVMlOpl_" & intRegel).Formula = .txtWaarde
-            End If
-        End If
-    End With
-    
-    Set frmInvoer = Nothing
-
-End Sub
-
 

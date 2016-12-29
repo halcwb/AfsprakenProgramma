@@ -35,21 +35,21 @@ Private Sub cmdOk_Click()
                         "geval worden ingevoerd", Buttons:=vbOKOnly, Title:="Informedica"
         txtOpnDat.SetFocus
     Else
-        Range("Opndatum").Formula = DateValue(txtOpnDat.Value)
-        Range("AfspraakDatum").Value = dtmDate
-        Range("PatNummer").Value = txtPatNum.Value
-        Range("_AchterNaam").Value = txtANaam.Value
-        Range("_VoorNaam").Value = txtVNaam.Text
+        ModRange.SetRangeValue "Opndatum", DateValue(txtOpnDat.Value)
+        ModRange.SetRangeValue "AfspraakDatum", dtmDate
+        ModRange.SetRangeValue ModConst.CONST_RANGE_PATNUM, txtPatNum.Value
+        ModRange.SetRangeValue ModConst.CONST_RANGE_AN, txtANaam.Value
+        ModRange.SetRangeValue ModConst.CONST_RANGE_VN, txtVNaam.Text
         If IsDate(txtGebDat.Value) Then
-            Range("GebDatum").Formula = DateValue(txtGebDat.Value)
+            ModRange.SetRangeValue ModConst.CONST_RANGE_GEBDAT, DateValue(txtGebDat.Value)
         Else
-            Range("GebDatum").Formula = (txtGebDat.Value)
+            ModRange.SetRangeValue ModConst.CONST_RANGE_GEBDAT, (txtGebDat.Value)
         End If
-        Range("_Weken").Value = txtWeken.Value
-        Range("_Dagen").Value = txtDagen.Value
-        Range("Gewicht").Value = txtGew.Value * 10
-        Range("_Gewicht").Value = txtGew.Value * 1
-        Range("Lengte").Value = txtLengte.Value
+        ModRange.SetRangeValue "_Weken", txtWeken.Value
+        ModRange.SetRangeValue "_Dagen", txtDagen.Value
+        ModRange.SetRangeValue "Gewicht", txtGew.Value * 10
+        ModRange.SetRangeValue "_Gewicht", txtGew.Value * 1
+        ModRange.SetRangeValue "Lengte", txtLengte.Value
 
         SelectTPN
         
@@ -170,16 +170,16 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
-    txtPatNum.Text = Range("PatNummer").Value
+    txtPatNum.Text = ModRange.GetRangeValue("PatNummer", "")
     
     txtOpnDat.Value = Now()
-    txtANaam.Value = Range("_AchterNaam").Value
-    txtVNaam.Value = Range("_VoorNaam").Value
-    txtGebDat.Value = CDate(Range("GebDatum").Value)
-    txtGew.Value = Range("Gewicht").Value / 10
-    txtLengte.Value = Range("Lengte").Value
-    txtWeken.Value = Range("_Weken").Value
-    txtDagen.Value = Range("_Dagen").Value
+    txtANaam.Value = ModRange.GetRangeValue("_AchterNaam", "")
+    txtVNaam.Value = ModRange.GetRangeValue("_VoorNaam", "")
+    txtGebDat.Value = ModString.StringToDate(ModRange.GetRangeValue("GebDatum", ""))
+    txtGew.Value = ModRange.GetRangeValue("Gewicht", 0) / 10
+    txtLengte.Value = ModRange.GetRangeValue("Lengte", 0)
+    txtWeken.Value = ModRange.GetRangeValue("_Weken", 0)
+    txtDagen.Value = ModRange.GetRangeValue("_Dagen", 0)
 
 End Sub
 

@@ -16,6 +16,14 @@ Public Const CONST_BEDNAME_LENGTH As Integer = 8
 Public Const CONST_DEFAULTERROR_MSG = "Er is een fout opgetreden. Neem contact op met uw functioneel beheerder."
 
 'Named ranges constants
+Public Const CONST_RANGE_PATNUM = "__0_PatNum"
+Public Const CONST_RANGE_BED = "__1_Bed"
+Public Const CONST_RANGE_AN = "__2_AchterNaam"
+Public Const CONST_RANGE_VN = "__3_VoorNaam"
+Public Const CONST_RANGE_GEBDAT = "__4_GebDatum"
+Public Const CONST_RANGE_DATE = "Var_AfspraakDatum"
+Public Const CONST_RANGE_VERSIE = "Var_Glob_Versie"
+
 Public Const CONST_RANGE_NEOBOOL = "rngNeoAfsprBlns"
 Public Const CONST_RANGE_NEODATA = "rngNeoAfsprData"
 Public Const CONST_RANGE_NEOMRI = "_Neo_AfsprD_Vertrek"
@@ -23,6 +31,8 @@ Public Const CONST_RANGE_PEDBOOL = "rngPedAfsprBlns"
 Public Const CONST_RANGE_PEDDATA = "rngPedAfsprData"
 Public Const CONST_RANGE_PEDLAB = "rngPedLabData"
 Public Const CONST_RANGE_NEOLAB = "rngNeoLabData"
+
+Public Const CONST_RANGE_NEOMED = "tbl_Neo_MedIV"
 
 'TPN ranges
 Public Const CONST_TPN_1 As Integer = 2
