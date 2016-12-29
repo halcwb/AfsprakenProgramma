@@ -149,7 +149,6 @@ Private Sub txtSterkte_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
                 Beep
             End If
     End If
-            
 
 End Sub
 

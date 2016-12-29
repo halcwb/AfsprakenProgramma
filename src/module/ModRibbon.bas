@@ -7,7 +7,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
 '
     Application.ScreenUpdating = False
     
-    Select Case ctrlMenuItem.ID
+    Select Case ctrlMenuItem.Id
     
         'grpAfspraken                                       ' -- AFSPRAKEN --
         
@@ -134,7 +134,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModMenuItems.GiveNameToRange
         
         Case Else
-            MsgBox ctrlMenuItem.ID & " has no select case", vbCritical
+            MsgBox ctrlMenuItem.Id & " has no select case", vbCritical
             
         
     End Select

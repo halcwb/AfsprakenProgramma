@@ -11,6 +11,8 @@ End Sub
 
 Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, strRange As String, shtTarget As Worksheet) As Boolean
     
+    On Error GoTo ErrFileOpenen
+    
     With Application
         .DisplayAlerts = False
         
@@ -20,17 +22,16 @@ Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, s
         ' Open the workbook
         FileSystem.SetAttr strFile, Attributes:=vbNormal
         .Workbooks.Open strFile, True
-        
         ' Make sure the workbook can be shared
         SaveWorkBookAsShared .Workbooks(strBook), strFile
         
         ' Copy the range to the target
-        .Workbooks(strBook).Range(strRange).CurrentRegion.Select
+        .Workbooks(strBook).Sheets(1).Range(strRange).CurrentRegion.Select
         Selection.Copy
         shtTarget.Range("A1").PasteSpecial xlPasteValues
         
         ' Close the workbook
-        Workbooks(strBook).Close
+        .Workbooks(strBook).Close
         
         .DisplayAlerts = True
     End With
@@ -41,6 +42,9 @@ Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, s
     
 ErrFileOpenen:
 
+    If Workbooks.Count = 2 Then Workbooks.Item(2).Close
+
+    ModLog.LogError "CopyWorkbookRangeToSheet " & strFile & ", " & strBook & ", " & strRange & ", " & shtTarget.Name
     ModMessage.ShowMsgBoxExclam "Kan " & strFile & " nu niet openen, probeer dadelijk nog een keer"
     
     Application.DisplayAlerts = True

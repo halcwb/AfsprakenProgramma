@@ -18,7 +18,7 @@ Public Sub OpenBed(strBed As String)
     
     strFileName = ModPatient.GetPatientDataFile(strBed)
     strBookName = ModPatient.GetPatientWorkBookName(strBed)
-    strRange = "a1:b1"
+    strRange = "A1"
     
     If ModWorkBook.CopyWorkbookRangeToSheet(strFileName, strBookName, strRange, shtGlobTemp) Then
         Range(ModConst.CONST_RANGE_VERSIE).Value = FileSystem.FileDateTime(strFileName)

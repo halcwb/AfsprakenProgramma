@@ -9,9 +9,6 @@ Public Const CONST_APPLICATION_NAME = "Informedica Afspraken Programma 2017"
 ' Password to protect code and sheets
 Public Const CONST_PASSWORD = "hla"
 
-'Length bedname
-Public Const CONST_BEDNAME_LENGTH As Integer = 8
-
 'Default error message
 Public Const CONST_DEFAULTERROR_MSG = "Er is een fout opgetreden. Neem contact op met uw functioneel beheerder."
 

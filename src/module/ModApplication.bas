@@ -180,16 +180,16 @@ Public Sub SetApplicationTitle()
 
     Dim strTitle As String
     Dim strBed As String
-    Dim strVn As String
-    Dim strAn As String
+    Dim strVN As String
+    Dim strAN As String
     
     strTitle = ModConst.CONST_APPLICATION_NAME
     strBed = ModRange.GetRangeValue(ModConst.CONST_RANGE_BED, "")
-    strVn = ModRange.GetRangeValue(ModConst.CONST_RANGE_VN, "")
-    strAn = ModRange.GetRangeValue(ModConst.CONST_RANGE_AN, "")
+    strVN = ModRange.GetRangeValue(ModConst.CONST_RANGE_VN, "")
+    strAN = ModRange.GetRangeValue(ModConst.CONST_RANGE_AN, "")
     
     If Not strBed = "0" Then
-        strTitle = strTitle & " Patient: " & strAn & " " & strVn & ", Bed: " & strBed
+        strTitle = strTitle & " Patient: " & strAN & " " & strVN & ", Bed: " & strBed
     End If
     
     Application.Caption = strTitle

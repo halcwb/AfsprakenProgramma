@@ -4,27 +4,20 @@ Option Explicit
 Public Function OpenPatientLijst(strCaption As String) As String
     
     Dim strIndex As String
-    Dim objPat As ClassPatient
+    Dim objPat As ClassPatientInfo
     Dim frmPats As New FormPatLijst
-    Dim colPats As New Collection
+    Dim colPats As Collection
+    
+    On Error GoTo OpenPatientListError
     
     Set colPats = GetPatients()
     
     With frmPats
-        Application.Cursor = xlWait
         .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
-        .lstPatienten.Clear
-        For Each objPat In colPats
-            .lstPatienten.AddItem objPat
-        Next objPat
-        Application.Cursor = xlDefault
+        .LoadPatients colPats
         .Show
-        If .lstPatienten.ListIndex > -1 Then
-            Application.Cursor = xlWait
-            strIndex = VBA.Left$(.lstPatienten.Text, CONST_BEDNAME_LENGTH)
-            Application.Cursor = xlDefault
-        End If
-        .lstPatienten.Clear
+        
+        strIndex = .GetSelectedBed()
     End With
     
     Set colPats = Nothing
@@ -32,6 +25,39 @@ Public Function OpenPatientLijst(strCaption As String) As String
     
     OpenPatientLijst = strIndex
     
+    Exit Function
+    
+OpenPatientListError:
+
+    ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
+    ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & Err.Number
+    
+End Function
+
+Private Sub TestPatientLijst()
+    Dim strBed As String
+    
+    strBed = OpenPatientLijst("Test")
+    MsgBox strBed
+    
+    'Application.DisplayAlerts = False
+    'Workbooks.Open "\\psf\Dropbox\Excel\Afspraken 2016\TestOmgeving\Pelikaan\ICAP\..\ICAP Data\Patienten.xls", True
+    'Application.DisplayAlerts = True
+    
+End Sub
+
+Public Function CreatePatientInfo(strId As String, strBed As String, strAN As String, strVN As String, strBD As String) As ClassPatientInfo
+
+    Dim objInfo As New ClassPatientInfo
+    
+    objInfo.Id = strId
+    objInfo.Bed = strBed
+    objInfo.AchterNaam = strAN
+    objInfo.VoorNaam = strVN
+    objInfo.BirthDate = strBD
+    
+    Set CreatePatientInfo = objInfo
+
 End Function
 
 Public Function GetPatients() As Collection
@@ -39,26 +65,25 @@ Public Function GetPatients() As Collection
     Dim colPatienten As New Collection
     Dim intCount As Integer
     Dim strBed As String
-    Dim strVn As String
-    Dim strAn As String
-    Dim strBd As String
+    Dim strVN As String
+    Dim strAN As String
+    Dim strBD As String
 
     If ModWorkBook.CopyWorkbookRangeToSheet(GetPatientDataPath() + "Patienten.xls", "Patienten.xls", "a1", shtGlobTemp) Then
         With colPatienten
             For intCount = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.Count
                 With shtGlobTemp
                     strBed = .Cells(intCount, 1).Value2
-                    strVn = .Cells(intCount, 2).Value2
-                    strAn = .Cells(intCount, 3).Value2
-                    strBd = IIf(.Cells(intCount, 4).Value2 <> 0, CDate(.Cells(intCount, 4).Value), vbNullString)
+                    strVN = .Cells(intCount, 2).Value2
+                    strAN = .Cells(intCount, 3).Value2
+                    strBD = IIf(.Cells(intCount, 4).Value2 <> 0, ModString.StringToDate(.Cells(intCount, 4).Value), vbNullString)
                 End With
-                .Add strBed & ": " & strVn & " " & strAn & ", " & strBd, strBed
+                .Add CreatePatientInfo("", strBed, strAN, strVN, strBD)
             Next intCount
         End With
     End If
 
     Set GetPatients = colPatienten
-    Set colPatienten = Nothing
 
 End Function
 
@@ -118,7 +143,7 @@ Public Sub ClearPatient(blnShowWarn As Boolean)
     
 End Sub
 
-Private Sub Test()
+Private Sub TestClearPatient()
 
     ClearPatient False
 
