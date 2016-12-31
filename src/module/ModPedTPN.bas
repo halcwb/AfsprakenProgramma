@@ -1,81 +1,5 @@
-Attribute VB_Name = "ModMenuItems"
+Attribute VB_Name = "ModPedTPN"
 Option Explicit
-
-Public Sub StandaardInstellingen()
-
-    Dim intN As Integer
-    
-    On Error GoTo StandaarInstellingenError
-        
-    GoTo StandaarInstellingenError
-    
-    Application.Cursor = xlWait
-    
-    With shtPatData
-        For intN = 3 To 25
-            Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 3).Formula
-        Next intN
-    End With
-    
-    With shtPatData
-        For intN = 105 To 150
-            Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 3).Formula
-        Next intN
-    End With
-    
-    With shtPatData
-        For intN = 370 To 392
-            Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 3).Formula
-        Next intN
-    End With
-    
-    Application.Cursor = xlDefault
-    
-    Exit Sub
-    
-StandaarInstellingenError:
-
-    ModMessage.ShowMsgBoxExclam "Dit werkt nog niet"
-
-End Sub
-
-Public Sub InstellingenKlein()
-
-    Dim intN As Integer
-    
-    On Error GoTo InstellingenKleinError
-    
-    GoTo InstellingenKleinError
-        
-    Application.Cursor = xlWait
-    
-    With shtPatData
-        For intN = 3 To 25
-            Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 4).Formula
-        Next intN
-    End With
-    
-    With shtPatData
-        For intN = 105 To 150
-            Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 3).Formula
-        Next intN
-    End With
-    
-    With shtPatData
-        For intN = 370 To 392
-            Range(.Cells(intN, 1).Value).Formula = .Cells(intN, 4).Formula
-        Next intN
-    End With
-    
-    Application.Cursor = xlDefault
-    
-    Exit Sub
-
-InstellingenKleinError:
-
-    ModMessage.ShowMsgBoxExclam "Dit werkt nog niet"
-
-End Sub
 
 Public Sub SelectPedTPNPrint()
 
@@ -102,27 +26,6 @@ Public Sub SelectPedTPNPrint()
     End If
         
     Range("A1").Select
-
-End Sub
-
-Public Sub SaveAndPrintAfspraken()
-
-    Dim frmPrintAfspraken As New FormPrintAfspraken
-    
-    ModBed.SluitBed
-    frmPrintAfspraken.Show
-    
-    Set frmPrintAfspraken = Nothing
-    
-End Sub
-
-Public Sub SpecialeVoeding()
-    
-    Dim frmSpecialeVoeding As New FormSpecialeVoeding
-
-    frmSpecialeVoeding.Show
-    
-    Set frmSpecialeVoeding = Nothing
 
 End Sub
 
@@ -162,60 +65,6 @@ Public Sub SelectTPN()
     
     Application.Calculate
     
-End Sub
-
-Private Sub ClearContentsSheetRange(shtSheet As Worksheet, strRange As String)
-
-    Dim blnLog As Boolean
-    Dim strError As String
-    Dim blnIsDevelop As Boolean
-    Dim strPw As String
-    
-    On Error GoTo ClearContentError
-    
-    blnIsDevelop = ModSetting.IsDevelopmentMode()
-    strPw = ModConst.CONST_PASSWORD
-    
-    shtSheet.Unprotect strPw
-    shtSheet.Visible = xlSheetVisible
-    
-    Application.Goto Reference:=strRange
-    Selection.ClearContents
-    
-    If strRange = ModConst.CONST_RANGE_NEOMRI Then
-        Selection.Value = 50
-    End If
-    
-    If Not blnIsDevelop Then
-        shtSheet.Visible = xlSheetVeryHidden
-        shtSheet.Protect strPw
-    End If
-    
-    Exit Sub
-    
-ClearContentError:
-    
-    strError = "ClearContentSheetRange Sheet: " & shtSheet.Name & " could  not clear content of Range: " & strRange
-    ModLog.LogError strError
-
-End Sub
-
-Public Sub ClearLab()
-    
-    ClearContentsSheetRange shtPedBerLab, ModConst.CONST_RANGE_PEDLAB
-    ClearContentsSheetRange shtNeoBerLab, ModConst.CONST_RANGE_NEOLAB
-    
-End Sub
-
-Public Sub ClearAfspraken()
-
-    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEOBOOL
-    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEODATA
-    ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEOMRI
-    
-    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_RANGE_PEDBOOL
-    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_RANGE_PEDDATA
-
 End Sub
 
 Private Sub TPNAdvies(Dag As Integer)
@@ -515,82 +364,18 @@ End Sub
 
 Public Sub TPNAdviesDagEen()
 
-    TPNAdvies (1)
+    TPNAdvies 1
 
 End Sub
 
 Public Sub TPNAdviesDagTwee()
 
-    TPNAdvies (2)
+    TPNAdvies 2
 
 End Sub
 
 Public Sub TPNAdviesDagDrie()
 
-    TPNAdvies (3)
+    TPNAdvies 3
 
 End Sub
-
-Public Sub PrintLabAanvragen()
-
-    With Application
-        .DisplayAlerts = False
-        'TODO: Link controleren op werking
-        .Workbooks.Open "G:\Zorgeenh\Pelikaan\ICAP Data\LabAanvragen.xls", True, True
-        .ActiveWorkbook.Sheets("Unit 1").PrintOut
-        .ActiveWorkbook.Sheets("Unit 2").PrintOut
-        .Workbooks("LabAanvragen.xls").Close
-    End With
-
-End Sub
-
-Public Sub AfsprakenPrinten()
-
-    shtNeoPrtAfspr.PrintPreview
-
-End Sub
-
-Public Sub WerkBriefPrinten()
-        
-    With shtNeoPrtWerkbr
-        .Unprotect ModConst.CONST_PASSWORD
-        .PrintPreview
-        .Protect ModConst.CONST_PASSWORD
-    End With
-
-End Sub
-
-Public Sub TPNAdviesNEO()
-
-    ModRange.SetRangeValue "_DagKeuze", IIf(ModRange.GetRangeValue("Dag", 0) < 4, 1, 2)
-    ModRange.SetRangeValue "_IntakePerKg", 5000
-    ModRange.SetRangeValue "_IntraLipid", 5000
-    ModRange.SetRangeValue "_NaCl", 5000
-    ModRange.SetRangeValue "_KCl", 5000
-    ModRange.SetRangeValue "_CaCl2", 5000
-    ModRange.SetRangeValue "_MgCl2", 5000
-    ModRange.SetRangeValue "_SoluVit", 5000
-    ModRange.SetRangeValue "_Primene", 5000
-    ModRange.SetRangeValue "_NICUMix", 5000
-    ModRange.SetRangeValue "_SSTB", 5000
-    
-    ModSheet.GoToSheet shtNeoGuiAfspraken, "A9"
-
-End Sub
-
-' Shows the frmNaamGeven to give a range a
-' sequential naming of "Name_" + a number
-' When runnig this from the visual basic editor
-' it works as expected. When running from the ribbon
-' menu, the selection in the sheet is not visible.
-' But it works as otherwise.
-Public Sub GiveNameToRange()
-
-    Dim frmNaamGeven As New FormNaamGeven
-    
-    frmNaamGeven.Show vbModal
-    
-    Set frmNaamGeven = Nothing
-
-End Sub
-

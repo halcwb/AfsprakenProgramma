@@ -15,7 +15,7 @@ Public Function GetVoedingItems() As String()
     Dim arrItems() As String
     ReDim arrItems(0)
         
-    arrItems(0) = "_Voeding"
+    arrItems(0) = "_InfB_Voeding"
     AddItemsToArray arrItems, "_Frequentie", 1, 2
     AddItemsToArray arrItems, "_Fototherapie", 1, 1
     AddItemsToArray arrItems, "_Parenteraal", 1, 1
@@ -33,7 +33,7 @@ Public Function GetIVAfsprItems() As String()
     Dim arrItems() As String
     ReDim arrItems(0)
         
-    arrItems(0) = "_ArtLijn"
+    arrItems(0) = "_InfB_ArtLijn"
     AddItemsToArray arrItems, "_Medicament", 1, 9
     AddItemsToArray arrItems, "_MedSterkte", 1, 9
     AddItemsToArray arrItems, "_OplHoev", 1, 9
@@ -51,7 +51,7 @@ Public Function GetTPNItems() As String()
     Dim arrItems() As String
     ReDim arrItems(0)
     
-    arrItems(0) = "_Parenteraal"
+    arrItems(0) = "_InfB_Parenteraal"
     AddItemsToArray arrItems, "_IntraLipid", 1, 1
     AddItemsToArray arrItems, "_DagKeuze", 1, 1
     
@@ -84,6 +84,10 @@ Public Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As 
 
     Dim intC As Integer
     Dim intU As Integer
+    Dim strInfB As String
+    Dim strN As String
+    
+    strInfB = "_Neo_InfB"
     
     If intStart = intStop Then
         AddItemToArray arrItems, strItem
@@ -93,7 +97,8 @@ Public Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As 
         
         For intC = intStart To intStop
             intU = intU + 1
-            arrItems(intU) = strItem & "_" & intC
+            strN = IIf(intStop > 9 And intC < 10, "0" & intC, intC)
+            arrItems(intU) = strInfB & strItem & "_" & strN
         Next intC
     End If
     
@@ -103,34 +108,13 @@ Public Function Get1700Items(arrItems() As String) As String()
     
     Dim arr1700Items() As String
     Dim varItem As Variant
-    Dim arrSplit() As String
-    Dim strAfspr, strAfspr1700 As String
-    Dim strNum As String
     Dim intN As Integer
     
     ReDim arr1700Items(UBound(arrItems))
     
     For Each varItem In arrItems
-        arrSplit = Split(varItem, "_")
-        strAfspr = arrSplit(1)
-        
-        If UBound(arrSplit) = 2 Then
-            strNum = arrSplit(2)
-        Else
-            strNum = ""
-        End If
-        
-        If strNum = vbNullString Then
-            strAfspr1700 = "_" & strAfspr & "1700"
-        Else
-            strAfspr1700 = "_" & strAfspr & "1700" & "_" & strNum
-        End If
-        
-        If strAfspr1700 = vbNullString Then Err.Raise 1004, "Get1700Items", "Afspraken 1700 cannot be empty string"
-        
-        arr1700Items(intN) = strAfspr1700
+        arr1700Items(intN) = Replace(varItem, "InfB", "1700")
         intN = intN + 1
-        
     Next varItem
     
     Get1700Items = arr1700Items
@@ -208,9 +192,8 @@ End Sub
 Public Sub CopyToActueel()
 
     Dim frmCopy1700 As New FormCopy1700
-    ' Show selectie form
+    
     frmCopy1700.Show
-    ' Copy by block
 
     Set frmCopy1700 = Nothing
     
@@ -230,7 +213,7 @@ Private Sub Test()
 
 End Sub
 
-Sub VerwijderContInfuus(intRegel As Integer, bln1700 As Boolean)
+Private Sub VerwijderContInfuus(intRegel As Integer, bln1700 As Boolean)
 
     Dim strMedicament As String
     Dim varMedicament As Variant
@@ -239,75 +222,141 @@ Sub VerwijderContInfuus(intRegel As Integer, bln1700 As Boolean)
     Dim strOplossing As String
     Dim strStand As String
     Dim strExtra As String
+    Dim strRegel As String
     
-    Dim objMeds As Range
+    Dim objTblMed As Range
     
-    Set objMeds = Range(ModConst.CONST_RANGE_NEOMED)
+    Set objTblMed = Range(ModConst.CONST_RANGE_NEOMED)
+    strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
     
-    If bln1700 Then
-        strMedicament = "_Medicament1700_" & intRegel
-        strMedSterkte = "_MedSterkte1700_" & intRegel
-        strOplHoev = "_OplHoev1700_" & intRegel
-        strOplossing = "_Oplossing1700_" & intRegel
-        strStand = "_Stand1700_" & intRegel
-        strExtra = "_Extra1700_" & intRegel
-    Else
-        strMedicament = "_Medicament_" & intRegel
-        strMedSterkte = "_MedSterkte_" & intRegel
-        strOplHoev = "_OplHoev_" & intRegel
-        strOplossing = "_Oplossing_" & intRegel
-        strStand = "_Stand_" & intRegel
-        strExtra = "_Extra_" & intRegel
-    End If
+    strMedicament = IIf(bln1700, "_Neo_1700_Medicament_" & intRegel, "_Neo_InfB_Medicament_" & intRegel)
+    strMedSterkte = IIf(bln1700, "_Neo_1700_MedSterkte_" & intRegel, "_Neo_InfB_MedSterkte_" & intRegel)
+    strOplHoev = IIf(bln1700, "_Neo_1700_OplHoev_" & intRegel, "_Neo_InfB_OplHoev_" & intRegel)
+    
+    strOplossing = IIf(bln1700, "_Neo_1700_Oplossing_" & strRegel, "_Neo_InfB_Oplossing_" & strRegel)
+    strStand = IIf(bln1700, "_Neo_1700_Stand_" & strRegel, "_Neo_InfB_Stand_" & strRegel)
+    strExtra = IIf(bln1700, "_Neo_1700_VochtExtra_" & strRegel, "_Neo_InfB_VochtExtra_" & strRegel)
 
     varMedicament = ModRange.GetRangeValue(strMedicament, vbNullString)
     
     ModRange.SetRangeValue strMedSterkte, 0
     ModRange.SetRangeValue strOplHoev, 0
     ModRange.SetRangeValue strStand, 0
-    ModRange.SetRangeValue strExtra, 0
+    ModRange.SetRangeValue strExtra, vbNullString
     
-    ModRange.SetRangeValue strOplossing, Application.VLookup(objMeds.Cells(varMedicament, 1), objMeds, 10, False)
+    ModRange.SetRangeValue strOplossing, Application.VLookup(objTblMed.Cells(varMedicament, 1), objTblMed, 10, False)
     If Not IsNumeric(ModRange.GetRangeValue(strOplossing, vbNullString)) Then
         ModRange.SetRangeValue strOplossing, 1
     End If
     
 End Sub
 
-Sub VerwijderContInfuus1700_1()
+Public Sub VerwijderContInfuus_1()
+
+    VerwijderContInfuus 1, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_2()
+    
+    VerwijderContInfuus 2, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_3()
+    
+    VerwijderContInfuus 3, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_4()
+    
+    VerwijderContInfuus 4, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_5()
+    
+    VerwijderContInfuus 5, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_6()
+    
+    VerwijderContInfuus 6, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_7()
+    
+    VerwijderContInfuus 7, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_8()
+    
+    VerwijderContInfuus 8, False
+
+End Sub
+
+Public Sub VerwijderContInfuus_9()
+    
+    VerwijderContInfuus 9, False
+
+End Sub
+
+Public Sub VerwijderContInfuus1700_1()
+
     VerwijderContInfuus 1, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_2()
+Public Sub VerwijderContInfuus1700_2()
+    
     VerwijderContInfuus 2, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_3()
+Public Sub VerwijderContInfuus1700_3()
+    
     VerwijderContInfuus 3, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_4()
+Public Sub VerwijderContInfuus1700_4()
+    
     VerwijderContInfuus 4, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_5()
+Public Sub VerwijderContInfuus1700_5()
+    
     VerwijderContInfuus 5, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_6()
+Public Sub VerwijderContInfuus1700_6()
+    
     VerwijderContInfuus 6, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_7()
+Public Sub VerwijderContInfuus1700_7()
+    
     VerwijderContInfuus 7, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_8()
+Public Sub VerwijderContInfuus1700_8()
+    
     VerwijderContInfuus 8, True
+
 End Sub
 
-Sub VerwijderContInfuus1700_9()
+Public Sub VerwijderContInfuus1700_9()
+    
     VerwijderContInfuus 9, True
+
 End Sub
 
 Private Sub MedSterkte(intRegel As Integer, bln1700 As Boolean)
@@ -315,11 +364,7 @@ Private Sub MedSterkte(intRegel As Integer, bln1700 As Boolean)
     Dim frmInvoer As New FormInvoerNumeriek
     Dim strSterkte As String
     
-    If bln1700 Then
-        strSterkte = "_MedSterkte1700_" & intRegel
-    Else
-        strSterkte = "_MedSterkte_" & intRegel
-    End If
+    strSterkte = IIf(bln1700, "_Neo_1700_MedSterkte_" & intRegel, "_Neo_InfB_MedSterkte_" & intRegel)
     
     With frmInvoer
         .Caption = "Medicament " & intRegel
@@ -332,127 +377,6 @@ Private Sub MedSterkte(intRegel As Integer, bln1700 As Boolean)
     End With
     
     Set frmInvoer = Nothing
-
-End Sub
-
-Public Sub MedSterkte1700_1()
-    MedSterkte 1, True
-End Sub
-
-Public Sub MedSterkte1700_2()
-    MedSterkte 2, True
-End Sub
-
-Public Sub MedSterkte1700_3()
-    MedSterkte 3, True
-End Sub
-
-Public Sub MedSterkte1700_4()
-    MedSterkte 4, True
-End Sub
-
-Public Sub MedSterkte1700_5()
-    MedSterkte 5, True
-End Sub
-
-Public Sub MedSterkte1700_6()
-    MedSterkte 6, True
-End Sub
-
-Public Sub MedSterkte1700_7()
-    MedSterkte 7, True
-End Sub
-
-Public Sub MedSterkte1700_8()
-    MedSterkte 8, True
-End Sub
-
-Public Sub MedSterkte1700_9()
-    MedSterkte 9, True
-End Sub
-
-Public Sub Afspraken_Vervolgkeuzelijst1_BijWijzigen()
-
-    VerwijderContInfuus 1, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst2_BijWijzigen()
-    
-    VerwijderContInfuus 2, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst3_BijWijzigen()
-    
-    VerwijderContInfuus 3, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst4_BijWijzigen()
-    
-    VerwijderContInfuus 4, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst5_BijWijzigen()
-    
-    VerwijderContInfuus 5, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst6_BijWijzigen()
-    
-    VerwijderContInfuus 6, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst7_BijWijzigen()
-    
-    VerwijderContInfuus 7, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst67_BijWijzigen()
-    
-    VerwijderContInfuus 8, False
-
-End Sub
-
-Public Sub Vervolgkeuzelijst97_BijWijzigen()
-    
-    VerwijderContInfuus 9, False
-
-End Sub
-
-Private Sub VerwijderZijlijn(intRegel As Integer)
-
-    Dim strStand As String
-    Dim strExtra As String
-
-    strStand = "_Stand_" & intRegel
-    strExtra = "_Extra_" & intRegel + 1
-    
-    ModRange.SetRangeValue strStand, 0
-    ModRange.SetRangeValue strExtra, 0
-    
-End Sub
-
-Public Sub Vervolgkeuzelijst101_BijWijzigen()
-    
-    VerwijderZijlijn 10
-
-End Sub
-
-Public Sub Vervolgkeuzelijst104_BijWijzigen()
-    
-    VerwijderZijlijn 11
-
-End Sub
-
-Public Sub Vervolgkeuzelijst108_BijWijzigen()
-    
-    VerwijderZijlijn 12
 
 End Sub
 
@@ -507,5 +431,108 @@ End Sub
 Public Sub Med9Sterkte()
 
     MedSterkte 9, False
+
+End Sub
+
+Public Sub MedSterkte1700_1()
+    
+    MedSterkte 1, True
+
+End Sub
+
+Public Sub MedSterkte1700_2()
+    
+    MedSterkte 2, True
+
+End Sub
+
+Public Sub MedSterkte1700_3()
+    
+    MedSterkte 3, True
+
+End Sub
+
+Public Sub MedSterkte1700_4()
+    
+    MedSterkte 4, True
+
+End Sub
+
+Public Sub MedSterkte1700_5()
+    
+    MedSterkte 5, True
+
+End Sub
+
+Public Sub MedSterkte1700_6()
+    
+    MedSterkte 6, True
+
+End Sub
+
+Public Sub MedSterkte1700_7()
+    
+    MedSterkte 7, True
+
+End Sub
+
+Public Sub MedSterkte1700_8()
+    
+    MedSterkte 8, True
+
+End Sub
+
+Public Sub MedSterkte1700_9()
+    
+    MedSterkte 9, True
+
+End Sub
+
+Private Sub VerwijderZijlijn(intRegel As Integer)
+
+    Dim strStand As String
+    Dim strExtra As String
+
+    strStand = "_Neo_InfB_Stand_" & intRegel
+    strExtra = "_Neo_InfB_VochtExtra_" & intRegel + 1
+    
+    ModRange.SetRangeValue strStand, 0
+    ModRange.SetRangeValue strExtra, vbNullString
+    
+End Sub
+
+Public Sub VerwijderZijlijn_10()
+    
+    VerwijderZijlijn 10
+
+End Sub
+
+Public Sub VerwijderZijlijn_11()
+    
+    VerwijderZijlijn 11
+
+End Sub
+
+Public Sub VerwijderZijlijn_12()
+    
+    VerwijderZijlijn 12
+
+End Sub
+
+Public Sub TPNAdviesNEO()
+
+    ModRange.SetRangeValue "_DagKeuze", IIf(ModRange.GetRangeValue("Dag", 0) < 4, 1, 2)
+    ModRange.SetRangeValue "_IntakePerKg", 5000
+    ModRange.SetRangeValue "_IntraLipid", 5000
+    ModRange.SetRangeValue "_NaCl", 5000
+    ModRange.SetRangeValue "_KCl", 5000
+    ModRange.SetRangeValue "_CaCl2", 5000
+    ModRange.SetRangeValue "_MgCl2", 5000
+    ModRange.SetRangeValue "_SoluVit", 5000
+    ModRange.SetRangeValue "_Primene", 5000
+    ModRange.SetRangeValue "_NICUMix", 5000
+    ModRange.SetRangeValue "_SSTB", 5000
+    
+    ModSheet.GoToSheet shtNeoGuiAfspraken, "A9"
 
 End Sub

@@ -4,11 +4,11 @@ $K$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_Pat_OpnDatum+1
 $O$2: 	=__1_Bed
 $E$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $J$3: 	=__4_GebDatum
-$K$3: 	=""Gewicht: ""&_Pat__Gewicht/10&"" kg""
-$N$3: 	=""Lengte: ""&_Pat__Lengte&"" cm""
+$K$3: 	=""Gewicht: ""&_Pat_Gewicht/10&"" kg""
+$N$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
 $E$4: 	=__0_PatNum
 $J$4: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
-$M$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat__Gewicht/10,0.424)*POWER(((_Pat__Lengte/100)*100),0.724)*0.007184,2)&"" m2""
+$M$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.424)*POWER(((_Pat_Lengte/100)*100),0.724)*0.007184,2)&"" m2""
 $D$6: 	=PedBerMedDisc!C2
 $H$6: 	=IF(INDEX(tblMedDiscTijdenValues,PedBerMedDisc!I2,1)=0,"""",INDEX(tblMedDiscTijdenValues,PedBerMedDisc!I2,1))
 $I$6: 	=IF(PedBerMedDisc!C2>1,PedBerMedDisc!H2,"""")

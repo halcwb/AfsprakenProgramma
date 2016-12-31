@@ -2,7 +2,7 @@
 $M$1: 	=TODAY()
 $O$1: 	=NOW()
 $B$3: 	=NeoAfspr1700!B10
-$M$3: 	=_Neo_InfB_PatNum
+$M$3: 	=__0_PatNum
 $B$4: 	=NeoAfspr1700!B11
 $J$4: 	=NeoAfspr1700!G11
 $M$4: 	=NeoAfspr1700!I11

@@ -1,40 +1,40 @@
 "$B$1: 	=IF(E60<0,""Te weinig volume voor TPN!"","""")
-$C$3: 	=ROUND(NeoBerIV!K50/_Neo_InfB_Gewicht,0)&"" ml/kg""
-$D$3: 	=ROUND(NeoBerIV!K49/_Neo_InfB_Gewicht,0)&"" ml/kg""
-$E$3: 	=ROUND(NeoBerIV!K47/_Neo_InfB_Gewicht,0)&"" ml/kg  ""&""= ""&ROUND(NeoBerIV!K47,0)&"" ml""
-$H$3: 	=ROUND(NeoBerIV!L50/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$I$3: 	=ROUND(NeoBerIV!L49/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$J$3: 	=ROUND(NeoBerIV!L47/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$C$4: 	=ROUND(NeoBerIV!Q50/_Neo_InfB_Gewicht,1)&"" g/kg""
-$D$4: 	=ROUND(NeoBerIV!Q49/_Neo_InfB_Gewicht,1)&"" g/kg""
-$E$4: 	=ROUND(NeoBerIV!Q47/_Neo_InfB_Gewicht,1)&"" g/kg""
-$H$4: 	=ROUND(NeoBerIV!M50/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$I$4: 	=ROUND(NeoBerIV!M49/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$J$4: 	=ROUND(NeoBerIV!M47/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$C$5: 	=ROUND(NeoBerIV!S50/_Neo_InfB_Gewicht,1)&"" g/kg""
-$D$5: 	=ROUND(NeoBerIV!S49/_Neo_InfB_Gewicht,1)&"" g/kg""
-$E$5: 	=ROUND(NeoBerIV!S47/_Neo_InfB_Gewicht,1)&"" g/kg""
-$H$5: 	=ROUND(NeoBerIV!N50/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$I$5: 	=ROUND(NeoBerIV!N49/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$J$5: 	=ROUND(NeoBerIV!N47/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$C$6: 	=ROUND(1000*NeoBerIV!R50/_Neo_InfB_Gewicht/1440,1)&"" mg/kg/min""
-$D$6: 	=ROUND(1000*NeoBerIV!R49/_Neo_InfB_Gewicht/1440,1)&"" mg/kg/min""
-$E$6: 	=ROUND(1000*NeoBerIV!R47/_Neo_InfB_Gewicht/1440,1)&"" mg/kg/min""
-$H$6: 	=ROUND(NeoBerIV!O50/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$I$6: 	=ROUND(NeoBerIV!O49/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$J$6: 	=ROUND(NeoBerIV!O47/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$C$7: 	=ROUND(NeoBerIV!T50/_Neo_InfB_Gewicht,1)& "" kcal/kg""
-$D$7: 	=ROUND(NeoBerIV!T49/_Neo_InfB_Gewicht,1)& "" kcal/kg""
-$E$7: 	=ROUND(NeoBerIV!T47/_Neo_InfB_Gewicht,1)& "" kcal/kg""
-$H$7: 	=ROUND(NeoBerIV!U50/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$I$7: 	=ROUND(NeoBerIV!U49/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$J$7: 	=ROUND(NeoBerIV!U47/_Neo_InfB_Gewicht,1)&"" mmol/kg""
+$C$3: 	=ROUND(NeoBerIV!K50/(_Pat_Gewicht/10),0)&"" ml/kg""
+$D$3: 	=ROUND(NeoBerIV!K49/(_Pat_Gewicht/10),0)&"" ml/kg""
+$E$3: 	=ROUND(NeoBerIV!K47/(_Pat_Gewicht/10),0)&"" ml/kg  ""&""= ""&ROUND(NeoBerIV!K47,0)&"" ml""
+$H$3: 	=ROUND(NeoBerIV!L50/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$I$3: 	=ROUND(NeoBerIV!L49/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$J$3: 	=ROUND(NeoBerIV!L47/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$C$4: 	=ROUND(NeoBerIV!Q50/(_Pat_Gewicht/10),1)&"" g/kg""
+$D$4: 	=ROUND(NeoBerIV!Q49/(_Pat_Gewicht/10),1)&"" g/kg""
+$E$4: 	=ROUND(NeoBerIV!Q47/(_Pat_Gewicht/10),1)&"" g/kg""
+$H$4: 	=ROUND(NeoBerIV!M50/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$I$4: 	=ROUND(NeoBerIV!M49/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$J$4: 	=ROUND(NeoBerIV!M47/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$C$5: 	=ROUND(NeoBerIV!S50/(_Pat_Gewicht/10),1)&"" g/kg""
+$D$5: 	=ROUND(NeoBerIV!S49/(_Pat_Gewicht/10),1)&"" g/kg""
+$E$5: 	=ROUND(NeoBerIV!S47/(_Pat_Gewicht/10),1)&"" g/kg""
+$H$5: 	=ROUND(NeoBerIV!N50/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$I$5: 	=ROUND(NeoBerIV!N49/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$J$5: 	=ROUND(NeoBerIV!N47/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$C$6: 	=ROUND(1000*NeoBerIV!R50/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
+$D$6: 	=ROUND(1000*NeoBerIV!R49/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
+$E$6: 	=ROUND(1000*NeoBerIV!R47/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
+$H$6: 	=ROUND(NeoBerIV!O50/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$I$6: 	=ROUND(NeoBerIV!O49/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$J$6: 	=ROUND(NeoBerIV!O47/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$C$7: 	=ROUND(NeoBerIV!T50/(_Pat_Gewicht/10),1)& "" kcal/kg""
+$D$7: 	=ROUND(NeoBerIV!T49/(_Pat_Gewicht/10),1)& "" kcal/kg""
+$E$7: 	=ROUND(NeoBerIV!T47/(_Pat_Gewicht/10),1)& "" kcal/kg""
+$H$7: 	=ROUND(NeoBerIV!U50/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$I$7: 	=ROUND(NeoBerIV!U49/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$J$7: 	=ROUND(NeoBerIV!U47/(_Pat_Gewicht/10),1)&"" mmol/kg""
 $C$8: 	=ROUND(NeoBerIV!V50,0)& "" IE""
 $D$8: 	=ROUND(NeoBerIV!V49,0)& "" IE""
 $E$8: 	=ROUND(NeoBerIV!V47,0)& "" IE""
-$H$8: 	=ROUND(NeoBerIV!P50/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$I$8: 	=ROUND(NeoBerIV!P49/_Neo_InfB_Gewicht,1)&"" mmol/kg""
-$J$8: 	=ROUND(NeoBerIV!P47/_Neo_InfB_Gewicht,1)&"" mmol/kg""
+$H$8: 	=ROUND(NeoBerIV!P50/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$I$8: 	=ROUND(NeoBerIV!P49/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$J$8: 	=ROUND(NeoBerIV!P47/(_Pat_Gewicht/10),1)&"" mmol/kg""
 $I$10: 	=__0_PatNum
 $I$11: 	=__2_AchterNaam &"",  ""&__3_VoorNaam
 $I$12: 	=NeoBerIV!B3-NeoBerIV!C3
@@ -45,7 +45,7 @@ $C$14: 	=NeoBerIV!B5
 $C$15: 	=__1_Bed
 $H$15: 	=TRUNC((H13*7+J13+NeoBerIV!B6-1)/7)&"" weken en ""& H13*7+J13+NeoBerIV!B6-1-TRUNC((H13*7+J13+NeoBerIV!B6-1)/7)*7&"" dag(-en)""
 $H$16: 	=NeoBerIV!B4&"" kg""
-$E$18: 	=IF(NeoBerIV!B17,NeoBerIV!C16,ROUND(NeoBerIV!K47/_Neo_InfB_Gewicht,1))
+$E$18: 	=IF(NeoBerIV!B17,NeoBerIV!C16,ROUND(NeoBerIV!K47/(_Pat_Gewicht/10),1))
 $K$18: 	=ROUND(NeoBerIV!B16,0)&"" ml/ kg/ 24 uur""
 $E$21: 	=IF(_Neo_InfB_Voeding>1,NeoBerIV!D10,"""")
 $G$21: 	=IF(_Neo_InfB_Voeding>1,NeoBerIV!D11/10&"" ml"","""")
@@ -134,7 +134,7 @@ $H$44: 	=IF(NeoBerIV!H34>0,""= ""&ROUND(NeoBerIV!H34,2),"""")
 $B$45: 	=IF(_Neo_InfB_MedTekst_1="""","""",_Neo_InfB_MedTekst_1)
 $B$46: 	=IF(_Neo_InfB_MedTekst_2="""","""",_Neo_InfB_MedTekst_2)
 $E$48: 	=IF(NeoBerIV!C35>0,NeoBerIV!C35&"" ml"","""")
-$F$48: 	=IF(E48<>"""",ROUND(NeoBerIV!C35/_Neo_InfB_Gewicht,0)&"" ml/ kg"","""")
+$F$48: 	=IF(E48<>"""",ROUND(NeoBerIV!C35/(_Pat_Gewicht/10),0)&"" ml/ kg"","""")
 $K$48: 	=IF(NeoBerIV!B35>0,NeoBerIV!B35&"" ml"","""")
 $E$52: 	=IF(NeoBerIV!$D$36=1,NeoBerIV!C37&"" ml"","""")
 $I$52: 	=IF(NeoBerIV!$D$36=3,NeoBerIV!C37&"" ml"","""")
@@ -151,10 +151,10 @@ $K$56: 	=IF(NeoBerIV!B41>0,NeoBerIV!B41&"" ml"","""")
 $E$57: 	=IF(NeoBerIV!$D$36=1,NeoBerIV!C42&"" ml"","""")
 $K$57: 	=IF(NeoBerIV!B42>0,NeoBerIV!B42&"" ml"","""")
 $G$58: 	=IF(NeoBerIV!D36=2,NeoBerIV!C43&"" ml"","""")
-$H$58: 	=IF(G58<>"""",""(""&ROUND(NeoBerIV!C43/_Neo_InfB_Gewicht,0)&"" ml/kg)"","""")
+$H$58: 	=IF(G58<>"""",""(""&ROUND(NeoBerIV!C43/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
 $K$58: 	=IF(NeoBerIV!B43>0,NeoBerIV!B43&"" ml"","""")
 $I$59: 	=IF(NeoBerIV!$D$36=3,NeoBerIV!C44&"" ml"","""")
-$J$59: 	=IF(I59<>"""",""(""&ROUND(NeoBerIV!C44/_Neo_InfB_Gewicht,0)&"" ml/kg)"","""")
+$J$59: 	=IF(I59<>"""",""(""&ROUND(NeoBerIV!C44/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
 $K$59: 	=IF(NeoBerIV!B44>0,NeoBerIV!B44&"" ml"","""")
 $E$60: 	=IF(NeoBerIV!D36=1,NeoBerIV!K45,"""")
 $F$60: 	=IF(E60<>"""",""ml"","""")

@@ -1,6 +1,8 @@
 Attribute VB_Name = "modPedContIV"
 Option Explicit
 
+Private Const constTblMed = "tblMedicationContIV"
+
 Sub SetMedContIVToStandardItem(intRegel As Integer)
 
     Dim strMedicament As String
@@ -9,14 +11,16 @@ Sub SetMedContIVToStandardItem(intRegel As Integer)
     Dim strOplossing As String
     Dim varOplossing As Variant
     Dim strStand As String
+    Dim strRegel As String
     
     On Error GoTo SetMedContIVToStandardError
 
-    strMedicament = "MedIVKeuze_" & intRegel
-    strMedSterkte = "MedIVSterkte_" & intRegel
-    strOplHoev = "MedIVMlOpl_" & intRegel
-    strOplossing = "MedIVOplVlst_" & intRegel
-    strStand = "MedIVStand_" & intRegel
+    strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
+    strMedicament = "_Ped_MedIV_Keuze_" & strRegel
+    strMedSterkte = "_Ped_MedIV_Sterkte_" & strRegel
+    strOplHoev = "_Ped_MedIV_OplVol_" & strRegel
+    strOplossing = "_Ped_MedIV_OplVlst_" & strRegel
+    strStand = "_Ped_MedIV_Stand_" & strRegel
     
     ModRange.SetRangeValue strMedSterkte, 0
     ModRange.SetRangeValue strOplHoev, 0
@@ -25,7 +29,7 @@ Sub SetMedContIVToStandardItem(intRegel As Integer)
     If ModRange.GetRangeValue(strMedicament, 0) = 1 Then
         ModRange.SetRangeValue strOplossing, 1
     Else
-        varOplossing = Application.VLookup(Range("tblMedicationContIV").Cells(Range(strMedicament).Value, 1), Range("tblMedicationContIV"), 22, False)
+        varOplossing = Application.VLookup(Range(constTblMed).Cells(Range(strMedicament).Value, 1), Range(constTblMed), 22, False)
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
     
@@ -33,7 +37,7 @@ Sub SetMedContIVToStandardItem(intRegel As Integer)
     
 SetMedContIVToStandardError:
 
-    ModLog.LogError "SetMedContIVToStandard: " & " Error for intRegel " & intRegel
+    ModLog.LogError "SetMedContIVToStandard: " & " Error for regel " & strRegel
 
 End Sub
 
@@ -101,26 +105,28 @@ Private Sub OpenInvoerNumeriek(intRegel As Integer, strRange As String, strUnit 
 
     Dim frmInvoer As New FormInvoerNumeriek
     Dim varKeuze As Variant
+    Dim strRegel As String
     
     On Error GoTo OpenInvoerNumeriekError
     
-    varKeuze = ModRange.GetRangeValue("MedIVKeuze_" & intRegel, vbNullString)
+    strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
+    varKeuze = ModRange.GetRangeValue("_Ped_MedIV_Keuze_" & strRegel, vbNullString)
     
     With frmInvoer
         .Caption = "Medicament " & intRegel
         .lblParameter = "Oplossing"
         .lblEenheid = strUnit
-        If ModRange.GetRangeValue("MedIVMlOpl_" & intRegel, 0) = 0 Then
-            .txtWaarde = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), varKeuze, 12)
+        If ModRange.GetRangeValue("_Ped_MedIV_OplVol_" & strRegel, 0) = 0 Then
+            .txtWaarde = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, 12)
         Else
-            .txtWaarde = ModRange.GetRangeValue(strRange & intRegel, vbNullString)
+            .txtWaarde = ModRange.GetRangeValue(strRange & strRegel, vbNullString)
         End If
         .Show
         If IsNumeric(.txtWaarde) Then
             If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), varKeuze, 12) Then
-                ModRange.SetRangeValue strRange & intRegel, 0
+                ModRange.SetRangeValue strRange & strRegel, 0
             Else
-                ModRange.SetRangeValue strRange & intRegel, .txtWaarde
+                ModRange.SetRangeValue strRange & strRegel, .txtWaarde
             End If
         End If
     End With
@@ -131,7 +137,7 @@ Private Sub OpenInvoerNumeriek(intRegel As Integer, strRange As String, strUnit 
     
 OpenInvoerNumeriekError:
 
-    ModLog.LogError "OpenInvoerNumeriek(" & Join(Array(intRegel, strRange, strUnit, intColumn), ", ") & ")"
+    ModLog.LogError "OpenInvoerNumeriek(" & Join(Array(strRegel, strRange, strUnit, intColumn), ", ") & ")"
     Set frmInvoer = Nothing
 
 End Sub
@@ -139,10 +145,12 @@ End Sub
 Private Sub SetMedContIVSterkteItem(intRegel As Integer)
 
     Dim strUnit As String
+    Dim strRegel As String
     
     On Error GoTo SetMedContIVSterkteError
 
-    strUnit = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), Range("MedIVKeuze_" & intRegel), 4)
+    strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
+    strUnit = Application.WorksheetFunction.Index(Range(constTblMed), Range("_Ped_MedIV_Keuze_" & strRegel), 4)
     OpenInvoerNumeriek intRegel, "MedIVSterkte_", strUnit, 11
     
     Exit Sub
@@ -215,7 +223,7 @@ End Sub
 
 Private Sub SetMedContIVOplossingItem(intRegel As Integer)
 
-    OpenInvoerNumeriek intRegel, "MedIVMlOpl_", "mL", 12
+    OpenInvoerNumeriek intRegel, "_Ped_MedIV_OplVol_", "mL", 12
 
 End Sub
 

@@ -45,7 +45,7 @@ Public Sub OpenBed()
         If Not blnAll Then ModMessage.ShowMsgBoxExclam "Niet alle data kon worden teruggezet!" & vbNewLine & "Controleer de afspraken goed"
     End If
 
-    ModMenuItems.SelectTPN
+    ModPedTPN.SelectTPN
 
     ModLog.LogActionEnd strAction
     

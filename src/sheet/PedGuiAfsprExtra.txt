@@ -4,11 +4,11 @@ $G$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_Pat_OpnDatum+1
 $J$2: 	=__1_Bed
 $C$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $F$3: 	=__4_GebDatum
-$G$3: 	=""Gewicht: ""&_Pat__Gewicht/10&"" kg""
-$I$3: 	=""Lengte: ""&_Pat__Lengte&"" cm""
+$G$3: 	=""Gewicht: ""&_Pat_Gewicht/10&"" kg""
+$I$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
 $C$4: 	=__0_PatNum
 $F$4: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
-$I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat__Gewicht/10,0.425)*POWER(((_Pat__Lengte/100)*100),0.725)*0.007184,2)&"" m2""
+$I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
 $C$8: 	=IF(PedBerExtraAfspr!C7=0,"""",PedBerExtraAfspr!C7)
 $C$9: 	=IF(PedBerExtraAfspr!C8=0,"""",PedBerExtraAfspr!C8)
 $G$9: 	=CONCATENATE(""à "",PedBerExtraAfspr!G16,"" uur"")

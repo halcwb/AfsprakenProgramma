@@ -2,7 +2,7 @@
 $C$2: 	=__3_VoorNaam&"" ""&__2_AchterNaam
 $I$2: 	=TODAY()
 $M$2: 	=NOW()
-$C$3: 	=_Neo_InfB_Gewicht
+$C$3: 	=(_Pat_Gewicht/10)*1000
 $I$4: 	=IF(_Neo_InfB_Arts>0,_Neo_InfB_Arts,"""")
 $H$5: 	=NeoGuiAfspraken!E28
 $A$6: 	=IF(M6<>"""",M6/24,"""")

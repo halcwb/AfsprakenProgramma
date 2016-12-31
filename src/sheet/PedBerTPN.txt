@@ -1,7 +1,7 @@
 "$E$3: 	=IF(D3<50,D3/10,IF(D3<146,D3-45,(D3-125)*5))
-$F$3: 	=ROUND(E3*24+ROUND(IF(AND(_Ped_TPN_Keuze=2,_Pat__Gewicht/10<=50,_Ped_TPN_SST1Keuze<11),F4*2+2*(F7+F8),2*(F7+F8)+4*(F9+F10))/24,0)*24,0)
+$F$3: 	=ROUND(E3*24+ROUND(IF(AND(_Ped_TPN_Keuze=2,_Pat_Gewicht/10<=50,_Ped_TPN_SST1Keuze<11),F4*2+2*(F7+F8),2*(F7+F8)+4*(F9+F10))/24,0)*24,0)
 $D$4: 	=F4/24
-$F$4: 	=IF(AND(OR(_Ped_TPN_SST1Keuze<11,_Pat__Gewicht/10>50),B4<>1),_Ped_TPN_Vol,0)
+$F$4: 	=IF(AND(OR(_Ped_TPN_SST1Keuze<11,_Pat_Gewicht/10>50),B4<>1),_Ped_TPN_Vol,0)
 $G$4: 	=INDEX(tblTPN,$B$4,G1)*$F$4
 $H$4: 	=INDEX(tblTPN,$B$4,H1)*$F$4
 $I$4: 	=INDEX(tblTPN,$B$4,I1)*$F$4
@@ -10,8 +10,8 @@ $K$4: 	=INDEX(tblTPN,$B$4,K1)*$F$4
 $L$4: 	=INDEX(tblTPN,$B$4,L1)*$F$4
 $M$4: 	=INDEX(tblTPN,$B$4,M1)*$F$4
 $N$4: 	=INDEX(tblTPN,$B$4,N1)*$F$4
-$F$5: 	=IF(AND(_Pat__Gewicht/10>=16,_Ped_TPN_Keuze>1,OR(_Ped_TPN_SST1Keuze<11,_Pat__Gewicht/10>50)),E5,0)
-$F$6: 	=IF(_Pat__Gewicht/10>50,F3-F7-F8-F9-F10,IF(OR(_Ped_TPN_Keuze=1,_Ped_TPN_SST1Keuze>=11),F3-F7-F8-F9-F10,F3-F4-F5-F7-F8))
+$F$5: 	=IF(AND(_Pat_Gewicht/10>=16,_Ped_TPN_Keuze>1,OR(_Ped_TPN_SST1Keuze<11,_Pat_Gewicht/10>50)),E5,0)
+$F$6: 	=IF(_Pat_Gewicht/10>50,F3-F7-F8-F9-F10,IF(OR(_Ped_TPN_Keuze=1,_Ped_TPN_SST1Keuze>=11),F3-F7-F8-F9-F10,F3-F4-F5-F7-F8))
 $G$6: 	=INDEX(J27:L40,B6,3)*F6
 $I$6: 	=INDEX(J27:M40,B6,4)*F6
 $J$6: 	=INDEX(J27:N40,B6,5)*F6
@@ -41,12 +41,12 @@ $O$13: 	=0.2*F13
 $D$14: 	=IF(E14<50,E14/10,E14-45)
 $F$14: 	=IF(C14,D14,0)
 $D$15: 	=IF(E15<50,E15/10,E15-45)
-$F$15: 	=IF(AND(C15,_Pat__Gewicht/10>=7),D15,0)
+$F$15: 	=IF(AND(C15,_Pat_Gewicht/10>=7),D15,0)
 $D$16: 	=IF(E16<50,E16/10,E16-45)
 $F$16: 	=IF(C16,D16,0)
-$F$17: 	=IF(AND(_Ped_TPN_Keuze=2,_Pat__Gewicht/10<=50,_Ped_TPN_SST1Keuze<11),ROUND((F9*4+F10*4)/10,0)*10,IF(AND(_Ped_TPN_Keuze=2,_Pat__Gewicht/10>50),100,0))
+$F$17: 	=IF(AND(_Ped_TPN_Keuze=2,_Pat_Gewicht/10<=50,_Ped_TPN_SST1Keuze<11),ROUND((F9*4+F10*4)/10,0)*10,IF(AND(_Ped_TPN_Keuze=2,_Pat_Gewicht/10>50),100,0))
 $G$17: 	=F17*0.1
-$F$18: 	=(ROUND(PedBerTPN!F11*1.5/(_Pat__Gewicht/10)/24/0.01,1)*24-PedBerTPN!F11)
+$F$18: 	=(ROUND(PedBerTPN!F11*1.5/(_Pat_Gewicht/10)/24/0.01,1)*24-PedBerTPN!F11)
 $G$18: 	=F18*0.05
 $N$18: 	=4*G18
 $E$19: 	=IF(D19<50,D19/10,D19-45)
@@ -62,7 +62,7 @@ $I$21: 	=F21*0.5
 $D$22: 	=IF(E22<50,E22/10,E22-45)
 $F$22: 	=IF(AND(C22,D21+D22<F19),D22,0)
 $J$22: 	=F22
-$F$24: 	=IF(_Pat__Gewicht/10>50,SUM(F3+F4+F12+F18+F17+F19),IF(_Ped_TPN_Keuze=1,SUM(F3+F12+F17+F18+F19),SUM(F3+F9+F10+F12+F17+F18+F19)))
+$F$24: 	=IF(_Pat_Gewicht/10>50,SUM(F3+F4+F12+F18+F17+F19),IF(_Ped_TPN_Keuze=1,SUM(F3+F12+F17+F18+F19),SUM(F3+F9+F10+F12+F17+F18+F19)))
 $G$24: 	=SUM(G3:G22)
 $H$24: 	=SUM(H3:H22)
 $I$24: 	=SUM(I3:I22)

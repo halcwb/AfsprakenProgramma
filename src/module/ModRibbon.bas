@@ -12,7 +12,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpAfspraken                                       ' -- AFSPRAKEN --
         
         Case "btnClose"                                     ' -> Programma Afsluiten
-            CloseAfspraken
+            ModApplication.CloseAfspraken
         
         Case "btnClear"                                     ' -> Alles Verwijderen
             ModPatient.ClearPatient True
@@ -62,7 +62,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoGuiAfsprExtra, "A6"
         
         Case "btnNTPNadvies"
-            TPNAdviesNEO
+            ModInfuusbrief.TPNAdviesNEO
         
         Case "btnNeoLab"                                    ' -> Lab Aanvragen
             ModSheet.GoToSheet shtNeoGuiLab, "A1"
@@ -73,11 +73,11 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpRemoveData                                      ' -- ACTIES --
                 
         Case "btnRemoveLab"                                 ' Lab Verwijderen
-            ClearLab
+            ModClear.ClearLab
             ModSheet.SelectPedOrNeoLabSheet
         
         Case "btnRemoveExtra"                               ' Afspraken Controles Verwijderen
-            ClearAfspraken
+            ModClear.ClearAfspraken
             ModSheet.SelectPedOrNeoAfsprExtraSheet
         
         ' grpNeoActions                                     ' -- INFUUSBRIEF OVERZETTEN --
@@ -100,7 +100,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtPedPrtMedDisc, "A1"
         
         Case "btnPedPrintTPN"                               ' -> TPN Brief
-            SelectPedTPNPrint
+            ModPedTPN.SelectPedTPNPrint
             
         'grpNeoPrint                                        ' -- PRINT NEO ---
         
@@ -114,7 +114,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
         
         Case "btnNTPN"
-            TPNAdviesNEO
+            ModInfuusbrief.TPNAdviesNEO
         
         Case "btnNeoPrintApoth"                             ' -> Apotheek
             ModSheet.GoToSheet shtNeoPrtApoth, "A1"
@@ -131,7 +131,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSetting.ToggleLogging
     
         Case "btnRangeNames"                                ' -> Range Names
-            ModMenuItems.GiveNameToRange
+            ModRange.GiveNameToRange
         
         Case Else
             MsgBox ctrlMenuItem.Id & " has no select case", vbCritical
@@ -146,7 +146,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
     
 End Sub
 
-Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
 
     Dim strPath, strPedDir As String
     Dim blnIsDevelop
@@ -163,7 +163,7 @@ Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
     
 End Sub
 
-Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
     
     Dim strPath, strPedDir As String
     Dim blnIsDevelop
@@ -180,7 +180,7 @@ Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
     
 End Sub
 
-Sub GetVisibleDevelopment(control As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisibleDevelopment(control As IRibbonControl, ByRef blnVisible)
 
     blnVisible = ModSetting.IsDevelopmentMode()
     

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormCopy1700 
    Caption         =   "17.00 uur Afspraken overnemen naar actuele afspraken"
-   ClientHeight    =   14938
+   ClientHeight    =   11123
    ClientLeft      =   42
    ClientTop       =   378
-   ClientWidth     =   17885
+   ClientWidth     =   16597
    OleObjectBlob   =   "FormCopy1700.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -44,56 +44,41 @@ Private Sub optPerBlok_Click()
 
 End Sub
 
-Private Sub SetCaption(ByVal strLbl As String, ByVal strItem As String, intN As Integer, bln1700 As Boolean)
-    
-    On Error GoTo SetCaptionError
-    
-    strLbl = IIf(bln1700, Replace(strLbl, "Actueel", "1700"), strLbl)
-    strLbl = strLbl & intN
-    
-    strItem = IIf(bln1700, Replace(strItem, "#", "1700"), Replace(strItem, "#", ""))
-    strItem = strItem & intN
-    
-    Me.Controls(strLbl).Caption = ModRange.GetRangeValue(strItem, vbNullString)
+Private Sub AddItemToList(ByVal strList As String, ByVal strItem As String, ByVal intN As Integer, ByVal bln1700 As Boolean)
 
-    Exit Sub
-
-SetCaptionError:
-
-    ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
-    Application.Cursor = xlDefault
+    strList = IIf(bln1700, Replace(strList, "Act", "1700"), strList)
+    strItem = IIf(bln1700, Replace(strItem, "#", "1700"), Replace(strItem, "#", "Act"))
+    strItem = IIf(intN < 10, strItem & "_0" & intN, strItem & "_" & intN)
     
-    ModLog.LogError "SetCaption " & strLbl & " " & strItem & " " & intN & " " & bln1700
+    Me.Controls(strList).AddItem ModRange.GetRangeValue(strItem, vbNullString)
     
-    Me.Hide
-
 End Sub
 
 Private Sub UserForm_Activate()
 
     Dim intN As Integer
-    Dim strLbl As String
+    Dim strList As String
     Dim strItem As String
     
-    strLbl = "lblActueelVoeding"
-    strItem = "_NeoVoeding#"
+    strList = "lstActVoed"
+    strItem = "Var_Neo_Voeding#"
     For intN = 1 To 15
-        SetCaption strLbl, strItem, intN, True
-        SetCaption strLbl, strItem, intN, False
+        AddItemToList strList, strItem, intN, True
+        AddItemToList strList, strItem, intN, False
     Next intN
 
-    strLbl = "lblActueelContMed"
-    strItem = "_NeoInfuusContinu#"
+    strList = "lstActMed"
+    strItem = "Var_Neo_InfuusContinu#"
     For intN = 1 To 15
-        SetCaption strLbl, strItem, intN, True
-        SetCaption strLbl, strItem, intN, False
+        AddItemToList strList, strItem, intN, True
+        AddItemToList strList, strItem, intN, False
     Next intN
 
-    strLbl = "lblActueelTPN"
-    strItem = "_NeoInfuusContinu#"
+    strList = "lstActTPN"
+    strItem = "Var_Neo_InfuusContinu#"
     For intN = 1 To 12
-        SetCaption strLbl, strItem, intN, True
-        SetCaption strLbl, strItem, intN, False
+        AddItemToList strList, strItem, intN, True
+        AddItemToList strList, strItem, intN, False
     Next intN
 
 End Sub

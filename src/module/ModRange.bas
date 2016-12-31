@@ -211,7 +211,7 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet)
         
     On Error Resume Next
     
-    shtSheet.Cells.Clear
+    shtSheet.UsedRange.Clear
         
     shtSheet.Cells(1, 1).Value = "RefersTo"
     shtSheet.Cells(1, 2).Value = "Name"
@@ -283,4 +283,22 @@ Public Sub ReplaceRangeNames()
     ModMessage.ShowMsgBoxExclam "Names have been replaced"
 
 End Sub
+
+' Shows the frmNaamGeven to give a range a
+' sequential naming of "Name_" + a number
+' When runnig this from the visual basic editor
+' it works as expected. When running from the ribbon
+' menu, the selection in the sheet is not visible.
+' But it works as otherwise.
+Public Sub GiveNameToRange()
+
+    Dim frmNaamGeven As New FormNaamGeven
+    
+    frmNaamGeven.Show vbModal
+    
+    Set frmNaamGeven = Nothing
+
+End Sub
+
+
 

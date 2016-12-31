@@ -1,4 +1,4 @@
-"$C$1: 	=PedPrtAfspr!F2&"" geb: ""&TEXT(PedPrtAfspr!F3,""dd-mmm-jj"")&"". Gewicht: ""&ROUND(_Pat__Gewicht/10,1)&"" kg""
+"$C$1: 	=PedPrtAfspr!F2&"" geb: ""&TEXT(PedPrtAfspr!F3,""dd-mmm-jj"")&"". Gewicht: ""&ROUND(_Pat_Gewicht/10,1)&"" kg""
 $C$2: 	=__2_AchterNaam
 $C$3: 	=__3_VoorNaam
 $C$4: 	=TEXT(PedPrtAfspr!F3,""dd-mmm-jj"")
