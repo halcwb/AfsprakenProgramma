@@ -1,15 +1,18 @@
 Attribute VB_Name = "ModSetting"
 Option Explicit
 
-Private Const CONST_DEVMODE = "SettingDevMode"
-Private Const CONST_LOGGING = "SettingLogging"
-Private Const CONST_NEODIR = "SettingNeoDir"
-Private Const CONST_PEDDIR = "SettingPedDir"
-Private Const CONST_DEVDIR = "SettingDevDir"
-Private Const CONST_TESTLOGDIR = "SettingTestLogDir"
-Private Const CONST_LOGDIR = "SettingLogDir"
-Private Const CONST_DATADIR = "SettingDataDir"
-Private Const CONST_DBDIR = "SettingDbDir"
+Private Const constDevMode = "SettingDevMode"
+Private Const constLogging = "SettingLogging"
+Private Const constNeoDir = "SettingNeoDir"
+Private Const constPedDir = "SettingPedDir"
+Private Const constDevDir = "SettingDevDir"
+Private Const constTestLogDir = "SettingTestLogDir"
+Private Const constLogDir = "SettingLogDir"
+Private Const constDataDir = "SettingDataDir"
+Private Const constDbDir = "SettingDbDir"
+Private Const constPrePend = "Patient"
+Private Const constPostData = ""
+Private Const constPostText = "_AfsprakenTekst"
 
 Private Function GetSetting(strSetting As String, varDefault As Variant) As Variant
 
@@ -17,7 +20,7 @@ Private Function GetSetting(strSetting As String, varDefault As Variant) As Vari
 
     On Error GoTo GetSettingError:
 
-    GetSetting = Range(strSetting).Value2 'ModRange.GetRangeValue(strSetting, varDefault)
+    GetSetting = shtGlobSettings.Range(strSetting).Value2 'ModRange.GetRangeValue(strSetting, varDefault)
     
     Exit Function
     
@@ -34,7 +37,7 @@ Private Sub SetSetting(strSetting As String, varValue As Variant)
 
     On Error GoTo SetSettingError:
 
-    Range(strSetting).Value2 = varValue ' ModRange.SetRangeValue strSetting, varValue
+    shtGlobSettings.Range(strSetting).Value2 = varValue ' ModRange.SetRangeValue strSetting, varValue
     
     Exit Sub
 
@@ -47,7 +50,7 @@ End Sub
 
 Public Function GetDevelopmentMode() As Boolean
 
-    GetDevelopmentMode = CBool(GetSetting(CONST_DEVMODE, False))
+    GetDevelopmentMode = CBool(GetSetting(constDevMode, False))
 
 End Function
 
@@ -65,19 +68,19 @@ End Function
 
 Public Sub SetDevelopmentMode(blnMode As Boolean)
 
-    SetSetting CONST_DEVMODE, blnMode
+    SetSetting constDevMode, blnMode
 
 End Sub
 
 Public Function GetEnableLogging() As Boolean
 
-    GetEnableLogging = CBool(GetSetting(CONST_LOGGING, False))
+    GetEnableLogging = CBool(GetSetting(constLogging, False))
 
 End Function
 
 Public Sub SetEnableLogging(blnMode As Boolean)
 
-    SetSetting CONST_LOGGING, blnMode
+    SetSetting constLogging, blnMode
 
 End Sub
 
@@ -89,49 +92,49 @@ End Sub
 
 Public Function GetNeoDir() As String
 
-    GetNeoDir = CStr(GetSetting(CONST_NEODIR, ""))
+    GetNeoDir = CStr(GetSetting(constNeoDir, ""))
 
 End Function
 
 Public Sub SetNeoDir(strDir As String)
 
-    SetSetting CONST_NEODIR, strDir
+    SetSetting constNeoDir, strDir
 
 End Sub
 
 Public Function GetPedDir() As String
 
-    GetPedDir = CStr(GetSetting(CONST_PEDDIR, ""))
+    GetPedDir = CStr(GetSetting(constPedDir, ""))
 
 End Function
 
 Public Sub SetPedDir(strDir As String)
 
-    SetSetting CONST_PEDDIR, strDir
+    SetSetting constPedDir, strDir
 
 End Sub
 
 Public Function GetDevelopmentDir() As String
 
-    GetDevelopmentDir = CStr(GetSetting(CONST_DEVDIR, ""))
+    GetDevelopmentDir = CStr(GetSetting(constDevDir, ""))
 
 End Function
 
 Public Sub SetDevelopmentDir(strDir As String)
 
-    SetSetting CONST_DEVDIR, strDir
+    SetSetting constDevDir, strDir
 
 End Sub
 
 Public Function GetTestLogDir() As String
 
-    GetTestLogDir = CStr(GetSetting(CONST_TESTLOGDIR, ""))
+    GetTestLogDir = CStr(GetSetting(constTestLogDir, ""))
 
 End Function
 
 Public Sub SetTestLogDir(strDir As String)
 
-    SetSetting CONST_TESTLOGDIR, strDir
+    SetSetting constTestLogDir, strDir
 
 End Sub
 
@@ -143,13 +146,13 @@ End Function
 
 Public Function GetLogDir() As String
 
-    GetLogDir = CStr(GetSetting(CONST_LOGDIR, ""))
+    GetLogDir = CStr(GetSetting(constLogDir, ""))
 
 End Function
 
 Public Sub SetLogDir(strDir As String)
 
-    SetSetting CONST_LOGDIR, strDir
+    SetSetting constLogDir, strDir
 
 End Sub
 
@@ -161,27 +164,66 @@ End Function
 
 Public Function GetDataDir() As String
 
-    GetDataDir = CStr(GetSetting(CONST_DATADIR, ""))
+    GetDataDir = CStr(GetSetting(constDataDir, ""))
 
 End Function
 
 Public Sub SetDataDir(strDir As String)
 
-    SetSetting CONST_DATADIR, strDir
+    SetSetting constDataDir, strDir
 
 End Sub
 
 Public Function GetFormDbDir() As String
 
-    GetFormDbDir = CStr(GetSetting(CONST_DBDIR, ""))
+    GetFormDbDir = CStr(GetSetting(constDbDir, ""))
 
 End Function
 
 Public Sub SetFormDbDir(strDir As String)
 
-    SetSetting CONST_DBDIR, strDir
+    SetSetting constDbDir, strDir
 
 End Sub
+
+Public Function GetPatientDataPath() As String
+
+    Dim strDir As String
+    
+    strDir = ModSetting.GetDataDir()
+    GetPatientDataPath = GetAbsolutePath(strDir)
+
+End Function
+
+Private Function GetAbsolutePath(strPath As String) As String
+
+    GetAbsolutePath = ActiveWorkbook.Path & strPath
+
+End Function
+
+Public Function GetPatientTextWorkBookName(strBed As String) As String
+
+    GetPatientTextWorkBookName = constPrePend & strBed & constPostText & ".xls"
+
+End Function
+
+Public Function GetPatientDataWorkBookName(strBed As String) As String
+
+    GetPatientDataWorkBookName = constPrePend & strBed & constPostData + ".xls"
+
+End Function
+
+Public Function GetPatientDataFile(strBed As String) As String
+
+    GetPatientDataFile = GetPatientDataPath + GetPatientDataWorkBookName(strBed)
+
+End Function
+
+Public Function GetPatientTextFile(strBed As String) As String
+
+    GetPatientTextFile = GetPatientDataPath + GetPatientTextWorkBookName(strBed)
+
+End Function
 
 Private Sub Test()
 

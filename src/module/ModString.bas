@@ -37,8 +37,8 @@ Private Sub Test()
     Dim strString As String
     Dim strStart As String
     
-    strString = "_ Test"
-    strStart = " "
+    strString = "__4_GebDatum"
+    strStart = "_"
 
     MsgBox StartsWith(strString, strStart)
 

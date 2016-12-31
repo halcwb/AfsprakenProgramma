@@ -2,20 +2,20 @@
 $F$3: 	=__0_PatNum
 $F$4: 	=__2_AchterNaam&"",  ""&__3_VoorNaam
 $F$5: 	=__4_GebDatum
-$B$6: 	=Var_Glob_Bed
+$B$6: 	=__1_Bed
 $G$6: 	=_Pat__Gewicht/10&"" kg""
 $A$10: 	=IF(_Pat__Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
 $C$10: 	=PedBerTPN!F24
-$A$14: 	=IF(_Ped_TPNKeuze<>1,ROUND(G22/24,1)&"" ml/u"","""")
-$G$14: 	=IF(AND(_Ped_TPNKeuze<>1,G16<>0),ROUND(PedBerTPN!F7,0),"""")
-$G$15: 	=IF(AND(_Ped_TPNKeuze<>1,G16<>0),ROUND(PedBerTPN!F8,0),"""")
-$G$16: 	=IF(_Ped_TPNKeuze<>1,PedBerTPN!F4,"""")
-$G$17: 	=IF(AND(_Ped_TPNSST1Keuze=2,_Ped_TPNKeuze<>1),ROUND(PedBerTPN!F6,0),"""")
-$G$18: 	=IF(AND(_Ped_TPNSST1Keuze=6,_Ped_TPNKeuze<>1),ROUND(PedBerTPN!F6,0),"""")
-$G$19: 	=IF(AND(_Ped_TPNSST1Keuze=8,_Ped_TPNKeuze<>1,_Pat__Gewicht/10<=10),ROUND(PedBerTPN!F6,0),"""")
-$G$20: 	=IF(AND(_Ped_TPNSST1Keuze=8,_Ped_TPNKeuze<>1,_Pat__Gewicht/10>10),ROUND(PedBerTPN!F6,0),"""")
-$B$21: 	=IF(AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze<>2,_Ped_TPNSST1Keuze<>6,_Ped_TPNSST1Keuze<>8,_Ped_TPNSST1Keuze<11),INDEX(tblSSTGlucose,_Ped_TPNSST1Keuze,1),""Glucose       %"")
-$G$21: 	=IF(AND(_Ped_TPNKeuze<>1,B20<>""""),IF(AND(_Ped_TPNSST1Keuze<>2,_Ped_TPNSST1Keuze<>6,_Ped_TPNSST1Keuze<>8,_Ped_TPNSST1Keuze<11),ROUND(PedBerTPN!F6,0),""""),"""")
+$A$14: 	=IF(_Ped_TPN_Keuze<>1,ROUND(G22/24,1)&"" ml/u"","""")
+$G$14: 	=IF(AND(_Ped_TPN_Keuze<>1,G16<>0),ROUND(PedBerTPN!F7,0),"""")
+$G$15: 	=IF(AND(_Ped_TPN_Keuze<>1,G16<>0),ROUND(PedBerTPN!F8,0),"""")
+$G$16: 	=IF(_Ped_TPN_Keuze<>1,PedBerTPN!F4,"""")
+$G$17: 	=IF(AND(_Ped_TPN_SST1Keuze=2,_Ped_TPN_Keuze<>1),ROUND(PedBerTPN!F6,0),"""")
+$G$18: 	=IF(AND(_Ped_TPN_SST1Keuze=6,_Ped_TPN_Keuze<>1),ROUND(PedBerTPN!F6,0),"""")
+$G$19: 	=IF(AND(_Ped_TPN_SST1Keuze=8,_Ped_TPN_Keuze<>1,_Pat__Gewicht/10<=10),ROUND(PedBerTPN!F6,0),"""")
+$G$20: 	=IF(AND(_Ped_TPN_SST1Keuze=8,_Ped_TPN_Keuze<>1,_Pat__Gewicht/10>10),ROUND(PedBerTPN!F6,0),"""")
+$B$21: 	=IF(AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze<>2,_Ped_TPN_SST1Keuze<>6,_Ped_TPN_SST1Keuze<>8,_Ped_TPN_SST1Keuze<11),INDEX(tblSSTGlucose,_Ped_TPN_SST1Keuze,1),""Glucose       %"")
+$G$21: 	=IF(AND(_Ped_TPN_Keuze<>1,B20<>""""),IF(AND(_Ped_TPN_SST1Keuze<>2,_Ped_TPN_SST1Keuze<>6,_Ped_TPN_SST1Keuze<>8,_Ped_TPN_SST1Keuze<11),ROUND(PedBerTPN!F6,0),""""),"""")
 $G$22: 	=SUM(G14:G21)
 $A$24: 	=IF(G27>0,ROUND(G27/24,1)&"" ml/u"","""")
 $G$24: 	=ROUND(PedBerTPN!F13,0)
@@ -23,15 +23,15 @@ $G$25: 	=ROUND(PedBerTPN!F14,0)
 $G$26: 	=ROUND(PedBerTPN!F15,0)
 $G$27: 	=SUM(G24:G26)
 $A$30: 	=IF(G33>0,ROUND(G39/24,1)&"" ml/u"","""")
-$G$30: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10))),ROUND(PedBerTPN!F7,0),0)
-$G$31: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10))),ROUND(PedBerTPN!F8,0),0)
+$G$30: 	=IF(AND(OR(_Ped_TPN_Keuze=1,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10))),ROUND(PedBerTPN!F7,0),0)
+$G$31: 	=IF(AND(OR(_Ped_TPN_Keuze=1,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10))),ROUND(PedBerTPN!F8,0),0)
 $G$32: 	=PedBerTPN!F9
 $G$33: 	=PedBerTPN!F10
-$G$34: 	=PedBerTPN!F17+IF(AND(_Ped_TPNSST1Keuze=2,_Ped_TPNKeuze=1),ROUND(PedBerTPN!F6,0),0)
-$B$35: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10)),_Ped_TPNSST1Keuze<>2,_Ped_TPNSST1Keuze<>11,_Ped_TPNSST1Keuze<>12,_Ped_TPNSST1Keuze<>13),INDEX(tblSSTGlucose,_Ped_TPNSST1Keuze,1),""Glucose       %"")
-$G$35: 	=IF(AND(OR(_Ped_TPNKeuze=1,AND(_Ped_TPNKeuze=2,_Ped_TPNSST1Keuze>10)),_Ped_TPNSST1Keuze<>2,_Ped_TPNSST1Keuze<>11,_Ped_TPNSST1Keuze<>12,_Ped_TPNSST1Keuze<>13),ROUND(PedBerTPN!F6,0),"""")
-$G$36: 	=IF(OR(_Ped_TPNSST1Keuze=11),ROUND(PedBerTPN!F6,0),"""")
-$G$37: 	=IF(AND(_Ped_TPNSST1Keuze=12),ROUND(PedBerTPN!F6,0),"""")
-$G$38: 	=IF(AND(_Ped_TPNSST1Keuze=13),ROUND(PedBerTPN!F6,0),"""")
+$G$34: 	=PedBerTPN!F17+IF(AND(_Ped_TPN_SST1Keuze=2,_Ped_TPN_Keuze=1),ROUND(PedBerTPN!F6,0),0)
+$B$35: 	=IF(AND(OR(_Ped_TPN_Keuze=1,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10)),_Ped_TPN_SST1Keuze<>2,_Ped_TPN_SST1Keuze<>11,_Ped_TPN_SST1Keuze<>12,_Ped_TPN_SST1Keuze<>13),INDEX(tblSSTGlucose,_Ped_TPN_SST1Keuze,1),""Glucose       %"")
+$G$35: 	=IF(AND(OR(_Ped_TPN_Keuze=1,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10)),_Ped_TPN_SST1Keuze<>2,_Ped_TPN_SST1Keuze<>11,_Ped_TPN_SST1Keuze<>12,_Ped_TPN_SST1Keuze<>13),ROUND(PedBerTPN!F6,0),"""")
+$G$36: 	=IF(OR(_Ped_TPN_SST1Keuze=11),ROUND(PedBerTPN!F6,0),"""")
+$G$37: 	=IF(AND(_Ped_TPN_SST1Keuze=12),ROUND(PedBerTPN!F6,0),"""")
+$G$38: 	=IF(AND(_Ped_TPN_SST1Keuze=13),ROUND(PedBerTPN!F6,0),"""")
 $G$39: 	=SUM(G30:G38)
 "

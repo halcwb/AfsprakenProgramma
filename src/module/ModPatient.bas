@@ -1,7 +1,37 @@
 Attribute VB_Name = "ModPatient"
 Option Explicit
 
-Public Function OpenPatientLijst(strCaption As String) As String
+Private Const constPatNum = "__0_PatNum"
+Private Const constBed = "__1_Bed"
+Private Const constAN = "__2_AchterNaam"
+Private Const constVN = "__3_VoorNaam"
+Private Const constGebDatum = "__4_GebDatum"
+Private Const constOpnDat = "_Pat_OpnDatum"
+Private Const constGewicht = "_Pat__Gewicht"
+Private Const constLengte = "_Pat__Lengte"
+Private Const constDagen = "_Pat_Dagen"
+Private Const constWeken = "_Pat_Weken"
+Private Const constGebGew = "_Pat_GebGew"
+
+Public Function GetGewichtFromRange() As Double
+
+    GetGewichtFromRange = Val(ModRange.GetRangeValue(constGewicht, 0)) / 10
+
+End Function
+
+Public Function GetPatientString() As String
+
+    Dim strPat As String
+    
+    strPat = "Num: " & ModRange.GetRangeValue(constPatNum, "")
+    strPat = "Naam: " & ModRange.GetRangeValue(constAN, "")
+    strPat = ", " & ModRange.GetRangeValue(constVN, "")
+    
+    GetPatientString = strPat
+
+End Function
+
+Public Sub OpenPatientLijst(strCaption As String)
     
     Dim strIndex As String
     Dim objPat As ClassPatientInfo
@@ -16,28 +46,23 @@ Public Function OpenPatientLijst(strCaption As String) As String
         .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
         .LoadPatients colPats
         .Show
-        
-        strIndex = .GetSelectedBed()
     End With
     
     Set colPats = Nothing
     Set frmPats = Nothing
     
-    OpenPatientLijst = strIndex
-    
-    Exit Function
+    Exit Sub
     
 OpenPatientListError:
 
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
     ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & Err.Number
     
-End Function
+End Sub
 
 Private Sub TestPatientLijst()
     Dim strBed As String
     
-    strBed = OpenPatientLijst("Test")
     MsgBox strBed
     
     'Application.DisplayAlerts = False
@@ -46,11 +71,11 @@ Private Sub TestPatientLijst()
     
 End Sub
 
-Public Function CreatePatientInfo(strId As String, strBed As String, strAN As String, strVN As String, strBD As String) As ClassPatientInfo
+Public Function CreatePatientInfo(strID As String, strBed As String, strAN As String, strVN As String, strBD As String) As ClassPatientInfo
 
     Dim objInfo As New ClassPatientInfo
     
-    objInfo.Id = strId
+    objInfo.Id = strID
     objInfo.Bed = strBed
     objInfo.AchterNaam = strAN
     objInfo.VoorNaam = strVN
@@ -87,31 +112,77 @@ Public Function GetPatients() As Collection
 
 End Function
 
-Public Sub EnterPatient()
+Public Function GetPatientDetails() As ClassPatientDetails
 
-    Dim frmPatient As New FormPatient
+    Dim objPat As New ClassPatientDetails
     
-    frmPatient.Show
+    objPat.PatientID = ModRange.GetRangeValue(constPatNum, vbNullString)
+    objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
+    objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
+    objPat.GeboorteDatum = ModRange.GetRangeValue(constGebDatum, ModDate.EmptyDate())
+    objPat.OpnameDatum = ModRange.GetRangeValue(constOpnDat, ModDate.EmptyDate())
+    objPat.Gewicht = ModRange.GetRangeValue(constGewicht, 0) / 10
+    objPat.Lengte = ModRange.GetRangeValue(constLengte, 0)
+    objPat.GeboorteGewicht = ModRange.GetRangeValue(constGebGew, 0)
+    objPat.Weeks = ModRange.GetRangeValue(constWeken, 0)
+    objPat.Days = ModRange.GetRangeValue(constDagen, 0)
     
-    Set frmPatient = Nothing
+    Set GetPatientDetails = objPat
+
+End Function
+
+Public Sub WritePatientDetails(objPat As ClassPatientDetails)
+
+    ModRange.SetRangeValue constPatNum, objPat.PatientID
+    ModRange.SetRangeValue constAN, objPat.AchterNaam
+    ModRange.SetRangeValue constVN, objPat.VoorNaam
+        
+    If Not ModDate.IsEmptyDate(objPat.GeboorteDatum) Then
+        ModRange.SetRangeValue constGebDatum, objPat.GeboorteDatum
+    End If
+    
+    If Not ModDate.IsEmptyDate(objPat.OpnameDatum) Then
+        ModRange.SetRangeValue constOpnDat, objPat.OpnameDatum
+    End If
+    
+    ModRange.SetRangeValue constGewicht, objPat.Gewicht * 10
+    ModRange.SetRangeValue constLengte, objPat.Lengte
+    ModRange.SetRangeValue constGebGew, objPat.GeboorteGewicht
+    ModRange.SetRangeValue constWeken, objPat.Weeks
+    ModRange.SetRangeValue constDagen, objPat.Days
 
 End Sub
 
-Public Function CopyPatientData() As Boolean
+Public Sub EnterPatientDetails()
+
+    Dim frmPat As New FormPatient
+    Dim objPat As ClassPatientDetails
+    
+    Set objPat = GetPatientDetails()
+    frmPat.SetPatient objPat
+    frmPat.Show
+    
+    WritePatientDetails objPat
+    Set frmPat = Nothing
+
+End Sub
+
+Public Sub CopyPatientData()
 
     Dim intN As Integer
-    
-    On Error Resume Next
-    
+    Dim strRange As String
+    Dim varValue As Variant
+        
     With shtPatData
         For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
-            .Cells(intN, 4).Formula = Range(.Cells(intN, 1).Value).Formula
+            strRange = .Cells(intN, 1).Value2
+            varValue = ModRange.GetRangeValue(strRange, Null)
+            
+            .Cells(intN, 2).Value2 = varValue
         Next intN
     End With
     
-    CopyPatientData = True
-    
-End Function
+End Sub
 
 Public Sub ClearPatient(blnShowWarn As Boolean)
     
@@ -144,35 +215,60 @@ Public Sub ClearPatient(blnShowWarn As Boolean)
 End Sub
 
 Private Sub TestClearPatient()
-
+    
     ClearPatient False
 
 End Sub
 
-Public Function GetPatientDataPath() As String
+Public Function ValidWeightKg(dblWeight As Double) As Boolean
 
-    Dim strDir As String
+    ValidWeightKg = dblWeight > 0.4 And dblWeight < 200
+
+End Function
+
+Public Function ValidLengthCm(dblLen As Double) As Boolean
+
+    ValidLengthCm = dblLen > 30 And dblLen < 250
+
+End Function
+
+Public Function ValidBirthDate(dtmBD As Date) As Boolean
+
+    Dim dtmMin As Date
     
-    strDir = ModSetting.GetDataDir()
-    GetPatientDataPath = GetRelativePath(strDir)
+    dtmMin = DateAdd("y", -100, Date)
+    
+    ValidBirthDate = dtmBD <= Date And dtmBD > dtmMin
 
 End Function
 
-Private Function GetRelativePath(strPath As String) As String
+Public Function ValidAdmissionDate(dtmAdm As Date) As Boolean
 
-    GetRelativePath = ActiveWorkbook.Path + strPath
-
-End Function
-
-Public Function GetPatientWorkBookName(strBed As String) As String
-
-    GetPatientWorkBookName = "Patient" + strBed + ".xls"
+    Dim dtmMin As Date
+    
+    dtmMin = DateSerial(2006, 1, 1)
+    ValidAdmissionDate = dtmAdm <= Date And dtmAdm > dtmMin
 
 End Function
 
-Public Function GetPatientDataFile(strBed As String) As String
+Private Sub TestValidBirthDate()
 
-    GetPatientDataFile = GetPatientDataPath + GetPatientWorkBookName(strBed)
+    MsgBox ValidBirthDate(Date)
+    MsgBox ValidBirthDate(DateAdd("d", 1, Date))
+    MsgBox ValidBirthDate(DateSerial(1901, 1, 1))
+    MsgBox ValidBirthDate(ModDate.EmptyDate)
+
+End Sub
+
+Public Function ValidDagen(intDay As Integer) As Boolean
+
+    ValidDagen = intDay >= 0 And intDay < 7
+
+End Function
+
+Public Function ValidWeken(intWeek As Integer) As Boolean
+
+    ValidWeken = intWeek > 24 And intWeek < 50
 
 End Function
 

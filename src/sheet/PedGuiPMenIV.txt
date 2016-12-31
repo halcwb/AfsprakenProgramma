@@ -1,7 +1,7 @@
 "$C$2: 	=Var_AfspraakDatum
-$F$2: 	=_OpnDatum
-$G$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_OpnDatum+1
-$J$2: 	=Var_Glob_Bed
+$F$2: 	=_Pat_OpnDatum
+$G$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_Pat_OpnDatum+1
+$J$2: 	=__1_Bed
 $C$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $F$3: 	=__4_GebDatum
 $G$3: 	=""Gewicht: ""&_Pat__Gewicht/10&"" kg""

@@ -119,7 +119,7 @@ Public Sub Test_GetPatientWorkBookName()
     Dim strBed As String
     strBed = "2.9"
 
-    AssertEqual GetPatientWorkBookName(strBed), "Patient" + strBed + ".xls", "Could not get correct CONST_WORKBOOKNAME", Not blnDontDisplay
+    AssertEqual GetPatientDataWorkBookName(strBed), "Patient" + strBed + ".xls", "Could not get correct CONST_WORKBOOKNAME", Not blnDontDisplay
 
 End Sub
 
@@ -128,10 +128,11 @@ Public Sub Test_OpenBed()
 
     Dim strBed As String
     
-    ModBed.OpenBed "2.9"
-    strBed = Range("Bednummer").Formula
+    ModBed.SetBed "Unit 2.9"
+    ModBed.OpenBed
+    strBed = ModBed.GetBed
     
-    AssertEqual "2.9", strBed, "Bed 2.9 should be opened, but strBed: " + strBed + " was open", Not blnDontDisplay
+    AssertEqual "Unit 2.9", strBed, "Bed 2.9 should be opened, but strBed: " + strBed + " was open", Not blnDontDisplay
 
 End Sub
 

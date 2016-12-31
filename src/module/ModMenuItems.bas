@@ -129,22 +129,35 @@ End Sub
 Public Sub SelectTPN()
 
     Dim dblGewicht As Double
+    Dim strTPNB As String
+    Dim strTPNC As String
+    Dim strTPND As String
+    Dim strTPNE As String
+    Dim strTPNnutri As String
+    Dim strSelected As String
+    
+    strTPNB = "tbl_Ped_tpnB"
+    strTPNC = "tbl_Ped_tpnC"
+    strTPND = "tbl_Ped_tpnD"
+    strTPNE = "tbl_Ped_tpnE"
+    strTPNnutri = "tbl_Ped_tpnNutriflex"
+    strSelected = "tbl_Ped_tpnSelected"
 
-    dblGewicht = Val(ModRange.GetRangeValue("Gewicht", 0)) / 10
+    dblGewicht = ModPatient.GetGewichtFromRange()
 
     With shtPedBerTPN
         If dblGewicht >= 2 And dblGewicht < 7 Then
-            .Range("tpnB").Copy
+            .Range(strTPNB).Copy
         ElseIf dblGewicht >= 7 And dblGewicht < 15 Then
-            .Range("tpnC").Copy
+            .Range(strTPNC).Copy
         ElseIf dblGewicht >= 15 And dblGewicht < 30 Then
-            .Range("tpnD").Copy
+            .Range(strTPND).Copy
         ElseIf dblGewicht >= 30 And dblGewicht <= 50 Then
-            .Range("tpnE").Copy
+            .Range(strTPNE).Copy
         ElseIf dblGewicht > 50 Then
-            .Range("tpnNutriflex").Copy
+            .Range(strTPNnutri).Copy
         End If
-        .Range("tpnSelected").PasteSpecial xlPasteValues
+        .Range(strSelected).PasteSpecial xlPasteValues
     End With
     
     Application.Calculate

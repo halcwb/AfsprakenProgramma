@@ -18,7 +18,8 @@ Option Explicit
 Private m_pats As Collection
 
 Private Sub lstPatienten_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-
+    
+    Me.SetSelectedBed
     Me.Hide
 
 End Sub
@@ -34,7 +35,7 @@ Public Sub LoadPatients(ByVal colPats As Collection)
 
 End Sub
 
-Public Function GetSelectedBed() As String
+Public Sub SetSelectedBed()
     
     Dim objPat As ClassPatientInfo
     Dim strBed As String
@@ -44,6 +45,12 @@ Public Function GetSelectedBed() As String
         strBed = objPat.Bed
     End If
     
-    GetSelectedBed = strBed
+    ModBed.SetBed strBed
 
-End Function
+End Sub
+
+Private Sub UserForm_Terminate()
+    
+    Me.SetSelectedBed
+
+End Sub

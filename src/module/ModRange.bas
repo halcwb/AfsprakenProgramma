@@ -16,20 +16,25 @@ Function GetRow(sheetName As String, searchString As String)
     
 End Function
 
-Public Sub CopyTempSheetRangeToRange()
+Public Function CopyTempSheetToNamedRanges() As Boolean
 
-    Dim intCount As Integer
-
-    shtPedGuiLab.Unprotect (ModConst.CONST_PASSWORD)
+    Dim intN As Integer
+    Dim blnAll As Boolean
+    Dim strRange As String
+    Dim varValue As Variant
+    
+    blnAll = True
     With shtGlobTemp
-        On Error Resume Next
-        For intCount = 2 To .Range("A1").CurrentRegion.Rows.Count
-            Range(.Cells(intCount, 1).Value).Formula = .Cells(intCount, 2).Formula
-        Next intCount
+        For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
+            strRange = .Cells(intN, 1).Value2
+            varValue = .Cells(intN, 2).Value2
+            blnAll = blnAll And ModRange.SetRangeValue(strRange, varValue)
+        Next intN
     End With
-    shtPedGuiLab.Protect (ModConst.CONST_PASSWORD)
+        
+    CopyTempSheetToNamedRanges = blnAll
 
-End Sub
+End Function
 
 Public Sub SetNameToRange(strName As String, objRange As Range)
 
@@ -95,21 +100,26 @@ Public Function CreateName(ByVal strName As String, ByVal strGroup As String, By
 
 End Function
 
-Public Sub SetRangeValue(strRange As String, varValue As Variant)
+Public Function SetRangeValue(strRange As String, varValue As Variant) As Boolean
 
     Dim blnLog As Boolean
+    Dim blnSet As Boolean
     
     blnLog = ModSetting.GetEnableLogging()
 
     If NameExists(strRange) Then
+        blnSet = True
         Range(strRange).Value2 = varValue
     Else
+        blnSet = False
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogPath(), Error, "Could not set " & varValue & " to range: " & strRange
         If Not blnLog Then ModLog.DisableLogging
     End If
+    
+    SetRangeValue = blnSet
 
-End Sub
+End Function
 
 Public Sub SetRangeFormula(strRange As String, strFormula As String)
 
@@ -161,9 +171,20 @@ End Function
 
 Public Function IsDataName(strName As String) As Boolean
 
-    IsDataName = ModString.StartsWith(strName, "_") & (Not strName = "_xlfn.IFERROR")
+    Dim blnData As Boolean
+    
+    blnData = ModString.StartsWith(strName, "_")
+    blnData = blnData And Not strName = "_xlfn.IFERROR"
+
+    IsDataName = blnData
 
 End Function
+
+Private Sub TestIsDataName()
+
+    MsgBox IsDataName("_Test")
+
+End Sub
 
 Public Function IsPedDataName(strName As String) As Boolean
 
@@ -218,7 +239,7 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet)
         
         shtSheet.Cells(intN, 1).Value = Strings.Replace(objName.RefersTo, "=", "")
         shtSheet.Cells(intN, 2).Value = objName.Name
-        shtSheet.Cells(intN, 4).FormulaLocal = "=IFERROR(VLOOKUP(B" & intN & ";PatData!$A$2:$A$1440;1;);" & strEmpty & ")<>" & strEmpty
+        shtSheet.Cells(intN, 4).FormulaLocal = "=IFERROR(VLOOKUP(B" & intN & ";PatData!$A$2:$A$2000;1;);" & strEmpty & ")<>" & strEmpty
         shtSheet.Cells(intN, 5).Value = varValue
         shtSheet.Cells(intN, 6).Value = blnIsFormula ' Is Formula
         shtSheet.Cells(intN, 7).Value = blnIsData ' Is Data
@@ -258,6 +279,8 @@ Public Sub ReplaceRangeNames()
         End If
     
     Next intN
+    
+    ModMessage.ShowMsgBoxExclam "Names have been replaced"
 
 End Sub
 

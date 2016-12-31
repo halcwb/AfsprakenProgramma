@@ -1,7 +1,7 @@
 "$C$2: 	=Var_AfspraakDatum
-$F$2: 	=_OpnDatum
-$G$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_OpnDatum+1
-$J$2: 	=Var_Glob_Bed
+$F$2: 	=_Pat_OpnDatum
+$G$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_Pat_OpnDatum+1
+$J$2: 	=__1_Bed
 $C$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $F$3: 	=__4_GebDatum
 $G$3: 	=""Gewicht: ""&_Pat__Gewicht/10&"" kg""
@@ -14,7 +14,7 @@ $C$9: 	=IF(PedBerExtraAfspr!C8=0,"""",PedBerExtraAfspr!C8)
 $G$9: 	=CONCATENATE(""à "",PedBerExtraAfspr!G16,"" uur"")
 $C$10: 	=IF(PedBerExtraAfspr!C9=0,"""",PedBerExtraAfspr!C9)
 $G$10: 	=CONCATENATE(""à "",PedBerExtraAfspr!G18,"" uur"")
-$I$10: 	=IF(_Ped_AfsprVerliezen=0,"""",_Ped_AfsprVerliezen)
+$I$10: 	=IF(_Ped_AfsprD_Verliezen=0,"""",_Ped_AfsprD_Verliezen)
 $C$11: 	=CONCATENATE(PedBerExtraAfspr!$B$12,"" dd"")
 $C$18: 	=CONCATENATE(PedBerExtraAfspr!$C$42,"" dd"")
 $F$18: 	=IF(_Ped_AfsprOverig=0,"""",_Ped_AfsprOverig)

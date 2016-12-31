@@ -14,6 +14,7 @@ Public Sub ExportForSourceControl()
 
     ExportFormulas
     ExportVbaCode
+    ExportNames
     
     ModMessage.ShowMsgBoxInfo "All code and formulas has been exported to: " & strPath
 

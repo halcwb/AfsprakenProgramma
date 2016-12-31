@@ -4,7 +4,7 @@ Option Explicit
 Public Sub VoerGewichtIn()
 
     Dim frmGewichtInvoer As New FormInvoerNumeriek
-    Dim objPatient As New ClassPatient
+    Dim objPatient As New ClassPatientDetails
     
     With frmGewichtInvoer
         .Caption = "Gewicht invoeren ..."
@@ -33,7 +33,7 @@ End Sub
 Public Sub VoerLengteIn()
 
     Dim frmLengteInvoer As New FormInvoerNumeriek
-    Dim objPatient As New ClassPatient
+    Dim objPatient As New ClassPatientDetails
     
     With frmLengteInvoer
         .Caption = "Lengte invoeren ..."

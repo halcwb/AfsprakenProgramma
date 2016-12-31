@@ -21,14 +21,14 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpBedden                                          ' -- BEDDEN --
         
         Case "btnOpenBed"                                   ' -> Bed Openen
-            ModBed.OpenBed ModPatient.OpenPatientLijst("Kies een patient...")
+            ModBed.OpenBed
         
         Case "btnSaveBed"                                   ' -> Bed Opslaan
             ModBed.SluitBed
             ModSheet.SelectPedOrNeoStartSheet
         
         Case "btnEnterPatient"                              ' -> Patient Gegevens
-            ModPatient.EnterPatient
+            ModPatient.EnterPatientDetails
             
         'grpPediatrie                                       ' -- PEDIATRIE --
         

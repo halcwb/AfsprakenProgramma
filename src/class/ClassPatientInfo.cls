@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private m_Id As String
+Private m_ID As String
 Private m_Bed As String
 Private m_AN As String
 Private m_VN As String
@@ -17,13 +17,13 @@ Private m_BD As String
 
 Public Property Get Id() As String
 
-    Id = m_Id
+    Id = m_ID
 
 End Property
 
-Public Property Let Id(ByVal strId As String)
+Public Property Let Id(ByVal strID As String)
 
-    m_Id = strId
+    m_ID = strID
 
 End Property
 

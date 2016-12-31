@@ -20,6 +20,8 @@ Public Const CONST_RANGE_VN = "__3_VoorNaam"
 Public Const CONST_RANGE_GEBDAT = "__4_GebDatum"
 Public Const CONST_RANGE_DATE = "Var_AfspraakDatum"
 Public Const CONST_RANGE_VERSIE = "Var_Glob_Versie"
+Public Const CONST_RANGE_GEWICHT = "_Pat__Gewicht"
+Public Const CONST_RANGE_LENGTE = "_Pat__Lengte"
 
 Public Const CONST_RANGE_NEOBOOL = "rngNeoAfsprBlns"
 Public Const CONST_RANGE_NEODATA = "rngNeoAfsprData"

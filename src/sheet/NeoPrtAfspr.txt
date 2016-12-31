@@ -1,8 +1,8 @@
-"$D$1: 	=_Neo_Bed
+"$D$1: 	=__1_Bed
 $M$1: 	=TODAY()
 $O$1: 	=NOW()
 $B$3: 	=NeoAfspr1700!B10
-$M$3: 	=_Neo_PatNum
+$M$3: 	=_Neo_InfB_PatNum
 $B$4: 	=NeoAfspr1700!B11
 $J$4: 	=NeoAfspr1700!G11
 $M$4: 	=NeoAfspr1700!I11
@@ -16,7 +16,7 @@ $D$9: 	=NeoAfspr1700!C14
 $I$9: 	=NeoAfspr1700!G16
 $K$9: 	=NeoAfspr1700!H16
 $B$10: 	=NeoAfspr1700!B15
-$F$10: 	=_Neo_Arts
+$F$10: 	=_Neo_InfB_Arts
 $I$10: 	=""Leeftijd: ""&NeoAfspr1700!$H$15
 $B$13: 	=NeoAfspr1700!B18
 $F$13: 	=NeoAfspr1700!E18
@@ -65,7 +65,7 @@ $B$28: 	=IF(NeoBer1700!J14=1,""De voeding is extra"","""")
 $B$30: 	=NeoAfspr1700!B28
 $G$30: 	=NeoAfspr1700!E28
 $H$30: 	=NeoAfspr1700!F28
-$B$32: 	=IF(_Neo_ArtLijn>0,NeoAfspr1700!B30,"""")
+$B$32: 	=IF(_Neo_InfB_ArtLijn>0,NeoAfspr1700!B30,"""")
 $K$32: 	=IF(NeoAfspr1700!G30<> ""0 ml/uur"",NeoAfspr1700!G30,"""")
 $P$32: 	=IF(B32="""","""",IF(NeoBer1700!J18,""ja"",""nee""))
 $B$33: 	=INDEX(tbl_Neo_MedIV,NeoBer1700!B20,1)
@@ -243,7 +243,7 @@ $D$74: 	=TRIM(NeoBerLab!H4&"" ""&NeoBerLab!H5&"" ""&NeoBerLab!H6&"" ""&NeoBerLab
 $D$75: 	=TRIM(NeoBerLab!J4&"" ""&NeoBerLab!J5&"" ""&NeoBerLab!J6&"" ""&NeoBerLab!J7&"" ""&NeoBerLab!J8&"" ""&NeoBerLab!J9&"" ""&NeoBerLab!J10&"" ""&NeoBerLab!J11&"" ""&NeoBerLab!J12&"" ""&NeoBerLab!J13&"" ""&NeoBerLab!J14&"" ""&NeoBerLab!J15&"" ""&NeoBerLab!J16&"" ""&NeoBerLab!J17&"" ""&NeoBerLab!J18&"" ""&NeoBerLab!J19&"" ""&NeoBerLab!J20&"" ""&NeoBerLab!J21&"" ""&NeoBerLab!J22&"" ""&NeoBerLab!J23&"" ""&NeoBerLab!J24&"" ""&NeoBerLab!J25&"" ""&NeoBerLab!J26&"" ""&NeoBerLab!J27&"" ""&NeoBerLab!J28&"" ""&NeoBerLab!J29&"" ""&NeoBerLab!J30&"" ""&NeoBerLab!J31&"" ""&NeoBerLab!J32&"" ""&NeoBerLab!J33&"" ""&NeoBerLab!J34)
 $D$76: 	=TRIM(NeoBerLab!L4&"" ""&NeoBerLab!L5&"" ""&NeoBerLab!L6&"" ""&NeoBerLab!L7&"" ""&NeoBerLab!L8&"" ""&NeoBerLab!L9&"" ""&NeoBerLab!L10&"" ""&NeoBerLab!L11&"" ""&NeoBerLab!L12&"" ""&NeoBerLab!L13&"" ""&NeoBerLab!L14&"" ""&NeoBerLab!L15&"" ""&NeoBerLab!L16&"" ""&NeoBerLab!L17&"" ""&NeoBerLab!L18&"" ""&NeoBerLab!L19&"" ""&NeoBerLab!L20&"" ""&NeoBerLab!L21&"" ""&NeoBerLab!L22&"" ""&NeoBerLab!L23&"" ""&NeoBerLab!L24&"" ""&NeoBerLab!L25&"" ""&NeoBerLab!L26&"" ""&NeoBerLab!L27&"" ""&NeoBerLab!L28&"" ""&NeoBerLab!L29&"" ""&NeoBerLab!L30&"" ""&NeoBerLab!L31&"" ""&NeoBerLab!L32&"" ""&NeoBerLab!L33&"" ""&NeoBerLab!L34)
 $D$77: 	=TRIM(NeoBerLab!N4&"" ""&NeoBerLab!N5&"" ""&NeoBerLab!N6&"" ""&NeoBerLab!N7&"" ""&NeoBerLab!N8&"" ""&NeoBerLab!N9&"" ""&NeoBerLab!N10&"" ""&NeoBerLab!N11&"" ""&NeoBerLab!N12&"" ""&NeoBerLab!N13&"" ""&NeoBerLab!N14&"" ""&NeoBerLab!N15&"" ""&NeoBerLab!N16&"" ""&NeoBerLab!N17&"" ""&NeoBerLab!N18&"" ""&NeoBerLab!N19&"" ""&NeoBerLab!N20&"" ""&NeoBerLab!N21&"" ""&NeoBerLab!N22&"" ""&NeoBerLab!N23&"" ""&NeoBerLab!N24&"" ""&NeoBerLab!N25&"" ""&NeoBerLab!N26&"" ""&NeoBerLab!N27&"" ""&NeoBerLab!N28&"" ""&NeoBerLab!N29&"" ""&NeoBerLab!N30&"" ""&NeoBerLab!N31&"" ""&NeoBerLab!N32&"" ""&NeoBerLab!N33&"" ""&NeoBerLab!N34)
-$D$78: 	=IF(_Neo_LabOpm=0,"""",_Neo_LabOpm)
+$D$78: 	=IF(_Neo_Lab_Opm=0,"""",_Neo_Lab_Opm)
 $D$82: 	=IFERROR(LEFT(Var_Neo_AfsprControles,LEN(Var_Neo_AfsprControles)-3),"""")
 $D$83: 	=IFERROR(LEFT(Var_Neo_AfsprOnderzoek,LEN(Var_Neo_AfsprOnderzoek)-3),"""")
 $D$84: 	=IFERROR(LEFT(Var_Neo_AfsprKweken,LEN(Var_Neo_AfsprKweken)-3),"""")

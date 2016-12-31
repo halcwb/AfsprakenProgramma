@@ -1,7 +1,7 @@
-"$B$5: 	=_OpnDatum
+"$B$5: 	=_Pat_OpnDatum
 $B$6: 	=TODAY()-B3+1+C3
 $C$6: 	=IF(B6<7,B6,6)
-$K$14: 	=IF(AND(_Neo_Extra=2,_Neo_Voeding>1),(D10*D11+D12*D13)/10,0)
+$K$14: 	=IF(AND(_Neo_InfB_VochtExtra_01=2,_Neo_InfB_Voeding>1),(D10*D11+D12*D13)/10,0)
 $L$14: 	=INDEX(tbl_Neo_Pos,$D$14,L11)*$K$14
 $M$14: 	=INDEX(tbl_Neo_Pos,$D$14,M11)*$K$14
 $N$14: 	=INDEX(tbl_Neo_Pos,$D$14,N11)*$K$14
@@ -13,9 +13,9 @@ $S$14: 	=INDEX(tbl_Neo_Pos,$D$14,S11)*$K$14
 $T$14: 	=INDEX(tbl_Neo_Pos,$D$14,T11)*$K$14
 $U$14: 	=INDEX(tbl_Neo_Pos,$D$14,U11)*$K$14
 $V$14: 	=INDEX(tbl_Neo_Pos,$D$14,V11)*$K$14
-$B$16: 	=IF(AND(D4<37,_Neo_Gewicht>=1),INDEX(NeoBerAdvies!B4:G4,1,NeoBerIV!C6),IF(_Neo_Gewicht<1,INDEX(NeoBerAdvies!B5:G5,1,NeoBerIV!C6),INDEX(NeoBerAdvies!B6:G6,1,NeoBerIV!C6)))+IF(B15=1,20,0)
+$B$16: 	=IF(AND(D4<37,_Neo_InfB_Gewicht>=1),INDEX(NeoBerAdvies!B4:G4,1,NeoBerIV!C6),IF(_Neo_InfB_Gewicht<1,INDEX(NeoBerAdvies!B5:G5,1,NeoBerIV!C6),INDEX(NeoBerAdvies!B6:G6,1,NeoBerIV!C6)))+IF(B15=1,20,0)
 $C$16: 	=ROUND(B16/5,0)*5+(D16-5000)
-$C$17: 	=ROUND(C16*_Neo_Gewicht-K14,0)
+$C$17: 	=ROUND(C16*_Neo_InfB_Gewicht-K14,0)
 $K$18: 	=IF(J18,0,B18*2.4)
 $L$18: 	=0.155*K18/2
 $G$20: 	=IF(INDEX(tbl_Neo_MedIV,NeoBerIV!B20,5)=0,1,INDEX(tbl_Neo_MedIV,NeoBerIV!B20,5))
@@ -165,40 +165,40 @@ $Q$31: 	=IF($E31>1,INDEX(tbl_Neo_Opl,$E31,5),0)*$K31
 $R$31: 	=IF($E31>1,INDEX(tbl_Neo_Opl,$E31,2),0)*$K31
 $W$31: 	=ROUND(IF(X31*10>1,X31*10,X31*600),0)
 $X$31: 	=IF(F31>0,D31/F31,0)
-$A$35: 	=INDEX(tbl_Neo_IntralipidSmof,_Neo_SelectedIntralipidSmof)
-$B$35: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,8,NeoBerIV!$C$6),0)
+$A$35: 	=INDEX(tbl_Neo_IntralipidSmof,_Neo_InfB_IntralipidSmof)
+$B$35: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,8,NeoBerIV!$C$6),0)
 $C$35: 	=ROUND(IF(AND(B17,B35+(D35-5000)>0),B35+(D35-5000),0),0)
 $K$35: 	=C35
 $S$35: 	=0.2*K35*10/12
 $V$35: 	=40*C35*2/12
-$B$37: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,2,NeoBerIV!$C$6),0)
+$B$37: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,2,NeoBerIV!$C$6),0)
 $C$37: 	=IF(AND($B$17,B37+(D37-5000)/10>0),ROUND(B37+(D37-5000)/10,1),0)
 $K$37: 	=IF(OR($D$36=1,$D$36=3),C37,0)
 $L$37: 	=K37*0.5
 $U$37: 	=K37*0.5
-$B$38: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,3,NeoBerIV!$C$6),0)
+$B$38: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,3,NeoBerIV!$C$6),0)
 $C$38: 	=IF(AND($B$17,B38+(D38-5000)/10>0),ROUND(B38+(D38-5000)/10,1),0)
 $K$38: 	=IF(OR($D$36=1,$D$36=3),C38,0)
 $M$38: 	=K38
-$B$39: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,4,NeoBerIV!$C$6),0)
+$B$39: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,4,NeoBerIV!$C$6),0)
 $C$39: 	=IF(AND($B$17,B39+(D39-5000)/10>0),ROUND(B39+(D39-5000)/10,1),0)
 $K$39: 	=IF($D$36=1,C39,0)
 $N$39: 	=K39*0.225
 $U$39: 	=K39*0.225*2
-$B$40: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,5,NeoBerIV!$C$6),1)
+$B$40: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,5,NeoBerIV!$C$6),1)
 $C$40: 	=IF(AND($B$17,B40+(D40-5000)/10>0),ROUND(B40+(D40-5000)/10,1),0)
 $K$40: 	=IF($D$36=1,C40,0)
 $O$40: 	=K40*0.5
 $U$40: 	=K40*0.5*2
-$B$41: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,6,NeoBerIV!$C$6),1)
+$B$41: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,6,NeoBerIV!$C$6),1)
 $C$41: 	=IF(AND($B$17,B41+(D41-5000)/10>0),ROUND(B41+(D41-5000)/10,1),0)
 $K$41: 	=IF($D$36=1,C41,0)
 $V$41: 	=40*C41
-$B$42: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,7,NeoBerIV!$C$6),0)
+$B$42: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,7,NeoBerIV!$C$6),0)
 $C$42: 	=IF(AND($B$17,B42+(D42-5000)>0),ROUND(B42+(D42-5000),0),0)
 $K$42: 	=IF($D$36=1,C42,0)
 $Q$42: 	=0.1*K42
-$B$43: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,1,NeoBerIV!$C$6),1)
+$B$43: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,1,NeoBerIV!$C$6),1)
 $C$43: 	=ROUND(IF(AND($B$17,B43+(D43-5000)>0),B43+(D43-5000),0),0)
 $K$43: 	=IF(D36=2,C43,0)
 $L$43: 	=INDEX(tbl_Neo_TpnNICU,2,L11)*$K$43
@@ -210,7 +210,7 @@ $Q$43: 	=INDEX(tbl_Neo_TpnNICU,2,Q11)*$K$43
 $R$43: 	=INDEX(tbl_Neo_TpnNICU,2,R11)*$K$43
 $S$43: 	=INDEX(tbl_Neo_TpnNICU,2,S11)*$K$43
 $T$43: 	=INDEX(tbl_Neo_TpnNICU,2,T11)*$K$43
-$B$44: 	=ROUND(_Neo_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,1,NeoBerIV!$C$6),1)
+$B$44: 	=ROUND(_Neo_InfB_Gewicht*INDEX(NeoBerAdvies!$B$9:$G$16,1,NeoBerIV!$C$6),1)
 $C$44: 	=ROUND(IF(AND($B$17,B44+(D44-5000)>0),B44+(D44-5000),0),0)
 $K$44: 	=IF(D36=3,C44,0)
 $L$44: 	=INDEX(tbl_Neo_TpnNICU,1,L11)*$K$44
@@ -237,17 +237,17 @@ $T$47: 	=T49+T50
 $U$47: 	=U49+U50
 $V$47: 	=V49+V50
 $K$49: 	=K14
-$L$49: 	=L14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",L57,L62)
-$M$49: 	=M14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",M57,M62)
-$N$49: 	=N14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",N57,N62)
-$O$49: 	=O14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",O57,O62)
-$P$49: 	=P14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",P57,P62)
-$Q$49: 	=Q14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",Q57,Q62)
-$R$49: 	=R14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",R57,R62)
-$S$49: 	=S14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",S57,S62)
-$T$49: 	=T14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",T57,T62)
-$U$49: 	=U14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",U57,U62)
-$V$49: 	=V14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",V57,V62)
+$L$49: 	=L14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",L57,L62)
+$M$49: 	=M14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",M57,M62)
+$N$49: 	=N14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",N57,N62)
+$O$49: 	=O14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",O57,O62)
+$P$49: 	=P14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",P57,P62)
+$Q$49: 	=Q14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",Q57,Q62)
+$R$49: 	=R14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",R57,R62)
+$S$49: 	=S14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",S57,S62)
+$T$49: 	=T14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",T57,T62)
+$U$49: 	=U14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",U57,U62)
+$V$49: 	=V14+IF(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",V57,V62)
 $K$50: 	=SUM(K18:K45)
 $L$50: 	=SUM(L18:L45)
 $M$50: 	=SUM(M18:M45)
@@ -272,7 +272,7 @@ $S$52: 	=IF($J52>1,($K52/100)*$K$49*HLOOKUP(S1,tbl_Neo_NutrBMFToev,$B52,FALSE),0
 $T$52: 	=IF($J52>1,($K52/100)*$K$49*HLOOKUP(T1,tbl_Neo_NutrBMFToev,$B52,FALSE),0)
 $U$52: 	=IF($J52>1,($K52/100)*$K$49*HLOOKUP(U1,tbl_Neo_NutrBMFToev,$B52,FALSE),0)
 $V$52: 	=IF($J52>1,($K52/100)*$K$49*HLOOKUP(V1,tbl_Neo_NutrBMFToev,$B52,FALSE),0)
-$C$53: 	=_Neo_Toevoeging_1+1
+$C$53: 	=_Neo_InfB_Toevoeging_1+1
 $K$53: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J53)
 $L$53: 	=IF($B53>1,($K53)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelMM,$C53,FALSE)/100,0)
 $M$53: 	=IF($B53>1,($K53)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelMM,$C53,FALSE)/100,0)
@@ -285,7 +285,7 @@ $S$53: 	=IF($B53>1,($K53)*$K$49*HLOOKUP(NeoBerIV!S$1,tbl_Neo_OpzoektabelMM,$C53,
 $T$53: 	=IF($B53>1,($K53)*$K$49*HLOOKUP(NeoBerIV!T$1,tbl_Neo_OpzoektabelMM,$C53,FALSE)/100,0)
 $U$53: 	=IF($B53>1,($K53)*$K$49*HLOOKUP(NeoBerIV!U$1,tbl_Neo_OpzoektabelMM,$C53,FALSE)/100,0)
 $V$53: 	=IF($B53>1,($K53)*$K$49*HLOOKUP(NeoBerIV!V$1,tbl_Neo_OpzoektabelMM,$C53,FALSE)/100,0)
-$C$54: 	=_Neo_Toevoeging_2+1
+$C$54: 	=_Neo_InfB_Toevoeging_2+1
 $K$54: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J54)
 $L$54: 	=IF($B54>1,($K54)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelMM,$C54,FALSE)/100,0)
 $M$54: 	=IF($B54>1,($K54)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelMM,$C54,FALSE)/100,0)
@@ -298,7 +298,7 @@ $S$54: 	=IF($B54>1,($K54)*$K$49*HLOOKUP(NeoBerIV!S$1,tbl_Neo_OpzoektabelMM,$C54,
 $T$54: 	=IF($B54>1,($K54)*$K$49*HLOOKUP(NeoBerIV!T$1,tbl_Neo_OpzoektabelMM,$C54,FALSE)/100,0)
 $U$54: 	=IF($B54>1,($K54)*$K$49*HLOOKUP(NeoBerIV!U$1,tbl_Neo_OpzoektabelMM,$C54,FALSE)/100,0)
 $V$54: 	=IF($B54>1,($K54)*$K$49*HLOOKUP(NeoBerIV!V$1,tbl_Neo_OpzoektabelMM,$C54,FALSE)/100,0)
-$C$55: 	=_Neo_Toevoeging_3+1
+$C$55: 	=_Neo_InfB_Toevoeging_3+1
 $K$55: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J55)
 $L$55: 	=IF($B55>1,($K55)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelMM,$C55,FALSE)/100,0)
 $M$55: 	=IF($B55>1,($K55)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelMM,$C55,FALSE)/100,0)
@@ -311,7 +311,7 @@ $S$55: 	=IF($B55>1,($K55)*$K$49*HLOOKUP(NeoBerIV!S$1,tbl_Neo_OpzoektabelMM,$C55,
 $T$55: 	=IF($B55>1,($K55)*$K$49*HLOOKUP(NeoBerIV!T$1,tbl_Neo_OpzoektabelMM,$C55,FALSE)/100,0)
 $U$55: 	=IF($B55>1,($K55)*$K$49*HLOOKUP(NeoBerIV!U$1,tbl_Neo_OpzoektabelMM,$C55,FALSE)/100,0)
 $V$55: 	=IF($B55>1,($K55)*$K$49*HLOOKUP(NeoBerIV!V$1,tbl_Neo_OpzoektabelMM,$C55,FALSE)/100,0)
-$C$56: 	=_Neo_Toevoeging_4+1
+$C$56: 	=_Neo_InfB_Toevoeging_4+1
 $K$56: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J56)
 $L$56: 	=IF($B56>1,($K56)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelMM,$C56,FALSE)/100,0)
 $M$56: 	=IF($B56>1,($K56)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelMM,$C56,FALSE)/100,0)
@@ -335,7 +335,7 @@ $S$57: 	=SUM(S52:S56)
 $T$57: 	=SUM(T52:T56)
 $U$57: 	=SUM(U52:U56)
 $V$57: 	=SUM(V52:V56)
-$C$58: 	=_Neo_Toevoeging_5+1
+$C$58: 	=_Neo_InfB_Toevoeging_5+1
 $K$58: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J58)
 $L$58: 	=IF($B58>1,($K58)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelKV,$C58,FALSE)/100,0)
 $M$58: 	=IF($B58>1,($K58)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelKV,$C58,FALSE)/100,0)
@@ -348,7 +348,7 @@ $S$58: 	=IF($B58>1,($K58)*$K$49*HLOOKUP(NeoBerIV!S$1,tbl_Neo_OpzoektabelKV,$C58,
 $T$58: 	=IF($B58>1,($K58)*$K$49*HLOOKUP(NeoBerIV!T$1,tbl_Neo_OpzoektabelKV,$C58,FALSE)/100,0)
 $U$58: 	=IF($B58>1,($K58)*$K$49*HLOOKUP(NeoBerIV!U$1,tbl_Neo_OpzoektabelKV,$C58,FALSE)/100,0)
 $V$58: 	=IF($B58>1,($K58)*$K$49*HLOOKUP(NeoBerIV!V$1,tbl_Neo_OpzoektabelKV,$C58,FALSE)/100,0)
-$C$59: 	=_Neo_Toevoeging_6+1
+$C$59: 	=_Neo_InfB_Toevoeging_6+1
 $K$59: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J59)
 $L$59: 	=IF($B59>1,($K59)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelKV,$C59,FALSE)/100,0)
 $M$59: 	=IF($B59>1,($K59)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelKV,$C59,FALSE)/100,0)
@@ -361,7 +361,7 @@ $S$59: 	=IF($B59>1,($K59)*$K$49*HLOOKUP(NeoBerIV!S$1,tbl_Neo_OpzoektabelKV,$C59,
 $T$59: 	=IF($B59>1,($K59)*$K$49*HLOOKUP(NeoBerIV!T$1,tbl_Neo_OpzoektabelKV,$C59,FALSE)/100,0)
 $U$59: 	=IF($B59>1,($K59)*$K$49*HLOOKUP(NeoBerIV!U$1,tbl_Neo_OpzoektabelKV,$C59,FALSE)/100,0)
 $V$59: 	=IF($B59>1,($K59)*$K$49*HLOOKUP(NeoBerIV!V$1,tbl_Neo_OpzoektabelKV,$C59,FALSE)/100,0)
-$C$60: 	=_Neo_Toevoeging_7+1
+$C$60: 	=_Neo_InfB_Toevoeging_7+1
 $K$60: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J60)
 $L$60: 	=IF($B60>1,($K60)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelKV,$C60,FALSE)/100,0)
 $M$60: 	=IF($B60>1,($K60)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelKV,$C60,FALSE)/100,0)
@@ -374,7 +374,7 @@ $S$60: 	=IF($B60>1,($K60)*$K$49*HLOOKUP(NeoBerIV!S$1,tbl_Neo_OpzoektabelKV,$C60,
 $T$60: 	=IF($B60>1,($K60)*$K$49*HLOOKUP(NeoBerIV!T$1,tbl_Neo_OpzoektabelKV,$C60,FALSE)/100,0)
 $U$60: 	=IF($B60>1,($K60)*$K$49*HLOOKUP(NeoBerIV!U$1,tbl_Neo_OpzoektabelKV,$C60,FALSE)/100,0)
 $V$60: 	=IF($B60>1,($K60)*$K$49*HLOOKUP(NeoBerIV!V$1,tbl_Neo_OpzoektabelKV,$C60,FALSE)/100,0)
-$C$61: 	=_Neo_Toevoeging_8+1
+$C$61: 	=_Neo_InfB_Toevoeging_8+1
 $K$61: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerIV!J61)
 $L$61: 	=IF($B61>1,($K61)*$K$49*HLOOKUP(NeoBerIV!L$1,tbl_Neo_OpzoektabelKV,$C61,FALSE)/100,0)
 $M$61: 	=IF($B61>1,($K61)*$K$49*HLOOKUP(NeoBerIV!M$1,tbl_Neo_OpzoektabelKV,$C61,FALSE)/100,0)
@@ -402,15 +402,15 @@ $B$73: 	=IF(NeoGuiAfspraken!E18=0,"""",CONCATENATE(NeoGuiAfspraken!B18,"": "",Ne
 $B$74: 	=IF(INDEX(tbl_Neo_Pos,NeoBerIV!D14,1)=0,"""",CONCATENATE(NeoGuiAfspraken!H21,"" "",INDEX(tbl_Neo_Pos,NeoBerIV!D14,1)))
 $B$75: 	=IF(INDEX(tbl_Neo_Pos,NeoBerIV!D14,1)=0,"""",CONCATENATE(""Hoeveelheid 1:  "",NeoGuiAfspraken!E21,"" "",NeoGuiAfspraken!F21,"" "",NeoGuiAfspraken!G21))
 $B$76: 	=IF(INDEX(tbl_Neo_Pos,NeoBerIV!D14,1)=0,"""",CONCATENATE(""Hoeveelheid 2:  "",NeoGuiAfspraken!E22,"" "",NeoGuiAfspraken!F22,"" "",NeoGuiAfspraken!G22))
-$B$77: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",Var_Neo_Percentage_0 > 0), CONCATENATE(""Toev MM: BMF "",Var_Neo_Percentage_0,"" %""),"""")
-$B$78: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",_Neo_Toevoeging_1 > 1,Var_Neo_Percentage_1 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_Toevoeging_1,1),"" "",Var_Neo_Percentage_1,"" %""),"""")
-$B$79: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",_Neo_Toevoeging_2 > 1,Var_Neo_Percentage_2 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_Toevoeging_2,1),"" "",Var_Neo_Percentage_2,"" %""),"""")
-$B$80: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",_Neo_Toevoeging_3 > 1,Var_Neo_Percentage_3 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_Toevoeging_3,1),"" "",Var_Neo_Percentage_3,"" %""),"""")
-$B$81: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""MM"",_Neo_Toevoeging_4 > 1,Var_Neo_Percentage_4 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_Toevoeging_4,1),"" "",Var_Neo_Percentage_4,"" %""),"""")
-$B$82: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""KV"",_Neo_Toevoeging_5 > 1,Var_Neo_Percentage_5 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_Toevoeging_5,1),"" "",Var_Neo_Percentage_5,"" %""),"""")
-$B$83: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""KV"",_Neo_Toevoeging_6 > 1,Var_Neo_Percentage_6 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_Toevoeging_6,1),"" "",Var_Neo_Percentage_6,"" %""),"""")
-$B$84: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""KV"",_Neo_Toevoeging_7 > 1,Var_Neo_Percentage_7 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_Toevoeging_7,1),"" "",Var_Neo_Percentage_7,"" %""),"""")
-$B$85: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_Voeding,14)=""KV"",_Neo_Toevoeging_8 > 1,Var_Neo_Percentage_8 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_Toevoeging_8,1),"" "",Var_Neo_Percentage_8,"" %""),"""")
+$B$77: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",Var_Neo_Percentage_0 > 0), CONCATENATE(""Toev MM: BMF "",Var_Neo_Percentage_0,"" %""),"""")
+$B$78: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",_Neo_InfB_Toevoeging_1 > 1,Var_Neo_Percentage_1 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_InfB_Toevoeging_1,1),"" "",Var_Neo_Percentage_1,"" %""),"""")
+$B$79: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",_Neo_InfB_Toevoeging_2 > 1,Var_Neo_Percentage_2 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_InfB_Toevoeging_2,1),"" "",Var_Neo_Percentage_2,"" %""),"""")
+$B$80: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",_Neo_InfB_Toevoeging_3 > 1,Var_Neo_Percentage_3 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_InfB_Toevoeging_3,1),"" "",Var_Neo_Percentage_3,"" %""),"""")
+$B$81: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""MM"",_Neo_InfB_Toevoeging_4 > 1,Var_Neo_Percentage_4 > 0), CONCATENATE(""Toev MM: "",INDEX(tbl_Neo_NutrMMToev,_Neo_InfB_Toevoeging_4,1),"" "",Var_Neo_Percentage_4,"" %""),"""")
+$B$82: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""KV"",_Neo_InfB_Toevoeging_5 > 1,Var_Neo_Percentage_5 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_InfB_Toevoeging_5,1),"" "",Var_Neo_Percentage_5,"" %""),"""")
+$B$83: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""KV"",_Neo_InfB_Toevoeging_6 > 1,Var_Neo_Percentage_6 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_InfB_Toevoeging_6,1),"" "",Var_Neo_Percentage_6,"" %""),"""")
+$B$84: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""KV"",_Neo_InfB_Toevoeging_7 > 1,Var_Neo_Percentage_7 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_InfB_Toevoeging_7,1),"" "",Var_Neo_Percentage_7,"" %""),"""")
+$B$85: 	=IF(AND(INDEX(tbl_Neo_LijstVoeding,_Neo_InfB_Voeding,14)=""KV"",_Neo_InfB_Toevoeging_8 > 1,Var_Neo_Percentage_8 > 0), CONCATENATE(""Toev KV: "",INDEX(tbl_Neo_NutrKunstToev,_Neo_InfB_Toevoeging_8,1),"" "",Var_Neo_Percentage_8,"" %""),"""")
 $B$86: 	=IF(NeoGuiAfspraken!E28>0,CONCATENATE(NeoGuiAfspraken!B28,"" "",NeoGuiAfspraken!E28,"" "",NeoGuiAfspraken!F28),"""")
 $B$87: 	=CONCATENATE(NeoGuiAfspraken!B19,"": "",IF(NeoBerIV!B15=1,""Ja"",""Nee""))
 $B$90: 	=IF(NeoBerIV!B20>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B20, 1)&"" ""&NeoGuiAfspraken!C32&"" ""&NeoGuiAfspraken!D32&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E20,1)&"" "" & NeoGuiAfspraken!G32&"" (=""&NeoGuiAfspraken!H32&"" ""&NeoGuiAfspraken!I32&""), inlooptijd: ""&NeoGuiAfspraken!N32,"""")
