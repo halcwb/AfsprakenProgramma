@@ -60,17 +60,6 @@ OpenPatientListError:
     
 End Sub
 
-Private Sub TestPatientLijst()
-    Dim strBed As String
-    
-    MsgBox strBed
-    
-    'Application.DisplayAlerts = False
-    'Workbooks.Open "\\psf\Dropbox\Excel\Afspraken 2016\TestOmgeving\Pelikaan\ICAP\..\ICAP Data\Patienten.xls", True
-    'Application.DisplayAlerts = True
-    
-End Sub
-
 Public Function CreatePatientInfo(strID As String, strBed As String, strAN As String, strVN As String, strBD As String) As ClassPatientInfo
 
     Dim objInfo As New ClassPatientInfo
@@ -88,13 +77,18 @@ End Function
 Public Function GetPatients() As Collection
 
     Dim colPatienten As New Collection
+    Dim strPatientsName As String
+    Dim strPatientsFile As String
     Dim intCount As Integer
     Dim strBed As String
     Dim strVN As String
     Dim strAN As String
     Dim strBD As String
 
-    If ModWorkBook.CopyWorkbookRangeToSheet(GetPatientDataPath() + "Patienten.xls", "Patienten.xls", "a1", shtGlobTemp) Then
+    strPatientsName = ModSetting.GetPatientsFileName()
+    strPatientsFile = ModSetting.GetPatientsFilePath()
+
+    If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "a1", shtGlobTemp) Then
         With colPatienten
             For intCount = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.Count
                 With shtGlobTemp

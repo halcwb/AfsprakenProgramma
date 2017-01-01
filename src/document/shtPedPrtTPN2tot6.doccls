@@ -14,7 +14,7 @@ Private Sub Worksheet_Activate()
     
     If Not ModSetting.IsDevelopmentMode() Then
         Set objWindow = Windows(1)
-        SetWindowToOpenApp objWindow
+        ModApplication.SetWindowToOpenApp objWindow
     End If
     
 End Sub

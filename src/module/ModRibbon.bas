@@ -146,7 +146,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
     
 End Sub
 
-Public Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisiblePed(ctrContr As IRibbonControl, ByRef blnVisible)
 
     Dim strPath, strPedDir As String
     Dim blnIsDevelop
@@ -163,7 +163,7 @@ Public Sub GetVisiblePed(control As IRibbonControl, ByRef blnVisible)
     
 End Sub
 
-Public Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisibleNeo(ctrContr As IRibbonControl, ByRef blnVisible)
     
     Dim strPath, strPedDir As String
     Dim blnIsDevelop
@@ -180,7 +180,7 @@ Public Sub GetVisibleNeo(control As IRibbonControl, ByRef blnVisible)
     
 End Sub
 
-Public Sub GetVisibleDevelopment(control As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisibleDevelopment(ctrContr As IRibbonControl, ByRef blnVisible)
 
     blnVisible = ModSetting.IsDevelopmentMode()
     

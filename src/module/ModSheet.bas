@@ -73,6 +73,7 @@ Public Sub UnprotectUserInterfaceSheets()
     For Each objItem In GetUserInterfaceSheets()
         With objItem
             .EnableSelection = xlNoRestrictions
+            .DisplayPageBreaks = True
             .Unprotect ModConst.CONST_PASSWORD
         End With
         
@@ -86,7 +87,8 @@ Public Sub ProtectUserInterfaceSheets()
     
     For Each objItem In GetUserInterfaceSheets()
         With objItem
-            .EnableSelection = xlNoRestrictions
+            .EnableSelection = xlNoSelection
+            .DisplayPageBreaks = False
             .Protect ModConst.CONST_PASSWORD
         End With
         

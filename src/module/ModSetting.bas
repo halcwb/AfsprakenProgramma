@@ -1,6 +1,11 @@
 Attribute VB_Name = "ModSetting"
 Option Explicit
 
+Public Const CONST_DATA_SHEET = "Data"
+Public Const CONST_PATIENTS_SHEET = "Patienten"
+
+Private Const constPatientsFile = "Patienten.xlsx"
+Private Const constExt = ".xlsx"
 Private Const constDevMode = "SettingDevMode"
 Private Const constLogging = "SettingLogging"
 Private Const constNeoDir = "SettingNeoDir"
@@ -10,9 +15,12 @@ Private Const constTestLogDir = "SettingTestLogDir"
 Private Const constLogDir = "SettingLogDir"
 Private Const constDataDir = "SettingDataDir"
 Private Const constDbDir = "SettingDbDir"
-Private Const constPrePend = "Patient"
-Private Const constPostData = ""
-Private Const constPostText = "_AfsprakenTekst"
+Private Const constPreData = ""
+Private Const constPostData = "_Data"
+Private Const constPreText = ""
+Private Const constPostText = "_Text"
+Private Const constPedBeds = "tbl_Ped_Beds"
+Private Const constNeoBeds = "tbl_Neo_Beds"
 
 Private Function GetSetting(strSetting As String, varDefault As Variant) As Variant
 
@@ -197,38 +205,77 @@ End Function
 
 Private Function GetAbsolutePath(strPath As String) As String
 
-    GetAbsolutePath = ActiveWorkbook.Path & strPath
+    GetAbsolutePath = WbkAfspraken.Path & strPath
 
 End Function
 
 Public Function GetPatientTextWorkBookName(strBed As String) As String
 
-    GetPatientTextWorkBookName = constPrePend & strBed & constPostText & ".xls"
+    GetPatientTextWorkBookName = constPreText & strBed & constPostText & constExt
 
 End Function
 
 Public Function GetPatientDataWorkBookName(strBed As String) As String
 
-    GetPatientDataWorkBookName = constPrePend & strBed & constPostData + ".xls"
+    GetPatientDataWorkBookName = constPreData & strBed & constPostData + constExt
 
 End Function
 
 Public Function GetPatientDataFile(strBed As String) As String
 
-    GetPatientDataFile = GetPatientDataPath + GetPatientDataWorkBookName(strBed)
+    GetPatientDataFile = GetPatientDataPath() & GetPatientDataWorkBookName(strBed)
 
 End Function
 
 Public Function GetPatientTextFile(strBed As String) As String
 
-    GetPatientTextFile = GetPatientDataPath + GetPatientTextWorkBookName(strBed)
+    GetPatientTextFile = GetPatientDataPath() & GetPatientTextWorkBookName(strBed)
+
+End Function
+
+Private Function GetBeds(strRange As String) As Variant()
+
+    Dim arrBeds() As Variant
+    Dim objBeds As Range
+    Dim intC As Integer
+    Dim intN As Integer
+    
+    Set objBeds = shtGlobSettings.Range(strRange)
+    intC = objBeds.Rows.Count
+    For intN = 1 To intC
+        ModArray.AddItemToVariantArray arrBeds, objBeds.Cells(intN, 1).Value2
+    Next intN
+    
+    GetBeds = arrBeds
+
+End Function
+
+Public Function GetPedBeds() As Variant()
+
+    GetPedBeds = GetBeds(constPedBeds)
+
+End Function
+
+Public Function GetNeoBeds() As Variant()
+
+    GetNeoBeds = GetBeds(constNeoBeds)
+
+End Function
+
+Public Function GetPatientsFileName() As String
+
+    GetPatientsFileName = constPatientsFile
+
+End Function
+
+Public Function GetPatientsFilePath() As String
+
+    GetPatientsFilePath = GetPatientDataPath() & "\" & constPatientsFile
 
 End Function
 
 Private Sub Test()
 
-    MsgBox GetEnableLogging()
-    SetEnableLogging True
-    MsgBox GetEnableLogging()
+    MsgBox GetPatientsFilePath
     
 End Sub

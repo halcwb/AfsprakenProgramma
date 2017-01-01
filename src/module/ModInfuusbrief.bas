@@ -69,17 +69,6 @@ Public Function GetTPNItems() As String()
     
 End Function
 
-Public Sub AddItemToArray(arrItems() As String, strItem As String)
-
-    Dim intU As Integer
-    
-    intU = UBound(arrItems) + 1
-    ReDim Preserve arrItems(0 To intU)
-    
-    arrItems(intU) = strItem
-
-End Sub
-
 Public Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As Integer, intStop)
 
     Dim intC As Integer
@@ -90,7 +79,7 @@ Public Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As 
     strInfB = "_Neo_InfB"
     
     If intStart = intStop Then
-        AddItemToArray arrItems, strItem
+        ModArray.AddItemToStringArray arrItems, strItem
     Else
         intU = UBound(arrItems)
         ReDim Preserve arrItems(0 To intU + intStop - intStart + 1)

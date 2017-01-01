@@ -18,26 +18,12 @@ Public Sub SetToDevelopmentMode()
 
     Dim objSheet As Worksheet
     
-    blnDontClose = True
-        
     ModSheet.UnprotectUserInterfaceSheets
     ModSheet.UnhideNonUserInterfaceSheets
-    
-    Application.DisplayFormulaBar = True
-    
-    For Each objSheet In ModSheet.GetNonInterfaceSheets()
-        objSheet.Activate
-        SetWindowToCloseApp Windows(1)
-    Next
-    
-    For Each objSheet In ModSheet.GetUserInterfaceSheets()
-        objSheet.Activate
-        SetWindowToCloseApp Windows(1)
-    Next
-    
-    blnDontClose = False
+            
     ModSetting.SetDevelopmentMode True
     
+    Application.DisplayFormulaBar = True
     Application.Cursor = xlDefault
 
 End Sub
@@ -82,6 +68,7 @@ Private Sub SetWindow(objWindow As Window, blnDisplay As Boolean)
         .DisplayHeadings = blnDisplay
         .DisplayOutline = blnDisplay
         .DisplayZeros = blnDisplay
+        .WindowState = xlMaximized
     End With
 
 End Sub
@@ -113,27 +100,20 @@ Public Sub InitializeAfspraken()
     ModLog.LogActionStart strAction, strParams
     
     Application.Cursor = xlWait
+    Application.WindowState = xlMaximized
+    
+    ' Setup sheets
     WbkAfspraken.Activate
-
     ModSheet.ProtectUserInterfaceSheets
     ModSheet.HideAndUnProtectNonUserInterfaceSheets
 
     SetCaptionAndHideBars
-    ActiveWindow.DisplayWorkbookTabs = ModSetting.IsDevelopmentMode()
-
-    For Each objWindow In Application.Windows
-        SetWindowToOpenApp objWindow
-    Next
     
-'   Zorg ervoor dat niet per ongeluk een lege patient naar een bed wordt weggeschreven
-    ModRange.SetRangeValue ModConst.CONST_RANGE_BED, 0
+    ' Clean everything
     ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, vbNullString
-    
     SetDateToDayFormula
-    
-    ModPatient.ClearPatient False
-    
-    ModSetting.SetDevelopmentMode False
+    ModPatient.ClearPatient False       ' Default start with no patient
+    ModSetting.SetDevelopmentMode False ' Default development mode is false
     
     Application.Cursor = xlDefault
     
@@ -170,8 +150,8 @@ Private Sub SetCaptionAndHideBars()
     With Application
          .DisplayFormulaBar = blnIsDevelop
          .DisplayStatusBar = blnIsDevelop
+         .DisplayFullScreen = False
          .DisplayScrollBars = True
-         .DisplayFormulaBar = blnIsDevelop
     End With
     
 End Sub
