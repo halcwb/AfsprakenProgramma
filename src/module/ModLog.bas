@@ -54,6 +54,18 @@ Public Sub LogError(strError As String)
 
 End Sub
 
+Public Sub LogInfo(strInfo As String)
+
+    Dim blnLog
+    
+    blnLog = ModSetting.GetEnableLogging()
+
+    EnableLogging
+    LogToFile ModSetting.GetLogPath(), Info, strInfo
+    If Not blnLog Then ModLog.DisableLogging
+
+End Sub
+
 Public Sub LogTest(enmLevel As LogLevel, strMsg As String)
     Dim strFile As String
 

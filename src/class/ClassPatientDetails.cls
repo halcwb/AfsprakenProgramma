@@ -134,29 +134,26 @@ Public Property Get GeboorteDatum() As Date
 
 End Property
 
-Public Property Let GeboorteDatum(ByVal dtmBD As Date)
-
-    If ModPatient.ValidBirthDate(dtmBD) Then
-        m_BD = dtmBD
-    Else
-        m_BD = ModDate.EmptyDate
-    End If
-
-End Property
-
 Public Property Get OpnameDatum() As Date
 
     OpnameDatum = m_AD
 
 End Property
 
-Public Property Let OpnameDatum(ByVal dtmAD As Date)
+Public Function SetAdmissionAndBirthDate(ByVal dtmAdm As Date, ByVal dtmBd As Date) As Boolean
 
-    If ModPatient.ValidAdmissionDate(dtmAD) Then
-        m_AD = dtmAD
+    If ModPatient.ValidBirthDate(dtmBd, dtmAdm) Then
+        m_AD = dtmAdm
+        m_BD = dtmBd
+        
+        SetAdmissionAndBirthDate = True
     Else
         m_AD = ModDate.EmptyDate
+        m_BD = ModDate.EmptyDate
+        
+        SetAdmissionAndBirthDate = False
     End If
     
-End Property
+End Function
+
 

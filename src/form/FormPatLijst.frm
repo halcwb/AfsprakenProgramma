@@ -41,7 +41,7 @@ Public Sub SetSelectedBed()
     Dim strBed As String
 
     If Me.lstPatienten.ListIndex > -1 Then
-        Set objPat = m_pats(Me.lstPatienten.ListIndex)
+        Set objPat = m_pats(Me.lstPatienten.ListIndex + 1)
         strBed = objPat.Bed
     End If
     

@@ -9,6 +9,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Const constNull = "0"
+
 Private m_ID As String
 Private m_Bed As String
 Private m_AN As String
@@ -23,7 +25,7 @@ End Property
 
 Public Property Let Id(ByVal strID As String)
 
-    m_ID = strID
+    If Not strID = constNull Then m_ID = strID Else m_ID = ""
 
 End Property
 
@@ -35,7 +37,7 @@ End Property
 
 Public Property Let Bed(ByVal strBed As String)
 
-    m_Bed = strBed
+    If Not strBed = constNull Then m_Bed = strBed Else m_Bed = ""
 
 End Property
 
@@ -47,7 +49,7 @@ End Property
 
 Public Property Let AchterNaam(ByVal strAN As String)
 
-    m_AN = strAN
+    If Not constNull = strAN Then m_AN = strAN Else m_AN = ""
 
 End Property
 
@@ -59,7 +61,7 @@ End Property
 
 Public Property Let VoorNaam(ByVal strVN As String)
 
-    m_VN = strVN
+    If Not strVN = constNull Then m_VN = strVN Else strVN = ""
 
 End Property
 
@@ -71,12 +73,25 @@ End Property
 
 Public Property Let BirthDate(ByVal strBD As String)
 
-    m_BD = strBD
+    If Not strBD = constNull Then m_BD = strBD Else m_BD = ""
 
 End Property
 
 Public Function ToString() As String
 
-    ToString = Me.Bed() & ": " & Me.Id() & " " & Me.AchterNaam() & ", " & Me.VoorNaam() & " " & Me.BirthDate()
+    Dim strString As String
+    
+    strString = Me.Bed() & ": "
+    strString = strString & Me.Id()
+    
+    If Me.AchterNaam() <> "" And Me.VoorNaam() <> "" Then
+        strString = Trim(strString) & " " & Me.AchterNaam & ", " & Me.VoorNaam()
+    Else
+        strString = Trim(strString) & Me.AchterNaam() & Me.VoorNaam()
+    End If
+    
+    strString = Trim(strString) & " " & Me.BirthDate()
+
+    ToString = strString
 
 End Function

@@ -5,7 +5,7 @@ Public Sub SaveAndPrintAfspraken()
 
     Dim frmPrintAfspraken As New FormPrintAfspraken
     
-    ModBed.SluitBed
+    ModBed.CloseBed (True)
     frmPrintAfspraken.Show
     
     Set frmPrintAfspraken = Nothing

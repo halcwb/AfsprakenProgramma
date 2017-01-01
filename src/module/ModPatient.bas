@@ -79,8 +79,9 @@ Public Function GetPatients() As Collection
     Dim colPatienten As New Collection
     Dim strPatientsName As String
     Dim strPatientsFile As String
-    Dim intCount As Integer
+    Dim intN As Integer
     Dim strBed As String
+    Dim strPN As String
     Dim strVN As String
     Dim strAN As String
     Dim strBD As String
@@ -90,15 +91,16 @@ Public Function GetPatients() As Collection
 
     If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "a1", shtGlobTemp) Then
         With colPatienten
-            For intCount = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.Count
+            For intN = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.Count
                 With shtGlobTemp
-                    strBed = .Cells(intCount, 1).Value2
-                    strVN = .Cells(intCount, 2).Value2
-                    strAN = .Cells(intCount, 3).Value2
-                    strBD = IIf(.Cells(intCount, 4).Value2 <> 0, ModString.StringToDate(.Cells(intCount, 4).Value), vbNullString)
+                    strBed = .Cells(intN, 1).Value2
+                    strPN = .Cells(intN, 2).Value2
+                    strAN = .Cells(intN, 3).Value2
+                    strVN = .Cells(intN, 4).Value2
+                    strBD = IIf(.Cells(intN, 5).Value2 > 0, ModString.DateToString(.Cells(intN, 5).Value), vbNullString)
                 End With
-                .Add CreatePatientInfo("", strBed, strAN, strVN, strBD)
-            Next intCount
+                .Add CreatePatientInfo(strPN, strBed, strAN, strVN, strBD)
+            Next intN
         End With
     End If
 
@@ -109,17 +111,21 @@ End Function
 Public Function GetPatientDetails() As ClassPatientDetails
 
     Dim objPat As New ClassPatientDetails
+    Dim dtmBd As Date
+    Dim dtmAdm As Date
     
     objPat.PatientID = ModRange.GetRangeValue(constPatNum, vbNullString)
     objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
     objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
-    objPat.GeboorteDatum = ModRange.GetRangeValue(constGebDatum, ModDate.EmptyDate())
-    objPat.OpnameDatum = ModRange.GetRangeValue(constOpnDat, ModDate.EmptyDate())
     objPat.Gewicht = ModRange.GetRangeValue(constGewicht, 0) / 10
     objPat.Lengte = ModRange.GetRangeValue(constLengte, 0)
     objPat.GeboorteGewicht = ModRange.GetRangeValue(constGebGew, 0)
     objPat.Weeks = ModRange.GetRangeValue(constWeken, 0)
     objPat.Days = ModRange.GetRangeValue(constDagen, 0)
+    
+    dtmAdm = ModRange.GetRangeValue(constOpnDat, ModDate.EmptyDate)
+    dtmBd = ModRange.GetRangeValue(constGebDatum, ModDate.EmptyDate)
+    objPat.SetAdmissionAndBirthDate dtmAdm, dtmBd
     
     Set GetPatientDetails = objPat
 
@@ -189,7 +195,7 @@ Public Sub ClearPatient(blnShowWarn As Boolean)
     End If
     
     If objResult = vbYes Then
-        Application.Cursor = xlWait
+        If blnShowWarn Then Application.Cursor = xlWait
         
         With shtPatData
             For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
@@ -197,20 +203,22 @@ Public Sub ClearPatient(blnShowWarn As Boolean)
             Next intN
         End With
         
-        ClearLab
-        ClearAfspraken
+        ' ClearLab
+        ' ClearAfspraken
         
         ModApplication.SetDateToDayFormula
         ModApplication.SetApplicationTitle
     
-        Application.Cursor = xlDefault
+        If blnShowWarn Then Application.Cursor = xlDefault
     End If
     
 End Sub
 
 Private Sub TestClearPatient()
     
+    Application.Cursor = xlWait
     ClearPatient False
+    Application.Cursor = xlDefault
 
 End Sub
 
@@ -226,13 +234,13 @@ Public Function ValidLengthCm(dblLen As Double) As Boolean
 
 End Function
 
-Public Function ValidBirthDate(dtmBD As Date) As Boolean
+Public Function ValidBirthDate(dtmBd As Date, dtmAdm As Date) As Boolean
 
     Dim dtmMin As Date
     
     dtmMin = DateAdd("y", -100, Date)
     
-    ValidBirthDate = dtmBD <= Date And dtmBD > dtmMin
+    ValidBirthDate = dtmBd <= Date And dtmBd > dtmMin And dtmBd <= dtmAdm
 
 End Function
 
@@ -245,15 +253,6 @@ Public Function ValidAdmissionDate(dtmAdm As Date) As Boolean
 
 End Function
 
-Private Sub TestValidBirthDate()
-
-    MsgBox ValidBirthDate(Date)
-    MsgBox ValidBirthDate(DateAdd("d", 1, Date))
-    MsgBox ValidBirthDate(DateSerial(1901, 1, 1))
-    MsgBox ValidBirthDate(ModDate.EmptyDate)
-
-End Sub
-
 Public Function ValidDagen(intDay As Integer) As Boolean
 
     ValidDagen = intDay >= 0 And intDay < 7
@@ -263,6 +262,12 @@ End Function
 Public Function ValidWeken(intWeek As Integer) As Boolean
 
     ValidWeken = intWeek > 24 And intWeek < 50
+
+End Function
+
+Public Function ValidBirthWeight(intBw As Integer) As Boolean
+
+    ValidBirthWeight = intBw > 400 And intBw < 9999
 
 End Function
 

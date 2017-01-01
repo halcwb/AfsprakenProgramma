@@ -22,9 +22,10 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         Case "btnOpenBed"                                   ' -> Bed Openen
             ModBed.OpenBed
+            ModSheet.SelectPedOrNeoStartSheet
         
         Case "btnSaveBed"                                   ' -> Bed Opslaan
-            ModBed.SluitBed
+            ModBed.CloseBed (True)
             ModSheet.SelectPedOrNeoStartSheet
         
         Case "btnEnterPatient"                              ' -> Patient Gegevens

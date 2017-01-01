@@ -14,6 +14,12 @@ Public Function GetBed() As String
 End Function
 
 Public Sub OpenBed()
+
+    OpenBedAsk True
+
+End Sub
+
+Private Sub OpenBedAsk(blnAsk)
     
     On Error GoTo ErrorOpenBed
 
@@ -25,8 +31,17 @@ Public Sub OpenBed()
     Dim strRange As String
     Dim blnAll As Boolean
     
-    ModPatient.OpenPatientLijst "Selecteer een patient"
     strBed = GetBed()
+    If blnAsk Then
+        ModPatient.OpenPatientLijst "Selecteer een patient"
+    End If
+    
+    If GetBed() = vbNullString Then
+        SetBed strBed
+        Exit Sub
+    End If
+    
+    Application.Cursor = xlWait
     
     strAction = "ModBed.OpenBed"
     strParams = Array(strBed)
@@ -42,7 +57,12 @@ Public Sub OpenBed()
         ModRange.SetRangeValue ModConst.CONST_RANGE_BED, strBed
         
         blnAll = ModRange.CopyTempSheetToNamedRanges()
-        If Not blnAll Then ModMessage.ShowMsgBoxExclam "Niet alle data kon worden teruggezet!" & vbNewLine & "Controleer de afspraken goed"
+        If Not blnAll And blnAsk Then
+            Application.Cursor = xlDefault
+            ModMessage.ShowMsgBoxExclam "Niet alle data kon worden teruggezet!" & vbNewLine & "Controleer de afspraken goed"
+        Else
+            If blnAsk Then Application.Cursor = xlDefault
+        End If
     End If
 
     ModPedTPN.SelectTPN
@@ -52,6 +72,8 @@ Public Sub OpenBed()
     Exit Sub
 
 ErrorOpenBed:
+
+    Application.Cursor = xlDefault
 
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
     ModLog.LogError Err.Description
@@ -64,7 +86,7 @@ Private Sub TestOpenBed()
 
 End Sub
 
-Public Sub SluitBed()
+Public Sub CloseBed(blnAsk As Boolean)
 
     Dim strBed As String
     Dim strNew As String
@@ -74,57 +96,81 @@ Public Sub SluitBed()
     Dim strParams() As Variant
     
     Dim varReply As VbMsgBoxResult
-    Dim colPatienten As Collection
-    Dim frmPatLijst As New FormPatLijst
     
     On Error GoTo CloseBedError
     
     strBed = GetBed()
     
-    If strBed = vbNullString Then Exit Sub
-    
-    strAction = "ModBed.SluitBed"
-    strParams = Array()
+    strAction = "ModBed.CloseBed"
+    strParams = Array(blnAsk, strBed)
     LogActionStart strAction, strParams
     
-    strPrompt = "Patient " & ModPatient.GetPatientString() & " Opslaan op Bed: " & strBed & "?"
-    varReply = ModMessage.ShowMsgBoxYesNo(strPrompt)
+    If strBed = vbNullString Then
+        If blnAsk Then
+            ModPatient.OpenPatientLijst "Selecteer een bed"
+            CloseBed False
+            Exit Sub
+        Else
+            Exit Sub
+        End If
+    End If
+    
+    If blnAsk Then
+        strPrompt = "Patient " & ModPatient.GetPatientString() & " Opslaan op Bed: " & strBed & "?"
+        varReply = ModMessage.ShowMsgBoxYesNo(strPrompt)
+    Else
+        varReply = vbYes
+    End If
 
     If varReply = vbYes Then
         Application.Cursor = xlWait
         
-        If SaveBedToFile(False) Then
-            ModMessage.ShowMsgBoxInfo "Patient is opgeslagen"
+        If SaveBedToFile(strBed, False) Then
+            Application.Cursor = xlDefault
+            ModMessage.ShowMsgBoxInfo "Patient is opgeslagen op bed: " & strBed
+        Else
+            Application.Cursor = xlDefault
+            ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
         End If
-        
-        Application.Cursor = xlDefault
     Else
         varReply = ModMessage.ShowMsgBoxYesNo("Op een ander bed opslaan?")
         
         If varReply = vbYes Then
             ModPatient.OpenPatientLijst "Selecteer een bed"
             
-            If SaveBedToFile(False) Then
-                ModMessage.ShowMsgBoxInfo "Patient is opgeslagen"
-                'Alleen oude verwijderen als oude bed niet "" is
-                If strBed <> vbNullString Then
-                    strNew = GetBed()
+            Application.Cursor = xlWait
+            strNew = GetBed()
+            If Not strNew = "" And SaveBedToFile(strNew, True) Then
+                If strBed <> vbNullString And strBed <> strNew Then
                     SetBed strBed
-                    OpenBed
-                    ModPatient.ClearPatient False
+                    OpenBedAsk False
                     
-                    SaveBedToFile True
+                    ModPatient.ClearPatient False
+                    SaveBedToFile strBed, True
+                    
                     SetBed strNew
-                    OpenBed
+                    OpenBedAsk False
+                    
+                    Application.Cursor = xlDefault
+                    ModMessage.ShowMsgBoxInfo "Patient is overgeplaatst van bed: " & strBed & " naar bed: " & strNew
+                Else
+                    Application.Cursor = xlDefault
+                    ModMessage.ShowMsgBoxInfo "Patient is opgeslagen op bed: " & strBed
+                End If
+            
+            Else
+                Application.Cursor = xlDefault
+                If strNew = "" Then
+                    SetBed strBed
+                    ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
+                Else
+                    ModMessage.ShowMsgBoxExclam "Patient kon niet worden opgeslagen op bed: " & strNew
                 End If
             End If
         End If
     End If
 
     LogActionEnd strAction
-    
-    Set frmPatLijst = Nothing
-    Application.Cursor = xlDefault
     
     Exit Sub
     
@@ -137,7 +183,7 @@ CloseBedError:
 
 End Sub
 
-Public Function SaveBedToFile(blnForce As Boolean) As Boolean
+Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
 
     Dim strDataRange As String
     Dim strTextRange As String
@@ -146,7 +192,6 @@ Public Function SaveBedToFile(blnForce As Boolean) As Boolean
     Dim strMsg As String
     Dim varReply As VbMsgBoxResult
     
-    Dim strBed As String
     Dim strDataFile As String
     Dim strDataName As String
     Dim strTextFile As String
@@ -154,7 +199,6 @@ Public Function SaveBedToFile(blnForce As Boolean) As Boolean
         
     On Error GoTo SaveBedToFileError
     
-    strBed = GetBed()
     If strBed = vbNullString Then Exit Function
     
     strDataFile = ModSetting.GetPatientDataFile(strBed)
@@ -181,10 +225,10 @@ Public Function SaveBedToFile(blnForce As Boolean) As Boolean
     strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.Count)
     strTextRange = "A1:C" + CStr(shtPatDataText.Range("C1").CurrentRegion.Rows.Count)
     
-    FileSystem.SetAttr strDataFile, Attributes:=vbNormal
+    FileSystem.SetAttr strDataFile, Attributes:=vbNormal ' Open Patient Data File
     Application.Workbooks.Open strDataFile, True
     
-    With Workbooks(strDataName)
+    With Workbooks(strDataName) ' Save Patient Data
         .Sheets(1).Cells.Clear
         shtPatData.Range(strDataRange).Copy
         .Sheets(1).Range("A1").PasteSpecial xlPasteValues
@@ -193,9 +237,10 @@ Public Function SaveBedToFile(blnForce As Boolean) As Boolean
     End With
     ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, FileSystem.FileDateTime(strDataFile)
     
-    FileSystem.SetAttr strTextFile, Attributes:=vbNormal
+    FileSystem.SetAttr strTextFile, Attributes:=vbNormal ' Open Patient Text File
     Application.Workbooks.Open strTextFile, True
-    With Workbooks(strTextName)
+    
+    With Workbooks(strTextName) ' Save Patient Text
         .Sheets(1).Cells.Clear
         shtPatDataText.Range(strTextRange).Copy
         .Sheets(1).Range("A1").PasteSpecial xlPasteValues
@@ -211,7 +256,6 @@ Public Function SaveBedToFile(blnForce As Boolean) As Boolean
     
 SaveBedToFileError:
 
-    ModMessage.ShowMsgBoxExclam "Kan " & strDataFile & " nu niet opslaan, probeer dadelijk nog een keer"
     Application.DisplayAlerts = True
     SaveBedToFile = False
 

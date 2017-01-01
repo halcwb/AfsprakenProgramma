@@ -44,12 +44,25 @@ Private Sub Test()
 
 End Sub
 
+Public Function DateToString(ByVal dtmDate As Date) As String
+
+    DateToString = Format(dtmDate, "dd-mmm-yyyy")
+
+End Function
+
+Private Sub TestDateToString()
+
+    MsgBox DateToString(Date)
+
+End Sub
+
 Public Function StringToDate(ByVal strValue As String) As Date
 
     Dim dtmDate As Date
+    Dim intLocale As Integer
     
     On Error GoTo StringToDateError
-    
+        
     dtmDate = CDate(strValue)
     StringToDate = dtmDate
     
@@ -60,6 +73,12 @@ StringToDateError:
     ModLog.LogError "Cannot convert " & strValue & " to a date time"
 
 End Function
+
+Private Sub TestStringToDate()
+
+    MsgBox DateToString(StringToDate("01-02-2017"))
+
+End Sub
 
 
 

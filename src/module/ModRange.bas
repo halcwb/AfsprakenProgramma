@@ -65,20 +65,35 @@ End Function
 
 Public Function NameExists(strName As String) As Boolean
 
-    Dim objName As Name
+'    Dim objName As Name
+'
+'    For Each objName In WbkAfspraken.Names
+'
+'        If objName.Name = strName Then
+'            NameExists = True
+'            Exit Function
+'        End If
+'
+'    Next objName
+
+    On Error GoTo NameExistsError
     
-    For Each objName In WbkAfspraken.Names
+    NameExists = WbkAfspraken.Names(strName).Name = strName
     
-        If objName.Name = strName Then
-            NameExists = True
-            Exit Function
-        End If
+    Exit Function
     
-    Next objName
-    
+NameExistsError:
+
     NameExists = False
 
 End Function
+
+Private Sub TestNameExists()
+
+    MsgBox NameExists("__0_PatNum")
+    MsgBox NameExists("foo")
+
+End Sub
 
 Public Function CreateName(ByVal strName As String, ByVal strGroup As String, ByVal intN As Integer, ByVal intMax As Integer) As String
 
@@ -105,12 +120,12 @@ Public Function SetRangeValue(strRange As String, varValue As Variant) As Boolea
     Dim blnLog As Boolean
     Dim blnSet As Boolean
     
-    blnLog = ModSetting.GetEnableLogging()
 
     If NameExists(strRange) Then
         blnSet = True
         Range(strRange).Value2 = varValue
     Else
+        blnLog = ModSetting.GetEnableLogging()
         blnSet = False
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogPath(), Error, "Could not set " & varValue & " to range: " & strRange
@@ -141,11 +156,10 @@ Public Function GetRangeValue(strRange As String, varDefault As Variant) As Vari
 
     Dim blnLog As Boolean
     
-    blnLog = ModSetting.GetEnableLogging()
-
     If NameExists(strRange) Then
         GetRangeValue = Range(strRange).Value2
     Else
+        blnLog = ModSetting.GetEnableLogging()
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogPath(), Error, "Could not get range value from: " & strRange
         If Not blnLog Then ModLog.DisableLogging
@@ -213,15 +227,15 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet)
     
     shtSheet.UsedRange.Clear
         
-    shtSheet.Cells(1, 1).Value = "RefersTo"
-    shtSheet.Cells(1, 2).Value = "Name"
-    shtSheet.Cells(1, 3).Value = "ReplaceWith"
-    shtSheet.Cells(1, 4).Value = "InPatData"
-    shtSheet.Cells(1, 5).Value = "Value"
-    shtSheet.Cells(1, 6).Value = "IsFormula"
-    shtSheet.Cells(1, 7).Value = "IsData"
-    shtSheet.Cells(1, 8).Value = "IsNeo"
-    shtSheet.Cells(1, 9).Value = "IsPed"
+    shtSheet.Cells(1, 1).Value2 = "RefersTo"
+    shtSheet.Cells(1, 2).Value2 = "Name"
+    shtSheet.Cells(1, 3).Value2 = "ReplaceWith"
+    shtSheet.Cells(1, 4).Value2 = "InPatData"
+    shtSheet.Cells(1, 5).Value2 = "Value"
+    shtSheet.Cells(1, 6).Value2 = "IsFormula"
+    shtSheet.Cells(1, 7).Value2 = "IsData"
+    shtSheet.Cells(1, 8).Value2 = "IsNeo"
+    shtSheet.Cells(1, 9).Value2 = "IsPed"
     
     intN = 2
     strEmpty = Chr(34) & Chr(34)
@@ -237,14 +251,14 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet)
             varValue = Range(objName.Name).Value2
         End If
         
-        shtSheet.Cells(intN, 1).Value = Strings.Replace(objName.RefersTo, "=", "")
-        shtSheet.Cells(intN, 2).Value = objName.Name
+        shtSheet.Cells(intN, 1).Value2 = Strings.Replace(objName.RefersTo, "=", "")
+        shtSheet.Cells(intN, 2).Value2 = objName.Name
         shtSheet.Cells(intN, 4).FormulaLocal = "=IFERROR(VLOOKUP(B" & intN & ";PatData!$A$2:$A$2000;1;);" & strEmpty & ")<>" & strEmpty
-        shtSheet.Cells(intN, 5).Value = varValue
-        shtSheet.Cells(intN, 6).Value = blnIsFormula ' Is Formula
-        shtSheet.Cells(intN, 7).Value = blnIsData ' Is Data
-        shtSheet.Cells(intN, 8).Value = blnIsNeo ' Is Neo Data
-        shtSheet.Cells(intN, 9).Value = blnIsPed ' Is Ped Data
+        shtSheet.Cells(intN, 5).Value2 = varValue
+        shtSheet.Cells(intN, 6).Value2 = blnIsFormula ' Is Formula
+        shtSheet.Cells(intN, 7).Value2 = blnIsData ' Is Data
+        shtSheet.Cells(intN, 8).Value2 = blnIsNeo ' Is Neo Data
+        shtSheet.Cells(intN, 9).Value2 = blnIsPed ' Is Ped Data
         intN = intN + 1
         ' If intN = 100 Then Exit For
     Next objName

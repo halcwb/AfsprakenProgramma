@@ -139,7 +139,7 @@ End Sub
 Public Sub Test_SluitBed()
 
     On Error GoTo Assert:
-    SluitBed
+    ModBed.CloseBed (False)
     
     Exit Sub
 

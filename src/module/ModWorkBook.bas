@@ -1,18 +1,66 @@
 Attribute VB_Name = "ModWorkBook"
 Option Explicit
 
-Private Const constFileReplace = "{File}"
-Private Const constSheetReplace = "{Sheet}"
-Private Const constQuotesReplace = "{QTS}"
-Private Const constNumReplace = "{Num}"
-Private Const constPatNum = "=IF('[{File}]{Sheet}'!$B$2={QTS};{QTS};'[{File}]{Sheet}'!$B$2)"
-Private Const constAchterNaam = "=IF(B{Num}<>{QTS};'[{File}]{Sheet}'!$B$4;{QTS})"
-Private Const constVoorNaam = "=IF(B{Num}<>{QTS};'[{File}]{Sheet}'!$B$5;{QTS})"
-Private Const constGebDat = "=IF(B{Num}<>{QTS};'[{File}]{Sheet}'!$B$6;{QTS})"
+Private Const constFileReplace = "{FILE}"
+Private Const constSheetReplace = "{SHEET}"
+Private Const constNumReplace = "{NUM}"
+Private Const constPatNum = "=IF(ISBLANK('[{FILE}]{SHEET}'!$B$2);$F${NUM};'[{FILE}]{SHEET}'!$B$2)"
+Private Const constAchterNaam = "=IF(ISBLANK(B{NUM});$F${NUM};'[{FILE}]{SHEET}'!$B$4)"
+Private Const constVoorNaam = "=IF(ISBLANK(B{NUM});$F${NUM};'[{FILE}]{SHEET}'!$B$5)"
+Private Const constGebDat = "=IF(ISBLANK(B{NUM});$F${NUM};'[{FILE}]{SHEET}'!$B$6)"
+
+Private Sub TestFormulas()
+
+    Dim varBed As Variant
+    Dim strPatsFile As String
+    Dim intN As Integer
+    Dim strPatNum As String
+    Dim strAchterNaam As String
+    Dim strVoorNaam As String
+    Dim strGebDat As String
+    Dim strFormula As String
+    Dim strDataFile As String
+    Dim strTextFile As String
+    Dim strDataName As String
+        
+    strPatNum = Replace(constPatNum, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+    strAchterNaam = Replace(constAchterNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+    strVoorNaam = Replace(constVoorNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+    strGebDat = Replace(constGebDat, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+            
+    intN = 2
+    For Each varBed In ModSetting.GetPedBeds()
+                
+        strDataFile = ModSetting.GetPatientDataFile(CStr(varBed))
+        strTextFile = ModSetting.GetPatientTextFile(CStr(varBed))
+        strDataName = ModSetting.GetPatientDataWorkBookName(CStr(varBed))
+                        
+        strFormula = Replace(strPatNum, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        ModLog.LogInfo "Set Formula: " & strFormula
+    
+        strFormula = Replace(strAchterNaam, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        ModLog.LogInfo "Set Formula: " & strFormula
+    
+        strFormula = Replace(strVoorNaam, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        ModLog.LogInfo "Set Formula: " & strFormula
+    
+        strFormula = Replace(strGebDat, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        ModLog.LogInfo "Set Formula: " & strFormula
+        
+        intN = intN + 1
+    
+    Next varBed
+    
+End Sub
 
 Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
     
     Dim objWb As Workbook
+    
     Dim strPatsFile As String
     Dim shtPats As Worksheet
     Dim intN As Integer
@@ -22,27 +70,20 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
     Dim strVoorNaam As String
     Dim strGebDat As String
     Dim strFormula As String
-    Dim strQuotes As String
+    
     Dim strDataFile As String
     Dim strTextFile As String
+    Dim strDataName As String
+    
     Dim objDataWb As Workbook
     Dim objTextWb As Workbook
     
     On Error GoTo CreatePatientsWorkBookError
     
-    strQuotes = Chr(34) & Chr(34)
-
-    strPatNum = Replace(strPatNum, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strPatNum = Replace(strPatNum, constQuotesReplace, strQuotes)
-    
-    strAchterNaam = Replace(strAchterNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strAchterNaam = Replace(strAchterNaam, constQuotesReplace, strQuotes)
-    
-    strVoorNaam = Replace(strVoorNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strVoorNaam = Replace(strVoorNaam, constQuotesReplace, strQuotes)
-    
-    strGebDat = Replace(strGebDat, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strGebDat = Replace(strGebDat, constQuotesReplace, strQuotes)
+    strPatNum = Replace(constPatNum, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+    strAchterNaam = Replace(constAchterNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+    strVoorNaam = Replace(constVoorNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+    strGebDat = Replace(constGebDat, constSheetReplace, ModSetting.CONST_DATA_SHEET)
     
     Set objWb = Workbooks.Add
     
@@ -60,6 +101,7 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
                 
         strDataFile = ModSetting.GetPatientDataFile(CStr(varBed))
         strTextFile = ModSetting.GetPatientTextFile(CStr(varBed))
+        strDataName = ModSetting.GetPatientDataWorkBookName(CStr(varBed))
         
         Set objDataWb = Workbooks.Add
         Set objTextWb = Workbooks.Add
@@ -76,22 +118,25 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
         Set objDataWb = Nothing
         Set objTextWb = Nothing
         
+        ModLog.LogInfo "Created: " & strDataFile
+        ModLog.LogInfo "Created: " & strTextFile
+        
         shtPats.Range("A" & intN).Value2 = varBed
         
-        strFormula = Replace(strPatNum, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN - 1)
+        strFormula = Replace(strPatNum, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
         shtPats.Range("B" & intN).FormulaLocal = strFormula
     
-        strFormula = Replace(strAchterNaam, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN - 1)
+        strFormula = Replace(strAchterNaam, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
         shtPats.Range("C" & intN).FormulaLocal = strFormula
     
-        strFormula = Replace(strVoorNaam, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN - 1)
+        strFormula = Replace(strVoorNaam, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
         shtPats.Range("D" & intN).FormulaLocal = strFormula
     
-        strFormula = Replace(strGebDat, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN - 1)
+        strFormula = Replace(strGebDat, constFileReplace, strDataName)
+        strFormula = Replace(strFormula, constNumReplace, intN)
         shtPats.Range("E" & intN).FormulaLocal = strFormula
         
         intN = intN + 1
@@ -102,12 +147,14 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
     SaveWorkBookAsShared objWb, strPatsFile
     objWb.Close
     
+    ModLog.LogInfo "Created: " & strPatsFile
+    
     Exit Sub
     
 CreatePatientsWorkBookError:
 
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
-    ModLog.LogError "Cannot create patients workbook: " & Join(Array(strDataFile, strTextFile), ", ")
+    ModLog.LogError "Cannot create patients workbook: " & Join(Array(strDataFile, strTextFile, strFormula), ", ")
 
 End Sub
 
