@@ -167,23 +167,6 @@ Public Sub EnterPatientDetails()
 
 End Sub
 
-Public Sub CopyPatientData()
-
-    Dim intN As Integer
-    Dim strRange As String
-    Dim varValue As Variant
-        
-    With shtPatData
-        For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
-            strRange = .Cells(intN, 1).Value2
-            varValue = ModRange.GetRangeValue(strRange, Null)
-            
-            .Cells(intN, 2).Value2 = varValue
-        Next intN
-    End With
-    
-End Sub
-
 Public Sub ClearPatient(blnShowWarn As Boolean)
     
     Dim intN As Integer, objResult As VbMsgBoxResult

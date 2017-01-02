@@ -314,5 +314,23 @@ Public Sub GiveNameToRange()
 
 End Sub
 
+Public Sub RefreshPatientData()
+
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim strName As String
+    Dim objName As Name
+    
+    intC = shtPatData.Range("A1").CurrentRegion.Rows.Count - 1
+    For intN = 2 To intC
+        strName = shtPatData.Cells(intN, 1).Value2
+        If NameExists(strName) Then
+            Set objName = WbkAfspraken.Names(strName)
+            shtPatData.Cells(intN, 2).Formula = objName.RefersTo
+        End If
+    Next intN
+
+End Sub
+
 
 

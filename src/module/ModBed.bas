@@ -19,6 +19,28 @@ Public Sub OpenBed()
 
 End Sub
 
+Private Function IsValidBed(strBed As String) As Boolean
+
+    Dim varItem As Variant
+    
+    For Each varItem In ModSetting.GetPedBeds()
+        If CStr(varItem) = strBed Then
+            IsValidBed = True
+            Exit Function
+        End If
+    Next varItem
+    
+    For Each varItem In ModSetting.GetNeoBeds()
+        If CStr(varItem) = strBed Then
+            IsValidBed = True
+            Exit Function
+        End If
+    Next varItem
+    
+    IsValidBed = False
+
+End Function
+
 Private Sub OpenBedAsk(blnAsk)
     
     On Error GoTo ErrorOpenBed
@@ -34,13 +56,16 @@ Private Sub OpenBedAsk(blnAsk)
     strBed = GetBed()
     If blnAsk Then
         ModPatient.OpenPatientLijst "Selecteer een patient"
+        If GetBed() = vbNullString Then ' No bed was selected
+            SetBed strBed ' Put back the old bed
+            Exit Sub      ' And exit sub
+        Else
+            strBed = GetBed()
+        End If
     End If
     
-    If GetBed() = vbNullString Then
-        SetBed strBed
-        Exit Sub
-    End If
-    
+    If Not IsValidBed(strBed) Then Exit Sub
+        
     Application.Cursor = xlWait
     
     strAction = "ModBed.OpenBed"
@@ -106,17 +131,17 @@ Public Sub CloseBed(blnAsk As Boolean)
     LogActionStart strAction, strParams
     
     If strBed = vbNullString Then
-        If blnAsk Then
+        If blnAsk Then     ' No bed selected so ask for a bed
             ModPatient.OpenPatientLijst "Selecteer een bed"
-            CloseBed False
+            CloseBed False ' And try again, but do not ask again
             Exit Sub
-        Else
+        Else               ' No bed selected do not ask, so exit
             Exit Sub
         End If
     End If
     
     If blnAsk Then
-        strPrompt = "Patient " & ModPatient.GetPatientString() & " Opslaan op Bed: " & strBed & "?"
+        strPrompt = "Patient " & ModPatient.GetPatientString() & " opslaan op bed: " & strBed & "?"
         varReply = ModMessage.ShowMsgBoxYesNo(strPrompt)
     Else
         varReply = vbYes
@@ -199,11 +224,15 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
         
     On Error GoTo SaveBedToFileError
     
-    If strBed = vbNullString Then Exit Function
+    ' Guard for invalid bed name
+    If Not IsValidBed(strBed) Then GoTo SaveBedToFileError
     
     strDataFile = ModSetting.GetPatientDataFile(strBed)
     strTextFile = ModSetting.GetPatientTextFile(strBed)
-
+    
+    ' Guard for non existing files
+    If Not ModFile.FileExists(strDataFile) Or Not ModFile.FileExists(strTextFile) Then GoTo SaveBedToFileError
+    
     strDataName = ModSetting.GetPatientDataWorkBookName(strBed)
     strTextName = ModSetting.GetPatientTextWorkBookName(strBed)
     
@@ -219,9 +248,7 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
     End If
     
     Application.DisplayAlerts = False
-    
-    ModPatient.CopyPatientData
-    
+        
     strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.Count)
     strTextRange = "A1:C" + CStr(shtPatDataText.Range("C1").CurrentRegion.Rows.Count)
     
@@ -255,6 +282,8 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
     Exit Function
     
 SaveBedToFileError:
+
+    ModLog.LogError "Could not save bed to files with: " & Join(Array(strBed, strDataFile, strTextFile), ", ")
 
     Application.DisplayAlerts = True
     SaveBedToFile = False

@@ -168,7 +168,10 @@ End Sub
 
 Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, strRange As String, shtTarget As Worksheet) As Boolean
     
-    On Error GoTo ErrFileOpenen
+    On Error GoTo CopyWorkbookRangeToSheetError
+    
+    ' Guard for non existing file
+    If Not ModFile.FileExists(strFile) Then GoTo CopyWorkbookRangeToSheetError
     
     With Application
         .DisplayAlerts = False
@@ -197,12 +200,11 @@ Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, s
         
     Exit Function
     
-ErrFileOpenen:
+CopyWorkbookRangeToSheetError:
 
-    If Workbooks.Count = 2 Then Workbooks.Item(2).Close
+    If Workbooks.Count = 2 Then Workbooks.Item(2).Close ' To Do Improve by che
 
     ModLog.LogError "CopyWorkbookRangeToSheet " & strFile & ", " & strBook & ", " & strRange & ", " & shtTarget.Name
-    ModMessage.ShowMsgBoxExclam "Kan " & strFile & " nu niet openen, probeer dadelijk nog een keer"
     
     Application.DisplayAlerts = True
     CopyWorkbookRangeToSheet = False
