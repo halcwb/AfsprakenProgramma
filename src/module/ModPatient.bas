@@ -89,7 +89,7 @@ Public Function GetPatients() As Collection
     strPatientsName = ModSetting.GetPatientsFileName()
     strPatientsFile = ModSetting.GetPatientsFilePath()
 
-    If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "a1", shtGlobTemp) Then
+    If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "a1", shtGlobTemp, False) Then
         With colPatienten
             For intN = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.Count
                 With shtGlobTemp
@@ -167,9 +167,12 @@ Public Sub EnterPatientDetails()
 
 End Sub
 
-Public Sub ClearPatient(blnShowWarn As Boolean)
+Public Sub ClearPatient(blnShowWarn As Boolean, blnShowProgress As Boolean)
     
-    Dim intN As Integer, objResult As VbMsgBoxResult
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim strJob As String
+    Dim objResult As VbMsgBoxResult
             
     If blnShowWarn Then
         objResult = ModMessage.ShowMsgBoxYesNo("Afspraken echt verwijderen?")
@@ -178,30 +181,27 @@ Public Sub ClearPatient(blnShowWarn As Boolean)
     End If
     
     If objResult = vbYes Then
-        If blnShowWarn Then Application.Cursor = xlWait
         
         With shtPatData
-            For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
+            strJob = "Patient gegevens verwijderen ..."
+            intC = .Range("A1").CurrentRegion.Rows.Count
+            For intN = 2 To intC
+                If blnShowProgress Then ModProgress.SetJobPercentage strJob, intC, intN
                 ModRange.SetRangeValue (.Cells(intN, 1).Value2), .Cells(intN, 3).Value2
             Next intN
         End With
         
-        ' ClearLab
-        ' ClearAfspraken
-        
         ModApplication.SetDateToDayFormula
         ModApplication.SetApplicationTitle
-    
-        If blnShowWarn Then Application.Cursor = xlDefault
     End If
     
 End Sub
 
 Private Sub TestClearPatient()
     
-    Application.Cursor = xlWait
-    ClearPatient False
-    Application.Cursor = xlDefault
+    ModProgress.StartProgress "Test Patient Gegevens Verwijderen"
+    ClearPatient False, True
+    ModProgress.FinishProgress
 
 End Sub
 

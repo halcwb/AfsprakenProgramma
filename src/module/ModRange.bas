@@ -16,19 +16,23 @@ Function GetRow(sheetName As String, searchString As String)
     
 End Function
 
-Public Function CopyTempSheetToNamedRanges() As Boolean
+Public Function CopyTempSheetToNamedRanges(blnShowProgress As Boolean) As Boolean
 
     Dim intN As Integer
+    Dim intC As Integer
     Dim blnAll As Boolean
     Dim strRange As String
     Dim varValue As Variant
     
     blnAll = True
     With shtGlobTemp
-        For intN = 2 To .Range("A1").CurrentRegion.Rows.Count
+        intC = .Range("A1").CurrentRegion.Rows.Count
+        For intN = 2 To intC
             strRange = .Cells(intN, 1).Value2
             varValue = .Cells(intN, 2).Value2
             blnAll = blnAll And ModRange.SetRangeValue(strRange, varValue)
+            
+            If blnShowProgress Then ModProgress.SetJobPercentage "Kopieer Waarden", intC, intN
         Next intN
     End With
         
@@ -212,10 +216,11 @@ Public Function IsNeoDataName(strName As String) As Boolean
 
 End Function
 
-Public Sub WriteNamesToSheet(shtSheet As Worksheet)
+Public Sub WriteNamesToSheet(shtSheet As Worksheet, blnShowProgress As Boolean)
 
     Dim objName As Name
     Dim intN As Integer
+    Dim intC As Integer
     Dim blnIsFormula As Boolean
     Dim blnIsData As Boolean
     Dim blnIsNeo As Boolean
@@ -238,6 +243,7 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet)
     shtSheet.Cells(1, 9).Value2 = "IsPed"
     
     intN = 2
+    intC = WbkAfspraken.Names.Count
     strEmpty = Chr(34) & Chr(34)
     For Each objName In WbkAfspraken.Names
         blnIsFormula = IsFormulaValue(Range(objName.Name).FormulaLocal)
@@ -260,6 +266,8 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet)
         shtSheet.Cells(intN, 8).Value2 = blnIsNeo ' Is Neo Data
         shtSheet.Cells(intN, 9).Value2 = blnIsPed ' Is Ped Data
         intN = intN + 1
+        
+        If blnShowProgress Then ModProgress.SetJobPercentage "Namen Schrijven", intC, intN
         ' If intN = 100 Then Exit For
     Next objName
 
@@ -268,11 +276,12 @@ End Sub
 Public Sub WriteNamesToGlobNames()
 
     Application.ScreenUpdating = False
-    Application.Cursor = xlWait
+    ModProgress.StartProgress "Schrijf Namen naar GlobNames Blad"
 
-    WriteNamesToSheet shtGlobNames
+    WriteNamesToSheet shtGlobNames, True
     
-    Application.Cursor = xlDefault
+    ModProgress.FinishProgress
+    
     Application.ScreenUpdating = True
 
 End Sub
@@ -280,10 +289,14 @@ End Sub
 Public Sub ReplaceRangeNames()
 
     Dim intN As Integer
+    Dim intC As Integer
     Dim strOld As String
     Dim strNew As String
     
-    For intN = 2 To shtGlobNames.Range("A1").CurrentRegion.Rows.Count - 1
+    ModProgress.StartProgress "Namen Vervangen"
+    
+    intC = shtGlobNames.Range("A1").CurrentRegion.Count - 1
+    For intN = 2 To intC
         strNew = shtGlobNames.Cells(intN, 3).Value2
 
         If strNew <> vbNullString Then
@@ -291,9 +304,12 @@ Public Sub ReplaceRangeNames()
             
             WbkAfspraken.Names(strOld).Name = strNew
         End If
+        
+        ModProgress.SetJobPercentage "Vervang", intC, intN
     
     Next intN
     
+    ModProgress.FinishProgress
     ModMessage.ShowMsgBoxExclam "Names have been replaced"
 
 End Sub
@@ -321,14 +337,20 @@ Public Sub RefreshPatientData()
     Dim strName As String
     Dim objName As Name
     
-    intC = shtPatData.Range("A1").CurrentRegion.Rows.Count - 1
+    ModProgress.StartProgress "Ververs Patient Data Blad"
+    
+    intC = shtPatData.Range("A1").CurrentRegion.Rows.Count
     For intN = 2 To intC
         strName = shtPatData.Cells(intN, 1).Value2
         If NameExists(strName) Then
             Set objName = WbkAfspraken.Names(strName)
             shtPatData.Cells(intN, 2).Formula = objName.RefersTo
         End If
+        
+        ModProgress.SetJobPercentage "Ververs", intC, intN
     Next intN
+    
+    ModProgress.FinishProgress
 
 End Sub
 

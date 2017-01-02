@@ -15,7 +15,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModApplication.CloseAfspraken
         
         Case "btnClear"                                     ' -> Alles Verwijderen
-            ModPatient.ClearPatient True
+            ModProgress.StartProgress "Patient Data Verwijderen"
+            ModPatient.ClearPatient True, True
+            ModProgress.FinishProgress
             ModSheet.SelectPedOrNeoStartSheet
         
         'grpBedden                                          ' -- BEDDEN --

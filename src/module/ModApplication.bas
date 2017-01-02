@@ -18,19 +18,27 @@ Public Sub SetToDevelopmentMode()
 
     Dim objSheet As Worksheet
     
-    ModSheet.UnprotectUserInterfaceSheets
-    ModSheet.UnhideNonUserInterfaceSheets
+    ModProgress.StartProgress "Zet in Ontwikkel Modus"
+    
+    ModSheet.UnprotectUserInterfaceSheets True
+    ModSheet.UnhideNonUserInterfaceSheets True
             
     ModSetting.SetDevelopmentMode True
     
+    ModProgress.FinishProgress
+    
     Application.DisplayFormulaBar = True
-    Application.Cursor = xlDefault
 
 End Sub
 
 Public Sub CloseAfspraken()
 
-    Dim strAction As String, strParams() As Variant
+    Dim strAction As String
+    Dim strParams() As Variant
+    
+    Dim intN As Integer
+    Dim intC As Integer
+    
     strAction = "ModApplication.CloseAfspraken"
     strParams = Array()
     
@@ -38,11 +46,15 @@ Public Sub CloseAfspraken()
     
     Dim objWindow As Window
 
-    Application.Cursor = xlWait
+    ModProgress.StartProgress "Afspraken Programma Afsluiten"
     Application.DisplayAlerts = False
     
+    intN = 1
+    intC = Application.Windows.Count
     For Each objWindow In Application.Windows
         SetWindowToCloseApp objWindow
+        ModProgress.SetJobPercentage "Windows Terugzetten", intC, intN
+        intN = intN + 1
     Next
  
     Toolbars("Afspraken").Visible = False
@@ -54,6 +66,7 @@ Public Sub CloseAfspraken()
          If Not blnDontClose Then .Quit
     End With
         
+    ModProgress.FinishProgress
     ModLog.LogActionEnd strAction
             
 End Sub
@@ -99,23 +112,24 @@ Public Sub InitializeAfspraken()
     
     ModLog.LogActionStart strAction, strParams
     
-    Application.Cursor = xlWait
     Application.WindowState = xlMaximized
+    
+    ModProgress.StartProgress "Start Afspraken Programma ... "
     
     ' Setup sheets
     WbkAfspraken.Activate
-    ModSheet.ProtectUserInterfaceSheets
-    ModSheet.HideAndUnProtectNonUserInterfaceSheets
+    ModSheet.ProtectUserInterfaceSheets True
+    ModSheet.HideAndUnProtectNonUserInterfaceSheets True
 
     SetCaptionAndHideBars
     
     ' Clean everything
     ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, vbNullString
     SetDateToDayFormula
-    ModPatient.ClearPatient False       ' Default start with no patient
+    ModPatient.ClearPatient False, True ' Default start with no patient
     ModSetting.SetDevelopmentMode False ' Default development mode is false
     
-    Application.Cursor = xlDefault
+    ModProgress.FinishProgress
     
     ModLog.LogActionEnd strAction
     
@@ -123,7 +137,7 @@ Public Sub InitializeAfspraken()
     
 InitializeError:
     
-    Application.Cursor = xlDefault
+    ModProgress.FinishProgress
 
     strError = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & " Kan de applicatie niet opstarten"
     ModMessage.ShowMsgBoxError strError

@@ -1,6 +1,8 @@
 Attribute VB_Name = "ModAdmin"
 Option Explicit
 
+' ToDo add methods to setup data files and refresh patient data admin jobs
+
 Private Sub SetUpDataDir(arrBeds() As Variant)
     
     Dim strPath As String

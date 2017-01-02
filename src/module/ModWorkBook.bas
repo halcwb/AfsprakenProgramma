@@ -166,32 +166,39 @@ Public Sub SaveWorkBookAsShared(objWorkbook As Workbook, strFile As String)
      
 End Sub
 
-Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, strRange As String, shtTarget As Worksheet) As Boolean
+Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, strRange As String, shtTarget As Worksheet, blnShowProgress As Boolean) As Boolean
+    
+    Dim strJob As String
     
     On Error GoTo CopyWorkbookRangeToSheetError
     
     ' Guard for non existing file
     If Not ModFile.FileExists(strFile) Then GoTo CopyWorkbookRangeToSheetError
     
+    strJob = "Kopieer Data Van File"
     With Application
         .DisplayAlerts = False
         
         ' Clear the target sheet
         shtTarget.Range("A1").CurrentRegion.Clear
+        If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 25
         
         ' Open the workbook
         FileSystem.SetAttr strFile, Attributes:=vbNormal
         .Workbooks.Open strFile, True
         ' Make sure the workbook can be shared
         SaveWorkBookAsShared .Workbooks(strBook), strFile
+        If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 50
         
         ' Copy the range to the target
         .Workbooks(strBook).Sheets(1).Range(strRange).CurrentRegion.Select
         Selection.Copy
         shtTarget.Range("A1").PasteSpecial xlPasteValues
+        If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 75
         
         ' Close the workbook
         .Workbooks(strBook).Close
+        If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 100
         
         .DisplayAlerts = True
     End With

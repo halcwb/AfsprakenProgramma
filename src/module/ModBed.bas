@@ -15,7 +15,9 @@ End Function
 
 Public Sub OpenBed()
 
-    OpenBedAsk True
+    ModProgress.StartProgress "Open Bed"
+    OpenBedAsk True, True
+    ModProgress.FinishProgress
 
 End Sub
 
@@ -41,7 +43,7 @@ Private Function IsValidBed(strBed As String) As Boolean
 
 End Function
 
-Private Sub OpenBedAsk(blnAsk)
+Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
     
     On Error GoTo ErrorOpenBed
 
@@ -65,9 +67,7 @@ Private Sub OpenBedAsk(blnAsk)
     End If
     
     If Not IsValidBed(strBed) Then Exit Sub
-        
-    Application.Cursor = xlWait
-    
+            
     strAction = "ModBed.OpenBed"
     strParams = Array(strBed)
     
@@ -77,28 +77,23 @@ Private Sub OpenBedAsk(blnAsk)
     strBookName = ModSetting.GetPatientDataWorkBookName(strBed)
     strRange = "A1"
     
-    If ModWorkBook.CopyWorkbookRangeToSheet(strFileName, strBookName, strRange, shtGlobTemp) Then
+    If ModWorkBook.CopyWorkbookRangeToSheet(strFileName, strBookName, strRange, shtGlobTemp, True) Then
         ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, FileSystem.FileDateTime(strFileName)
         ModRange.SetRangeValue ModConst.CONST_RANGE_BED, strBed
         
-        blnAll = ModRange.CopyTempSheetToNamedRanges()
+        blnAll = ModRange.CopyTempSheetToNamedRanges(True)
         If Not blnAll And blnAsk Then
-            Application.Cursor = xlDefault
             ModMessage.ShowMsgBoxExclam "Niet alle data kon worden teruggezet!" & vbNewLine & "Controleer de afspraken goed"
         Else
-            If blnAsk Then Application.Cursor = xlDefault
         End If
     End If
 
     ModPedTPN.SelectTPN
-
     ModLog.LogActionEnd strAction
     
     Exit Sub
 
 ErrorOpenBed:
-
-    Application.Cursor = xlDefault
 
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
     ModLog.LogError Err.Description
@@ -146,15 +141,16 @@ Public Sub CloseBed(blnAsk As Boolean)
     Else
         varReply = vbYes
     End If
+    
 
     If varReply = vbYes Then
-        Application.Cursor = xlWait
-        
-        If SaveBedToFile(strBed, False) Then
-            Application.Cursor = xlDefault
+        ModProgress.StartProgress "Bed Opslaan"
+    
+        If SaveBedToFile(strBed, False, True) Then
+            ModProgress.FinishProgress
             ModMessage.ShowMsgBoxInfo "Patient is opgeslagen op bed: " & strBed
         Else
-            Application.Cursor = xlDefault
+            ModProgress.FinishProgress
             ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
         End If
     Else
@@ -163,28 +159,30 @@ Public Sub CloseBed(blnAsk As Boolean)
         If varReply = vbYes Then
             ModPatient.OpenPatientLijst "Selecteer een bed"
             
-            Application.Cursor = xlWait
             strNew = GetBed()
-            If Not strNew = "" And SaveBedToFile(strNew, True) Then
+            ModProgress.StartProgress "Verplaats Patient Naar Bed: " & strNew
+            
+            If Not strNew = "" And SaveBedToFile(strNew, True, True) Then
                 If strBed <> vbNullString And strBed <> strNew Then
                     SetBed strBed
-                    OpenBedAsk False
+                    OpenBedAsk False, True
                     
-                    ModPatient.ClearPatient False
-                    SaveBedToFile strBed, True
+                    ModPatient.ClearPatient False, True
+                    SaveBedToFile strBed, True, True
                     
                     SetBed strNew
-                    OpenBedAsk False
+                    OpenBedAsk False, True
                     
-                    Application.Cursor = xlDefault
+                    ModProgress.FinishProgress
                     ModMessage.ShowMsgBoxInfo "Patient is overgeplaatst van bed: " & strBed & " naar bed: " & strNew
                 Else
-                    Application.Cursor = xlDefault
+                    ModProgress.FinishProgress
                     ModMessage.ShowMsgBoxInfo "Patient is opgeslagen op bed: " & strBed
                 End If
             
             Else
-                Application.Cursor = xlDefault
+                ModProgress.FinishProgress
+                
                 If strNew = "" Then
                     SetBed strBed
                     ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
@@ -201,14 +199,14 @@ Public Sub CloseBed(blnAsk As Boolean)
     
 CloseBedError:
 
-    Application.Cursor = xlDefault
+    ModProgress.FinishProgress
     
     ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & "Kan patient niet opslaan op bed: " & strBed
     ModLog.LogError strAction
 
 End Sub
 
-Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
+Private Function SaveBedToFile(strBed As String, blnForce As Boolean, blnShowProgress As Boolean) As Boolean
 
     Dim strDataRange As String
     Dim strTextRange As String
@@ -221,6 +219,8 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
     Dim strDataName As String
     Dim strTextFile As String
     Dim strTextName As String
+    
+    Dim strProg As String
         
     On Error GoTo SaveBedToFileError
     
@@ -239,11 +239,20 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
     dtmVersion = FileSystem.FileDateTime(strDataFile)
     dtmCurrent = ModRange.GetRangeValue(ModConst.CONST_RANGE_VERSIE, Now())
     
+    If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 33
+    
     If Not dtmVersion = dtmCurrent And Not blnForce Then
+        If blnShowProgress Then
+            strProg = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+    
         strMsg = strMsg & "De afspraken zijn inmiddels gewijzig!" & vbNewLine
         strMsg = strMsg & "Wilt u toch de afspraken opslaan?"
         varReply = ModMessage.ShowMsgBoxYesNo(strMsg)
         
+        If blnShowProgress Then ModProgress.StartProgress strProg
+
         If varReply = vbNo Then Exit Function
     End If
     
@@ -264,6 +273,8 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
     End With
     ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, FileSystem.FileDateTime(strDataFile)
     
+    If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 66
+    
     FileSystem.SetAttr strTextFile, Attributes:=vbNormal ' Open Patient Text File
     Application.Workbooks.Open strTextFile, True
     
@@ -275,6 +286,7 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean) As Boolean
         .Close
     End With
             
+    If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 100
     Application.DisplayAlerts = True
         
     SaveBedToFile = True

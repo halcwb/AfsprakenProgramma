@@ -78,7 +78,7 @@ End Sub
 Public Sub Test_ClearPatient()
 
     On Error GoTo Assert:
-    ClearPatient True
+    ClearPatient True, True
     
     Exit Sub
 
@@ -324,7 +324,7 @@ Sub TestTakenMetaVision()
 End Sub
 
 Sub TestVerwijderen()
-    ClearPatient True
+    ClearPatient True, True
 End Sub
 
 Public Sub TestWorkBookName()

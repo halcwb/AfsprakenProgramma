@@ -48,68 +48,105 @@ Public Function GetNonInterfaceSheets() As Collection
 
 End Function
 
-Public Sub HideAndUnProtectNonUserInterfaceSheets()
+Public Sub UnhideNonUserInterfaceSheets(blnShowProgress As Boolean)
 
-    Dim col As New Collection
-    Dim intCount As Integer
+    Dim colShts As Collection
+    Dim intN As Integer
+    Dim intC As Integer
     
-    Set col = GetNonInterfaceSheets()
+    Set colShts = GetNonInterfaceSheets()
+    intN = 1
+    intC = colShts.Count
     
-    For intCount = 1 To col.Count
-        With col(intCount)
-            .Visible = xlVeryHidden
-            .Unprotect PASSWORD:=CONST_PASSWORD
+    For intN = 1 To intC
+    
+        With colShts(intN)
+            .Visible = True
         End With
-    Next intCount
+        
+        If blnShowProgress Then ModProgress.SetJobPercentage "Verberg Bladen", intC, intN
 
-    Set col = Nothing
+    Next intN
+
+    Set colShts = Nothing
 
 End Sub
 
-Public Sub UnprotectUserInterfaceSheets()
+
+Public Sub HideAndUnProtectNonUserInterfaceSheets(blnShowProgress As Boolean)
+
+    Dim colShts As Collection
+    Dim intN As Integer
+    Dim intC As Integer
+    
+    Set colShts = GetNonInterfaceSheets()
+    intN = 1
+    intC = colShts.Count
+    
+    For intN = 1 To intC
+    
+        With colShts(intN)
+            .Visible = xlVeryHidden
+            .Unprotect PASSWORD:=CONST_PASSWORD
+        End With
+        
+        If blnShowProgress Then ModProgress.SetJobPercentage "Verberg Bladen", intC, intN
+
+    Next intN
+
+    Set colShts = Nothing
+
+End Sub
+
+Public Sub UnprotectUserInterfaceSheets(blnShowProgress As Boolean)
 
     Dim objItem As Worksheet
+    Dim colShts As Collection
+    Dim intN As Integer
+    Dim intC As Integer
     
-    For Each objItem In GetUserInterfaceSheets()
+    Set colShts = GetUserInterfaceSheets()
+    intN = 1
+    intC = colShts.Count
+    For Each objItem In colShts
+    
         With objItem
             .EnableSelection = xlNoRestrictions
             .DisplayPageBreaks = True
             .Unprotect ModConst.CONST_PASSWORD
         End With
         
+        If blnShowProgress Then ModProgress.SetJobPercentage "Verwijder Beveiliging", intC, intN
+        
     Next objItem
+            
+    Set colShts = Nothing
             
 End Sub
 
-Public Sub ProtectUserInterfaceSheets()
+Public Sub ProtectUserInterfaceSheets(blnShowProgress As Boolean)
             
     Dim objItem As Worksheet
+    Dim colShts As Collection
+    Dim intN As Integer
+    Dim intC As Integer
     
-    For Each objItem In GetUserInterfaceSheets()
+    Set colShts = GetUserInterfaceSheets()
+    intN = 1
+    intC = colShts.Count
+    For Each objItem In colShts
+    
         With objItem
             .EnableSelection = xlNoSelection
             .DisplayPageBreaks = False
             .Protect ModConst.CONST_PASSWORD
         End With
         
+        If blnShowProgress Then ModProgress.SetJobPercentage "Zet Beveiliging", intC, intN
+        
     Next objItem
 
-End Sub
-
-Public Sub UnhideNonUserInterfaceSheets()
-
-    Dim col As New Collection
-    Dim intCount As Integer
-    
-    Set col = GetNonInterfaceSheets()
-    
-    For intCount = 1 To col.Count
-        With col(intCount)
-            .Visible = True
-        End With
-    Next intCount
-
-    Set col = Nothing
+    Set colShts = Nothing
 
 End Sub
 
