@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormOpmerking
    ClientHeight    =   1904
    ClientLeft      =   42
    ClientTop       =   329
-   ClientWidth     =   8211.001
+   ClientWidth     =   8211
    OleObjectBlob   =   "FormOpmerking.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -30,6 +30,12 @@ End Sub
 Private Sub UserForm_Activate()
 
     txtOpmerking.SetFocus
+
+End Sub
+
+Public Sub SetText(strText As String)
+
+    txtOpmerking.Text = IIf(strText = "0", vbNullString, strText)
 
 End Sub
 

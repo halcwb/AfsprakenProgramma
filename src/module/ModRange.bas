@@ -147,7 +147,7 @@ Public Sub SetRangeFormula(strRange As String, strFormula As String)
     blnLog = ModSetting.GetEnableLogging()
 
     If NameExists(strRange) Then
-        Range(strRange).FormulaLocal = strFormula
+        Range(strRange).Formula = strFormula
     Else
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogPath(), Error, "Could not set " & strFormula & " to range: " & strRange
@@ -246,20 +246,20 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet, blnShowProgress As Boolean)
     intC = WbkAfspraken.Names.Count
     strEmpty = Chr(34) & Chr(34)
     For Each objName In WbkAfspraken.Names
-        blnIsFormula = IsFormulaValue(Range(objName.Name).FormulaLocal)
+        blnIsFormula = IsFormulaValue(Range(objName.Name).Formula)
         blnIsData = IsDataName(objName.Name)
         blnIsNeo = IsNeoDataName(objName.Name)
         blnIsPed = IsPedDataName(objName.Name)
         
         If blnIsFormula Then
-            varValue = "F:" & Range(objName.Name).FormulaLocal
+            varValue = "F:" & Range(objName.Name).Formula
         Else
             varValue = Range(objName.Name).Value2
         End If
         
         shtSheet.Cells(intN, 1).Value2 = Strings.Replace(objName.RefersTo, "=", "")
         shtSheet.Cells(intN, 2).Value2 = objName.Name
-        shtSheet.Cells(intN, 4).FormulaLocal = "=IFERROR(VLOOKUP(B" & intN & ";PatData!$A$2:$A$2000;1;);" & strEmpty & ")<>" & strEmpty
+        shtSheet.Cells(intN, 4).Formula = "=IFERROR(VLOOKUP(B" & intN & ",PatData!$A$2:$A$2000,1,)," & strEmpty & ")<>" & strEmpty
         shtSheet.Cells(intN, 5).Value2 = varValue
         shtSheet.Cells(intN, 6).Value2 = blnIsFormula ' Is Formula
         shtSheet.Cells(intN, 7).Value2 = blnIsData ' Is Data

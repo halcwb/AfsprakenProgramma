@@ -4,11 +4,24 @@ Option Explicit
 ' Write strText to a file
 ' Creates the file if it doesn't exist
 ' Appends the text to the file if it does exist
-Public Sub AppendToFile(strFile As String, strText As String)
+Public Sub AppendToFile(ByVal strFile As String, ByVal strText As String)
+
+    Dim strError As String
+
+    On Error GoTo AppenToFileError
 
     Open strFile For Append As #1
     Write #1, strText
     Close #1
+    
+    Exit Sub
+    
+AppenToFileError:
+
+    strError = "AppenToFileError" & vbNewLine
+    strError = strError & "Kan '" & strText & "' niet wegschrijven naar '" & strFile & "'"
+    strError = strError & vbNewLine & ModConst.CONST_DEFAULTERROR_MSG
+    ModMessage.ShowMsgBoxError strError
 
 End Sub
 
@@ -17,9 +30,22 @@ End Sub
 ' Overwrites the file if it does exist
 Public Sub WriteToFile(strFile As String, ByVal strText As String)
 
+    Dim strError As String
+
+    On Error GoTo WriteToFileError
+
     Open strFile For Output As #1
     Write #1, strText
     Close #1
+    
+    Exit Sub
+
+WriteToFileError:
+
+    strError = "WriteToFileError" & vbNewLine
+    strError = strError & "Kan '" & strText & "' niet wegschrijven naar '" & strFile & "'"
+    strError = strError & vbNewLine & ModConst.CONST_DEFAULTERROR_MSG
+    ModMessage.ShowMsgBoxError strError
 
 End Sub
 

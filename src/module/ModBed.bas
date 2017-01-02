@@ -48,6 +48,7 @@ Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
     On Error GoTo ErrorOpenBed
 
     Dim strBed As String
+    Dim strTitle As String
     Dim strAction As String
     Dim strParams() As Variant
     Dim strFileName As String
@@ -57,12 +58,19 @@ Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
     
     strBed = GetBed()
     If blnAsk Then
+        If blnShowProgress Then
+            strTitle = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+    
         ModPatient.OpenPatientLijst "Selecteer een patient"
         If GetBed() = vbNullString Then ' No bed was selected
             SetBed strBed ' Put back the old bed
             Exit Sub      ' And exit sub
         Else
             strBed = GetBed()
+            
+            If blnShowProgress Then ModProgress.StartProgress strTitle
         End If
     End If
     
@@ -83,7 +91,14 @@ Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
         
         blnAll = ModRange.CopyTempSheetToNamedRanges(True)
         If Not blnAll And blnAsk Then
+            If blnShowProgress Then
+                strTitle = FormProgress.Caption
+                ModProgress.FinishProgress
+            End If
+        
             ModMessage.ShowMsgBoxExclam "Niet alle data kon worden teruggezet!" & vbNewLine & "Controleer de afspraken goed"
+        
+            If blnShowProgress Then ModProgress.StartProgress strTitle
         Else
         End If
     End If

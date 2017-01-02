@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormTekstInvoer
    ClientHeight    =   1561
    ClientLeft      =   42
    ClientTop       =   329
-   ClientWidth     =   8463.001
+   ClientWidth     =   8463
    OleObjectBlob   =   "FormTekstInvoer.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

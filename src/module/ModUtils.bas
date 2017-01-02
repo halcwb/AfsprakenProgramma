@@ -177,6 +177,20 @@ Public Function CorrectNumberAscii(ByVal intKey As Integer) As Integer
 
 End Function
 
+Public Function OnlyNumericAscii(ByVal intKey As Integer) As Integer
+
+    If intKey >= 48 And intKey <= 57 Then
+        ' Key ascii is OK
+    Else
+        ' Not a numeric ascii
+        intKey = 0
+        Beep
+    End If
+    
+    OnlyNumericAscii = intKey
+
+End Function
+
 
 Public Sub RunTestCmd()
     Dim strArgs(1) As String

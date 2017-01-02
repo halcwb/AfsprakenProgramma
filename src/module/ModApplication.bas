@@ -2,6 +2,7 @@ Attribute VB_Name = "ModApplication"
 Option Explicit
 
 Private blnDontClose As Boolean
+Private blnCloseHaseRun As Boolean
 
 Public Enum EnumAppLanguage
     Dutch = 1043
@@ -39,12 +40,15 @@ Public Sub CloseAfspraken()
     Dim intN As Integer
     Dim intC As Integer
     
+    Dim objWindow As Window
+    
+    If blnCloseHaseRun Then Exit Sub
+    
     strAction = "ModApplication.CloseAfspraken"
     strParams = Array()
     
     ModLog.LogActionStart strAction, strParams
     
-    Dim objWindow As Window
 
     ModProgress.StartProgress "Afspraken Programma Afsluiten"
     Application.DisplayAlerts = False
@@ -63,12 +67,15 @@ Public Sub CloseAfspraken()
          .Caption = vbNullString
          .DisplayFormulaBar = True
          .Cursor = xlDefault
-         If Not blnDontClose Then .Quit
     End With
         
     ModProgress.FinishProgress
     ModLog.LogActionEnd strAction
+    
+    blnCloseHaseRun = True
             
+    If Not blnDontClose Then Application.Quit
+
 End Sub
 
 Private Sub SetWindow(objWindow As Window, blnDisplay As Boolean)
@@ -115,12 +122,14 @@ Public Sub InitializeAfspraken()
     Application.WindowState = xlMaximized
     
     ModProgress.StartProgress "Start Afspraken Programma ... "
-    
+        
     ' Setup sheets
     WbkAfspraken.Activate
     ModSheet.ProtectUserInterfaceSheets True
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
+    ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)
 
+    ' Setup Excel Application
     SetCaptionAndHideBars
     
     ' Clean everything

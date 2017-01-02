@@ -4,10 +4,10 @@ Option Explicit
 Private Const constFileReplace = "{FILE}"
 Private Const constSheetReplace = "{SHEET}"
 Private Const constNumReplace = "{NUM}"
-Private Const constPatNum = "=IF(ISBLANK('[{FILE}]{SHEET}'!$B$2);$F${NUM};'[{FILE}]{SHEET}'!$B$2)"
-Private Const constAchterNaam = "=IF(ISBLANK(B{NUM});$F${NUM};'[{FILE}]{SHEET}'!$B$4)"
-Private Const constVoorNaam = "=IF(ISBLANK(B{NUM});$F${NUM};'[{FILE}]{SHEET}'!$B$5)"
-Private Const constGebDat = "=IF(ISBLANK(B{NUM});$F${NUM};'[{FILE}]{SHEET}'!$B$6)"
+Private Const constPatNum = "=IF(ISBLANK('{FILE}{SHEET}'!$B$2),$F${NUM},'{FILE}{SHEET}'!$B$2)"
+Private Const constAchterNaam = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$4)"
+Private Const constVoorNaam = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$5)"
+Private Const constGebDat = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$6)"
 
 Private Sub TestFormulas()
 
@@ -35,19 +35,19 @@ Private Sub TestFormulas()
         strTextFile = ModSetting.GetPatientTextFile(CStr(varBed))
         strDataName = ModSetting.GetPatientDataWorkBookName(CStr(varBed))
                         
-        strFormula = Replace(strPatNum, constFileReplace, strDataName)
+        strFormula = Replace(strPatNum, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
         ModLog.LogInfo "Set Formula: " & strFormula
     
-        strFormula = Replace(strAchterNaam, constFileReplace, strDataName)
+        strFormula = Replace(strAchterNaam, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
         ModLog.LogInfo "Set Formula: " & strFormula
     
-        strFormula = Replace(strVoorNaam, constFileReplace, strDataName)
+        strFormula = Replace(strVoorNaam, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
         ModLog.LogInfo "Set Formula: " & strFormula
     
-        strFormula = Replace(strGebDat, constFileReplace, strDataName)
+        strFormula = Replace(strGebDat, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
         ModLog.LogInfo "Set Formula: " & strFormula
         
@@ -57,13 +57,14 @@ Private Sub TestFormulas()
     
 End Sub
 
-Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
+Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String, blnShowProgress As Boolean)
     
     Dim objWb As Workbook
     
     Dim strPatsFile As String
     Dim shtPats As Worksheet
     Dim intN As Integer
+    Dim intC As Integer
     Dim varBed As Variant
     Dim strPatNum As String
     Dim strAchterNaam As String
@@ -97,6 +98,7 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
     shtPats.Range("E1").Value2 = "Geboortedatum"
     
     intN = 2
+    intC = UBound(arrBeds)
     For Each varBed In arrBeds
                 
         strDataFile = ModSetting.GetPatientDataFile(CStr(varBed))
@@ -123,22 +125,25 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String)
         
         shtPats.Range("A" & intN).Value2 = varBed
         
-        strFormula = Replace(strPatNum, constFileReplace, strDataName)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("B" & intN).FormulaLocal = strFormula
-    
-        strFormula = Replace(strAchterNaam, constFileReplace, strDataName)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("C" & intN).FormulaLocal = strFormula
-    
-        strFormula = Replace(strVoorNaam, constFileReplace, strDataName)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("D" & intN).FormulaLocal = strFormula
-    
-        strFormula = Replace(strGebDat, constFileReplace, strDataName)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("E" & intN).FormulaLocal = strFormula
+        strDataFile = Replace(strDataFile, strDataName, "[" & strDataName & "]")
         
+        strFormula = Replace(strPatNum, constFileReplace, strDataFile)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        shtPats.Range("B" & intN).Formula = strFormula
+    
+        strFormula = Replace(strAchterNaam, constFileReplace, strDataFile)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        shtPats.Range("C" & intN).Formula = strFormula
+    
+        strFormula = Replace(strVoorNaam, constFileReplace, strDataFile)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        shtPats.Range("D" & intN).Formula = strFormula
+    
+        strFormula = Replace(strGebDat, constFileReplace, strDataFile)
+        strFormula = Replace(strFormula, constNumReplace, intN)
+        shtPats.Range("E" & intN).Formula = strFormula
+        
+        If blnShowProgress Then ModProgress.SetJobPercentage "Created " & CStr(varBed), intN - 1, intC
         intN = intN + 1
     
     Next varBed

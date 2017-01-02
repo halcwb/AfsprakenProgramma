@@ -41,13 +41,13 @@ End Sub
 ' --- Individual Tests --
 
 
-Public Sub Test_CanPrescribeAdrenaline()
+Private Sub Test_CanPrescribeAdrenaline()
 
     MsgBox shtPedGuiMedIV.Shapes.Count
 
 End Sub
 
-Public Sub Test_Open()
+Private Sub Test_Open()
 
     On Error GoTo Assert:
     
@@ -62,7 +62,7 @@ Assert:
 End Sub
 
 
-Public Sub Test_Sluit()
+Private Sub Test_Sluit()
 
     On Error GoTo Assert:
     CloseAfspraken
@@ -75,7 +75,7 @@ Assert:
 
 End Sub
 
-Public Sub Test_ClearPatient()
+Private Sub Test_ClearPatient()
 
     On Error GoTo Assert:
     ClearPatient True, True
@@ -88,7 +88,7 @@ Assert:
 
 End Sub
 
-Public Sub Test_GetPatientDataPath()
+Private Sub Test_GetPatientDataPath()
     
     Dim strPath As String
     Dim strFile As String
@@ -102,7 +102,7 @@ Public Sub Test_GetPatientDataPath()
 
 End Sub
 
-Public Sub Test_GetPatientDataFile()
+Private Sub Test_GetPatientDataFile()
 
     Dim strBed As String, strResult As String, strFile As String
     strBed = "2.9"
@@ -114,7 +114,7 @@ Public Sub Test_GetPatientDataFile()
 
 End Sub
 
-Public Sub Test_GetPatientWorkBookName()
+Private Sub Test_GetPatientWorkBookName()
 
     Dim strBed As String
     strBed = "2.9"
@@ -124,7 +124,7 @@ Public Sub Test_GetPatientWorkBookName()
 End Sub
 
 
-Public Sub Test_OpenBed()
+Private Sub Test_OpenBed()
 
     Dim strBed As String
     
@@ -136,7 +136,7 @@ Public Sub Test_OpenBed()
 
 End Sub
 
-Public Sub Test_SluitBed()
+Private Sub Test_SluitBed()
 
     On Error GoTo Assert:
     ModBed.CloseBed (False)
@@ -149,7 +149,7 @@ Assert:
 
 End Sub
 
-Public Sub Test_CanOpenCloseWorkbook()
+Private Sub Test_CanOpenCloseWorkbook()
     
     Dim strFileName As String, strName As String, intCount As Integer
     
@@ -167,7 +167,7 @@ Public Sub Test_CanOpenCloseWorkbook()
 
 End Sub
 
-Public Sub Test_CanReadFormulariumDb()
+Private Sub Test_CanReadFormulariumDb()
 
     Dim objForm As ClassFormularium
     Dim intCount As Integer
@@ -184,7 +184,7 @@ Public Sub Test_CanReadFormulariumDb()
 End Sub
 
 
-Public Sub Test_CountInterfaceSheets()
+Private Sub Test_CountInterfaceSheets()
 
     Dim intCount As Integer
     
@@ -194,7 +194,7 @@ Public Sub Test_CountInterfaceSheets()
 
 End Sub
 
-Public Sub Test_CountCalculationSheets()
+Private Sub Test_CountCalculationSheets()
 
     Dim intCount As Integer
     
@@ -294,8 +294,7 @@ Private Sub UnlockAllA1Cells()
     Next
 End Sub
 
-
-Sub GetAllNamedRangesOnCurrentWorksheet()
+Private Sub GetAllNamedRangesOnCurrentWorksheet()
     Dim curSheet As Worksheet
     Dim x As Name
     Set curSheet = ActiveSheet
@@ -308,7 +307,7 @@ Sub GetAllNamedRangesOnCurrentWorksheet()
     
 End Sub
 
-Sub TestTakenMetaVision()
+Private Sub TestTakenMetaVision()
     Dim strTaak As String
     Dim strAfspraak As String
     Dim strTaak2 As String
@@ -323,11 +322,11 @@ Sub TestTakenMetaVision()
     If strTaak2 = strAfspraak2 Then MsgBox "Hetzelfde!"
 End Sub
 
-Sub TestVerwijderen()
+Private Sub TestVerwijderen()
     ClearPatient True, True
 End Sub
 
-Public Sub TestWorkBookName()
+Private Sub TestWorkBookName()
 
     MsgBox ActiveWorkbook.Name
 

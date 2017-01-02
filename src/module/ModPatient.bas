@@ -13,6 +13,59 @@ Private Const constDagen = "_Pat_Dagen"
 Private Const constWeken = "_Pat_Weken"
 Private Const constGebGew = "_Pat_GebGew"
 
+Public Sub VoerGewichtIn()
+
+    Dim frmGewichtInvoer As New FormInvoerNumeriek
+    Dim objPatient As New ClassPatientDetails
+    
+    With frmGewichtInvoer
+        .Caption = "Gewicht invoeren ..."
+        .lblParameter.Caption = "Gewicht:"
+        .lblEenheid = "kg"
+        .txtWaarde = ModRange.GetRangeValue(constGewicht, 0) / 10
+        .Show
+        If .txtWaarde.Text <> vbNullString Then
+            objPatient.Gewicht = .txtWaarde.Text
+            If Not IsNull(objPatient.Gewicht) Then
+                ModRange.SetRangeValue constGewicht, objPatient.Gewicht * 10
+                
+            End If
+        End If
+        .txtWaarde = vbNullString
+    End With
+    
+    SelectTPN
+    
+    Set objPatient = Nothing
+    Set frmGewichtInvoer = Nothing
+
+End Sub
+
+Public Sub VoerLengteIn()
+
+    Dim frmLengteInvoer As New FormInvoerNumeriek
+    Dim objPatient As New ClassPatientDetails
+    
+    With frmLengteInvoer
+        .Caption = "Lengte invoeren ..."
+        .lblParameter.Caption = "Lengte:"
+        .lblEenheid = "cm"
+        .txtWaarde = ModRange.GetRangeValue(constLengte, 0)
+        .Show
+        If .txtWaarde.Text <> vbNullString Then
+            objPatient.Lengte = .txtWaarde.Text
+            If Not IsNull(objPatient.Lengte) Then
+                ModRange.SetRangeValue constLengte, objPatient.Lengte
+            End If
+        End If
+        .txtWaarde = vbNullString
+    End With
+    
+    Set objPatient = Nothing
+    Set frmLengteInvoer = Nothing
+
+End Sub
+
 Public Function GetGewichtFromRange() As Double
 
     GetGewichtFromRange = Val(ModRange.GetRangeValue(constGewicht, 0)) / 10
@@ -171,16 +224,23 @@ Public Sub ClearPatient(blnShowWarn As Boolean, blnShowProgress As Boolean)
     
     Dim intN As Integer
     Dim intC As Integer
+    Dim strTitle As String
     Dim strJob As String
     Dim objResult As VbMsgBoxResult
             
     If blnShowWarn Then
+        If blnShowProgress Then
+            strTitle = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+        
         objResult = ModMessage.ShowMsgBoxYesNo("Afspraken echt verwijderen?")
     Else
         objResult = vbYes
     End If
     
     If objResult = vbYes Then
+        If blnShowProgress Then ModProgress.StartProgress strTitle
         
         With shtPatData
             strJob = "Patient gegevens verwijderen ..."

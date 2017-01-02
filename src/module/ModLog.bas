@@ -96,7 +96,7 @@ Public Sub LogActionEnd(strAction As String)
     
 End Sub
 
-Public Sub LogToFile(strFile As String, enmLevel As LogLevel, strMsg As String)
+Public Sub LogToFile(ByVal strFile As String, enmLevel As LogLevel, strMsg As String)
     
     If Not ModSetting.GetEnableLogging() Then Exit Sub
 

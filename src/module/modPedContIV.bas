@@ -2,8 +2,11 @@ Attribute VB_Name = "modPedContIV"
 Option Explicit
 
 Private Const constTblMed = "tblMedicationContIV"
+Private Const constMedIVKeuze = "_Ped_MedIV_Keuze_"
+Private Const constMedIVSterkte = "_Ped_MedIV_Sterkte_"
+Private Const constMedIVOpm = "_Ped_MedIV_Opm"
 
-Sub SetMedContIVToStandardItem(intRegel As Integer)
+Private Sub SetMedContIVToStandardItem(intRegel As Integer)
 
     Dim strMedicament As String
     Dim strMedSterkte As String
@@ -284,6 +287,67 @@ End Sub
 Public Sub SetMedContIVOplossing_10()
     
     SetMedContIVOplossingItem 10
+
+End Sub
+
+Private Sub MedIVInvoer(intN As Integer)
+
+    Dim strMed As String, strSterkte As String
+    Dim frmMedIV As New FormMedIV
+    
+    frmMedIV.Show
+    
+    strMed = frmMedIV.txtMedicament.Text
+    strSterkte = frmMedIV.txtSterkte.Text
+    ModRange.SetRangeValue constMedIVKeuze & intN, strMed
+    ModRange.SetRangeValue constMedIVSterkte & intN, strSterkte
+    
+    Set frmMedIV = Nothing
+        
+End Sub
+
+Public Sub MedIV_11()
+
+    MedIVInvoer 11
+        
+End Sub
+
+Public Sub MedIV_12()
+    
+    MedIVInvoer 12
+
+End Sub
+
+Public Sub MedIV_13()
+    
+    MedIVInvoer 13
+
+End Sub
+
+Public Sub MedIV_14()
+    
+    MedIVInvoer 14
+
+End Sub
+
+Public Sub MedIV_15()
+    
+    MedIVInvoer 15
+
+End Sub
+
+Public Sub PedContIV_Opm()
+
+    Dim frmOpmerking As New FormOpmerking
+    
+    frmOpmerking.SetText ModRange.GetRangeValue(constMedIVOpm, vbNullString)
+    frmOpmerking.Show
+    
+    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
+        ModRange.SetRangeValue constMedIVOpm, frmOpmerking.txtOpmerking.Text
+    End If
+    
+    Set frmOpmerking = Nothing
 
 End Sub
 

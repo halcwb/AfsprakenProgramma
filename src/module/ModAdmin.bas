@@ -10,10 +10,12 @@ Private Sub SetUpDataDir(arrBeds() As Variant)
     strPath = ModSetting.GetPatientDataPath()
     
     Application.DisplayAlerts = False
+    ModProgress.StartProgress "Opzetten Data Files"
 
     ModFile.DeleteAllFilesInDir strPath
-    CreateDataWorkBooks arrBeds, strPath
+    ModWorkBook.CreateDataWorkBooks arrBeds, strPath, True
     
+    ModProgress.FinishProgress
     Application.DisplayAlerts = True
 
 End Sub
