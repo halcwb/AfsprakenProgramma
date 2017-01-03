@@ -51,6 +51,7 @@ End Function
 Public Sub UnhideNonUserInterfaceSheets(blnShowProgress As Boolean)
 
     Dim colShts As Collection
+    Dim shtSheet As Worksheet
     Dim intN As Integer
     Dim intC As Integer
     
@@ -58,24 +59,23 @@ Public Sub UnhideNonUserInterfaceSheets(blnShowProgress As Boolean)
     intN = 1
     intC = colShts.Count
     
-    For intN = 1 To intC
+    For Each shtSheet In colShts
     
-        With colShts(intN)
-            .Visible = True
-        End With
+        shtSheet.Visible = True
         
         If blnShowProgress Then ModProgress.SetJobPercentage "Verberg Bladen", intC, intN
+        intN = intN + 1
 
-    Next intN
+    Next shtSheet
 
     Set colShts = Nothing
 
 End Sub
 
-
 Public Sub HideAndUnProtectNonUserInterfaceSheets(blnShowProgress As Boolean)
 
     Dim colShts As Collection
+    Dim shtSheet As Worksheet
     Dim intN As Integer
     Dim intC As Integer
     
@@ -83,16 +83,17 @@ Public Sub HideAndUnProtectNonUserInterfaceSheets(blnShowProgress As Boolean)
     intN = 1
     intC = colShts.Count
     
-    For intN = 1 To intC
+    For Each shtSheet In colShts
     
-        With colShts(intN)
+        With shtSheet
             .Visible = xlVeryHidden
-            .Unprotect PASSWORD:=CONST_PASSWORD
+            .Unprotect Password:=CONST_PASSWORD
         End With
         
         If blnShowProgress Then ModProgress.SetJobPercentage "Verberg Bladen", intC, intN
+        intN = intN + 1
 
-    Next intN
+    Next shtSheet
 
     Set colShts = Nothing
 
@@ -111,6 +112,7 @@ Public Sub UnprotectUserInterfaceSheets(blnShowProgress As Boolean)
     For Each objItem In colShts
     
         With objItem
+            .Visible = xlSheetVisible
             .EnableSelection = xlNoRestrictions
             .DisplayPageBreaks = True
             .Unprotect ModConst.CONST_PASSWORD
@@ -137,6 +139,7 @@ Public Sub ProtectUserInterfaceSheets(blnShowProgress As Boolean)
     For Each objItem In colShts
     
         With objItem
+            .Visible = xlSheetVisible
             .EnableSelection = xlNoSelection
             .DisplayPageBreaks = False
             .Protect ModConst.CONST_PASSWORD
@@ -193,7 +196,7 @@ Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet)
     Dim strPeli As String
     Dim blnIsDevelop As Boolean
     
-    strPath = Application.ActiveWorkbook.Path
+    strPath = WbkAfspraken.Path
     strPeli = ModSetting.GetPedDir()
     blnIsDevelop = ModSetting.IsDevelopmentMode()
     
@@ -207,7 +210,7 @@ End Sub
 
 Public Sub SelectPedOrNeoStartSheet()
 
-    SelectNeoOrPedSheet shtPedGuiMedIV, shtNeoGuiAfspraken
+    SelectNeoOrPedSheet shtPedGuiMedIV, shtNeoGuiInfB
     
 End Sub
 
@@ -217,9 +220,9 @@ Public Sub SelectPedOrNeoLabSheet()
         
 End Sub
 
-Public Sub SelectPedOrNeoAfsprExtraSheet()
+Public Sub SelectPedOrNeoAfsprSheet()
     
-    SelectNeoOrPedSheet shtPedGuiAfsprExta, shtNeoGuiAfsprExtra
+    SelectNeoOrPedSheet shtPedGuiAfspr, shtNeoGuiAfspr
         
 End Sub
 

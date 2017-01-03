@@ -1,11 +1,28 @@
-Attribute VB_Name = "ModPedTPN"
+Attribute VB_Name = "ModPedEntTPN"
 Option Explicit
+
+Private Const constEntText = "_Ped_Ent_Opm"
+Private Const constTpnText = "_Ped_TPN_Opm"
+Private Const constNaCl1 = "_Ped_TPN_NaCl1"
+Private Const constKCl1 = "_Ped_TPN_KCl1"
+Private Const constNaCl2 = "_Ped_TPN_NaCl2"
+Private Const constKCl2 = "_Ped_TPN_KCl2"
+Private Const constCaGluc = "_Ped_TPN_CaCl"
+Private Const constMgCl = "_Ped_TPN_MgCl"
+Private Const constKNaFosf = "_Ped_TPN_KNaFosf"
+Private Const constNaCl1Vol = "_Ped_TPN_NaClVol1"
+Private Const constKCl1Vol = "_Ped_TPN_KClVol1"
+Private Const constNaCl2Vol = "_Ped_TPN_NaClVol2"
+Private Const constKCl2Vol = "_Ped_TPN_KClVol2"
+Private Const constCaGlucVol = "_Ped_TPN_CaGlucVol"
+Private Const constMgClVol = "_Ped_TPN_MgClVol"
+Private Const constTPNVol = "_Ped_TPN_Vol"
 
 Public Sub SelectPedTPNPrint()
 
     Dim dblGew As Double
     
-    dblGew = Val(ModRange.GetRangeValue("Gewicht", 0)) / 10
+    dblGew = Val(ModRange.GetRangeValue(ModConst.CONST_RANGE_GEWICHT, 0)) / 10
 
     If dblGew >= CONST_TPN_1 And dblGew <= CONST_TPN_2 Then
         shtPedPrtTPN2tot6.Select
@@ -77,7 +94,7 @@ Private Sub TPNAdvies(Dag As Integer)
     Dim dblSolu As Double
     Dim dblGewicht As Double
     
-    dblGewicht = Val(ModRange.GetRangeValue("Gewicht", 0)) / 10
+    dblGewicht = Val(ModRange.GetRangeValue(ModConst.CONST_RANGE_GEWICHT, 0)) / 10
 
     Select Case dblGewicht
         Case 2 To 6
@@ -377,5 +394,194 @@ End Sub
 Public Sub TPNAdviesDagDrie()
 
     TPNAdvies 3
+
+End Sub
+
+Private Sub EnterOpmAfspr(strRange As String)
+
+    Dim frmOpmerking As New FormOpmerking
+    
+    frmOpmerking.txtOpmerking.Text = ModRange.GetRangeValue(strRange, vbNullString)
+    
+    frmOpmerking.Show
+    
+    If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
+        ModRange.SetRangeValue strRange, frmOpmerking.txtOpmerking.Text
+    End If
+    
+    frmOpmerking.txtOpmerking.Text = vbNullString
+    
+    Set frmOpmerking = Nothing
+
+End Sub
+
+
+Public Sub PedEntTPN_EntText()
+    
+    EnterOpmAfspr constEntText
+    
+End Sub
+
+Public Sub PedEntTPN_TPNText()
+    
+    EnterOpmAfspr constTpnText
+
+End Sub
+
+Private Sub EnterHoeveelheid(strRange As String, strItem As String)
+
+    Dim frmInvoer As New FormInvoerNumeriek
+    
+    frmInvoer.SetValue strRange, strItem, ModRange.GetRangeValue(strRange, 0), "mL"
+    frmInvoer.Show
+    
+    Set frmInvoer = Nothing
+
+End Sub
+
+Public Sub PedEntTPN_TPN()
+
+    EnterHoeveelheid constTPNVol, "TPN"
+
+End Sub
+
+Public Sub PedEntTPN_NaCL1()
+
+    EnterHoeveelheid constNaCl1Vol, "NaCl"
+    ModRange.SetRangeValue constNaCl1, True
+    
+End Sub
+
+Public Sub PedEntTPN_KCl1()
+
+    EnterHoeveelheid constKCl1Vol, "KCl"
+    ModRange.SetRangeValue constKCl1, True
+
+End Sub
+
+Public Sub PedEntTPN_NaCL2()
+
+    EnterHoeveelheid constNaCl2Vol, "NaCl"
+    ModRange.SetRangeValue constNaCl2, True
+    
+End Sub
+
+Public Sub PedEntTPN_KCl2()
+
+    EnterHoeveelheid constKCl2Vol, "KCl"
+    ModRange.SetRangeValue constKCl2, True
+
+End Sub
+
+Public Sub PedEntTPN_CaGlucVol()
+
+    EnterHoeveelheid constCaGlucVol, "CaGluc"
+    ModRange.SetRangeValue constCaGluc, True
+
+End Sub
+
+Public Sub PedEntTPN_MgCl()
+
+    EnterHoeveelheid constMgClVol, "MgCl"
+    ModRange.SetRangeValue constMgCl, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeNaCl1()
+
+    ModRange.SetRangeValue constNaCl1, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeKCl1()
+
+    ModRange.SetRangeValue constKCl1, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeNaCl2()
+
+    ModRange.SetRangeValue constNaCl2, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeKCl2()
+
+    ModRange.SetRangeValue constKCl2, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeCaGluc()
+
+    ModRange.SetRangeValue constCaGluc, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeMgCl()
+
+    ModRange.SetRangeValue constMgCl, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeKNaFosf()
+
+    ModRange.SetRangeValue constKNaFosf, True
+
+End Sub
+
+Public Sub PedEntTPN_SpecVoed()
+    
+    Dim frmSpecialeVoeding As New FormSpecialeVoeding
+
+    frmSpecialeVoeding.Show
+    
+    Set frmSpecialeVoeding = Nothing
+
+End Sub
+
+Public Sub PedEntTPN_ChangeEnt()
+
+    If Range("_Ped_Ent_Keuze_1").Value = 1 Then
+    
+        ModRange.SetRangeValue "_Ped_Ent_Keuze_2", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Keuze_3", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Keuze_4", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Freq_1", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Freq_2", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Freq_3", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Freq_4", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Vol_1", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Vol_2", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Vol_3", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Vol_4", vbNullString
+        
+    End If
+
+End Sub
+
+Public Sub PedEntTPN_ChangeEntAdd1()
+
+    If ModRange.GetRangeValue("_Ped_Ent_Keuze_2", 0) = 1 Then
+        ModRange.SetRangeValue "_Ped_Ent_Freq_2", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Vol_2", vbNullString
+    End If
+
+End Sub
+
+Public Sub PedEntTPN_ChangeEntAdd2()
+    
+    If ModRange.GetRangeValue("_Ped_Ent_Keuze_3", 0) = 1 Then
+        ModRange.SetRangeValue "_Ped_Ent_Freq_3", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Vol_3", vbNullString
+    End If
+
+End Sub
+
+Public Sub PedEntTPN_ChangeEntAdd3()
+    
+    If ModRange.GetRangeValue("_Ped_Ent_Keuze_4", 0) = 1 Then
+        ModRange.SetRangeValue "_Ped_Ent_Freq_4", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Vol_4", vbNullString
+    End If
 
 End Sub

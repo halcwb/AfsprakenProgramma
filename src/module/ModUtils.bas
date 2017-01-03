@@ -8,15 +8,27 @@ Public Sub ExportForSourceControl()
 
     Dim strPath As String
     
+    On Error GoTo ExportForSourceControlError
+    
     strPath = WbkAfspraken.Path & "\src\"
+    
+    ModProgress.StartProgress "Exporting Source Files"
     
     DeleteSourceFiles
 
-    ExportFormulas
-    ExportVbaCode
-    ExportNames
+    ExportFormulas True
+    ExportVbaCode True
+    ExportNames True
     
+    ModProgress.FinishProgress
     ModMessage.ShowMsgBoxInfo "All code and formulas has been exported to: " & strPath
+    
+    Exit Sub
+
+ExportForSourceControlError:
+
+    ModProgress.FinishProgress
+    ModMessage.ShowMsgBoxExclam "Failed to export for source control"
 
 End Sub
 
@@ -35,15 +47,18 @@ Public Sub DeleteSourceFiles()
 
 End Sub
 
-Public Sub ExportFormulas()
+Public Sub ExportFormulas(blnShowProgress As Boolean)
 
     Dim shtSheet As Worksheet
     Dim objCell As Range
+    Dim intN, intC As Integer
     Dim strText, strPath As String
     
     strPath = WbkAfspraken.Path & "\src\sheet\"
     
-    For Each shtSheet In ActiveWorkbook.Sheets
+    intN = 1
+    intC = WbkAfspraken.Sheets.Count
+    For Each shtSheet In WbkAfspraken.Sheets
     
         strText = ""
     
@@ -65,37 +80,52 @@ Public Sub ExportFormulas()
             shtSheet.Protect ModConst.CONST_PASSWORD
         End If
         
+        If blnShowProgress Then ModProgress.SetJobPercentage "Export Formulas", intC, intN
+        intN = intN + 1
+        
     Next shtSheet
 
 End Sub
 
-Public Sub ExportNames()
+Public Sub ExportNames(blnShowProgress As Boolean)
 
     Dim objName As Name
     Dim strText As String
     Dim strPath As String
+    Dim intN, intC As Integer
     
     strPath = WbkAfspraken.Path & "\src\name\names.txt"
     
+    intN = 1
+    intC = WbkAfspraken.Names.Count
     For Each objName In WbkAfspraken.Names
         strText = strText & objName.NameLocal & ":" & vbTab & objName.RefersTo & vbNewLine
+        
+        If blnShowProgress Then ModProgress.SetJobPercentage "Export Names", intC, intN
+        intN = intN + 1
     Next objName
     
     ModFile.WriteToFile strPath, strText
 
 End Sub
 
-Public Sub ExportVbaCode()
+Public Sub ExportVbaCode(blnShowProgress As Boolean)
 
     Dim vbcItem As VBComponent
     Dim strFile As String
     Dim strPath As String
+    Dim intN, intC As Integer
     
     strPath = WbkAfspraken.Path
-
-    For Each vbcItem In ActiveWorkbook.VBProject.VBComponents
+    
+    intN = 1
+    intC = WbkAfspraken.VBProject.VBComponents.Count
+    For Each vbcItem In WbkAfspraken.VBProject.VBComponents
         strFile = GetComponentFileName(vbcItem)
         vbcItem.Export (strPath & "\src\" & strFile)
+        
+        If blnShowProgress Then ModProgress.SetJobPercentage "Export VBA Code", intC, intN
+        intN = intN + 1
     Next
 
 End Sub

@@ -23,7 +23,7 @@ End Sub
 
 Private Sub cmdOk_Click()
     
-    ModInfuusbrief.AfsprakenOvernemen Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
+    ModInfB.AfsprakenOvernemen Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
     Me.Hide
 
 End Sub

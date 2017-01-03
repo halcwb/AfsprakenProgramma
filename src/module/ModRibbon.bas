@@ -39,10 +39,10 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtPedGuiMedIV, "A6"
         
         Case "btnPedMedDisc"                                ' -> Discontinue Medicatie
-            ModSheet.GoToSheet shtPedGuiMedDisc, "A6"
+            ModSheet.GoToSheet shtGlobGuiMedDisc, "A6"
         
         Case "btnPedIVandPM"                                ' -> Lijnen en PM
-            ModSheet.GoToSheet shtPedGuiPMenIV, "A6"
+            ModSheet.GoToSheet shtPedGuiLijnPM, "A6"
         
         Case "btnPedEntTPN"                                 ' -> Voeding en TPN
             ModSheet.GoToSheet shtPedGuiEntTPN, "A6"
@@ -51,27 +51,27 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtPedGuiLab, "A1"
         
         Case "btnPedExtra"                                  ' -> Afspraken en Controles
-            ModSheet.GoToSheet shtPedGuiAfsprExta, "A6"
+            ModSheet.GoToSheet shtPedGuiAfspr, "A6"
             
         'grpNeonatologie                                    ' -- NEONATOLOGIE --
         
         Case "btnNeoMedIV"                                  ' -> Infuusbrief
-            ModSheet.GoToSheet shtNeoGuiAfspraken, "A9"
+            ModSheet.GoToSheet shtNeoGuiInfB, "A9"
         
         Case "btnNeoMedDisc"                                ' -> Discontinue Medicatie
-            ModSheet.GoToSheet shtPedGuiMedDisc, "A6"
+            ModSheet.GoToSheet shtGlobGuiMedDisc, "A6"
         
         Case "btnNeoExtra"                                  ' -> Afspraken en Controles
-            ModSheet.GoToSheet shtNeoGuiAfsprExtra, "A6"
+            ModSheet.GoToSheet shtNeoGuiAfspr, "A6"
         
         Case "btnNTPNadvies"
-            ModInfuusbrief.TPNAdviesNEO
+            ModInfB.TPNAdviesNEO
         
         Case "btnNeoLab"                                    ' -> Lab Aanvragen
             ModSheet.GoToSheet shtNeoGuiLab, "A1"
         
         Case "btnNeo1700"                                   ' -> Infuusbrief 17:00
-            ModSheet.GoToSheet shtNeoGuiAfspr1700, "A9"
+            ModSheet.GoToSheet shtNeoGui1700, "A9"
         
         'grpRemoveData                                      ' -- ACTIES --
                 
@@ -81,15 +81,15 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         Case "btnRemoveExtra"                               ' Afspraken Controles Verwijderen
             ModClear.ClearAfspraken
-            ModSheet.SelectPedOrNeoAfsprExtraSheet
+            ModSheet.SelectPedOrNeoAfsprSheet
         
         ' grpNeoActions                                     ' -- INFUUSBRIEF OVERZETTEN --
         
         Case "btnCopy1700"                                  ' -> 17:00 uur Overzetten
-            ModInfuusbrief.CopyToActueel
+            ModInfB.CopyToActueel
         
         Case "btnCopyCurrent"                               ' -> Actueel Overzetten
-            ModInfuusbrief.CopyAfspraken
+            ModInfB.CopyAfspraken
             
         'grpPedPrint                                        ' -- PRINT PEDIATRIE --
         
@@ -103,7 +103,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtPedPrtMedDisc, "A1"
         
         Case "btnPedPrintTPN"                               ' -> TPN Brief
-            ModPedTPN.SelectPedTPNPrint
+            ModPedEntTPN.SelectPedTPNPrint
             
         'grpNeoPrint                                        ' -- PRINT NEO ---
         
@@ -117,7 +117,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
         
         Case "btnNTPN"
-            ModInfuusbrief.TPNAdviesNEO
+            ModInfB.TPNAdviesNEO
         
         Case "btnNeoPrintApoth"                             ' -> Apotheek
             ModSheet.GoToSheet shtNeoPrtApoth, "A1"
@@ -142,9 +142,6 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
     End Select
 
-    ' Waarom wordt dit aangeroepen na een menu item keuze???
-    ' HideBars
-    
     Application.ScreenUpdating = True
     
 End Sub

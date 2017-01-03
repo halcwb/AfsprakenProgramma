@@ -13,7 +13,7 @@ Private Const constDagen = "_Pat_Dagen"
 Private Const constWeken = "_Pat_Weken"
 Private Const constGebGew = "_Pat_GebGew"
 
-Public Sub VoerGewichtIn()
+Public Sub Patient_EnterWeight()
 
     Dim frmGewichtInvoer As New FormInvoerNumeriek
     Dim objPatient As New ClassPatientDetails
@@ -41,7 +41,7 @@ Public Sub VoerGewichtIn()
 
 End Sub
 
-Public Sub VoerLengteIn()
+Public Sub Patient_EnterLength()
 
     Dim frmLengteInvoer As New FormInvoerNumeriek
     Dim objPatient As New ClassPatientDetails

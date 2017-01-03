@@ -1,4 +1,4 @@
-Attribute VB_Name = "ModInfuusbrief"
+Attribute VB_Name = "ModInfB"
 Option Explicit
 
 ' ToDo: Add comment
@@ -522,6 +522,47 @@ Public Sub TPNAdviesNEO()
     ModRange.SetRangeValue "_NICUMix", 5000
     ModRange.SetRangeValue "_SSTB", 5000
     
-    ModSheet.GoToSheet shtNeoGuiAfspraken, "A9"
+    ModSheet.GoToSheet shtNeoGuiInfB, "A9"
 
+End Sub
+
+Private Sub TekstInvoer(strCaption As String, strName As String, strRange As String)
+
+    Dim frmInvoer As New FormTekstInvoer
+    
+    With frmInvoer
+        .Caption = strCaption
+        .lblNaam.Caption = strName
+        .Tekst = ModRange.GetRangeValue(strRange, vbNullString)
+        .Show
+        If .IsOK Then ModRange.SetRangeValue strRange, .Tekst
+    End With
+    
+    Set frmInvoer = Nothing
+
+End Sub
+
+Public Sub Med11Tekst()
+
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst_1"
+
+End Sub
+
+Public Sub Med12Tekst()
+
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst_2"
+    
+End Sub
+
+
+Public Sub Med11Tekst1700()
+
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst1700_1"
+    
+End Sub
+
+Public Sub Med12Tekst1700()
+
+    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst1700_2"
+    
 End Sub

@@ -50,7 +50,7 @@ Public Sub ClearAfspraken()
     ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEODATA
     ClearContentsSheetRange shtNeoBerAfspr, ModConst.CONST_RANGE_NEOMRI
     
-    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_RANGE_PEDBOOL
-    ClearContentsSheetRange shtPedBerExtraAfspr, ModConst.CONST_RANGE_PEDDATA
+    ClearContentsSheetRange shtPedBerAfspr, ModConst.CONST_RANGE_PEDBOOL
+    ClearContentsSheetRange shtPedBerAfspr, ModConst.CONST_RANGE_PEDDATA
 
 End Sub

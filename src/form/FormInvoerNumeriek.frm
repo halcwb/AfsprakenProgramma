@@ -14,6 +14,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private m_Range As String
+
 Private Sub cmdCancel_Click()
     
     Me.txtWaarde = vbNullString
@@ -23,6 +25,7 @@ End Sub
 
 Private Sub cmdOk_Click()
     
+    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, Val(txtWaarde.Value)
     Me.Hide
 
 End Sub
@@ -36,5 +39,31 @@ End Sub
 Private Sub UserForm_Activate()
 
     Me.txtWaarde.SetFocus
+    Me.Caption = ModConst.CONST_APPLICATION_NAME
+
+End Sub
+
+Public Sub SetValue(strRange As String, strItem As String, varValue As Variant, strUnit As String)
+    
+    Dim strError As String
+
+    If varValue = vbNullString Then varValue = 0
+    If Not IsNumeric(varValue) Then GoTo SetValueError
+    
+    m_Range = strRange
+    
+    lblParameter.Caption = strItem
+    txtWaarde.Value = Val(varValue)
+    lblEenheid.Caption = strUnit
+    
+    Exit Sub
+    
+SetValueError:
+
+    strError = varValue & " is geen numerieke waarde" & vbNewLine
+    strError = strError & ModConst.CONST_DEFAULTERROR_MSG
+    ModMessage.ShowMsgBoxError strError
+    
+    Me.Hide
 
 End Sub

@@ -122,9 +122,10 @@ Public Sub InitializeAfspraken()
     Application.WindowState = xlMaximized
     
     ModProgress.StartProgress "Start Afspraken Programma ... "
+    
+    ModSheet.SelectPedOrNeoStartSheet
         
     ' Setup sheets
-    WbkAfspraken.Activate
     ModSheet.ProtectUserInterfaceSheets True
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
     ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)
@@ -212,23 +213,24 @@ Public Function GetLanguage() As EnumAppLanguage
 
 End Function
 
-Private Function GetToDayFormula() As String
-    
-    Dim strToDay As String
-
-    Select Case GetLanguage()
-    Case EnumAppLanguage.Dutch: strToDay = "= Vandaag()"
-    Case Else: strToDay = "= ToDay()"
-    End Select
-    
-    GetToDayFormula = strToDay
-
-End Function
-
-Private Sub Test()
+Private Sub TestGetLanguage()
 
     MsgBox GetLanguage()
 
 End Sub
+
+Private Function GetToDayFormula() As String
+    
+'    Dim strToDay As String
+
+'    -- Probably not necessary with Formula instead of FormulaLocal
+'    Select Case GetLanguage()
+'    Case EnumAppLanguage.Dutch: strToDay = "= Vandaag()"
+'    Case Else: strToDay = "= ToDay()"
+'    End Select
+    
+    GetToDayFormula = "= ToDay()"
+
+End Function
 
 

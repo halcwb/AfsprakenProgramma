@@ -9,17 +9,17 @@ $I$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
 $C$4: 	=__0_PatNum
 $F$4: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
 $I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
-$C$8: 	=IF(PedBerExtraAfspr!C7=0,"""",PedBerExtraAfspr!C7)
-$C$9: 	=IF(PedBerExtraAfspr!C8=0,"""",PedBerExtraAfspr!C8)
-$G$9: 	=CONCATENATE(""à "",PedBerExtraAfspr!G16,"" uur"")
-$C$10: 	=IF(PedBerExtraAfspr!C9=0,"""",PedBerExtraAfspr!C9)
-$G$10: 	=CONCATENATE(""à "",PedBerExtraAfspr!G18,"" uur"")
+$C$8: 	=IF(PedBerAfspr!C7=0,"""",PedBerAfspr!C7)
+$C$9: 	=IF(PedBerAfspr!C8=0,"""",PedBerAfspr!C8)
+$G$9: 	=CONCATENATE(""à "",PedBerAfspr!G16,"" uur"")
+$C$10: 	=IF(PedBerAfspr!C9=0,"""",PedBerAfspr!C9)
+$G$10: 	=CONCATENATE(""à "",PedBerAfspr!G18,"" uur"")
 $I$10: 	=IF(_Ped_AfsprD_Verliezen=0,"""",_Ped_AfsprD_Verliezen)
-$C$11: 	=CONCATENATE(PedBerExtraAfspr!$B$12,"" dd"")
-$C$18: 	=CONCATENATE(PedBerExtraAfspr!$C$42,"" dd"")
+$C$11: 	=CONCATENATE(PedBerAfspr!$B$12,"" dd"")
+$C$18: 	=CONCATENATE(PedBerAfspr!$C$42,"" dd"")
 $F$18: 	=IF(_Ped_AfsprOverig=0,"""",_Ped_AfsprOverig)
-$C$19: 	=CONCATENATE(PedBerExtraAfspr!$C$43,"" dd"")
-$D$35: 	=PedBerExtraAfspr!D40
+$C$19: 	=CONCATENATE(PedBerAfspr!$C$43,"" dd"")
+$D$35: 	=PedBerAfspr!D40
 $C$41: 	=IFERROR(LEFT(Var_Ped_AfsprControles,LEN(Var_Ped_AfsprControles)-3),"""")
 $C$42: 	=IFERROR(LEFT(Var_Ped_AfsprOnderzoeken,LEN(Var_Ped_AfsprOnderzoeken)-3),"""")
 $C$43: 	=IFERROR(LEFT(Var_Ped_AfsprInstellingen,LEN(Var_Ped_AfsprInstellingen)-3),"""")

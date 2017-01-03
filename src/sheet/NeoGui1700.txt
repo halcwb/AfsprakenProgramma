@@ -39,12 +39,12 @@ $I$10: 	=__0_PatNum
 $I$11: 	=__2_AchterNaam &"",  ""&__3_VoorNaam
 $I$12: 	=NeoBer1700!B3-NeoBer1700!C3
 $J$12: 	=""=dag ""&NeoBer1700!B6
-$H$13: 	=NeoBerIV!D4
-$J$13: 	=NeoBerIV!D5
+$H$13: 	=NeoBerInfB!D4
+$J$13: 	=NeoBerInfB!D5
 $C$14: 	=NeoBer1700!B5
 $C$15: 	=__1_Bed
 $H$15: 	=TRUNC((H13*7+J13+NeoBer1700!B6-1)/7)&"" weken en ""& H13*7+J13+NeoBer1700!B6-1-TRUNC((H13*7+J13+NeoBer1700!B6-1)/7)*7&"" dag(-en)""
-$H$16: 	=NeoBerIV!B4&"" kg""
+$H$16: 	=NeoBerInfB!B4&"" kg""
 $E$18: 	=IF(NeoBer1700!B17,NeoBer1700!C16,ROUND(NeoBer1700!K47/(_Pat_Gewicht/10),1))
 $K$18: 	=ROUND(NeoBer1700!B16,0)&"" ml/ kg/ 24 uur""
 $E$21: 	=IF(_Neo_1700_Voeding>1,NeoBer1700!D10,"""")

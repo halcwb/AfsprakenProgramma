@@ -103,7 +103,7 @@ Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
         End If
     End If
 
-    ModPedTPN.SelectTPN
+    ModPedEntTPN.SelectTPN
     ModLog.LogActionEnd strAction
     
     Exit Sub
@@ -274,7 +274,7 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean, blnShowPro
     Application.DisplayAlerts = False
         
     strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.Count)
-    strTextRange = "A1:C" + CStr(shtPatDataText.Range("C1").CurrentRegion.Rows.Count)
+    strTextRange = "A1:C" + CStr(shtPatText.Range("C1").CurrentRegion.Rows.Count)
     
     FileSystem.SetAttr strDataFile, Attributes:=vbNormal ' Open Patient Data File
     Application.Workbooks.Open strDataFile, True
@@ -295,7 +295,7 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean, blnShowPro
     
     With Workbooks(strTextName) ' Save Patient Text
         .Sheets(1).Cells.Clear
-        shtPatDataText.Range(strTextRange).Copy
+        shtPatText.Range(strTextRange).Copy
         .Sheets(1).Range("A1").PasteSpecial xlPasteValues
         .Save
         .Close

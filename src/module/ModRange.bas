@@ -354,5 +354,15 @@ Public Sub RefreshPatientData()
 
 End Sub
 
+Public Sub NaamGeven()
+    
+    Dim frmNaam As New FormNaamGeven
+    
+    frmNaam.Show
+    
+    Set frmNaam = Nothing
+
+End Sub
+
 
 

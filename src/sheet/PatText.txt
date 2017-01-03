@@ -19,40 +19,40 @@ $C$18: 	=IF(PedPrtAfspr!C63<>0,PedPrtAfspr!C63&"" ""&PedPrtAfspr!E63&"" ""&PedPr
 $C$19: 	=IF(PedPrtAfspr!C64<>0,PedPrtAfspr!C64&"" ""&PedPrtAfspr!E64&"" ""&PedPrtAfspr!F64&"" ""&PedPrtAfspr!G64&"", totaal ""&PedPrtAfspr!J64&"" ""&PedPrtAfspr!I64,"""")
 $C$20: 	=IF(PedPrtAfspr!C65<>0,PedPrtAfspr!C65&"" ""&PedPrtAfspr!E65&"" ""&PedPrtAfspr!F65&"" ""&PedPrtAfspr!G65&"", totaal ""&PedPrtAfspr!J65&"" ""&PedPrtAfspr!I65,"""")
 $C$21: 	=IF(GlobBerOpm!C3<>0,PedPrtAfspr!C67&"" ""&GlobBerOpm!C3,"""")
-$C$22: 	=PedBerMedDisc!AC2
-$C$23: 	=PedBerMedDisc!AC3
-$C$24: 	=PedBerMedDisc!AC4
-$C$25: 	=PedBerMedDisc!AC5
-$C$26: 	=PedBerMedDisc!AC6
-$C$27: 	=PedBerMedDisc!AC7
-$C$28: 	=PedBerMedDisc!AC8
-$C$29: 	=PedBerMedDisc!AC9
-$C$30: 	=PedBerMedDisc!AC10
-$C$31: 	=PedBerMedDisc!AC11
-$C$32: 	=PedBerMedDisc!AC12
-$C$33: 	=PedBerMedDisc!AC13
-$C$34: 	=PedBerMedDisc!AC14
-$C$35: 	=PedBerMedDisc!AC15
-$C$36: 	=PedBerMedDisc!AC16
-$C$37: 	=PedBerMedDisc!AC17
-$C$38: 	=PedBerMedDisc!AC18
-$C$39: 	=PedBerMedDisc!AC19
-$C$40: 	=PedBerMedDisc!AC20
-$C$41: 	=PedBerMedDisc!AC21
-$C$42: 	=PedBerMedDisc!AC22
-$C$43: 	=PedBerMedDisc!AC23
-$C$44: 	=PedBerMedDisc!AC24
-$C$45: 	=PedBerMedDisc!AC25
-$C$46: 	=PedBerMedDisc!AC26
-$C$47: 	=PedBerMedDisc!AC27
-$C$48: 	=PedBerMedDisc!AC28
-$C$49: 	=PedBerMedDisc!AC29
-$C$50: 	=PedBerMedDisc!AC30
-$C$51: 	=PedBerMedDisc!AC31
-$C$52: 	=IF(PedGuiAfsprExtra!C41="""","""",CONCATENATE(PedGuiAfsprExtra!B41,"": "",PedGuiAfsprExtra!C41))
-$C$53: 	=IF(PedGuiAfsprExtra!C42="""","""",CONCATENATE(PedGuiAfsprExtra!B42,"": "",PedGuiAfsprExtra!C42))
-$C$54: 	=IF(PedGuiAfsprExtra!C43="""","""",CONCATENATE(PedGuiAfsprExtra!B43,"": "",PedGuiAfsprExtra!C43))
-$C$55: 	=IF(PedGuiAfsprExtra!C44="""","""",CONCATENATE(PedGuiAfsprExtra!B44,"": "",PedGuiAfsprExtra!C44))
+$C$22: 	=GlobBerMedDisc!AC2
+$C$23: 	=GlobBerMedDisc!AC3
+$C$24: 	=GlobBerMedDisc!AC4
+$C$25: 	=GlobBerMedDisc!AC5
+$C$26: 	=GlobBerMedDisc!AC6
+$C$27: 	=GlobBerMedDisc!AC7
+$C$28: 	=GlobBerMedDisc!AC8
+$C$29: 	=GlobBerMedDisc!AC9
+$C$30: 	=GlobBerMedDisc!AC10
+$C$31: 	=GlobBerMedDisc!AC11
+$C$32: 	=GlobBerMedDisc!AC12
+$C$33: 	=GlobBerMedDisc!AC13
+$C$34: 	=GlobBerMedDisc!AC14
+$C$35: 	=GlobBerMedDisc!AC15
+$C$36: 	=GlobBerMedDisc!AC16
+$C$37: 	=GlobBerMedDisc!AC17
+$C$38: 	=GlobBerMedDisc!AC18
+$C$39: 	=GlobBerMedDisc!AC19
+$C$40: 	=GlobBerMedDisc!AC20
+$C$41: 	=GlobBerMedDisc!AC21
+$C$42: 	=GlobBerMedDisc!AC22
+$C$43: 	=GlobBerMedDisc!AC23
+$C$44: 	=GlobBerMedDisc!AC24
+$C$45: 	=GlobBerMedDisc!AC25
+$C$46: 	=GlobBerMedDisc!AC26
+$C$47: 	=GlobBerMedDisc!AC27
+$C$48: 	=GlobBerMedDisc!AC28
+$C$49: 	=GlobBerMedDisc!AC29
+$C$50: 	=GlobBerMedDisc!AC30
+$C$51: 	=GlobBerMedDisc!AC31
+$C$52: 	=IF(PedGuiAfspr!C41="""","""",CONCATENATE(PedGuiAfspr!B41,"": "",PedGuiAfspr!C41))
+$C$53: 	=IF(PedGuiAfspr!C42="""","""",CONCATENATE(PedGuiAfspr!B42,"": "",PedGuiAfspr!C42))
+$C$54: 	=IF(PedGuiAfspr!C43="""","""",CONCATENATE(PedGuiAfspr!B43,"": "",PedGuiAfspr!C43))
+$C$55: 	=IF(PedGuiAfspr!C44="""","""",CONCATENATE(PedGuiAfspr!B44,"": "",PedGuiAfspr!C44))
 $C$56: 	=IF(PedPrtAfspr!C39<>0,PedPrtAfspr!C39,"""")
 $C$57: 	=IF(PedPrtAfspr!C40<>0,PedPrtAfspr!C40,"""")
 $C$58: 	=IF(PedPrtAfspr!C41<>0,PedPrtAfspr!C41,"""")
@@ -85,23 +85,23 @@ $C$84: 	=PedPrtAfspr!G97&"": ""&PedPrtAfspr!H97
 $C$85: 	=PedPrtAfspr!G98&"": ""&PedPrtAfspr!H98
 $C$86: 	=PedPrtAfspr!I96&"": ""&PedPrtAfspr!J96
 $C$87: 	=PedPrtAfspr!I97&"": ""&PedPrtAfspr!J97
-$C$88: 	=NeoGuiAfspraken!H15
-$C$89: 	=IF(NeoBerIV!B20>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B20, 1)&"" ""&NeoGuiAfspraken!C32&"" ""&NeoGuiAfspraken!D32&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E20,1)&"" "" & NeoGuiAfspraken!G32&"" (=""&NeoGuiAfspraken!H32&"" ""&NeoGuiAfspraken!I32&""), inlooptijd: ""&NeoGuiAfspraken!N32,"""")
-$C$90: 	=IF(NeoBerIV!B21>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B21, 1)&"" ""&NeoGuiAfspraken!C33&"" ""&NeoGuiAfspraken!D33&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E21,1)&"" "" & NeoGuiAfspraken!G33&"" (=""&NeoGuiAfspraken!H33&"" ""&NeoGuiAfspraken!I33&""), inlooptijd: ""&NeoGuiAfspraken!N33,"""")
-$C$91: 	=IF(NeoBerIV!B22>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B22, 1)&"" ""&NeoGuiAfspraken!C34&"" ""&NeoGuiAfspraken!D34&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E22,1)&"" "" & NeoGuiAfspraken!G34&"" (=""&NeoGuiAfspraken!H34&"" ""&NeoGuiAfspraken!I34&""), inlooptijd: ""&NeoGuiAfspraken!N34,"""")
-$C$92: 	=IF(NeoBerIV!B23>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B23, 1)&"" ""&NeoGuiAfspraken!C35&"" ""&NeoGuiAfspraken!D35&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E23,1)&"" "" & NeoGuiAfspraken!G35&"" (=""&NeoGuiAfspraken!H35&"" ""&NeoGuiAfspraken!I35&""), inlooptijd: ""&NeoGuiAfspraken!N35,"""")
-$C$93: 	=IF(NeoBerIV!B24>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B24, 1)&"" ""&NeoGuiAfspraken!C36&"" ""&NeoGuiAfspraken!D36&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E24,1)&"" "" & NeoGuiAfspraken!G36&"" (=""&NeoGuiAfspraken!H36&"" ""&NeoGuiAfspraken!I36&""), inlooptijd: ""&NeoGuiAfspraken!N36,"""")
-$C$94: 	=IF(NeoBerIV!B25>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B25, 1)&"" ""&NeoGuiAfspraken!C37&"" ""&NeoGuiAfspraken!D37&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E25,1)&"" "" & NeoGuiAfspraken!G37&"" (=""&NeoGuiAfspraken!H37&"" ""&NeoGuiAfspraken!I37&""), inlooptijd: ""&NeoGuiAfspraken!N37,"""")
-$C$95: 	=IF(NeoBerIV!B26>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B26, 1)&"" ""&NeoGuiAfspraken!C38&"" ""&NeoGuiAfspraken!D38&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E26,1)&"" "" & NeoGuiAfspraken!G38&"" (=""&NeoGuiAfspraken!H38&"" ""&NeoGuiAfspraken!I38&""), inlooptijd: ""&NeoGuiAfspraken!N38,"""")
-$C$96: 	=IF(NeoBerIV!B27>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B27, 1)&"" ""&NeoGuiAfspraken!C39&"" ""&NeoGuiAfspraken!D39&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E27,1)&"" "" & NeoGuiAfspraken!G39&"" (=""&NeoGuiAfspraken!H39&"" ""&NeoGuiAfspraken!I39&""), inlooptijd: ""&NeoGuiAfspraken!N39,"""")
-$C$97: 	=IF(NeoBerIV!B28>1,INDEX(tbl_Neo_MedIV,NeoBerIV!B28, 1)&"" ""&NeoGuiAfspraken!C40&"" ""&NeoGuiAfspraken!D40&"" ""& INDEX(tbl_Neo_Opl,NeoBerIV!E28,1)&"" "" & NeoGuiAfspraken!G40&"" (=""&NeoGuiAfspraken!H40&"" ""&NeoGuiAfspraken!I40&""), inlooptijd: ""&NeoGuiAfspraken!N40,"""")
-$C$98: 	=IF(NeoBerIV!B32="""","""",NeoBerIV!B32)
-$C$99: 	=IF(NeoBerIV!B33="""","""",NeoBerIV!B33)
-$C$100: 	=IF(NeoBerIV!E29<>0, NeoGuiAfspraken!B42&"": ""& INDEX(tbl_Neo_Opl,NeoBerIV!$E29,1)&"" "" & NeoGuiAfspraken!G42,"""")
-$C$101: 	=IF(NeoBerIV!E30<>0, NeoGuiAfspraken!B43&"": ""& INDEX(tbl_Neo_Opl,NeoBerIV!$E30,1)&"" "" & NeoGuiAfspraken!G43,"""")
-$C$102: 	=IF(NeoBerIV!E31<>0, NeoGuiAfspraken!B44&"": ""& INDEX(tbl_Neo_Opl,NeoBerIV!$E31,1)&"" "" & NeoGuiAfspraken!G44,"""")
+$C$88: 	=NeoGuiInfB!H15
+$C$89: 	=IF(NeoBerInfB!B20>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B20, 1)&"" ""&NeoGuiInfB!C32&"" ""&NeoGuiInfB!D32&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E20,1)&"" "" & NeoGuiInfB!G32&"" (=""&NeoGuiInfB!H32&"" ""&NeoGuiInfB!I32&""), inlooptijd: ""&NeoGuiInfB!N32,"""")
+$C$90: 	=IF(NeoBerInfB!B21>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B21, 1)&"" ""&NeoGuiInfB!C33&"" ""&NeoGuiInfB!D33&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E21,1)&"" "" & NeoGuiInfB!G33&"" (=""&NeoGuiInfB!H33&"" ""&NeoGuiInfB!I33&""), inlooptijd: ""&NeoGuiInfB!N33,"""")
+$C$91: 	=IF(NeoBerInfB!B22>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B22, 1)&"" ""&NeoGuiInfB!C34&"" ""&NeoGuiInfB!D34&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E22,1)&"" "" & NeoGuiInfB!G34&"" (=""&NeoGuiInfB!H34&"" ""&NeoGuiInfB!I34&""), inlooptijd: ""&NeoGuiInfB!N34,"""")
+$C$92: 	=IF(NeoBerInfB!B23>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B23, 1)&"" ""&NeoGuiInfB!C35&"" ""&NeoGuiInfB!D35&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E23,1)&"" "" & NeoGuiInfB!G35&"" (=""&NeoGuiInfB!H35&"" ""&NeoGuiInfB!I35&""), inlooptijd: ""&NeoGuiInfB!N35,"""")
+$C$93: 	=IF(NeoBerInfB!B24>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B24, 1)&"" ""&NeoGuiInfB!C36&"" ""&NeoGuiInfB!D36&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E24,1)&"" "" & NeoGuiInfB!G36&"" (=""&NeoGuiInfB!H36&"" ""&NeoGuiInfB!I36&""), inlooptijd: ""&NeoGuiInfB!N36,"""")
+$C$94: 	=IF(NeoBerInfB!B25>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B25, 1)&"" ""&NeoGuiInfB!C37&"" ""&NeoGuiInfB!D37&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E25,1)&"" "" & NeoGuiInfB!G37&"" (=""&NeoGuiInfB!H37&"" ""&NeoGuiInfB!I37&""), inlooptijd: ""&NeoGuiInfB!N37,"""")
+$C$95: 	=IF(NeoBerInfB!B26>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B26, 1)&"" ""&NeoGuiInfB!C38&"" ""&NeoGuiInfB!D38&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E26,1)&"" "" & NeoGuiInfB!G38&"" (=""&NeoGuiInfB!H38&"" ""&NeoGuiInfB!I38&""), inlooptijd: ""&NeoGuiInfB!N38,"""")
+$C$96: 	=IF(NeoBerInfB!B27>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B27, 1)&"" ""&NeoGuiInfB!C39&"" ""&NeoGuiInfB!D39&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E27,1)&"" "" & NeoGuiInfB!G39&"" (=""&NeoGuiInfB!H39&"" ""&NeoGuiInfB!I39&""), inlooptijd: ""&NeoGuiInfB!N39,"""")
+$C$97: 	=IF(NeoBerInfB!B28>1,INDEX(tbl_Neo_MedIV,NeoBerInfB!B28, 1)&"" ""&NeoGuiInfB!C40&"" ""&NeoGuiInfB!D40&"" ""& INDEX(tbl_Neo_Opl,NeoBerInfB!E28,1)&"" "" & NeoGuiInfB!G40&"" (=""&NeoGuiInfB!H40&"" ""&NeoGuiInfB!I40&""), inlooptijd: ""&NeoGuiInfB!N40,"""")
+$C$98: 	=IF(NeoBerInfB!B32="""","""",NeoBerInfB!B32)
+$C$99: 	=IF(NeoBerInfB!B33="""","""",NeoBerInfB!B33)
+$C$100: 	=IF(NeoBerInfB!E29<>0, NeoGuiInfB!B42&"": ""& INDEX(tbl_Neo_Opl,NeoBerInfB!$E29,1)&"" "" & NeoGuiInfB!G42,"""")
+$C$101: 	=IF(NeoBerInfB!E30<>0, NeoGuiInfB!B43&"": ""& INDEX(tbl_Neo_Opl,NeoBerInfB!$E30,1)&"" "" & NeoGuiInfB!G43,"""")
+$C$102: 	=IF(NeoBerInfB!E31<>0, NeoGuiInfB!B44&"": ""& INDEX(tbl_Neo_Opl,NeoBerInfB!$E31,1)&"" "" & NeoGuiInfB!G44,"""")
 $C$103: 	=IF(Var_Neo_WerkbriefActueelIntravasaleToegangStand<>"""",CONCATENATE(Var_Neo_WerkbriefActueelIntravasaleToegangTekst,"" "",Var_Neo_WerkbriefActueelIntravasaleToegangStand, "" ml/uur""),"""")
-$C$104: 	=IF(NeoBerIV!C35<>0,CONCATENATE(INDEX(tbl_Neo_IntralipidSmof,_Neo_InfB_IntralipidSmof),"" "",ROUNDUP(NeoBerIV!C35/24,1),"" ml/uur""),"""")
+$C$104: 	=IF(NeoBerInfB!C35<>0,CONCATENATE(INDEX(tbl_Neo_IntralipidSmof,_Neo_InfB_IntralipidSmof),"" "",ROUNDUP(NeoBerInfB!C35/24,1),"" ml/uur""),"""")
 $C$105: 	=IF(Var_Neo_WerkbriefActueelTPNStand<>"""",CONCATENATE(""TPN: "",Var_Neo_WerkbriefActueelTPNStand, "" ml/uur""),"""")
 $C$106: 	=IF(Var_Neo_WerkbriefActueelTPNStand<>"""",CONCATENATE(""TPN Totaal: "",Var_Neo_WerkbriefActueelTPNTotaalGeheel,"","", Var_Neo_WerkbriefActueelTPNTotaalBreuk, "" ml""),"""")
 $C$107: 	=IF(OR(Var_Neo_WerkbriefActueelTPNNaClGeheel<>"""",Var_Neo_WerkbriefActueelTPNNaClBreuk<>""""),CONCATENATE(Var_Neo_WerkbriefActueelTPNNaCLTekst,"" "",Var_Neo_WerkbriefActueelTPNNaClGeheel,"","", Var_Neo_WerkbriefActueelTPNNaClBreuk, "" ml""),"""")
@@ -125,30 +125,30 @@ $C$124: 	=IF(Var_Neo_Voeding10<>"""",Var_Neo_Voeding10,"""")
 $C$125: 	=IF(Var_Neo_Voeding11<>"""",Var_Neo_Voeding11,"""")
 $C$126: 	=IF(Var_Neo_Voeding12<>"""",Var_Neo_Voeding12,"""")
 $C$127: 	=IF(Var_Neo_Voeding13<>"""",Var_Neo_Voeding13,"""")
-$C$128: 	=IF(NeoGuiAfsprExtra!C45="""","""",CONCATENATE(NeoGuiAfsprExtra!B45,"": "",NeoGuiAfsprExtra!C45))
-$C$129: 	=IF(NeoGuiAfsprExtra!C46="""","""",CONCATENATE(NeoGuiAfsprExtra!B46,"": "",NeoGuiAfsprExtra!C46))
-$C$130: 	=IF(NeoGuiAfsprExtra!C47="""","""",CONCATENATE(NeoGuiAfsprExtra!B47,"": "",NeoGuiAfsprExtra!C47))
-$C$131: 	=IF(NeoGuiAfsprExtra!C48="""","""",CONCATENATE(NeoGuiAfsprExtra!B48,"": "",NeoGuiAfsprExtra!C48))
-$C$132: 	=IF(NeoGuiAfsprExtra!C49="""","""",CONCATENATE(NeoGuiAfsprExtra!B49,"": "",NeoGuiAfsprExtra!C49))
-$C$133: 	=IF(NeoGuiAfspraken!D65<>"""",NeoGuiAfspraken!C65&"": ""&NeoGuiAfspraken!D65,"""")
-$C$134: 	=IF(NeoGuiAfspraken!D66<>"""",NeoGuiAfspraken!C66&"": ""&NeoGuiAfspraken!D66,"""")
-$C$135: 	=IF(NeoGuiAfspraken!D67<>"""",NeoGuiAfspraken!C67&"": ""&NeoGuiAfspraken!D67,"""")
-$C$136: 	=IF(NeoGuiAfspraken!D68<>"""",NeoGuiAfspraken!C68&"": ""&NeoGuiAfspraken!D68,"""")
-$C$137: 	=IF(NeoGuiAfspraken!D69<>"""",NeoGuiAfspraken!C69&"": ""&NeoGuiAfspraken!D69,"""")
-$C$138: 	=IF(NeoGuiAfspraken!D70<>"""",NeoGuiAfspraken!C70&"": ""&NeoGuiAfspraken!D70,"""")
-$C$139: 	=IF(NeoGuiAfspraken!D71<>"""",NeoGuiAfspraken!C71&"" ""&NeoGuiAfspraken!D71,"""")
-$C$140: 	=IF(NeoGuiAfspraken!D72<>"""",NeoGuiAfspraken!C72&"" ""&NeoGuiAfspraken!D72,"""")
-$C$141: 	=IF(NeoGuiAfspraken!D73<>"""",NeoGuiAfspraken!C73&"" ""&NeoGuiAfspraken!D73,"""")
-$C$142: 	=CONCATENATE(NeoGuiAfspraken!B3,""        : "",NeoGuiAfspraken!$C$2,"" - "",NeoGuiAfspraken!C3,""; "",NeoGuiAfspraken!$D$2,"" - "",NeoGuiAfspraken!D3,""; "",NeoGuiAfspraken!$E$2,"" - "",NeoGuiAfspraken!E3,"";"")
-$C$143: 	=CONCATENATE(NeoGuiAfspraken!B4,""            : "",NeoGuiAfspraken!C2,"" - "",NeoGuiAfspraken!C4,""; "",NeoGuiAfspraken!$D$2,"" - "",NeoGuiAfspraken!D4,""; "",NeoGuiAfspraken!$E$2,"" - "",NeoGuiAfspraken!E4,"";"")
-$C$144: 	=CONCATENATE(NeoGuiAfspraken!B5,""              : "",NeoGuiAfspraken!$C$2,"" - "",NeoGuiAfspraken!C5,""; "",NeoGuiAfspraken!$D$2,"" - "",NeoGuiAfspraken!D5,""; "",NeoGuiAfspraken!$E$2,"" - "",NeoGuiAfspraken!E5,"";"")
-$C$145: 	=CONCATENATE(NeoGuiAfspraken!B6,""       : "",NeoGuiAfspraken!$C$2,"" - "",NeoGuiAfspraken!C6,""; "",NeoGuiAfspraken!$D$2,"" - "",NeoGuiAfspraken!D6,""; "",NeoGuiAfspraken!$E$2,"" - "",NeoGuiAfspraken!E6,"";"")
-$C$146: 	=CONCATENATE(NeoGuiAfspraken!B7,""        : "",NeoGuiAfspraken!$C$2,"" - "",NeoGuiAfspraken!C7,""; "",NeoGuiAfspraken!$D$2,"" - "",NeoGuiAfspraken!D7,""; "",NeoGuiAfspraken!$E$2,"" - "",NeoGuiAfspraken!E7,"";"")
-$C$147: 	=CONCATENATE(NeoGuiAfspraken!B8,""            : "",NeoGuiAfspraken!$C$2,"" - "",NeoGuiAfspraken!C8,""; "",NeoGuiAfspraken!$D$2,"" - "",NeoGuiAfspraken!D8,""; "",NeoGuiAfspraken!$E$2,"" - "",NeoGuiAfspraken!E8,"";"")
-$C$148: 	=CONCATENATE(NeoGuiAfspraken!G3,""        : "",NeoGuiAfspraken!$H$2,"" - "",NeoGuiAfspraken!H3,""; "",NeoGuiAfspraken!$I$2,"" - "",NeoGuiAfspraken!I3,""; "",NeoGuiAfspraken!$J$2,"" - "",NeoGuiAfspraken!J3,"";"")
-$C$149: 	=CONCATENATE(NeoGuiAfspraken!G4,""         : "",NeoGuiAfspraken!$H$2,"" - "",NeoGuiAfspraken!H4,""; "",NeoGuiAfspraken!$I$2,"" - "",NeoGuiAfspraken!I4,""; "",NeoGuiAfspraken!$J$2,"" - "",NeoGuiAfspraken!J4,"";"")
-$C$150: 	=CONCATENATE(NeoGuiAfspraken!G5,""       : "",NeoGuiAfspraken!$H$2,"" - "",NeoGuiAfspraken!H5,""; "",NeoGuiAfspraken!$I$2,"" - "",NeoGuiAfspraken!I5,""; "",NeoGuiAfspraken!$J$2,"" - "",NeoGuiAfspraken!J5,"";"")
-$C$151: 	=CONCATENATE(NeoGuiAfspraken!G6,""  : "",NeoGuiAfspraken!$H$2,"" - "",NeoGuiAfspraken!H6,""; "",NeoGuiAfspraken!$I$2,"" - "",NeoGuiAfspraken!I6,""; "",NeoGuiAfspraken!$J$2,"" - "",NeoGuiAfspraken!J6,"";"")
-$C$152: 	=CONCATENATE(NeoGuiAfspraken!G7,""          : "",NeoGuiAfspraken!$H$2,"" - "",NeoGuiAfspraken!H7,""; "",NeoGuiAfspraken!$I$2,"" - "",NeoGuiAfspraken!I7,""; "",NeoGuiAfspraken!$J$2,"" - "",NeoGuiAfspraken!J7,"";"")
-$C$153: 	=CONCATENATE(NeoGuiAfspraken!G8,""         : "",NeoGuiAfspraken!$H$2,"" - "",NeoGuiAfspraken!H8,""; "",NeoGuiAfspraken!$I$2,"" - "",NeoGuiAfspraken!I8,""; "",NeoGuiAfspraken!$J$2,"" - "",NeoGuiAfspraken!J8,"";"")
+$C$128: 	=IF(NeoGuiAfspr!C45="""","""",CONCATENATE(NeoGuiAfspr!B45,"": "",NeoGuiAfspr!C45))
+$C$129: 	=IF(NeoGuiAfspr!C46="""","""",CONCATENATE(NeoGuiAfspr!B46,"": "",NeoGuiAfspr!C46))
+$C$130: 	=IF(NeoGuiAfspr!C47="""","""",CONCATENATE(NeoGuiAfspr!B47,"": "",NeoGuiAfspr!C47))
+$C$131: 	=IF(NeoGuiAfspr!C48="""","""",CONCATENATE(NeoGuiAfspr!B48,"": "",NeoGuiAfspr!C48))
+$C$132: 	=IF(NeoGuiAfspr!C49="""","""",CONCATENATE(NeoGuiAfspr!B49,"": "",NeoGuiAfspr!C49))
+$C$133: 	=IF(NeoGuiInfB!D65<>"""",NeoGuiInfB!C65&"": ""&NeoGuiInfB!D65,"""")
+$C$134: 	=IF(NeoGuiInfB!D66<>"""",NeoGuiInfB!C66&"": ""&NeoGuiInfB!D66,"""")
+$C$135: 	=IF(NeoGuiInfB!D67<>"""",NeoGuiInfB!C67&"": ""&NeoGuiInfB!D67,"""")
+$C$136: 	=IF(NeoGuiInfB!D68<>"""",NeoGuiInfB!C68&"": ""&NeoGuiInfB!D68,"""")
+$C$137: 	=IF(NeoGuiInfB!D69<>"""",NeoGuiInfB!C69&"": ""&NeoGuiInfB!D69,"""")
+$C$138: 	=IF(NeoGuiInfB!D70<>"""",NeoGuiInfB!C70&"": ""&NeoGuiInfB!D70,"""")
+$C$139: 	=IF(NeoGuiInfB!D71<>"""",NeoGuiInfB!C71&"" ""&NeoGuiInfB!D71,"""")
+$C$140: 	=IF(NeoGuiInfB!D72<>"""",NeoGuiInfB!C72&"" ""&NeoGuiInfB!D72,"""")
+$C$141: 	=IF(NeoGuiInfB!D73<>"""",NeoGuiInfB!C73&"" ""&NeoGuiInfB!D73,"""")
+$C$142: 	=CONCATENATE(NeoGuiInfB!B3,""        : "",NeoGuiInfB!$C$2,"" - "",NeoGuiInfB!C3,""; "",NeoGuiInfB!$D$2,"" - "",NeoGuiInfB!D3,""; "",NeoGuiInfB!$E$2,"" - "",NeoGuiInfB!E3,"";"")
+$C$143: 	=CONCATENATE(NeoGuiInfB!B4,""            : "",NeoGuiInfB!C2,"" - "",NeoGuiInfB!C4,""; "",NeoGuiInfB!$D$2,"" - "",NeoGuiInfB!D4,""; "",NeoGuiInfB!$E$2,"" - "",NeoGuiInfB!E4,"";"")
+$C$144: 	=CONCATENATE(NeoGuiInfB!B5,""              : "",NeoGuiInfB!$C$2,"" - "",NeoGuiInfB!C5,""; "",NeoGuiInfB!$D$2,"" - "",NeoGuiInfB!D5,""; "",NeoGuiInfB!$E$2,"" - "",NeoGuiInfB!E5,"";"")
+$C$145: 	=CONCATENATE(NeoGuiInfB!B6,""       : "",NeoGuiInfB!$C$2,"" - "",NeoGuiInfB!C6,""; "",NeoGuiInfB!$D$2,"" - "",NeoGuiInfB!D6,""; "",NeoGuiInfB!$E$2,"" - "",NeoGuiInfB!E6,"";"")
+$C$146: 	=CONCATENATE(NeoGuiInfB!B7,""        : "",NeoGuiInfB!$C$2,"" - "",NeoGuiInfB!C7,""; "",NeoGuiInfB!$D$2,"" - "",NeoGuiInfB!D7,""; "",NeoGuiInfB!$E$2,"" - "",NeoGuiInfB!E7,"";"")
+$C$147: 	=CONCATENATE(NeoGuiInfB!B8,""            : "",NeoGuiInfB!$C$2,"" - "",NeoGuiInfB!C8,""; "",NeoGuiInfB!$D$2,"" - "",NeoGuiInfB!D8,""; "",NeoGuiInfB!$E$2,"" - "",NeoGuiInfB!E8,"";"")
+$C$148: 	=CONCATENATE(NeoGuiInfB!G3,""        : "",NeoGuiInfB!$H$2,"" - "",NeoGuiInfB!H3,""; "",NeoGuiInfB!$I$2,"" - "",NeoGuiInfB!I3,""; "",NeoGuiInfB!$J$2,"" - "",NeoGuiInfB!J3,"";"")
+$C$149: 	=CONCATENATE(NeoGuiInfB!G4,""         : "",NeoGuiInfB!$H$2,"" - "",NeoGuiInfB!H4,""; "",NeoGuiInfB!$I$2,"" - "",NeoGuiInfB!I4,""; "",NeoGuiInfB!$J$2,"" - "",NeoGuiInfB!J4,"";"")
+$C$150: 	=CONCATENATE(NeoGuiInfB!G5,""       : "",NeoGuiInfB!$H$2,"" - "",NeoGuiInfB!H5,""; "",NeoGuiInfB!$I$2,"" - "",NeoGuiInfB!I5,""; "",NeoGuiInfB!$J$2,"" - "",NeoGuiInfB!J5,"";"")
+$C$151: 	=CONCATENATE(NeoGuiInfB!G6,""  : "",NeoGuiInfB!$H$2,"" - "",NeoGuiInfB!H6,""; "",NeoGuiInfB!$I$2,"" - "",NeoGuiInfB!I6,""; "",NeoGuiInfB!$J$2,"" - "",NeoGuiInfB!J6,"";"")
+$C$152: 	=CONCATENATE(NeoGuiInfB!G7,""          : "",NeoGuiInfB!$H$2,"" - "",NeoGuiInfB!H7,""; "",NeoGuiInfB!$I$2,"" - "",NeoGuiInfB!I7,""; "",NeoGuiInfB!$J$2,"" - "",NeoGuiInfB!J7,"";"")
+$C$153: 	=CONCATENATE(NeoGuiInfB!G8,""         : "",NeoGuiInfB!$H$2,"" - "",NeoGuiInfB!H8,""; "",NeoGuiInfB!$I$2,"" - "",NeoGuiInfB!I8,""; "",NeoGuiInfB!$J$2,"" - "",NeoGuiInfB!J8,"";"")
 "
