@@ -65,7 +65,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoGuiAfspr, "A6"
         
         Case "btnNTPNadvies"
-            ModInfB.TPNAdviesNEO
+            ModNeoInfB.NeoInfB_TPNAdvice
         
         Case "btnNeoLab"                                    ' -> Lab Aanvragen
             ModSheet.GoToSheet shtNeoGuiLab, "A1"
@@ -86,10 +86,10 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         ' grpNeoActions                                     ' -- INFUUSBRIEF OVERZETTEN --
         
         Case "btnCopy1700"                                  ' -> 17:00 uur Overzetten
-            ModInfB.CopyToActueel
+            ModNeoInfB.CopyToActueel
         
         Case "btnCopyCurrent"                               ' -> Actueel Overzetten
-            ModInfB.CopyAfspraken
+            ModNeoInfB.NeoInfB_CopyAfspraken
             
         'grpPedPrint                                        ' -- PRINT PEDIATRIE --
         
@@ -103,7 +103,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtPedPrtMedDisc, "A1"
         
         Case "btnPedPrintTPN"                               ' -> TPN Brief
-            ModPedEntTPN.SelectPedTPNPrint
+            ModPedEntTPN.PedEntTPN_SelectTPNPrint
             
         'grpNeoPrint                                        ' -- PRINT NEO ---
         
@@ -117,7 +117,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
         
         Case "btnNTPN"
-            ModInfB.TPNAdviesNEO
+            ModNeoInfB.NeoInfB_TPNAdvice
         
         Case "btnNeoPrintApoth"                             ' -> Apotheek
             ModSheet.GoToSheet shtNeoPrtApoth, "A1"

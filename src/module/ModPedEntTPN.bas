@@ -18,7 +18,7 @@ Private Const constCaGlucVol = "_Ped_TPN_CaGlucVol"
 Private Const constMgClVol = "_Ped_TPN_MgClVol"
 Private Const constTPNVol = "_Ped_TPN_Vol"
 
-Public Sub SelectPedTPNPrint()
+Public Sub PedEntTPN_SelectTPNPrint()
 
     Dim dblGew As Double
     
@@ -46,7 +46,7 @@ Public Sub SelectPedTPNPrint()
 
 End Sub
 
-Public Sub SelectTPN()
+Public Sub PedEntTPN_SelectTPN()
 
     Dim dblGewicht As Double
     Dim strTPNB As String
@@ -379,19 +379,19 @@ Private Sub TPNAdvies(Dag As Integer)
     
 End Sub
 
-Public Sub TPNAdviesDagEen()
+Public Sub PedEntTPN_TPNAdviceDayOne()
 
     TPNAdvies 1
 
 End Sub
 
-Public Sub TPNAdviesDagTwee()
+Public Sub PedEntTPN_TPNAdviceDayTwo()
 
     TPNAdvies 2
 
 End Sub
 
-Public Sub TPNAdviesDagDrie()
+Public Sub PedEntTPN_TPNAdviceDayThree()
 
     TPNAdvies 3
 

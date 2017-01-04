@@ -1,2 +1,3 @@
 "$B$2: 	= TODAY()
+$K$2: 	=IF(((Var_AfspraakDatum-__4_GebDatum)/365)>100,"""",TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)"")
 "

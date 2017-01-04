@@ -103,7 +103,7 @@ Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
         End If
     End If
 
-    ModPedEntTPN.SelectTPN
+    ModPedEntTPN.PedEntTPN_SelectTPN
     ModLog.LogActionEnd strAction
     
     Exit Sub

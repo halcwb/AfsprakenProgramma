@@ -1,16 +1,16 @@
-Attribute VB_Name = "ModInfB"
+Attribute VB_Name = "ModNeoInfB"
 Option Explicit
 
 ' ToDo: Add comment
-Public Sub CopyAfspraken()
+Public Sub NeoInfB_CopyAfspraken()
 
-    CopyRangeNamesToRangeNames GetVoedingItems(), Get1700Items(GetVoedingItems())
-    CopyRangeNamesToRangeNames GetIVAfsprItems(), Get1700Items(GetIVAfsprItems())
-    CopyRangeNamesToRangeNames GetTPNItems(), Get1700Items(GetTPNItems())
+    CopyRangeNamesToRangeNames NeoInfB_GetVoedingItems(), ChangeTo1700(NeoInfB_GetVoedingItems())
+    CopyRangeNamesToRangeNames NeoInfB_GetIVAfsprItems(), ChangeTo1700(NeoInfB_GetIVAfsprItems())
+    CopyRangeNamesToRangeNames NeoInfB_GetTPNItems(), ChangeTo1700(NeoInfB_GetTPNItems())
     
 End Sub
 
-Public Function GetVoedingItems() As String()
+Public Function NeoInfB_GetVoedingItems() As String()
 
     Dim arrItems() As String
     ReDim arrItems(0)
@@ -24,11 +24,11 @@ Public Function GetVoedingItems() As String()
     AddItemsToArray arrItems, "_IntakePerKg", 1, 1
     AddItemsToArray arrItems, "_Extra", 1, 1
     
-    GetVoedingItems = arrItems
+    NeoInfB_GetVoedingItems = arrItems
 
 End Function
 
-Public Function GetIVAfsprItems() As String()
+Public Function NeoInfB_GetIVAfsprItems() As String()
 
     Dim arrItems() As String
     ReDim arrItems(0)
@@ -42,11 +42,11 @@ Public Function GetIVAfsprItems() As String()
     AddItemsToArray arrItems, "_Extra", 1, 12
     AddItemsToArray arrItems, "_MedTekst", 1, 2
     
-    GetIVAfsprItems = arrItems
+    NeoInfB_GetIVAfsprItems = arrItems
 
 End Function
 
-Public Function GetTPNItems() As String()
+Public Function NeoInfB_GetTPNItems() As String()
 
     Dim arrItems() As String
     ReDim arrItems(0)
@@ -65,11 +65,11 @@ Public Function GetTPNItems() As String()
     AddItemsToArray arrItems, "_SSTB", 1, 1
     AddItemsToArray arrItems, "_GlucSterkte", 1, 1
     
-    GetTPNItems = arrItems
+    NeoInfB_GetTPNItems = arrItems
     
 End Function
 
-Public Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As Integer, intStop)
+Private Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As Integer, intStop)
 
     Dim intC As Integer
     Dim intU As Integer
@@ -93,7 +93,7 @@ Public Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As 
     
 End Sub
 
-Public Function Get1700Items(arrItems() As String) As String()
+Private Function ChangeTo1700(arrItems() As String) As String()
     
     Dim arr1700Items() As String
     Dim varItem As Variant
@@ -106,21 +106,11 @@ Public Function Get1700Items(arrItems() As String) As String()
         intN = intN + 1
     Next varItem
     
-    Get1700Items = arr1700Items
+    ChangeTo1700 = arr1700Items
 
 End Function
 
-Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
-    
-    Dim intN As Integer
-    
-    For intN = 0 To UBound(arrFrom)
-        ModRange.SetRangeValue arrTo(intN), ModRange.GetRangeValue(arrFrom(intN), vbNullString)
-    Next intN
-    
-End Sub
-
-Public Sub AfsprakenOvernemen(blnAlles As Boolean, blnVoeding As Boolean, blnContMed As Boolean, blnTPN As Boolean)
+Public Sub NeoInfB_CopyInfB(blnAlles As Boolean, blnVoeding As Boolean, blnContMed As Boolean, blnTPN As Boolean)
     
     If blnAlles Then
         blnVoeding = True
@@ -147,8 +137,8 @@ Private Sub VoedingOvernemen()
     Dim arrTo() As String
     Dim arrFrom() As String
     
-    arrTo = GetVoedingItems()
-    arrFrom = Get1700Items(arrTo)
+    arrTo = NeoInfB_GetVoedingItems()
+    arrFrom = ChangeTo1700(arrTo)
     
     CopyRangeNamesToRangeNames arrFrom, arrTo
 
@@ -159,8 +149,8 @@ Private Sub ContMedOvernemen()
     Dim arrTo() As String
     Dim arrFrom() As String
     
-    arrTo = GetIVAfsprItems()
-    arrFrom = Get1700Items(arrTo)
+    arrTo = NeoInfB_GetIVAfsprItems()
+    arrFrom = ChangeTo1700(arrTo)
     
     CopyRangeNamesToRangeNames arrFrom, arrTo
 
@@ -171,8 +161,8 @@ Private Sub TPNOvernemen()
     Dim arrTo() As String
     Dim arrFrom() As String
     
-    arrTo = GetTPNItems()
-    arrFrom = Get1700Items(arrTo)
+    arrTo = NeoInfB_GetTPNItems()
+    arrFrom = ChangeTo1700(arrTo)
     
     CopyRangeNamesToRangeNames arrFrom, arrTo
 
@@ -194,15 +184,15 @@ Private Sub Test()
     Dim arr1700Items() As String
     Dim intN As Integer
     
-    arr1700Items = Get1700Items(GetIVAfsprItems())
-    For Each varItem In GetIVAfsprItems()
+    arr1700Items = ChangeTo1700(NeoInfB_GetIVAfsprItems())
+    For Each varItem In NeoInfB_GetIVAfsprItems()
         MsgBox varItem & ", " & arr1700Items(intN)
         intN = intN + 1
     Next varItem
 
 End Sub
 
-Private Sub VerwijderContInfuus(intRegel As Integer, bln1700 As Boolean)
+Private Sub RemoveContIV(intRegel As Integer, bln1700 As Boolean)
 
     Dim strMedicament As String
     Dim varMedicament As Variant
@@ -240,111 +230,111 @@ Private Sub VerwijderContInfuus(intRegel As Integer, bln1700 As Boolean)
     
 End Sub
 
-Public Sub VerwijderContInfuus_1()
+Public Sub NeoInfB_RemoveContIV_1()
 
-    VerwijderContInfuus 1, False
+    RemoveContIV 1, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_2()
+Public Sub NeoInfB_RemoveContIV_2()
     
-    VerwijderContInfuus 2, False
+    RemoveContIV 2, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_3()
+Public Sub NeoInfB_RemoveContIV_3()
     
-    VerwijderContInfuus 3, False
+    RemoveContIV 3, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_4()
+Public Sub NeoInfB_RemoveContIV_4()
     
-    VerwijderContInfuus 4, False
+    RemoveContIV 4, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_5()
+Public Sub NeoInfB_RemoveContIV_5()
     
-    VerwijderContInfuus 5, False
+    RemoveContIV 5, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_6()
+Public Sub NeoInfB_RemoveContIV_6()
     
-    VerwijderContInfuus 6, False
+    RemoveContIV 6, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_7()
+Public Sub NeoInfB_RemoveContIV_7()
     
-    VerwijderContInfuus 7, False
+    RemoveContIV 7, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_8()
+Public Sub NeoInfB_RemoveContIV_8()
     
-    VerwijderContInfuus 8, False
+    RemoveContIV 8, False
 
 End Sub
 
-Public Sub VerwijderContInfuus_9()
+Public Sub NeoInfB_RemoveContIV_9()
     
-    VerwijderContInfuus 9, False
+    RemoveContIV 9, False
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_1()
+Public Sub NeoInfB_RemoveContIV1700_1()
 
-    VerwijderContInfuus 1, True
+    RemoveContIV 1, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_2()
+Public Sub NeoInfB_RemoveContIV1700_2()
     
-    VerwijderContInfuus 2, True
+    RemoveContIV 2, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_3()
+Public Sub NeoInfB_RemoveContIV1700_3()
     
-    VerwijderContInfuus 3, True
+    RemoveContIV 3, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_4()
+Public Sub NeoInfB_RemoveContIV1700_4()
     
-    VerwijderContInfuus 4, True
+    RemoveContIV 4, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_5()
+Public Sub NeoInfB_RemoveContIV1700_5()
     
-    VerwijderContInfuus 5, True
+    RemoveContIV 5, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_6()
+Public Sub NeoInfB_RemoveContIV1700_6()
     
-    VerwijderContInfuus 6, True
+    RemoveContIV 6, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_7()
+Public Sub NeoInfB_RemoveContIV1700_7()
     
-    VerwijderContInfuus 7, True
+    RemoveContIV 7, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_8()
+Public Sub NeoInfB_RemoveContIV1700_8()
     
-    VerwijderContInfuus 8, True
+    RemoveContIV 8, True
 
 End Sub
 
-Public Sub VerwijderContInfuus1700_9()
+Public Sub NeoInfB_RemoveContIV1700_9()
     
-    VerwijderContInfuus 9, True
+    RemoveContIV 9, True
 
 End Sub
 
@@ -369,115 +359,115 @@ Private Sub MedSterkte(intRegel As Integer, bln1700 As Boolean)
 
 End Sub
 
-Public Sub Med1Sterkte()
+Public Sub NeoInfB_MedConc_1()
 
     MedSterkte 1, False
 
 End Sub
 
-Public Sub Med2Sterkte()
+Public Sub NeoInfB_MedConc_2()
 
     MedSterkte 2, False
 
 End Sub
 
-Public Sub Med3Sterkte()
+Public Sub NeoInfB_MedConc_3()
 
     MedSterkte 3, False
 
 End Sub
 
-Public Sub Med4Sterkte()
+Public Sub NeoInfB_MedConc_4()
 
     MedSterkte 4, False
 
 End Sub
 
-Public Sub Med5Sterkte()
+Public Sub NeoInfB_MedConc_5()
 
         MedSterkte 5, False
 
 End Sub
 
-Public Sub Med6Sterkte()
+Public Sub NeoInfB_MedConc_6()
 
     MedSterkte 6, False
 
 End Sub
 
-Public Sub Med7Sterkte()
+Public Sub NeoInfB_MedConc_7()
 
     MedSterkte 7, False
 
 End Sub
 
-Public Sub Med8Sterkte()
+Public Sub NeoInfB_MedConc_8()
 
     MedSterkte 8, False
 
 End Sub
 
-Public Sub Med9Sterkte()
+Public Sub NeoInfB_MedConc_9()
 
     MedSterkte 9, False
 
 End Sub
 
-Public Sub MedSterkte1700_1()
+Public Sub NeoInfB_MedConc1700_1()
     
     MedSterkte 1, True
 
 End Sub
 
-Public Sub MedSterkte1700_2()
+Public Sub NeoInfB_MedConc1700_2()
     
     MedSterkte 2, True
 
 End Sub
 
-Public Sub MedSterkte1700_3()
+Public Sub NeoInfB_MedConc1700_3()
     
     MedSterkte 3, True
 
 End Sub
 
-Public Sub MedSterkte1700_4()
+Public Sub NeoInfB_MedConc1700_4()
     
     MedSterkte 4, True
 
 End Sub
 
-Public Sub MedSterkte1700_5()
+Public Sub NeoInfB_MedConc1700_5()
     
     MedSterkte 5, True
 
 End Sub
 
-Public Sub MedSterkte1700_6()
+Public Sub NeoInfB_MedConc1700_6()
     
     MedSterkte 6, True
 
 End Sub
 
-Public Sub MedSterkte1700_7()
+Public Sub NeoInfB_MedConc1700_7()
     
     MedSterkte 7, True
 
 End Sub
 
-Public Sub MedSterkte1700_8()
+Public Sub NeoInfB_MedConc1700_8()
     
     MedSterkte 8, True
 
 End Sub
 
-Public Sub MedSterkte1700_9()
+Public Sub NeoInfB_MedConc1700_9()
     
     MedSterkte 9, True
 
 End Sub
 
-Private Sub VerwijderZijlijn(intRegel As Integer)
+Private Sub RemoveIV(intRegel As Integer)
 
     Dim strStand As String
     Dim strExtra As String
@@ -490,25 +480,25 @@ Private Sub VerwijderZijlijn(intRegel As Integer)
     
 End Sub
 
-Public Sub VerwijderZijlijn_10()
+Public Sub NeoInfB_RemoveIV_10()
     
-    VerwijderZijlijn 10
+    RemoveIV 10
 
 End Sub
 
-Public Sub VerwijderZijlijn_11()
+Public Sub NeoInfB_RemoveIV_11()
     
-    VerwijderZijlijn 11
+    RemoveIV 11
 
 End Sub
 
-Public Sub VerwijderZijlijn_12()
+Public Sub NeoInfB_RemoveIV_12()
     
-    VerwijderZijlijn 12
+    RemoveIV 12
 
 End Sub
 
-Public Sub TPNAdviesNEO()
+Public Sub NeoInfB_TPNAdvice()
 
     ModRange.SetRangeValue "_DagKeuze", IIf(ModRange.GetRangeValue("Dag", 0) < 4, 1, 2)
     ModRange.SetRangeValue "_IntakePerKg", 5000
@@ -526,7 +516,7 @@ Public Sub TPNAdviesNEO()
 
 End Sub
 
-Private Sub TekstInvoer(strCaption As String, strName As String, strRange As String)
+Private Sub EnterText(strCaption As String, strName As String, strRange As String)
 
     Dim frmInvoer As New FormTekstInvoer
     
@@ -542,27 +532,27 @@ Private Sub TekstInvoer(strCaption As String, strName As String, strRange As Str
 
 End Sub
 
-Public Sub Med11Tekst()
+Public Sub NeoInfB_MedText_1()
 
-    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst_1"
+    EnterText "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst_1"
 
 End Sub
 
-Public Sub Med12Tekst()
+Public Sub NeoInfB_MedText_2()
 
-    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst_2"
+    EnterText "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst_2"
     
 End Sub
 
 
-Public Sub Med11Tekst1700()
+Public Sub NeoInfB_MedText1700_1()
 
-    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst1700_1"
+    EnterText "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst1700_1"
     
 End Sub
 
-Public Sub Med12Tekst1700()
+Public Sub NeoInfB_MedText1700_2()
 
-    TekstInvoer "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst1700_2"
+    EnterText "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst1700_2"
     
 End Sub

@@ -23,7 +23,7 @@ End Sub
 
 Private Sub cmdOk_Click()
     
-    ModInfB.AfsprakenOvernemen Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
+    ModNeoInfB.NeoInfB_CopyInfB Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
     Me.Hide
 
 End Sub

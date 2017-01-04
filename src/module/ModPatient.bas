@@ -34,7 +34,7 @@ Public Sub Patient_EnterWeight()
         .txtWaarde = vbNullString
     End With
     
-    SelectTPN
+    PedEntTPN_SelectTPN
     
     Set objPatient = Nothing
     Set frmGewichtInvoer = Nothing
@@ -240,7 +240,7 @@ Public Sub ClearPatient(blnShowWarn As Boolean, blnShowProgress As Boolean)
     End If
     
     If objResult = vbYes Then
-        If blnShowProgress Then ModProgress.StartProgress strTitle
+        If blnShowProgress And blnShowWarn Then ModProgress.StartProgress strTitle
         
         With shtPatData
             strJob = "Patient gegevens verwijderen ..."
@@ -281,7 +281,7 @@ Public Function ValidBirthDate(dtmBd As Date, dtmAdm As Date) As Boolean
 
     Dim dtmMin As Date
     
-    dtmMin = DateAdd("y", -100, Date)
+    dtmMin = DateAdd("yyyy", -100, Date)
     
     ValidBirthDate = dtmBd <= Date And dtmBd > dtmMin And dtmBd <= dtmAdm
 

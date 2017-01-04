@@ -81,182 +81,181 @@ Private Sub MedicamentInvoeren(intN)
 
 End Sub
 
-Public Sub Medicament_16()
-
-    MedicamentInvoeren 16
-
-End Sub
-
-Public Sub Medicament_17()
-
-    MedicamentInvoeren 17
-
-End Sub
-
-Public Sub Medicament_18()
-
-    MedicamentInvoeren 18
-
-End Sub
-
-Public Sub Medicament_19()
-
-    MedicamentInvoeren 19
-
-End Sub
-
-Public Sub Medicament_15()
-
-    MedicamentInvoeren 15
-
-End Sub
-
-Public Sub Medicament_14()
-
-    MedicamentInvoeren 14
-
-End Sub
-
-Public Sub Medicament_13()
-
-    MedicamentInvoeren 13
-
-End Sub
-
-Public Sub Medicament_12()
-
-    MedicamentInvoeren 12
-
-End Sub
-
-Public Sub Medicament_11()
-
-    MedicamentInvoeren 11
-
-End Sub
-
-Public Sub Medicament_10()
-
-    MedicamentInvoeren 10
-
-End Sub
-
-Public Sub Medicament_9()
-
-    MedicamentInvoeren 9
-
-End Sub
-
-Public Sub Medicament_8()
-
-    MedicamentInvoeren 8
-
-End Sub
-
-Public Sub Medicament_7()
-
-    MedicamentInvoeren 7
-
-End Sub
-
-Public Sub Medicament_6()
-
-    MedicamentInvoeren 6
-
-End Sub
-
-Public Sub Medicament_5()
-
-    MedicamentInvoeren 5
-
-End Sub
-
-Public Sub Medicament_4()
-
-    MedicamentInvoeren 4
-
-End Sub
-
-Public Sub Medicament_3()
-
-    MedicamentInvoeren 3
-
-End Sub
-
-Public Sub Medicament_2()
-
-    MedicamentInvoeren 2
-
-End Sub
-
-Public Sub Medicament_1()
+Public Sub MedDisc_EnterMed_01()
 
     MedicamentInvoeren 1
 
 End Sub
 
+Public Sub MedDisc_EnterMed_02()
 
-Public Sub Medicament_20()
+    MedicamentInvoeren 2
+
+End Sub
+
+Public Sub MedDisc_EnterMed_03()
+
+    MedicamentInvoeren 3
+
+End Sub
+
+Public Sub MedDisc_EnterMed_04()
+
+    MedicamentInvoeren 4
+
+End Sub
+
+Public Sub MedDisc_EnterMed_05()
+
+    MedicamentInvoeren 5
+
+End Sub
+
+Public Sub MedDisc_EnterMed_06()
+
+    MedicamentInvoeren 6
+
+End Sub
+
+Public Sub MedDisc_EnterMed_07()
+
+    MedicamentInvoeren 7
+
+End Sub
+
+Public Sub MedDisc_EnterMed_08()
+
+    MedicamentInvoeren 8
+
+End Sub
+
+Public Sub MedDisc_EnterMed_09()
+
+    MedicamentInvoeren 9
+
+End Sub
+
+Public Sub MedDisc_EnterMed_10()
+
+    MedicamentInvoeren 10
+
+End Sub
+
+Public Sub MedDisc_EnterMed_11()
+
+    MedicamentInvoeren 11
+
+End Sub
+
+Public Sub MedDisc_EnterMed_12()
+
+    MedicamentInvoeren 12
+
+End Sub
+
+Public Sub MedDisc_EnterMed_13()
+
+    MedicamentInvoeren 13
+
+End Sub
+
+Public Sub MedDisc_EnterMed_14()
+
+    MedicamentInvoeren 14
+
+End Sub
+
+Public Sub MedDisc_EnterMed_15()
+
+    MedicamentInvoeren 15
+
+End Sub
+
+Public Sub MedDisc_EnterMed_16()
+
+    MedicamentInvoeren 16
+
+End Sub
+
+Public Sub MedDisc_EnterMed_17()
+
+    MedicamentInvoeren 17
+
+End Sub
+
+Public Sub MedDisc_EnterMed_18()
+
+    MedicamentInvoeren 18
+
+End Sub
+
+Public Sub MedDisc_EnterMed_19()
+
+    MedicamentInvoeren 19
+
+End Sub
+
+Public Sub MedDisc_EnterMed_20()
 
     MedicamentInvoeren 20
 
 End Sub
 
-Public Sub Medicament_21()
+Public Sub MedDisc_EnterMed_21()
 
     MedicamentInvoeren 21
 
 End Sub
 
-Public Sub Medicament_22()
+Public Sub MedDisc_EnterMed_22()
 
     MedicamentInvoeren 22
 
 End Sub
 
-Public Sub Medicament_23()
+Public Sub MedDisc_EnterMed_23()
 
     MedicamentInvoeren 23
 
 End Sub
 
-Public Sub Medicament_24()
+Public Sub MedDisc_EnterMed_24()
 
     MedicamentInvoeren 24
 
 End Sub
 
-Public Sub Medicament_25()
+Public Sub MedDisc_EnterMed_25()
 
     MedicamentInvoeren 25
 
 End Sub
 
-Public Sub Medicament_26()
+Public Sub MedDisc_EnterMed_26()
 
     MedicamentInvoeren 26
 
 End Sub
 
-Public Sub Medicament_27()
+Public Sub MedDisc_EnterMed_27()
 
     MedicamentInvoeren 27
 
 End Sub
 
-Public Sub Medicament_28()
+Public Sub MedDisc_EnterMed_28()
 
     MedicamentInvoeren 28
 
 End Sub
 
-Public Sub Medicament_29()
+Public Sub MedDisc_EnterMed_29()
 
     MedicamentInvoeren 29
 
 End Sub
 
-Public Sub Medicament_30()
+Public Sub MedDisc_EnterMed_30()
 
     MedicamentInvoeren 30
 
@@ -267,7 +266,7 @@ Private Sub OpmMedDisc(intN As Integer)
     Dim frmOpmerking As New FormOpmerking
     Dim strRange As String
     
-    strRange = shtGlobBerOpm.Name & "!c" & intN
+    strRange = shtGlobBerOpm.Name & "!C" & intN
 
     frmOpmerking.txtOpmerking.Text = Range(strRange).Value
     frmOpmerking.Show
@@ -280,165 +279,180 @@ Private Sub OpmMedDisc(intN As Integer)
 
 End Sub
 
-Public Sub OpmMedDisc_1()
+Public Sub MedDisc_EnterText_01()
     
     OpmMedDisc 16
     
 End Sub
 
-Public Sub OpmMedDisc_2()
+Public Sub MedDisc_EnterText_02()
     
     OpmMedDisc 17
 
 End Sub
 
-Public Sub OpmMedDisc_3()
+Public Sub MedDisc_EnterText_03()
     
     OpmMedDisc 18
 
 End Sub
-Public Sub OpmMedDisc_4()
+Public Sub MedDisc_EnterText_04()
     
     OpmMedDisc 19
 
 End Sub
 
-Public Sub OpmMedDisc_5()
+Public Sub MedDisc_EnterText_05()
     
     OpmMedDisc 20
 
 End Sub
-Public Sub OpmMedDisc_6()
+
+Public Sub MedDisc_EnterText_06()
     
     OpmMedDisc 21
 
 End Sub
-Public Sub OpmMedDisc_7()
+
+Public Sub MedDisc_EnterText_07()
     
     OpmMedDisc 22
 
 End Sub
-Public Sub OpmMedDisc_8()
+
+Public Sub MedDisc_EnterText_08()
     
     OpmMedDisc 23
 
 End Sub
-Public Sub OpmMedDisc_9()
+
+Public Sub MedDisc_EnterText_09()
     
     OpmMedDisc 24
 
 End Sub
-Public Sub OpmMedDisc_10()
+
+Public Sub MedDisc_EnterText_10()
     
     OpmMedDisc 25
 
 End Sub
-Public Sub OpmMedDisc_11()
+
+Public Sub MedDisc_EnterText_11()
     
     OpmMedDisc 26
 
 End Sub
-Public Sub OpmMedDisc_12()
+
+Public Sub MedDisc_EnterText_12()
     
     OpmMedDisc 27
 
 End Sub
-Public Sub OpmMedDisc_13()
+
+Public Sub MedDisc_EnterText_13()
     
     OpmMedDisc 28
 
 End Sub
-Public Sub OpmMedDisc_14()
+
+Public Sub MedDisc_EnterText_14()
     
     OpmMedDisc 29
 
 End Sub
-Public Sub OpmMedDisc_15()
+
+Public Sub MedDisc_EnterText_15()
     
     OpmMedDisc 30
 
 End Sub
-Public Sub OpmMedDisc_16()
+
+Public Sub MedDisc_EnterText_16()
     
     OpmMedDisc 31
 
 End Sub
-Public Sub OpmMedDisc_17()
+
+Public Sub MedDisc_EnterText_17()
     
     OpmMedDisc 32
 
 End Sub
-Public Sub OpmMedDisc_18()
+
+Public Sub MedDisc_EnterText_18()
     
     OpmMedDisc 33
 
 End Sub
-Public Sub OpmMedDisc_19()
+
+Public Sub MedDisc_EnterText_19()
     
     OpmMedDisc 34
 
 End Sub
-Public Sub OpmMedDisc_20()
+
+Public Sub MedDisc_EnterText_20()
     
     OpmMedDisc 35
 
 End Sub
 
-Public Sub OpmMedDisc_21()
+Public Sub MedDisc_EnterText_21()
     
     OpmMedDisc 36
 
 End Sub
 
-Public Sub OpmMedDisc_22()
+Public Sub MedDisc_EnterText_22()
     
     OpmMedDisc 37
 
 End Sub
 
-Public Sub OpmMedDisc_23()
+Public Sub MedDisc_EnterText_23()
     
     OpmMedDisc 38
 
 End Sub
 
-Public Sub OpmMedDisc_24()
+Public Sub MedDisc_EnterText_24()
     
     OpmMedDisc 39
 
 End Sub
 
-Public Sub OpmMedDisc_25()
+Public Sub MedDisc_EnterText_25()
     
     OpmMedDisc 40
 
 End Sub
 
-Public Sub OpmMedDisc_26()
+Public Sub MedDisc_EnterText_26()
     
     OpmMedDisc 41
 
 End Sub
 
-Public Sub OpmMedDisc_27()
+Public Sub MedDisc_EnterText_27()
     
     OpmMedDisc 42
 
 End Sub
 
-Public Sub OpmMedDisc_28()
+Public Sub MedDisc_EnterText_28()
     
     OpmMedDisc 43
 
 End Sub
 
-Public Sub OpmMedDisc_29()
+Public Sub MedDisc_EnterText_29()
     
     OpmMedDisc 44
 
 End Sub
 
-Public Sub OpmMedDisc_30()
+Public Sub MedDisc_EnterText_30()
     
     OpmMedDisc 45
 

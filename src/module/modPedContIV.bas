@@ -6,7 +6,7 @@ Private Const constMedIVKeuze = "_Ped_MedIV_Keuze_"
 Private Const constMedIVSterkte = "_Ped_MedIV_Sterkte_"
 Private Const constMedIVOpm = "_Ped_MedIV_Opm"
 
-Private Sub SetMedContIVToStandardItem(intRegel As Integer)
+Private Sub SetToStandard(intRegel As Integer)
 
     Dim strMedicament As String
     Dim strMedSterkte As String
@@ -16,7 +16,7 @@ Private Sub SetMedContIVToStandardItem(intRegel As Integer)
     Dim strStand As String
     Dim strRegel As String
     
-    On Error GoTo SetMedContIVToStandardError
+    On Error GoTo SetToStandardError
 
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
     strMedicament = "_Ped_MedIV_Keuze_" & strRegel
@@ -38,73 +38,73 @@ Private Sub SetMedContIVToStandardItem(intRegel As Integer)
     
     Exit Sub
     
-SetMedContIVToStandardError:
+SetToStandardError:
 
     ModLog.LogError "SetMedContIVToStandard: " & " Error for regel " & strRegel
 
 End Sub
 
-Public Sub SetMedContIVToStand_01()
+Public Sub PedContIV_SetStandard_01()
     
-    SetMedContIVToStandardItem 1
+    SetToStandard 1
 
 End Sub
 
-Public Sub SetMedContIVToStand_02()
+Public Sub PedContIV_SetStandard_02()
     
-    SetMedContIVToStandardItem 2
+    SetToStandard 2
 
 End Sub
 
-Public Sub SetMedContIVToStand_03()
+Public Sub PedContIV_SetStandard_03()
     
-    SetMedContIVToStandardItem 3
+    SetToStandard 3
 
 End Sub
 
-Public Sub SetMedContIVToStand_04()
+Public Sub PedContIV_SetStandard_04()
         
-    SetMedContIVToStandardItem 4
+    SetToStandard 4
 
 End Sub
 
-Public Sub SetMedContIVToStand_05()
+Public Sub PedContIV_SetStandard_05()
     
-    SetMedContIVToStandardItem 5
+    SetToStandard 5
 
 End Sub
 
-Public Sub SetMedContIVToStand_06()
+Public Sub PedContIV_SetStandard_06()
     
-    SetMedContIVToStandardItem 6
+    SetToStandard 6
 
 End Sub
 
-Public Sub SetMedContIVToStand_07()
+Public Sub PedContIV_SetStandard_07()
 
-    SetMedContIVToStandardItem 7
-
-End Sub
-
-Public Sub SetMedContIVToStand_08()
-
-    SetMedContIVToStandardItem 8
+    SetToStandard 7
 
 End Sub
 
-Public Sub SetMedContIVToStand_09()
+Public Sub PedContIV_SetStandard_08()
+
+    SetToStandard 8
+
+End Sub
+
+Public Sub PedContIV_SetStandard_09()
     
-    SetMedContIVToStandardItem 9
+    SetToStandard 9
 
 End Sub
 
-Public Sub SetMedContIVToStand_10()
+Public Sub PedContIV_SetStandard_10()
     
-    SetMedContIVToStandardItem 10
+    SetToStandard 10
 
 End Sub
 
-Private Sub OpenInvoerNumeriek(intRegel As Integer, strRange As String, strUnit As String, intColumn As Integer)
+Private Sub EnterNumeric(intRegel As Integer, strRange As String, strUnit As String, intColumn As Integer)
 
     Dim frmInvoer As New FormInvoerNumeriek
     Dim varKeuze As Variant
@@ -140,157 +140,157 @@ Private Sub OpenInvoerNumeriek(intRegel As Integer, strRange As String, strUnit 
     
 OpenInvoerNumeriekError:
 
-    ModLog.LogError "OpenInvoerNumeriek(" & Join(Array(strRegel, strRange, strUnit, intColumn), ", ") & ")"
+    ModLog.LogError "EnterNumeric(" & Join(Array(strRegel, strRange, strUnit, intColumn), ", ") & ")"
     Set frmInvoer = Nothing
 
 End Sub
 
-Private Sub SetMedContIVSterkteItem(intRegel As Integer)
+Private Sub SetMedConc(intRegel As Integer)
 
     Dim strUnit As String
     Dim strRegel As String
     
-    On Error GoTo SetMedContIVSterkteError
+    On Error GoTo SetMedConcError
 
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
     strUnit = Application.WorksheetFunction.Index(Range(constTblMed), Range("_Ped_MedIV_Keuze_" & strRegel), 4)
-    OpenInvoerNumeriek intRegel, "MedIVSterkte_", strUnit, 11
+    EnterNumeric intRegel, "MedIVSterkte_", strUnit, 11
     
     Exit Sub
     
-SetMedContIVSterkteError:
+SetMedConcError:
 
-    ModLog.LogError "SetMedContIVSterkteItem(" & intRegel & ")"
+    ModLog.LogError "SetMedConc(" & intRegel & ")"
 
 End Sub
 
-Public Sub SetMedContIVSterkte_01()
+Public Sub PedContIV_MedConc_01()
     
-    SetMedContIVSterkteItem 1
+    SetMedConc 1
 
 End Sub
 
-Public Sub SetMedContIVSterkte_02()
+Public Sub PedContIV_MedConc_02()
     
-    SetMedContIVSterkteItem 2
+    SetMedConc 2
 
 End Sub
 
-Public Sub SetMedContIVSterkte_03()
+Public Sub PedContIV_MedConc_03()
     
-    SetMedContIVSterkteItem 3
+    SetMedConc 3
 
 End Sub
 
-Public Sub SetMedContIVSterkte_04()
+Public Sub PedContIV_MedConc_04()
     
-    SetMedContIVSterkteItem 4
+    SetMedConc 4
 
 End Sub
 
-Public Sub SetMedContIVSterkte_05()
+Public Sub PedContIV_MedConc_05()
     
-    SetMedContIVSterkteItem 5
+    SetMedConc 5
 
 End Sub
 
-Public Sub SetMedContIVSterkte_06()
+Public Sub PedContIV_MedConc_06()
     
-    SetMedContIVSterkteItem 6
+    SetMedConc 6
 
 End Sub
 
-Public Sub SetMedContIVSterkte_07()
+Public Sub PedContIV_MedConc_07()
     
-    SetMedContIVSterkteItem 7
+    SetMedConc 7
 
 End Sub
 
-Public Sub SetMedContIVSterkte_08()
+Public Sub PedContIV_MedConc_08()
     
-    SetMedContIVSterkteItem 8
+    SetMedConc 8
 
 End Sub
 
-Public Sub SetMedContIVSterkte_09()
+Public Sub PedContIV_MedConc_09()
     
-    SetMedContIVSterkteItem 9
+    SetMedConc 9
 
 End Sub
 
-Public Sub SetMedContIVSterkte_10()
+Public Sub PedContIV_MedConc_10()
     
-    SetMedContIVSterkteItem 10
+    SetMedConc 10
 
 End Sub
 
-Private Sub SetMedContIVOplossingItem(intRegel As Integer)
+Private Sub SetSolution(intRegel As Integer)
 
-    OpenInvoerNumeriek intRegel, "_Ped_MedIV_OplVol_", "mL", 12
+    EnterNumeric intRegel, "_Ped_MedIV_OplVol_", "mL", 12
 
 End Sub
 
-Public Sub SetMedContIVOplossing_01()
+Public Sub PedContIV_SetSolution_01()
     
-    SetMedContIVOplossingItem 1
+    SetSolution 1
 
 End Sub
 
-Public Sub SetMedContIVOplossing_02()
+Public Sub PedContIV_SetSolution_02()
     
-    SetMedContIVOplossingItem 2
+    SetSolution 2
 
 End Sub
 
-Public Sub SetMedContIVOplossing_03()
+Public Sub PedContIV_SetSolution_03()
     
-    SetMedContIVOplossingItem 3
+    SetSolution 3
 
 End Sub
 
-Public Sub SetMedContIVOplossing_04()
+Public Sub PedContIV_SetSolution_04()
     
-    SetMedContIVOplossingItem 4
+    SetSolution 4
 
 End Sub
 
-Public Sub SetMedContIVOplossing_05()
+Public Sub PedContIV_SetSolution_05()
     
-    SetMedContIVOplossingItem 5
+    SetSolution 5
 
 End Sub
 
-Public Sub SetMedContIVOplossing_06()
+Public Sub PedContIV_SetSolution_06()
     
-    SetMedContIVOplossingItem 6
+    SetSolution 6
 
 End Sub
 
-Public Sub SetMedContIVOplossing_07()
+Public Sub PedContIV_SetSolution_07()
     
-    SetMedContIVOplossingItem 7
+    SetSolution 7
 
 End Sub
 
-Public Sub SetMedContIVOplossing_08()
+Public Sub PedContIV_SetSolution_08()
     
-    SetMedContIVOplossingItem 8
+    SetSolution 8
 
 End Sub
 
-Public Sub SetMedContIVOplossing_09()
+Public Sub PedContIV_SetSolution_09()
     
-    SetMedContIVOplossingItem 9
+    SetSolution 9
 
 End Sub
 
-Public Sub SetMedContIVOplossing_10()
+Public Sub PedContIV_SetSolution_10()
     
-    SetMedContIVOplossingItem 10
+    SetSolution 10
 
 End Sub
 
-Private Sub MedIVInvoer(intN As Integer)
+Private Sub EnterMed(intN As Integer)
 
     Dim strMed As String, strSterkte As String
     Dim frmMedIV As New FormMedIV
@@ -306,37 +306,37 @@ Private Sub MedIVInvoer(intN As Integer)
         
 End Sub
 
-Public Sub MedIV_11()
+Public Sub PedContIV_EnterMed_11()
 
-    MedIVInvoer 11
+    EnterMed 11
         
 End Sub
 
-Public Sub MedIV_12()
+Public Sub PedContIV_EnterMed_12()
     
-    MedIVInvoer 12
+    EnterMed 12
 
 End Sub
 
-Public Sub MedIV_13()
+Public Sub PedContIV_EnterMed_13()
     
-    MedIVInvoer 13
+    EnterMed 13
 
 End Sub
 
-Public Sub MedIV_14()
+Public Sub PedContIV_EnterMed_14()
     
-    MedIVInvoer 14
+    EnterMed 14
 
 End Sub
 
-Public Sub MedIV_15()
+Public Sub PedContIV_EnterMed_15()
     
-    MedIVInvoer 15
+    EnterMed 15
 
 End Sub
 
-Public Sub PedContIV_Opm()
+Public Sub PedContIV_Text()
 
     Dim frmOpmerking As New FormOpmerking
     

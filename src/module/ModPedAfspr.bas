@@ -1,7 +1,10 @@
 Attribute VB_Name = "ModPedAfspr"
 Option Explicit
 
-Private Sub TekstInvoer(strCaption As String, strName As String, strRange As String)
+Private Const constOverige = "_Ped_AfsprOverig"
+Private Const constCompens = "_Ped_AfsprD_Verliezen" 'ToDo Remove duplicate name _Ped_AfsprD_VerliezenStof
+
+Private Sub EnterText(strCaption As String, strName As String, strRange As String)
 
     Dim frmInvoer As New FormTekstInvoer
     
@@ -17,28 +20,14 @@ Private Sub TekstInvoer(strCaption As String, strName As String, strRange As Str
 
 End Sub
 
+Public Sub PedAfspr_OverigeText()
 
-Public Sub MedTekstWondkweek()
-
-    TekstInvoer "Voer tekst in ...", "Voer locatie wond(en) in", "Aanvullend_WondkweekTekst"
-
-End Sub
-
-Public Sub MedTekstVerliezenCompenseren()
-
-    TekstInvoer "Voer tekst in ...", "Voer verliezen compenseren in", "Aanvullend_VerliezenTekst"
-
-End Sub
-
-Public Sub MedTekstAanvullendeAfsprakenOverigePed()
-
-    TekstInvoer "Voer tekst in ...", "Voer overige aanvullende afspraken in", "Aanvullend_Overige_Ped"
+    EnterText "Voer tekst in ...", "Voer overige aanvullende afspraken in", constOverige
     
 End Sub
 
+Public Sub PedAfspr_CompensateText()
 
-Public Sub MedTekstAanvullendeAfsprakenVerliezenPed()
-
-    TekstInvoer "Voer tekst in ...", "Voer compensatie vloeistof in", "Aanvullend_Verliezen_Ped"
+    EnterText "Voer tekst in ...", "Voer compensatie vloeistof in", constCompens
 
 End Sub

@@ -16,6 +16,16 @@ Function GetRow(sheetName As String, searchString As String)
     
 End Function
 
+Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
+    
+    Dim intN As Integer
+    
+    For intN = 0 To UBound(arrFrom)
+        ModRange.SetRangeValue arrTo(intN), ModRange.GetRangeValue(arrFrom(intN), vbNullString)
+    Next intN
+    
+End Sub
+
 Public Function CopyTempSheetToNamedRanges(blnShowProgress As Boolean) As Boolean
 
     Dim intN As Integer
