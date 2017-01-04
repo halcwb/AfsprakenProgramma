@@ -112,9 +112,12 @@ End Sub
 Public Sub ExportVbaCode(blnShowProgress As Boolean)
 
     Dim vbcItem As VBComponent
+    Dim strError As String
     Dim strFile As String
     Dim strPath As String
     Dim intN, intC As Integer
+    
+    On Error GoTo ExportVbaCodeError:
     
     strPath = WbkAfspraken.Path
     
@@ -127,7 +130,16 @@ Public Sub ExportVbaCode(blnShowProgress As Boolean)
         If blnShowProgress Then ModProgress.SetJobPercentage "Export VBA Code", intC, intN
         intN = intN + 1
     Next
+    
+    Exit Sub
+    
+ExportVbaCodeError:
+    
+    strError = "Kan VBA bestanden niet exporteren." & vbNewLine
+    strError = strError & "Waarschijnlijk is het Afspraken project niet geopend (beveiligd met een passwoord)." & vbNewLine
+    strError = strError & "Open dit eerst en probeer het opnieuw"
 
+    ModMessage.ShowMsgBoxError strError
 End Sub
 
 Public Function GetComponentFileName(vbcComp As VBComponent) As String

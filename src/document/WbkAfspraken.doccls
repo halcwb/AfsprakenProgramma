@@ -11,18 +11,15 @@ Option Explicit
 
 Private Sub Workbook_BeforeClose(blnCancel As Boolean)
     
+    Me.Saved = True ' DisplayAlerts = False doesn' prevent save dialog
+                    ' http://www.microsofttraining.net/post-34753-applicationdisplayalerts--false.html
     ModApplication.CloseAfspraken
 
 End Sub
 
 Private Sub Workbook_Open()
     
-    Application.ScreenUpdating = False
-    
     ModApplication.InitializeAfspraken
-    ModSheet.SelectPedOrNeoStartSheet
-    
-    Application.ScreenUpdating = True
     
 End Sub
 

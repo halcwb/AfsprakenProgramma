@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPatient
    ClientHeight    =   3633
    ClientLeft      =   42
    ClientTop       =   329
-   ClientWidth     =   8694
+   ClientWidth     =   8694.001
    OleObjectBlob   =   "FormPatient.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

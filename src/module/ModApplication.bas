@@ -42,16 +42,16 @@ Public Sub CloseAfspraken()
     
     Dim objWindow As Window
     
-    If blnCloseHaseRun Then Exit Sub
+    If blnCloseHaseRun Then ' Second CloseAfspraken triggert by WbkAfspraken.Workbook_BeforeClose
+        Exit Sub
+    End If
     
     strAction = "ModApplication.CloseAfspraken"
     strParams = Array()
     
     ModLog.LogActionStart strAction, strParams
     
-
     ModProgress.StartProgress "Afspraken Programma Afsluiten"
-    Application.DisplayAlerts = False
     
     intN = 1
     intC = Application.Windows.Count
@@ -74,8 +74,17 @@ Public Sub CloseAfspraken()
     
     blnCloseHaseRun = True
             
-    If Not blnDontClose Then Application.Quit
+    If Not blnDontClose Then
+        Application.DisplayAlerts = False
+        Application.Quit
+    End If
 
+End Sub
+
+Private Sub TestCloseAfspraken()
+    blnDontClose = True
+    CloseAfspraken
+    MsgBox Application.DisplayAlerts
 End Sub
 
 Private Sub SetWindow(objWindow As Window, blnDisplay As Boolean)
@@ -123,8 +132,11 @@ Public Sub InitializeAfspraken()
     
     ModProgress.StartProgress "Start Afspraken Programma ... "
     
-    ModSheet.SelectPedOrNeoStartSheet
-        
+    ModSheet.SelectPedOrNeoStartSheet ' Select the first GUI sheet
+    DoEvents                          ' Make sure sheet is shown before proceding
+    
+    Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
+    
     ' Setup sheets
     ModSheet.ProtectUserInterfaceSheets True
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
@@ -140,6 +152,8 @@ Public Sub InitializeAfspraken()
     ModSetting.SetDevelopmentMode False ' Default development mode is false
     
     ModProgress.FinishProgress
+    
+    Application.ScreenUpdating = True
     
     ModLog.LogActionEnd strAction
     

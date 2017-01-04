@@ -201,9 +201,9 @@ Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet)
     blnIsDevelop = ModSetting.IsDevelopmentMode()
     
     If ModString.ContainsCaseInsensitive(strPath, strPeli) Or blnIsDevelop Then
-        shtPed.Select
+        GoToSheet shtPed, "A1"
     Else
-        shtNeo.Select
+        GoToSheet shtNeo, "A1"
     End If
     
 End Sub

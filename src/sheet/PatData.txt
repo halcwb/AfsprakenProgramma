@@ -1,8 +1,8 @@
-"$B$2: 	=PatDetails!$A$2
-$B$3: 	=PatDetails!$J$2
-$B$4: 	=PatDetails!$D$2
-$B$5: 	=PatDetails!$E$2
-$B$6: 	=PatDetails!$F$2
+"$B$2: 	=PatDetails!$B$1
+$B$3: 	=PatDetails!$B$2
+$B$4: 	=PatDetails!$B$3
+$B$5: 	=PatDetails!$B$4
+$B$6: 	=PatDetails!$B$5
 $B$7: 	=GlobBerMedDisc!$AF$2
 $B$8: 	=GlobBerMedDisc!$AF$3
 $B$9: 	=GlobBerMedDisc!$AF$4

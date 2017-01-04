@@ -109,7 +109,7 @@ Private Sub TestNameExists()
 
 End Sub
 
-Public Function CreateName(ByVal strName As String, ByVal strGroup As String, ByVal intN As Integer, ByVal intMax As Integer) As String
+Public Function CreateName(ByVal strName As String, ByVal strGroup As String, ByVal intN As Integer, ByVal intMax As Integer, ByVal blnData As Boolean) As String
 
     Dim strInt As String
     Dim strResult As String
@@ -117,7 +117,7 @@ Public Function CreateName(ByVal strName As String, ByVal strGroup As String, By
     If strGroup = vbNullString Then
         strResult = "_" & strName & "_"
     Else
-        strResult = "_" & strGroup & "_" & strName & "_"
+        strResult = IIf(blnData, "_" & strGroup & "_" & strName & "_", strGroup & "_" & strName & "_")
     End If
     
     strInt = CStr(intN)

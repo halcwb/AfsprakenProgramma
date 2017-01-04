@@ -133,8 +133,21 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnToggleLogging"                             ' -> Toggle Logging
             ModSetting.ToggleLogging
     
-        Case "btnRangeNames"                                ' -> Range Names
+        Case "btnRangeNames"                                ' -> Name Range
             ModRange.GiveNameToRange
+            
+        Case "btnWriteNames"                                ' -> Write Names
+            ModRange.WriteNamesToGlobNames
+            
+        Case "btnRefreshPatientData"                        ' -> Refresh Patient Data
+            ModRange.RefreshPatientData
+            
+        Case "btnExportSource"                              ' -> Export To Source
+            ModUtils.ExportForSourceControl
+        
+        'grpAdmin                                           ' -- ADMISTRATION --
+        
+        
         
         Case Else
             MsgBox ctrlMenuItem.Id & " has no select case", vbCritical
@@ -181,6 +194,12 @@ Public Sub GetVisibleNeo(ctrContr As IRibbonControl, ByRef blnVisible)
 End Sub
 
 Public Sub GetVisibleDevelopment(ctrContr As IRibbonControl, ByRef blnVisible)
+
+    blnVisible = ModSetting.IsDevelopmentMode()
+    
+End Sub
+
+Public Sub GetVisibleAdmin(ctrContr As IRibbonControl, ByRef blnVisible)
 
     blnVisible = ModSetting.IsDevelopmentMode()
     
