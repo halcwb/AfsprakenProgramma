@@ -5,8 +5,164 @@ Private Const constTblMed = "tblMedicationContIV"
 Private Const constMedIVKeuze = "_Ped_MedIV_Keuze_"
 Private Const constMedIVSterkte = "_Ped_MedIV_Sterkte_"
 Private Const constMedIVOpm = "_Ped_MedIV_Opm"
+Private Const constMedIVOplVol = "_Ped_MedIV_OplVol_"
+Private Const constMedIVOplVlst = "_Ped_MedIV_OplVlst_"
+Private Const constMedIVStand = "_Ped_MedIV_Stand_"
 
-Private Sub SetToStandard(intRegel As Integer)
+Private Sub Clear(intN As Integer)
+
+    Dim strN As String
+    
+    Dim strMedicament As String
+    Dim strMedSterkte As String
+    Dim strOplHoev As String
+    Dim strOplossing As String
+    Dim varOplossing As Variant
+    Dim strStand As String
+    
+    strN = IIf(intN < 10, "0" + intN, intN)
+    
+    strN = IIf(intN < 10, "0" & intN, intN)
+    strMedicament = constMedIVKeuze & strN
+    strMedSterkte = constMedIVSterkte & strN
+    strOplHoev = constMedIVOplVol & strN
+    strOplossing = constMedIVOplVlst & strN
+    strStand = constMedIVStand & strN
+    
+    If intN < 16 Then
+        ModRange.SetRangeValue strMedicament, 1
+    Else
+        ModRange.SetRangeValue strMedicament, vbNullString
+    End If
+    
+    ModRange.SetRangeValue strMedSterkte, 0
+    ModRange.SetRangeValue strOplHoev, 0
+    ModRange.SetRangeValue strOplossing, 1
+    ModRange.SetRangeValue strStand, 0
+
+End Sub
+
+Public Sub PedContIV_Clear_01()
+
+    Clear 1
+
+End Sub
+
+Public Sub PedContIV_Clear_02()
+
+    Clear 2
+
+End Sub
+
+Public Sub PedContIV_Clear_03()
+
+    Clear 3
+
+End Sub
+
+Public Sub PedContIV_Clear_04()
+
+    Clear 4
+
+End Sub
+
+Public Sub PedContIV_Clear_05()
+
+    Clear 5
+
+End Sub
+
+Public Sub PedContIV_Clear_06()
+
+    Clear 6
+
+End Sub
+
+Public Sub PedContIV_Clear_07()
+
+    Clear 7
+
+End Sub
+
+Public Sub PedContIV_Clear_08()
+
+    Clear 8
+
+End Sub
+
+Public Sub PedContIV_Clear_09()
+
+    Clear 1
+
+End Sub
+
+Public Sub PedContIV_Clear_10()
+
+    Clear 10
+
+End Sub
+
+Public Sub PedContIV_Clear_11()
+
+    Clear 11
+
+End Sub
+
+Public Sub PedContIV_Clear_12()
+
+    Clear 12
+
+End Sub
+
+Public Sub PedContIV_Clear_13()
+
+    Clear 13
+
+End Sub
+
+Public Sub PedContIV_Clear_14()
+
+    Clear 14
+
+End Sub
+
+Public Sub PedContIV_Clear_15()
+
+    Clear 15
+
+End Sub
+
+Public Sub PedContIV_Clear_16()
+
+    Clear 16
+
+End Sub
+
+Public Sub PedContIV_Clear_17()
+
+    Clear 17
+
+End Sub
+
+Public Sub PedContIV_Clear_18()
+
+    Clear 18
+
+End Sub
+
+Public Sub PedContIV_Clear_19()
+
+    Clear 19
+
+End Sub
+
+Public Sub PedContIV_Clear_20()
+
+    Clear 20
+
+End Sub
+
+Private Sub SetToStandard(intN As Integer)
 
     Dim strMedicament As String
     Dim strMedSterkte As String
@@ -14,25 +170,29 @@ Private Sub SetToStandard(intRegel As Integer)
     Dim strOplossing As String
     Dim varOplossing As Variant
     Dim strStand As String
-    Dim strRegel As String
+    Dim strN As String
+    Dim intKeuze As Integer
     
     On Error GoTo SetToStandardError
 
-    strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
-    strMedicament = "_Ped_MedIV_Keuze_" & strRegel
-    strMedSterkte = "_Ped_MedIV_Sterkte_" & strRegel
-    strOplHoev = "_Ped_MedIV_OplVol_" & strRegel
-    strOplossing = "_Ped_MedIV_OplVlst_" & strRegel
-    strStand = "_Ped_MedIV_Stand_" & strRegel
+    strN = IIf(intN < 10, "0" & intN, intN)
+    strMedicament = constMedIVKeuze & strN
+    strMedSterkte = constMedIVSterkte & strN
+    strOplHoev = constMedIVOplVol & strN
+    strOplossing = constMedIVOplVlst & strN
+    strStand = constMedIVStand & strN
     
     ModRange.SetRangeValue strMedSterkte, 0
     ModRange.SetRangeValue strOplHoev, 0
     ModRange.SetRangeValue strStand, 0
     
-    If ModRange.GetRangeValue(strMedicament, 0) = 1 Then
-        ModRange.SetRangeValue strOplossing, 1
-    Else
-        varOplossing = Application.VLookup(Range(constTblMed).Cells(Range(strMedicament).Value, 1), Range(constTblMed), 22, False)
+    intKeuze = ModRange.GetRangeValue(strMedicament, 0)
+    If intKeuze = 0 Then GoTo SetToStandardError    ' Something is wrong, 0 is no valid value
+    
+    If intKeuze = 1 Then                            ' No medicament was selected so clear the line
+        Clear intN
+    Else                                            ' Else find the right standard concentration
+        varOplossing = Application.VLookup(Range(constTblMed).Cells(intKeuze), Range(constTblMed), 22, False)
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
     
@@ -40,7 +200,7 @@ Private Sub SetToStandard(intRegel As Integer)
     
 SetToStandardError:
 
-    ModLog.LogError "SetMedContIVToStandard: " & " Error for regel " & strRegel
+    ModLog.LogError "SetMedContIVToStandard: " & " Error for regel " & strN
 
 End Sub
 
@@ -104,6 +264,36 @@ Public Sub PedContIV_SetStandard_10()
 
 End Sub
 
+Public Sub PedContIV_SetStandard_11()
+    
+    SetToStandard 11
+
+End Sub
+
+Public Sub PedContIV_SetStandard_12()
+    
+    SetToStandard 12
+
+End Sub
+
+Public Sub PedContIV_SetStandard_13()
+    
+    SetToStandard 13
+
+End Sub
+
+Public Sub PedContIV_SetStandard_14()
+    
+    SetToStandard 14
+
+End Sub
+
+Public Sub PedContIV_SetStandard_15()
+    
+    SetToStandard 15
+
+End Sub
+
 Private Sub EnterNumeric(intRegel As Integer, strRange As String, strUnit As String, intColumn As Integer)
 
     Dim frmInvoer As New FormInvoerNumeriek
@@ -113,20 +303,20 @@ Private Sub EnterNumeric(intRegel As Integer, strRange As String, strUnit As Str
     On Error GoTo OpenInvoerNumeriekError
     
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
-    varKeuze = ModRange.GetRangeValue("_Ped_MedIV_Keuze_" & strRegel, vbNullString)
+    varKeuze = ModRange.GetRangeValue(constMedIVKeuze & strRegel, vbNullString)
     
     With frmInvoer
         .Caption = "Medicament " & intRegel
         .lblParameter = "Oplossing"
         .lblEenheid = strUnit
-        If ModRange.GetRangeValue("_Ped_MedIV_OplVol_" & strRegel, 0) = 0 Then
+        If ModRange.GetRangeValue(constMedIVOplVol & strRegel, 0) = 0 Then
             .txtWaarde = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, 12)
         Else
             .txtWaarde = ModRange.GetRangeValue(strRange & strRegel, vbNullString)
         End If
         .Show
         If IsNumeric(.txtWaarde) Then
-            If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range("tblMedicationContIV"), varKeuze, 12) Then
+            If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, 12) Then
                 ModRange.SetRangeValue strRange & strRegel, 0
             Else
                 ModRange.SetRangeValue strRange & strRegel, .txtWaarde
@@ -153,8 +343,8 @@ Private Sub SetMedConc(intRegel As Integer)
     On Error GoTo SetMedConcError
 
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
-    strUnit = Application.WorksheetFunction.Index(Range(constTblMed), Range("_Ped_MedIV_Keuze_" & strRegel), 4)
-    EnterNumeric intRegel, "MedIVSterkte_", strUnit, 11
+    strUnit = Application.WorksheetFunction.Index(Range(constTblMed), Range(constMedIVKeuze & strRegel), 4)
+    EnterNumeric intRegel, constMedIVSterkte, strUnit, 11
     
     Exit Sub
     
@@ -224,9 +414,39 @@ Public Sub PedContIV_MedConc_10()
 
 End Sub
 
+Public Sub PedContIV_MedConc_11()
+    
+    SetMedConc 11
+
+End Sub
+
+Public Sub PedContIV_MedConc_12()
+    
+    SetMedConc 12
+
+End Sub
+
+Public Sub PedContIV_MedConc_13()
+    
+    SetMedConc 13
+
+End Sub
+
+Public Sub PedContIV_MedConc_14()
+    
+    SetMedConc 14
+
+End Sub
+
+Public Sub PedContIV_MedConc_15()
+    
+    SetMedConc 15
+
+End Sub
+
 Private Sub SetSolution(intRegel As Integer)
 
-    EnterNumeric intRegel, "_Ped_MedIV_OplVol_", "mL", 12
+    EnterNumeric intRegel, constMedIVOplVol, "mL", 12
 
 End Sub
 
@@ -290,6 +510,36 @@ Public Sub PedContIV_SetSolution_10()
 
 End Sub
 
+Public Sub PedContIV_SetSolution_11()
+    
+    SetSolution 11
+
+End Sub
+
+Public Sub PedContIV_SetSolution_12()
+    
+    SetSolution 12
+
+End Sub
+
+Public Sub PedContIV_SetSolution_13()
+    
+    SetSolution 13
+
+End Sub
+
+Public Sub PedContIV_SetSolution_14()
+    
+    SetSolution 14
+
+End Sub
+
+Public Sub PedContIV_SetSolution_15()
+    
+    SetSolution 15
+
+End Sub
+
 Private Sub EnterMed(intN As Integer)
 
     Dim strMed As String, strSterkte As String
@@ -306,33 +556,33 @@ Private Sub EnterMed(intN As Integer)
         
 End Sub
 
-Public Sub PedContIV_EnterMed_11()
+Public Sub PedContIV_EnterMed_16()
 
-    EnterMed 11
+    EnterMed 16
         
 End Sub
 
-Public Sub PedContIV_EnterMed_12()
+Public Sub PedContIV_EnterMed_17()
     
-    EnterMed 12
+    EnterMed 17
 
 End Sub
 
-Public Sub PedContIV_EnterMed_13()
+Public Sub PedContIV_EnterMed_18()
     
-    EnterMed 13
+    EnterMed 18
 
 End Sub
 
-Public Sub PedContIV_EnterMed_14()
+Public Sub PedContIV_EnterMed_19()
     
-    EnterMed 14
+    EnterMed 19
 
 End Sub
 
-Public Sub PedContIV_EnterMed_15()
+Public Sub PedContIV_EnterMed_20()
     
-    EnterMed 15
+    EnterMed 20
 
 End Sub
 

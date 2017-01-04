@@ -220,11 +220,13 @@ Public Sub EnterPatientDetails()
 
 End Sub
 
-Public Sub ClearPatient(blnShowWarn As Boolean, blnShowProgress As Boolean)
-    
+Public Sub ClearPatientData(strStartWith As String, blnShowWarn As Boolean, blnShowProgress As Boolean)
+
     Dim intN As Integer
     Dim intC As Integer
     Dim strTitle As String
+    Dim strRange As String
+    Dim varValue As Variant
     Dim strJob As String
     Dim objResult As VbMsgBoxResult
             
@@ -234,7 +236,7 @@ Public Sub ClearPatient(blnShowWarn As Boolean, blnShowProgress As Boolean)
             ModProgress.FinishProgress
         End If
         
-        objResult = ModMessage.ShowMsgBoxYesNo("Afspraken echt verwijderen?")
+        objResult = ModMessage.ShowMsgBoxYesNo("Patient gegevens echt verwijderen?")
     Else
         objResult = vbYes
     End If
@@ -245,12 +247,47 @@ Public Sub ClearPatient(blnShowWarn As Boolean, blnShowProgress As Boolean)
         With shtPatData
             strJob = "Patient gegevens verwijderen ..."
             intC = .Range("A1").CurrentRegion.Rows.Count
+            
             For intN = 2 To intC
+                strRange = .Cells(intN, 1).Value2
+                If strStartWith = vbNullString Then
+                    varValue = .Cells(intN, 3).Value2
+                    ModRange.SetRangeValue strRange, varValue
+                Else
+                    If ModString.StartsWith(strRange, strStartWith) Then
+                        varValue = .Cells(intN, 3).Value2
+                        ModRange.SetRangeValue strRange, varValue
+                    End If
+                End If
+                
                 If blnShowProgress Then ModProgress.SetJobPercentage strJob, intC, intN
-                ModRange.SetRangeValue (.Cells(intN, 1).Value2), .Cells(intN, 3).Value2
             Next intN
         End With
         
+        ModApplication.SetDateToDayFormula
+        ModApplication.SetApplicationTitle
+    End If
+End Sub
+
+Public Sub PatientClearAll(blnShowWarn As Boolean, blnShowProgress As Boolean)
+    
+    Dim strTitle As String
+    Dim objResult As VbMsgBoxResult
+            
+    If blnShowWarn Then
+        If blnShowProgress Then
+            strTitle = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+        
+        objResult = ModMessage.ShowMsgBoxYesNo("Alle patient gegevens echt verwijderen?")
+    Else
+        objResult = vbYes
+    End If
+    
+    If objResult = vbYes Then
+        ModProgress.StartProgress strTitle
+        ClearPatientData vbNullString, False, True
         ModApplication.SetDateToDayFormula
         ModApplication.SetApplicationTitle
     End If
@@ -260,7 +297,7 @@ End Sub
 Private Sub TestClearPatient()
     
     ModProgress.StartProgress "Test Patient Gegevens Verwijderen"
-    ClearPatient False, True
+    PatientClearAll False, True
     ModProgress.FinishProgress
 
 End Sub

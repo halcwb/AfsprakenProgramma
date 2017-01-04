@@ -1,6 +1,19 @@
 Attribute VB_Name = "ModString"
 Option Explicit
 
+'Public Function StartsWith(ByVal strString, ByVal strValue As String) As Boolean
+'
+'    If Len(strString) >= Len(strValue) Then
+'        If Mid(strString, 0, Len(strValue)) = strValue Then
+'            StartsWith = True
+'            Exit Function
+'        End If
+'    End If
+'
+'    StartsWith = False
+'
+'End Function
+
 ' Checks whether strString contains strValue case insensitive, ignores spaces
 Public Function ContainsCaseInsensitive(ByVal strString As String, ByVal strValue As String) As Boolean
     strString = Trim(strString)

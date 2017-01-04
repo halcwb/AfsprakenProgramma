@@ -16,7 +16,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         Case "btnClear"                                     ' -> Alles Verwijderen
             ModProgress.StartProgress "Patient Data Verwijderen"
-            ModPatient.ClearPatient True, True
+            ModPatient.PatientClearAll True, True
             ModProgress.FinishProgress
             ModSheet.SelectPedOrNeoStartSheet
         
@@ -76,20 +76,20 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpRemoveData                                      ' -- ACTIES --
                 
         Case "btnRemoveLab"                                 ' Lab Verwijderen
-            ModClear.ClearLab
+            ClearLab
             ModSheet.SelectPedOrNeoLabSheet
         
         Case "btnRemoveExtra"                               ' Afspraken Controles Verwijderen
-            ModClear.ClearAfspraken
+            ClearAfspraken
             ModSheet.SelectPedOrNeoAfsprSheet
         
         ' grpNeoActions                                     ' -- INFUUSBRIEF OVERZETTEN --
         
         Case "btnCopy1700"                                  ' -> 17:00 uur Overzetten
-            ModNeoInfB.CopyToActueel
+            ModNeoInfB.NeoInfB_ShowFormCopy1700ToAct
         
         Case "btnCopyCurrent"                               ' -> Actueel Overzetten
-            ModNeoInfB.NeoInfB_CopyAfspraken
+            ModNeoInfB.NeoInfB_CopyActTo1700
             
         'grpPedPrint                                        ' -- PRINT PEDIATRIE --
         
@@ -203,5 +203,29 @@ Public Sub GetVisibleAdmin(ctrContr As IRibbonControl, ByRef blnVisible)
 
     blnVisible = ModSetting.IsDevelopmentMode()
     
+End Sub
+
+Private Sub ClearLab()
+    
+    If ModSetting.IsDevelopmentMode Then
+        ModNeoLab.NeoLab_Clear
+        ModPedLab.PedLab_Clear
+    Else
+        If ModApplication.IsNeoDir() Then ModNeoLab.NeoLab_Clear
+        If ModApplication.IsPedDir() Then ModPedLab.PedLab_Clear
+    End If
+    
+End Sub
+
+Private Sub ClearAfspraken()
+
+    If ModSetting.IsDevelopmentMode Then
+        ModNeoAfspr.NeoAfspr_Clear
+        ModPedAfspr.PedAfspr_Clear
+    Else
+        If ModApplication.IsNeoDir() Then ModNeoAfspr.NeoAfspr_Clear
+        If ModApplication.IsPedDir() Then ModPedAfspr.PedAfspr_Clear
+    End If
+
 End Sub
 

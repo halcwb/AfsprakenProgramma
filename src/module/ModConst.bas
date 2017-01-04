@@ -23,14 +23,6 @@ Public Const CONST_RANGE_VERSIE = "Var_Glob_Versie"
 Public Const CONST_RANGE_GEWICHT = "_Pat_Gewicht"
 Public Const CONST_RANGE_LENGTE = "_Pat_Lengte"
 
-Public Const CONST_RANGE_NEOBOOL = "rngNeoAfsprBlns"
-Public Const CONST_RANGE_NEODATA = "rngNeoAfsprData"
-Public Const CONST_RANGE_NEOMRI = "_Neo_AfsprD_Vertrek"
-Public Const CONST_RANGE_PEDBOOL = "rngPedAfsprBlns"
-Public Const CONST_RANGE_PEDDATA = "rngPedAfsprData"
-Public Const CONST_RANGE_PEDLAB = "rngPedLabData"
-Public Const CONST_RANGE_NEOLAB = "rngNeoLabData"
-
 Public Const CONST_RANGE_NEOMED = "tbl_Neo_MedIV"
 
 'TPN ranges

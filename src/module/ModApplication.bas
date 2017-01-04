@@ -148,7 +148,7 @@ Public Sub InitializeAfspraken()
     ' Clean everything
     ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, vbNullString
     SetDateToDayFormula
-    ModPatient.ClearPatient False, True ' Default start with no patient
+    ModPatient.PatientClearAll False, True ' Default start with no patient
     ModSetting.SetDevelopmentMode False ' Default development mode is false
     
     ModProgress.FinishProgress
@@ -247,4 +247,25 @@ Private Function GetToDayFormula() As String
 
 End Function
 
+Private Function HasInPath(strDir As String) As Boolean
+
+    Dim strPath As String
+
+    strPath = WbkAfspraken.Path
+    
+    HasInPath = ModString.ContainsCaseInsensitive(strPath, strDir)
+
+End Function
+
+Public Function IsPedDir() As Boolean
+
+    IsPedDir = HasInPath(ModSetting.GetPedDir())
+    
+End Function
+
+Public Function IsNeoDir() As Boolean
+
+    IsNeoDir = HasInPath(ModSetting.GetNeoDir())
+
+End Function
 

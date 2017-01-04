@@ -182,7 +182,7 @@ Public Sub CloseBed(blnAsk As Boolean)
                     SetBed strBed
                     OpenBedAsk False, True
                     
-                    ModPatient.ClearPatient False, True
+                    ModPatient.PatientClearAll False, True
                     SaveBedToFile strBed, True, True
                     
                     SetBed strNew

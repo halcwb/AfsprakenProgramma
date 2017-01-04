@@ -15,6 +15,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Const constVoeding = "Var_Neo_#_ContIV"
+Private Const constIVCont = "Var_Neo_#_Voeding"
+
 Private Sub cmdCancel_Click()
     
     Me.Hide
@@ -23,7 +26,7 @@ End Sub
 
 Private Sub cmdOk_Click()
     
-    ModNeoInfB.NeoInfB_CopyInfB Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
+    ModNeoInfB.NeoInfB_Copy1700ToAct Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
     Me.Hide
 
 End Sub
@@ -47,7 +50,7 @@ End Sub
 Private Sub AddItemToList(ByVal strList As String, ByVal strItem As String, ByVal intN As Integer, ByVal bln1700 As Boolean)
 
     strList = IIf(bln1700, Replace(strList, "Act", "1700"), strList)
-    strItem = IIf(bln1700, Replace(strItem, "#", "1700"), Replace(strItem, "#", "Act"))
+    strItem = IIf(bln1700, Replace(strItem, "#", "1700"), Replace(strItem, "#", "InfB"))
     strItem = IIf(intN < 10, strItem & "_0" & intN, strItem & "_" & intN)
     
     Me.Controls(strList).AddItem ModRange.GetRangeValue(strItem, vbNullString)
@@ -61,22 +64,22 @@ Private Sub UserForm_Activate()
     Dim strItem As String
     
     strList = "lstActVoed"
-    strItem = "Var_Neo_Voeding#"
+    strItem = constVoeding
     For intN = 1 To 15
         AddItemToList strList, strItem, intN, True
         AddItemToList strList, strItem, intN, False
     Next intN
 
     strList = "lstActMed"
-    strItem = "Var_Neo_InfuusContinu#"
+    strItem = constIVCont
     For intN = 1 To 15
         AddItemToList strList, strItem, intN, True
         AddItemToList strList, strItem, intN, False
     Next intN
 
     strList = "lstActTPN"
-    strItem = "Var_Neo_InfuusContinu#"
-    For intN = 1 To 12
+    strItem = constIVCont
+    For intN = 16 To 27
         AddItemToList strList, strItem, intN, True
         AddItemToList strList, strItem, intN, False
     Next intN

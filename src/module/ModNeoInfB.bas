@@ -2,7 +2,7 @@ Attribute VB_Name = "ModNeoInfB"
 Option Explicit
 
 ' ToDo: Add comment
-Public Sub NeoInfB_CopyAfspraken()
+Public Sub NeoInfB_CopyActTo1700()
 
     CopyRangeNamesToRangeNames NeoInfB_GetVoedingItems(), ChangeTo1700(NeoInfB_GetVoedingItems())
     CopyRangeNamesToRangeNames NeoInfB_GetIVAfsprItems(), ChangeTo1700(NeoInfB_GetIVAfsprItems())
@@ -110,7 +110,7 @@ Private Function ChangeTo1700(arrItems() As String) As String()
 
 End Function
 
-Public Sub NeoInfB_CopyInfB(blnAlles As Boolean, blnVoeding As Boolean, blnContMed As Boolean, blnTPN As Boolean)
+Public Sub NeoInfB_Copy1700ToAct(blnAlles As Boolean, blnVoeding As Boolean, blnContMed As Boolean, blnTPN As Boolean)
     
     If blnAlles Then
         blnVoeding = True
@@ -168,7 +168,7 @@ Private Sub TPNOvernemen()
 
 End Sub
 
-Public Sub CopyToActueel()
+Public Sub NeoInfB_ShowFormCopy1700ToAct()
 
     Dim frmCopy1700 As New FormCopy1700
     
