@@ -28,7 +28,7 @@ Public Sub DisableLogging()
 
 End Sub
 
-Public Function LogLevelToString(enmLevel As LogLevel) As String
+Public Function LogLevelToString(ByVal enmLevel As LogLevel) As String
 
     Select Case enmLevel
         Case 0
@@ -41,9 +41,9 @@ Public Function LogLevelToString(enmLevel As LogLevel) As String
     
 End Function
 
-Public Sub LogError(strError As String)
+Public Sub LogError(ByVal strError As String)
 
-    Dim blnLog
+    Dim blnLog As Boolean
     
     strError = " Number: " & Err.Number & " Source: " & Err.Source & " Description: " & strError
     blnLog = ModSetting.GetEnableLogging()
@@ -54,9 +54,9 @@ Public Sub LogError(strError As String)
 
 End Sub
 
-Public Sub LogInfo(strInfo As String)
+Public Sub LogInfo(ByVal strInfo As String)
 
-    Dim blnLog
+    Dim blnLog As Boolean
     
     blnLog = ModSetting.GetEnableLogging()
 
@@ -66,7 +66,7 @@ Public Sub LogInfo(strInfo As String)
 
 End Sub
 
-Public Sub LogTest(enmLevel As LogLevel, strMsg As String)
+Public Sub LogTest(ByVal enmLevel As LogLevel, ByVal strMsg As String)
     Dim strFile As String
 
     strFile = WbkAfspraken.Path + ModSetting.GetTestLogDir()
@@ -74,9 +74,10 @@ Public Sub LogTest(enmLevel As LogLevel, strMsg As String)
     
 End Sub
 
-Public Sub LogActionStart(strAction As String, strParams() As Variant)
+Public Sub LogActionStart(ByVal strAction As String, ByRef strParams() As Variant)
 
-    Dim strFile As String, strMsg As String
+    Dim strFile As String
+    Dim strMsg As String
 
     strMsg = "Begin " + strAction + ": " + Join(strParams, ", ")
 
@@ -85,9 +86,10 @@ Public Sub LogActionStart(strAction As String, strParams() As Variant)
     
 End Sub
 
-Public Sub LogActionEnd(strAction As String)
+Public Sub LogActionEnd(ByVal strAction As String)
 
-    Dim strFile As String, strMsg As String
+    Dim strFile As String
+    Dim strMsg As String
 
     strMsg = "End " + strAction
 
@@ -96,12 +98,12 @@ Public Sub LogActionEnd(strAction As String)
     
 End Sub
 
-Public Sub LogToFile(ByVal strFile As String, enmLevel As LogLevel, strMsg As String)
+Public Sub LogToFile(ByVal strFile As String, ByVal enmLevel As LogLevel, ByVal strMsg As String)
     
     If Not ModSetting.GetEnableLogging() Then Exit Sub
 
     strMsg = Replace(strMsg, vbNewLine, ". ")
-    AppendToFile strFile, Format(DateTime.Now, vbNullString) + ": " + LogLevelToString(enmLevel) + ": " + strMsg
+    AppendToFile strFile, Strings.Format(DateTime.Now, vbNullString) + ": " + LogLevelToString(enmLevel) + ": " + strMsg
     
 End Sub
 

@@ -7,7 +7,7 @@ Public Function EmptyDate() As Date
 
 End Function
 
-Public Function IsEmptyDate(dtmDate As Date) As Boolean
+Public Function IsEmptyDate(ByVal dtmDate As Date) As Boolean
 
     IsEmptyDate = dtmDate = EmptyDate()
 

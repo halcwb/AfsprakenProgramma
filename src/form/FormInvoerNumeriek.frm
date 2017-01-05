@@ -43,7 +43,7 @@ Private Sub UserForm_Activate()
 
 End Sub
 
-Public Sub SetValue(strRange As String, strItem As String, varValue As Variant, strUnit As String)
+Public Sub SetValue(ByVal strRange As String, ByVal strItem As String, ByVal varValue As Variant, ByVal strUnit As String)
     
     Dim strError As String
 

@@ -1,6 +1,9 @@
 Attribute VB_Name = "ModRibbon"
 Option Explicit
 
+' Module to handle ribbon events
+' Note: blnVisible in GetVisible functions is not a boolean!! Using blnVisible As Boolean will result in a type mismatch!
+
 Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
 '
 ' Code for onAction callback. Ribbon control button
@@ -159,9 +162,16 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
     
 End Sub
 
+Public Sub RibbonOnLoad(objRibbon As IRibbonUI)
+
+    ModLog.LogInfo "RibbonOnLoad"
+
+End Sub
+
 Public Sub GetVisiblePed(ctrContr As IRibbonControl, ByRef blnVisible)
 
-    Dim strPath, strPedDir As String
+    Dim strPath As String
+    Dim strPedDir As String
     Dim blnIsDevelop
 
     blnIsDevelop = ModSetting.IsDevelopmentMode()
@@ -178,7 +188,8 @@ End Sub
 
 Public Sub GetVisibleNeo(ctrContr As IRibbonControl, ByRef blnVisible)
     
-    Dim strPath, strPedDir As String
+    Dim strPath As String
+    Dim strPedDir As String
     Dim blnIsDevelop
 
     blnIsDevelop = ModSetting.IsDevelopmentMode()
@@ -228,4 +239,5 @@ Private Sub ClearAfspraken()
     End If
 
 End Sub
+
 

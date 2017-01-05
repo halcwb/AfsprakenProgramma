@@ -1,8 +1,8 @@
 Attribute VB_Name = "ModPedLab"
 Option Explicit
 
-Private Const constPedLab = "_Ped_Lab_"
-Private Const constPedLabOpm = "_Ped_Lab_Opm"
+Private Const constPedLab As String = "_Ped_Lab_"
+Private Const constPedLabOpm As String = "_Ped_Lab_Opm"
 
 Public Sub PedLab_Clear()
     
@@ -12,12 +12,12 @@ Public Sub PedLab_Clear()
 
 End Sub
 
-Private Sub EnterText(strRange As String)
+Private Sub EnterText(ByVal strRange As String)
 
-    Dim frmOpmerking As New FormOpmerking
+    Dim frmOpmerking As FormOpmerking
     
+    Set frmOpmerking = New FormOpmerking
     frmOpmerking.txtOpmerking.Text = ModRange.GetRangeValue(strRange, vbNullString)
-    
     frmOpmerking.Show
     
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then

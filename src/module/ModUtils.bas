@@ -47,12 +47,14 @@ Public Sub DeleteSourceFiles()
 
 End Sub
 
-Public Sub ExportFormulas(blnShowProgress As Boolean)
+Public Sub ExportFormulas(ByVal blnShowProgress As Boolean)
 
     Dim shtSheet As Worksheet
     Dim objCell As Range
-    Dim intN, intC As Integer
-    Dim strText, strPath As String
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim strText As String
+    Dim strPath As String
     
     strPath = WbkAfspraken.Path & "\src\sheet\"
     
@@ -60,7 +62,7 @@ Public Sub ExportFormulas(blnShowProgress As Boolean)
     intC = WbkAfspraken.Sheets.Count
     For Each shtSheet In WbkAfspraken.Sheets
     
-        strText = ""
+        strText = vbNullString
     
         If ModSheet.IsUserInterface(shtSheet) Then
             shtSheet.Unprotect ModConst.CONST_PASSWORD
@@ -87,12 +89,13 @@ Public Sub ExportFormulas(blnShowProgress As Boolean)
 
 End Sub
 
-Public Sub ExportNames(blnShowProgress As Boolean)
+Public Sub ExportNames(ByVal blnShowProgress As Boolean)
 
     Dim objName As Name
     Dim strText As String
     Dim strPath As String
-    Dim intN, intC As Integer
+    Dim intN As Integer
+    Dim intC As Integer
     
     strPath = WbkAfspraken.Path & "\src\name\names.txt"
     
@@ -109,13 +112,14 @@ Public Sub ExportNames(blnShowProgress As Boolean)
 
 End Sub
 
-Public Sub ExportVbaCode(blnShowProgress As Boolean)
+Public Sub ExportVbaCode(ByVal blnShowProgress As Boolean)
 
     Dim vbcItem As VBComponent
     Dim strError As String
     Dim strFile As String
     Dim strPath As String
-    Dim intN, intC As Integer
+    Dim intN As Integer
+    Dim intC As Integer
     
     On Error GoTo ExportVbaCodeError:
     
@@ -142,7 +146,7 @@ ExportVbaCodeError:
     ModMessage.ShowMsgBoxError strError
 End Sub
 
-Public Function GetComponentFileName(vbcComp As VBComponent) As String
+Public Function GetComponentFileName(ByRef vbcComp As VBComponent) As String
 
         Dim strExt As String
         Dim strPath As String
@@ -169,7 +173,7 @@ Public Function GetComponentFileName(vbcComp As VBComponent) As String
 
 End Function
 
-Public Sub RunShell(strCmd As String, strArgs() As String)
+Public Sub RunShell(ByVal strCmd As String, ByRef strArgs() As String)
 
     Dim strPath As String
     Dim dblExit As Double

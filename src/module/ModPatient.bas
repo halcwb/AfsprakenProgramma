@@ -1,22 +1,36 @@
 Attribute VB_Name = "ModPatient"
 Option Explicit
 
-Private Const constPatNum = "__0_PatNum"
-Private Const constBed = "__1_Bed"
-Private Const constAN = "__2_AchterNaam"
-Private Const constVN = "__3_VoorNaam"
-Private Const constGebDatum = "__4_GebDatum"
-Private Const constOpnDat = "_Pat_OpnDatum"
-Private Const constGewicht = "_Pat_Gewicht"
-Private Const constLengte = "_Pat_Lengte"
-Private Const constDagen = "_Pat_Dagen"
-Private Const constWeken = "_Pat_Weken"
-Private Const constGebGew = "_Pat_GebGew"
+Private Const constPatNum As String = "__0_PatNum"
+Private Const constAN As String = "__2_AchterNaam"
+Private Const constVN As String = "__3_VoorNaam"
+Private Const constGebDatum As String = "__4_GebDatum"
+Private Const constOpnDat As String = "_Pat_OpnDatum"
+Private Const constGewicht As String = "_Pat_Gewicht"
+Private Const constLengte As String = "_Pat_Lengte"
+Private Const constDagen As String = "_Pat_Dagen"
+Private Const constWeken As String = "_Pat_Weken"
+Private Const constGebGew As String = "_Pat_GebGew"
+
+Public Function PatientAchterNaam() As String
+
+    PatientAchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
+
+End Function
+
+Public Function PatientVoorNaam() As String
+
+    PatientVoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
+
+End Function
 
 Public Sub Patient_EnterWeight()
 
-    Dim frmGewichtInvoer As New FormInvoerNumeriek
-    Dim objPatient As New ClassPatientDetails
+    Dim frmGewichtInvoer As FormInvoerNumeriek
+    Dim objPatient As ClassPatientDetails
+    
+    Set frmGewichtInvoer = New FormInvoerNumeriek
+    Set objPatient = New ClassPatientDetails
     
     With frmGewichtInvoer
         .Caption = "Gewicht invoeren ..."
@@ -43,8 +57,11 @@ End Sub
 
 Public Sub Patient_EnterLength()
 
-    Dim frmLengteInvoer As New FormInvoerNumeriek
-    Dim objPatient As New ClassPatientDetails
+    Dim frmLengteInvoer As FormInvoerNumeriek
+    Dim objPatient As ClassPatientDetails
+    
+    Set frmLengteInvoer = New FormInvoerNumeriek
+    Set objPatient = New ClassPatientDetails
     
     With frmLengteInvoer
         .Caption = "Lengte invoeren ..."
@@ -76,24 +93,23 @@ Public Function GetPatientString() As String
 
     Dim strPat As String
     
-    strPat = "Num: " & ModRange.GetRangeValue(constPatNum, "")
-    strPat = "Naam: " & ModRange.GetRangeValue(constAN, "")
-    strPat = ", " & ModRange.GetRangeValue(constVN, "")
+    strPat = "Num: " & ModRange.GetRangeValue(constPatNum, vbNullString)
+    strPat = "Naam: " & ModRange.GetRangeValue(constAN, vbNullString)
+    strPat = ", " & ModRange.GetRangeValue(constVN, vbNullString)
     
     GetPatientString = strPat
 
 End Function
 
-Public Sub OpenPatientLijst(strCaption As String)
+Public Sub OpenPatientLijst(ByVal strCaption As String)
     
-    Dim strIndex As String
-    Dim objPat As ClassPatientInfo
-    Dim frmPats As New FormPatLijst
+    Dim frmPats As FormPatLijst
     Dim colPats As Collection
     
     On Error GoTo OpenPatientListError
     
     Set colPats = GetPatients()
+    Set frmPats = New FormPatLijst
     
     With frmPats
         .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
@@ -113,10 +129,11 @@ OpenPatientListError:
     
 End Sub
 
-Public Function CreatePatientInfo(strID As String, strBed As String, strAN As String, strVN As String, strBD As String) As ClassPatientInfo
+Public Function CreatePatientInfo(ByVal strID As String, ByVal strBed As String, ByVal strAN As String, ByVal strVN As String, ByVal strBD As String) As ClassPatientInfo
 
-    Dim objInfo As New ClassPatientInfo
+    Dim objInfo As ClassPatientInfo
     
+    Set objInfo = New ClassPatientInfo
     objInfo.Id = strID
     objInfo.Bed = strBed
     objInfo.AchterNaam = strAN
@@ -129,7 +146,7 @@ End Function
 
 Public Function GetPatients() As Collection
 
-    Dim colPatienten As New Collection
+    Dim colPatienten As Collection
     Dim strPatientsName As String
     Dim strPatientsFile As String
     Dim intN As Integer
@@ -141,6 +158,7 @@ Public Function GetPatients() As Collection
 
     strPatientsName = ModSetting.GetPatientsFileName()
     strPatientsFile = ModSetting.GetPatientsFilePath()
+    Set colPatienten = New Collection
 
     If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "a1", shtGlobTemp, False) Then
         With colPatienten
@@ -163,10 +181,11 @@ End Function
 
 Public Function GetPatientDetails() As ClassPatientDetails
 
-    Dim objPat As New ClassPatientDetails
+    Dim objPat As ClassPatientDetails
     Dim dtmBd As Date
     Dim dtmAdm As Date
     
+    Set objPat = New ClassPatientDetails
     objPat.PatientID = ModRange.GetRangeValue(constPatNum, vbNullString)
     objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
     objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
@@ -184,7 +203,7 @@ Public Function GetPatientDetails() As ClassPatientDetails
 
 End Function
 
-Public Sub WritePatientDetails(objPat As ClassPatientDetails)
+Public Sub WritePatientDetails(ByRef objPat As ClassPatientDetails)
 
     ModRange.SetRangeValue constPatNum, objPat.PatientID
     ModRange.SetRangeValue constAN, objPat.AchterNaam
@@ -208,10 +227,12 @@ End Sub
 
 Public Sub EnterPatientDetails()
 
-    Dim frmPat As New FormPatient
+    Dim frmPat As FormPatient
     Dim objPat As ClassPatientDetails
     
     Set objPat = GetPatientDetails()
+    Set frmPat = New FormPatient
+    
     frmPat.SetPatient objPat
     frmPat.Show
     
@@ -220,7 +241,7 @@ Public Sub EnterPatientDetails()
 
 End Sub
 
-Public Sub ClearPatientData(strStartWith As String, blnShowWarn As Boolean, blnShowProgress As Boolean)
+Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer
     Dim intC As Integer
@@ -269,7 +290,7 @@ Public Sub ClearPatientData(strStartWith As String, blnShowWarn As Boolean, blnS
     End If
 End Sub
 
-Public Sub PatientClearAll(blnShowWarn As Boolean, blnShowProgress As Boolean)
+Public Sub PatientClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
     
     Dim strTitle As String
     Dim objResult As VbMsgBoxResult
@@ -302,50 +323,50 @@ Private Sub TestClearPatient()
 
 End Sub
 
-Public Function ValidWeightKg(dblWeight As Double) As Boolean
+Public Function ValidWeightKg(ByVal dblWeight As Double) As Boolean
 
     ValidWeightKg = dblWeight > 0.4 And dblWeight < 200
 
 End Function
 
-Public Function ValidLengthCm(dblLen As Double) As Boolean
+Public Function ValidLengthCm(ByVal dblLen As Double) As Boolean
 
     ValidLengthCm = dblLen > 30 And dblLen < 250
 
 End Function
 
-Public Function ValidBirthDate(dtmBd As Date, dtmAdm As Date) As Boolean
+Public Function ValidBirthDate(ByVal dtmBd As Date, ByVal dtmAdm As Date) As Boolean
 
     Dim dtmMin As Date
     
-    dtmMin = DateAdd("yyyy", -100, Date)
+    dtmMin = DateAdd("yyyy", -100, DateTime.Date)
     
-    ValidBirthDate = dtmBd <= Date And dtmBd > dtmMin And dtmBd <= dtmAdm
+    ValidBirthDate = dtmBd <= DateTime.Date And dtmBd > dtmMin And dtmBd <= dtmAdm
 
 End Function
 
-Public Function ValidAdmissionDate(dtmAdm As Date) As Boolean
+Public Function ValidAdmissionDate(ByVal dtmAdm As Date) As Boolean
 
     Dim dtmMin As Date
     
     dtmMin = DateSerial(2006, 1, 1)
-    ValidAdmissionDate = dtmAdm <= Date And dtmAdm > dtmMin
+    ValidAdmissionDate = dtmAdm <= DateTime.Date And dtmAdm > dtmMin
 
 End Function
 
-Public Function ValidDagen(intDay As Integer) As Boolean
+Public Function ValidDagen(ByVal intDay As Integer) As Boolean
 
     ValidDagen = intDay >= 0 And intDay < 7
 
 End Function
 
-Public Function ValidWeken(intWeek As Integer) As Boolean
+Public Function ValidWeken(ByVal intWeek As Integer) As Boolean
 
     ValidWeken = intWeek > 24 And intWeek < 50
 
 End Function
 
-Public Function ValidBirthWeight(intBw As Integer) As Boolean
+Public Function ValidBirthWeight(ByVal intBw As Integer) As Boolean
 
     ValidBirthWeight = intBw > 400 And intBw < 9999
 

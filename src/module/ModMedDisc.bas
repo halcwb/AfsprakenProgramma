@@ -1,30 +1,63 @@
 Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
-Private Const constATC = "_Glob_MedDisc_ATC_"
-Private Const constDoseUnit = "_Glob_MedDisc_DoseEenh_"
-Private Const constDoseQty = "_Glob_MedDisc_DoseHoev_"
-Private Const constLabel = "_Glob_MedDisc_Etiket_"
-Private Const constGeneric = "_Glob_MedDisc_Generic_"
-Private Const constGPK = "_Glob_MedDisc_GPK_"
-Private Const constIndic = "_Glob_MedDisc_Ind_"
-Private Const constTime = "_Glob_MedDisc_Inloop_"
-Private Const constDrug = "_Glob_MedDisc_Keuze_"
-Private Const constSolNo = "_Glob_MedDisc_OplKeuze_"
-Private Const constSolVol = "_Glob_MedDisc_OplVol_"
-Private Const constText = "_Glob_MedDisc_Opm_"
-Private Const constStandDose = "_Glob_MedDisc_StandDose_"
-Private Const constConc = "_Glob_MedDisc_Sterkte_"
-Private Const constConcUnit = "_Glob_MedDisc_SterkteEenh_"
-Private Const constFreq = "_Glob_MedDisc_Tijden_"
-Private Const constRoute = "_Glob_MedDisc_Toed_"
+Private Const constATC As String = "_Glob_MedDisc_ATC_"
+Private Const constDoseUnit As String = "_Glob_MedDisc_DoseEenh_"
+Private Const constDoseQty As String = "_Glob_MedDisc_DoseHoev_"
+Private Const constLabel As String = "_Glob_MedDisc_Etiket_"
+Private Const constGeneric As String = "_Glob_MedDisc_Generic_"
+Private Const constGPK As String = "_Glob_MedDisc_GPK_"
+Private Const constIndic As String = "_Glob_MedDisc_Ind_"
+Private Const constTime As String = "_Glob_MedDisc_Inloop_"
+Private Const constDrug As String = "_Glob_MedDisc_Keuze_"
+Private Const constSolNo As String = "_Glob_MedDisc_OplKeuze_"
+Private Const constSolVol As String = "_Glob_MedDisc_OplVol_"
+Private Const constText As String = "_Glob_MedDisc_Opm_"
+Private Const constStandDose As String = "_Glob_MedDisc_StandDose_"
+Private Const constConc As String = "_Glob_MedDisc_Sterkte_"
+Private Const constConcUnit As String = "_Glob_MedDisc_SterkteEenh_"
+Private Const constFreq As String = "_Glob_MedDisc_Tijden_"
+Private Const constRoute As String = "_Glob_MedDisc_Toed_"
 
-Private Sub MedicamentInvoeren(intN)
+Private Sub Clear(ByVal intN As Integer)
 
-    Dim frmMedicament As New FormMedicament
+    Dim strN As String
+    
+    strN = IIf(intN < 10, "0" & intN, intN)
+
+    ModRange.SetRangeValue constLabel, vbNullString
+    ModRange.SetRangeValue constIndic, vbNullString
+    ModRange.SetRangeValue constATC & strN, vbNullString
+    ModRange.SetRangeValue constDrug & strN, vbNullString
+    ModRange.SetRangeValue constStandDose & strN, vbNullString
+    ModRange.SetRangeValue constDoseUnit & strN, vbNullString
+    ModRange.SetRangeValue constRoute & strN, vbNullString
+    ModRange.SetRangeValue constText & strN, vbNullString
+    ModRange.SetRangeValue constDoseQty & strN, vbNullString
+    ModRange.SetRangeValue constConc, 0
+    ModRange.SetRangeValue constConcUnit, vbNullString
+    ModRange.SetRangeValue constFreq & strN, 1
+    ModRange.SetRangeValue constSolVol & strN, 0
+    ModRange.SetRangeValue constSolNo & strN, 0
+    ModRange.SetRangeValue constTime & strN, 0
+    ModRange.SetRangeValue constGPK & strN, 0
+
+End Sub
+
+Public Sub MedDisc_Clear_01()
+
+    Clear 1
+
+End Sub
+
+Private Sub MedicamentInvoeren(ByVal intN As Integer)
+
+    Dim frmMedicament As FormMedicament
     Dim strMed As String
     Dim strGeneric As String
     Dim strN As String
+    
+    Set frmMedicament = New FormMedicament
     
     strN = IIf(intN < 10, "0" & intN, intN)
     
@@ -261,10 +294,12 @@ Public Sub MedDisc_EnterMed_30()
 
 End Sub
 
-Private Sub OpmMedDisc(intN As Integer)
+Private Sub OpmMedDisc(ByVal intN As Integer)
     
-    Dim frmOpmerking As New FormOpmerking
+    Dim frmOpmerking As FormOpmerking
     Dim strRange As String
+    
+    Set frmOpmerking = New FormOpmerking
     
     strRange = shtGlobBerOpm.Name & "!C" & intN
 

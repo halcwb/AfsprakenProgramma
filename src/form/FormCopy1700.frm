@@ -15,8 +15,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Const constVoeding = "Var_Neo_#_ContIV"
-Private Const constIVCont = "Var_Neo_#_Voeding"
+Private Const constVoeding As String = "Var_Neo_#_ContIV"
+Private Const constIVCont As String = "Var_Neo_#_Voeding"
 
 Private Sub cmdCancel_Click()
     

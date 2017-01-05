@@ -9,12 +9,14 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Dim m_lngCount As Integer
+Private m_lngCount As Integer
 Private m_colMedicamenten As Collection
 
 Public Sub AddMedicament(ByVal v_vntGPK As Variant)
 
-    Dim objMedicament As New ClassMedicatieDisc
+    Dim objMedicament As ClassMedicatieDisc
+    
+    Set objMedicament = New ClassMedicatieDisc
     
     If v_vntGPK = vbNullString Then
         Exit Sub
@@ -56,7 +58,7 @@ End Sub
 
 Public Sub GetMedicamenten()
 
-    Dim i As Integer
+    Dim intN As Integer
     Dim oForm As Range
     Dim oSheet As Worksheet
     
@@ -76,23 +78,23 @@ Public Sub GetMedicamenten()
     Set oSheet = Workbooks(sName).Worksheets(sSheet)
     Set oForm = oSheet.Range("A1").CurrentRegion
         
-    For i = 2 To oForm.Rows.Count
-        Me.AddMedicament (oForm.Cells(i, 1))
-        With Me.Item(i - 1)
-            .ATC = oForm.Cells(i, 2)
-            .TherapieGroep = oForm.Cells(i, 3)
-            .TherapieSubgroep = oForm.Cells(i, 4)
-            .Generiek = oForm.Cells(i, 5)
-            .Etiket = oForm.Cells(i, 6)
-            .Vorm = oForm.Cells(i, 7)
-            .routes = oForm.Cells(i, 8)
-            .Sterkte = oForm.Cells(i, 9)
-            .SterkteEenheid = oForm.Cells(i, 10)
-            .Dosis = oForm.Cells(i, 11)
-            .DosisEenheid = oForm.Cells(i, 12)
-            .indicaties = oForm.Cells(i, 13)
+    For intN = 2 To oForm.Rows.Count
+        Me.AddMedicament (oForm.Cells(intN, 1))
+        With Me.Item(intN - 1)
+            .ATC = oForm.Cells(intN, 2)
+            .TherapieGroep = oForm.Cells(intN, 3)
+            .TherapieSubgroep = oForm.Cells(intN, 4)
+            .Generiek = oForm.Cells(intN, 5)
+            .Etiket = oForm.Cells(intN, 6)
+            .Vorm = oForm.Cells(intN, 7)
+            .routes = oForm.Cells(intN, 8)
+            .Sterkte = oForm.Cells(intN, 9)
+            .SterkteEenheid = oForm.Cells(intN, 10)
+            .Dosis = oForm.Cells(intN, 11)
+            .DosisEenheid = oForm.Cells(intN, 12)
+            .indicaties = oForm.Cells(intN, 13)
         End With
-    Next i
+    Next intN
     
     Workbooks(sName).Close
     Application.DisplayAlerts = True

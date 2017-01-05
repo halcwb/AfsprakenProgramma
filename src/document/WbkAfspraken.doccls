@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
-Private Sub Workbook_BeforeClose(blnCancel As Boolean)
+Private Sub Workbook_BeforeClose(ByRef blnCancel As Boolean)
     
     Me.Saved = True ' DisplayAlerts = False doesn' prevent save dialog
                     ' http://www.microsofttraining.net/post-34753-applicationdisplayalerts--false.html

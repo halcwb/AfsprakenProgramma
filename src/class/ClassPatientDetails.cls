@@ -58,7 +58,7 @@ End Property
 
 Public Property Get GeboorteGewicht() As Double
 
-    Gewicht = m_BW
+    GeboorteGewicht = m_BW
 
 End Property
 

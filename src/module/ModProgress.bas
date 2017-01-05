@@ -11,10 +11,10 @@ Public Sub SetJobPercentage(ByVal strJob As String, ByVal intTot As Integer, ByV
 
 End Sub
 
-Public Sub StartProgress(strTitle As String)
+Public Sub StartProgress(ByVal strTitle As String)
 
     FormProgress.SetCaption strTitle
-    FormProgress.SetJobPercentage "", 0
+    FormProgress.SetJobPercentage vbNullString, 0
     FormProgress.Show vbModeless
 
 End Sub

@@ -1,14 +1,11 @@
 Attribute VB_Name = "ModNeoLab"
 Option Explicit
 
-Private Const constNeoLab = "_Neo_Lab_"
-Private Const constNeoLabOpm = "_Neo_Lab_Opm"
+Private Const constNeoLab As String = "_Neo_Lab_"
+Private Const constNeoLabOpm As String = "_Neo_Lab_Opm"
 
 Public Sub NeoLab_Clear()
 
-    Dim intN, intC As Integer
-    Dim strRange As String
-    
     ModProgress.StartProgress "Verwijder Neo Lab"
     ModPatient.ClearPatientData constNeoLab, False, True
     ModProgress.FinishProgress
@@ -17,7 +14,9 @@ End Sub
 
 Public Sub NeoLab_EnterText()
     
-    Dim frmOpmerking As New FormOpmerking
+    Dim frmOpmerking As FormOpmerking
+    
+    Set frmOpmerking = New FormOpmerking
     
     frmOpmerking.txtOpmerking.Text = ModRange.GetRangeValue(constNeoLabOpm, vbNullString)
     frmOpmerking.Show

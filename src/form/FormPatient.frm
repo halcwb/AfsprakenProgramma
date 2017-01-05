@@ -33,7 +33,7 @@ End Sub
 
 Private Function BirthDateComplete() As Boolean
 
-    BirthDateComplete = txtBirthDay.Value <> "" And txtBirthMonth.Value <> "" And txtBirthYear.Value <> ""
+    BirthDateComplete = txtBirthDay.Value <> vbNullString And txtBirthMonth.Value <> vbNullString And txtBirthYear.Value <> vbNullString
 
 End Function
 
@@ -47,7 +47,7 @@ Private Function GetBirthDate() As Date
 
 End Function
 
-Private Sub SetBirthDate(dtmDate As Date)
+Private Sub SetBirthDate(ByVal dtmDate As Date)
 
     txtBirthYear.Value = Year(dtmDate)
     txtBirthMonth.Value = Month(dtmDate)
@@ -65,7 +65,7 @@ End Sub
 
 Private Function AdmDateComplete() As Boolean
 
-    AdmDateComplete = txtAdmDay.Value <> "" And txtAdmMonth.Value <> "" And txtAdmYear.Value <> ""
+    AdmDateComplete = txtAdmDay.Value <> vbNullString And txtAdmMonth.Value <> vbNullString And txtAdmYear.Value <> vbNullString
 
 End Function
 
@@ -79,7 +79,7 @@ Private Function GetAdmDate() As Date
 
 End Function
 
-Private Sub SetAdmDate(dtmDate As Date)
+Private Sub SetAdmDate(ByVal dtmDate As Date)
 
     txtAdmYear.Value = Year(dtmDate)
     txtAdmMonth.Value = Month(dtmDate)
@@ -149,11 +149,11 @@ End Sub
 
 Private Sub txtGestDay_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
-    If txtGestDay.Value = "" Then Exit Sub
+    If txtGestDay.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidDagen(Val(txtGestDay.Value)) Then
         ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor dagen: " & txtGestDay.Value
-        txtGestDay.Value = ""
+        txtGestDay.Value = vbNullString
         blnCancel = True
     End If
 
@@ -176,7 +176,7 @@ Private Function ValidateBirthDate() As Boolean
     If ModDate.IsEmptyDate(dtmBd) Then Exit Function
     
     If ModDate.IsEmptyDate(dtmAdm) Then
-        dtmAdm = Date
+        dtmAdm = DateTime.Date
         SetAdmDate (dtmAdm)
     End If
 
@@ -198,7 +198,7 @@ Public Sub SetPatient(ByRef objPat As ClassPatientDetails)
     If Not ModDate.IsEmptyDate(m_Pat.OpnameDatum) Then
         SetAdmDate m_Pat.OpnameDatum
     Else
-        SetAdmDate Date
+        SetAdmDate DateTime.Date
     End If
     If Not ModDate.IsEmptyDate(m_Pat.GeboorteDatum) Then SetBirthDate m_Pat.GeboorteDatum
     
@@ -215,11 +215,11 @@ End Sub
 
 Private Sub txtBirthWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
-    If txtBirthWeight.Value = "" Then Exit Sub
+    If txtBirthWeight.Value = vbNullString Then Exit Sub
     
     If Not ModPatient.ValidBirthWeight(Val(txtBirthWeight.Value)) Then
         ModMessage.ShowMsgBoxExclam "Geen geldig geboortegewicht: " & txtBirthWeight.Value
-        txtBirthWeight.Value = ""
+        txtBirthWeight.Value = vbNullString
         blnCancel = True
     End If
 
@@ -233,11 +233,11 @@ End Sub
 
 Private Sub txtLength_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
-    If txtLength.Value = "" Then Exit Sub
+    If txtLength.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidLengthCm(txtLength.Value) Then
         ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor lengte: " & txtLength.Value
-        txtLength.Value = ""
+        txtLength.Value = vbNullString
         blnCancel = True
     End If
 
@@ -245,11 +245,11 @@ End Sub
 
 Private Sub txtWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
-    If txtWeight.Value = "" Then Exit Sub
+    If txtWeight.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidWeightKg(txtWeight.Value) Then
         ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor gewicht: " & txtWeight.Value
-        txtWeight.Value = ""
+        txtWeight.Value = vbNullString
         blnCancel = True
     End If
             
@@ -303,11 +303,11 @@ End Function
 
 Private Sub txtGestWeek_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
-    If txtGestWeek.Value = "" Then Exit Sub
+    If txtGestWeek.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidWeken(Val(txtGestWeek.Value)) Then
         ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor weken: " & txtGestWeek.Value
-        txtGestWeek.Value = ""
+        txtGestWeek.Value = vbNullString
         blnCancel = True
     End If
 

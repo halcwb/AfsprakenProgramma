@@ -1,15 +1,30 @@
 Attribute VB_Name = "ModBed"
 Option Explicit
 
-Public Sub SetBed(strBed As String)
+Private Const constVersie As String = "Var_Glob_Versie"
+Private Const constBed As String = "__1_Bed"
 
-    ModRange.SetRangeValue ModConst.CONST_RANGE_BED, strBed
+Public Sub SetBed(ByVal strBed As String)
+
+    ModRange.SetRangeValue constBed, strBed
 
 End Sub
 
+Public Sub SetFileVersie(ByVal dtmVersie As Date)
+
+    ModRange.SetRangeValue constVersie, dtmVersie
+
+End Sub
+
+Public Function GetFileVersie() As Date
+
+    GetFileVersie = ModRange.GetRangeValue(constVersie, Now())
+
+End Function
+
 Public Function GetBed() As String
 
-    GetBed = ModRange.GetRangeValue(ModConst.CONST_RANGE_BED, vbNullString)
+    GetBed = ModRange.GetRangeValue(constBed, vbNullString)
 
 End Function
 
@@ -21,7 +36,7 @@ Public Sub OpenBed()
 
 End Sub
 
-Private Function IsValidBed(strBed As String) As Boolean
+Private Function IsValidBed(ByVal strBed As String) As Boolean
 
     Dim varItem As Variant
     
@@ -43,7 +58,7 @@ Private Function IsValidBed(strBed As String) As Boolean
 
 End Function
 
-Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
+Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     
     On Error GoTo ErrorOpenBed
 
@@ -86,8 +101,8 @@ Private Sub OpenBedAsk(blnAsk As Boolean, blnShowProgress As Boolean)
     strRange = "A1"
     
     If ModWorkBook.CopyWorkbookRangeToSheet(strFileName, strBookName, strRange, shtGlobTemp, True) Then
-        ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, FileSystem.FileDateTime(strFileName)
-        ModRange.SetRangeValue ModConst.CONST_RANGE_BED, strBed
+        SetFileVersie FileSystem.FileDateTime(strFileName)
+        SetBed strBed
         
         blnAll = ModRange.CopyTempSheetToNamedRanges(True)
         If Not blnAll And blnAsk Then
@@ -121,7 +136,7 @@ Private Sub TestOpenBed()
 
 End Sub
 
-Public Sub CloseBed(blnAsk As Boolean)
+Public Sub CloseBed(ByVal blnAsk As Boolean)
 
     Dim strBed As String
     Dim strNew As String
@@ -177,7 +192,7 @@ Public Sub CloseBed(blnAsk As Boolean)
             strNew = GetBed()
             ModProgress.StartProgress "Verplaats Patient Naar Bed: " & strNew
             
-            If Not strNew = "" And SaveBedToFile(strNew, True, True) Then
+            If Not strNew = vbNullString And SaveBedToFile(strNew, True, True) Then
                 If strBed <> vbNullString And strBed <> strNew Then
                     SetBed strBed
                     OpenBedAsk False, True
@@ -198,7 +213,7 @@ Public Sub CloseBed(blnAsk As Boolean)
             Else
                 ModProgress.FinishProgress
                 
-                If strNew = "" Then
+                If strNew = vbNullString Then
                     SetBed strBed
                     ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
                 Else
@@ -221,7 +236,7 @@ CloseBedError:
 
 End Sub
 
-Private Function SaveBedToFile(strBed As String, blnForce As Boolean, blnShowProgress As Boolean) As Boolean
+Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean, ByVal blnShowProgress As Boolean) As Boolean
 
     Dim strDataRange As String
     Dim strTextRange As String
@@ -252,7 +267,7 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean, blnShowPro
     strTextName = ModSetting.GetPatientTextWorkBookName(strBed)
     
     dtmVersion = FileSystem.FileDateTime(strDataFile)
-    dtmCurrent = ModRange.GetRangeValue(ModConst.CONST_RANGE_VERSIE, Now())
+    dtmCurrent = ModBed.GetFileVersie()
     
     If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 33
     
@@ -286,7 +301,7 @@ Private Function SaveBedToFile(strBed As String, blnForce As Boolean, blnShowPro
         .Save
         .Close
     End With
-    ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, FileSystem.FileDateTime(strDataFile)
+    SetFileVersie FileSystem.FileDateTime(strDataFile)
     
     If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 66
     

@@ -39,13 +39,13 @@ Private Sub UserForm_QueryClose(blnCancel As Integer, CloseMode As Integer)
 
 End Sub
 
-Public Sub SetCaption(strTitle As String)
+Public Sub SetCaption(ByVal strTitle As String)
 
     Me.Caption = strTitle
 
 End Sub
 
-Public Sub SetJobPercentage(strJob As String, intPerc As Integer)
+Public Sub SetJobPercentage(ByVal strJob As String, ByVal intPerc As Integer)
     
     Me.frmProgress.Caption = strJob & "..." & intPerc & "%"
     Me.lblProgress.Width = Int((CDbl(intWidth) / 100) * intPerc)

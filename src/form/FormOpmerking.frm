@@ -33,7 +33,7 @@ Private Sub UserForm_Activate()
 
 End Sub
 
-Public Sub SetText(strText As String)
+Public Sub SetText(ByVal strText As String)
 
     txtOpmerking.Text = IIf(strText = "0", vbNullString, strText)
 

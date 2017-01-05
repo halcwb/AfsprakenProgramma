@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModArray"
 Option Explicit
 
-Public Sub AddItemToVariantArray(arrItems() As Variant, varItem As Variant)
+Public Sub AddItemToVariantArray(ByRef arrItems() As Variant, ByVal varItem As Variant)
 
     Dim intU As Integer
     
@@ -17,7 +17,7 @@ Public Sub AddItemToVariantArray(arrItems() As Variant, varItem As Variant)
 End Sub
 
 
-Public Sub AddItemToStringArray(arrItems() As String, strItem As String)
+Public Sub AddItemToStringArray(ByRef arrItems() As String, ByVal strItem As String)
 
     Dim intU As Integer
     

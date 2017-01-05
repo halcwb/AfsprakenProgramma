@@ -1,63 +1,15 @@
 Attribute VB_Name = "ModWorkBook"
 Option Explicit
 
-Private Const constFileReplace = "{FILE}"
-Private Const constSheetReplace = "{SHEET}"
-Private Const constNumReplace = "{NUM}"
-Private Const constPatNum = "=IF(ISBLANK('{FILE}{SHEET}'!$B$2),$F${NUM},'{FILE}{SHEET}'!$B$2)"
-Private Const constAchterNaam = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$4)"
-Private Const constVoorNaam = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$5)"
-Private Const constGebDat = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$6)"
+Private Const constFileReplace As String = "{FILE}"
+Private Const constSheetReplace As String = "{SHEET}"
+Private Const constNumReplace As String = "{NUM}"
+Private Const constPatNum As String = "=IF(ISBLANK('{FILE}{SHEET}'!$B$2),$F${NUM},'{FILE}{SHEET}'!$B$2)"
+Private Const constAchterNaam As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$4)"
+Private Const constVoorNaam As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$5)"
+Private Const constGebDat As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$6)"
 
-Private Sub TestFormulas()
-
-    Dim varBed As Variant
-    Dim strPatsFile As String
-    Dim intN As Integer
-    Dim strPatNum As String
-    Dim strAchterNaam As String
-    Dim strVoorNaam As String
-    Dim strGebDat As String
-    Dim strFormula As String
-    Dim strDataFile As String
-    Dim strTextFile As String
-    Dim strDataName As String
-        
-    strPatNum = Replace(constPatNum, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strAchterNaam = Replace(constAchterNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strVoorNaam = Replace(constVoorNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strGebDat = Replace(constGebDat, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-            
-    intN = 2
-    For Each varBed In ModSetting.GetPedBeds()
-                
-        strDataFile = ModSetting.GetPatientDataFile(CStr(varBed))
-        strTextFile = ModSetting.GetPatientTextFile(CStr(varBed))
-        strDataName = ModSetting.GetPatientDataWorkBookName(CStr(varBed))
-                        
-        strFormula = Replace(strPatNum, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        ModLog.LogInfo "Set Formula: " & strFormula
-    
-        strFormula = Replace(strAchterNaam, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        ModLog.LogInfo "Set Formula: " & strFormula
-    
-        strFormula = Replace(strVoorNaam, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        ModLog.LogInfo "Set Formula: " & strFormula
-    
-        strFormula = Replace(strGebDat, constFileReplace, strDataFile)
-        strFormula = Replace(strFormula, constNumReplace, intN)
-        ModLog.LogInfo "Set Formula: " & strFormula
-        
-        intN = intN + 1
-    
-    Next varBed
-    
-End Sub
-
-Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, strPath As String, blnShowProgress As Boolean)
+Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As String, ByVal blnShowProgress As Boolean)
     
     Dim objWb As Workbook
     
@@ -163,7 +115,7 @@ CreatePatientsWorkBookError:
 
 End Sub
 
-Public Sub SaveWorkBookAsShared(objWorkbook As Workbook, strFile As String)
+Public Sub SaveWorkBookAsShared(ByRef objWorkbook As Workbook, ByVal strFile As String)
     
     If Not objWorkbook.MultiUserEditing Then
         objWorkbook.SaveAs strFile, AccessMode:=xlShared
@@ -171,7 +123,7 @@ Public Sub SaveWorkBookAsShared(objWorkbook As Workbook, strFile As String)
      
 End Sub
 
-Public Function CopyWorkbookRangeToSheet(strFile As String, strBook As String, strRange As String, shtTarget As Worksheet, blnShowProgress As Boolean) As Boolean
+Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook As String, ByVal strRange As String, ByRef shtTarget As Worksheet, ByVal blnShowProgress As Boolean) As Boolean
     
     Dim strJob As String
     

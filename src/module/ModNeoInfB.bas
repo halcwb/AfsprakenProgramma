@@ -1,6 +1,9 @@
 Attribute VB_Name = "ModNeoInfB"
 Option Explicit
 
+Private Const constTblMedIV As String = "tbl_Neo_MedIV"
+
+
 ' ToDo: Add comment
 Public Sub NeoInfB_CopyActTo1700()
 
@@ -69,7 +72,7 @@ Public Function NeoInfB_GetTPNItems() As String()
     
 End Function
 
-Private Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As Integer, intStop)
+Private Sub AddItemsToArray(ByRef arrItems() As String, ByVal strItem As String, ByVal intStart As Integer, ByVal intStop As Boolean)
 
     Dim intC As Integer
     Dim intU As Integer
@@ -93,7 +96,7 @@ Private Sub AddItemsToArray(arrItems() As String, strItem As String, intStart As
     
 End Sub
 
-Private Function ChangeTo1700(arrItems() As String) As String()
+Private Function ChangeTo1700(ByRef arrItems() As String) As String()
     
     Dim arr1700Items() As String
     Dim varItem As Variant
@@ -110,7 +113,7 @@ Private Function ChangeTo1700(arrItems() As String) As String()
 
 End Function
 
-Public Sub NeoInfB_Copy1700ToAct(blnAlles As Boolean, blnVoeding As Boolean, blnContMed As Boolean, blnTPN As Boolean)
+Public Sub NeoInfB_Copy1700ToAct(ByVal blnAlles As Boolean, ByVal blnVoeding As Boolean, ByVal blnContMed As Boolean, ByVal blnTPN As Boolean)
     
     If blnAlles Then
         blnVoeding = True
@@ -170,15 +173,16 @@ End Sub
 
 Public Sub NeoInfB_ShowFormCopy1700ToAct()
 
-    Dim frmCopy1700 As New FormCopy1700
+    Dim frmCopy1700 As FormCopy1700
     
+    Set frmCopy1700 = New FormCopy1700
     frmCopy1700.Show
 
     Set frmCopy1700 = Nothing
     
 End Sub
 
-Private Sub Test()
+Private Sub test()
     
     Dim varItem As Variant
     Dim arr1700Items() As String
@@ -192,7 +196,7 @@ Private Sub Test()
 
 End Sub
 
-Private Sub RemoveContIV(intRegel As Integer, bln1700 As Boolean)
+Private Sub RemoveContIV(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
 
     Dim strMedicament As String
     Dim varMedicament As Variant
@@ -205,7 +209,7 @@ Private Sub RemoveContIV(intRegel As Integer, bln1700 As Boolean)
     
     Dim objTblMed As Range
     
-    Set objTblMed = Range(ModConst.CONST_RANGE_NEOMED)
+    Set objTblMed = Range(constTblMedIV)
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
     
     strMedicament = IIf(bln1700, "_Neo_1700_Medicament_" & intRegel, "_Neo_InfB_Medicament_" & intRegel)
@@ -338,11 +342,12 @@ Public Sub NeoInfB_RemoveContIV1700_9()
 
 End Sub
 
-Private Sub MedSterkte(intRegel As Integer, bln1700 As Boolean)
+Private Sub MedSterkte(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
 
-    Dim frmInvoer As New FormInvoerNumeriek
+    Dim frmInvoer As FormInvoerNumeriek
     Dim strSterkte As String
     
+    Set frmInvoer = New FormInvoerNumeriek
     strSterkte = IIf(bln1700, "_Neo_1700_MedSterkte_" & intRegel, "_Neo_InfB_MedSterkte_" & intRegel)
     
     With frmInvoer
@@ -467,7 +472,7 @@ Public Sub NeoInfB_MedConc1700_9()
 
 End Sub
 
-Private Sub RemoveIV(intRegel As Integer)
+Private Sub RemoveIV(ByVal intRegel As Integer)
 
     Dim strStand As String
     Dim strExtra As String
@@ -516,9 +521,11 @@ Public Sub NeoInfB_TPNAdvice()
 
 End Sub
 
-Private Sub EnterText(strCaption As String, strName As String, strRange As String)
+Private Sub EnterText(ByVal strCaption As String, ByVal strName As String, ByVal strRange As String)
 
-    Dim frmInvoer As New FormTekstInvoer
+    Dim frmInvoer As FormTekstInvoer
+    
+    Set frmInvoer = New FormTekstInvoer
     
     With frmInvoer
         .Caption = strCaption

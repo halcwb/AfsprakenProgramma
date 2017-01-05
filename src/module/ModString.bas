@@ -16,10 +16,10 @@ Option Explicit
 
 ' Checks whether strString contains strValue case insensitive, ignores spaces
 Public Function ContainsCaseInsensitive(ByVal strString As String, ByVal strValue As String) As Boolean
-    strString = Trim(strString)
-    strValue = Trim(strValue)
+    strString = Strings.Trim(strString)
+    strValue = Strings.Trim(strValue)
     
-    If InStr(1, LCase(strString), LCase(strValue)) > 0 Then
+    If Strings.InStr(1, Strings.LCase(strString), Strings.LCase(strValue)) > 0 Then
         ContainsCaseInsensitive = True
     Else
         ContainsCaseInsensitive = False
@@ -29,10 +29,10 @@ End Function
 
 ' Checks whether strString contains strValue case sensitive, ignores spaces
 Public Function ContainsCaseSensitive(ByVal strString As String, ByVal strValue As String) As Boolean
-    strString = Trim(strString)
-    strValue = Trim(strValue)
+    strString = Strings.Trim(strString)
+    strValue = Strings.Trim(strValue)
 
-    If InStr(1, strString, strValue) > 0 Then
+    If Strings.InStr(1, strString, strValue) > 0 Then
         ContainsCaseSensitive = True
     Else
         ContainsCaseSensitive = False
@@ -40,13 +40,13 @@ Public Function ContainsCaseSensitive(ByVal strString As String, ByVal strValue 
     
 End Function
 
-Public Function StartsWith(ByVal strString, strValue As String) As Boolean
+Public Function StartsWith(ByVal strString As String, ByVal strValue As String) As Boolean
 
-    StartsWith = InStr(1, strString, strValue) = 1
+    StartsWith = Strings.InStr(1, strString, strValue) = 1
 
 End Function
 
-Private Sub Test()
+Private Sub test()
     Dim strString As String
     Dim strStart As String
     
@@ -59,20 +59,19 @@ End Sub
 
 Public Function DateToString(ByVal dtmDate As Date) As String
 
-    DateToString = Format(dtmDate, "dd-mmm-yyyy")
+    DateToString = Strings.Format(dtmDate, "dd-mmm-yyyy")
 
 End Function
 
 Private Sub TestDateToString()
 
-    MsgBox DateToString(Date)
+    MsgBox DateToString(DateTime.Date)
 
 End Sub
 
 Public Function StringToDate(ByVal strValue As String) As Date
 
     Dim dtmDate As Date
-    Dim intLocale As Integer
     
     On Error GoTo StringToDateError
         

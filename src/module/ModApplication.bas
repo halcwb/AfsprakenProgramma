@@ -4,12 +4,15 @@ Option Explicit
 Private blnDontClose As Boolean
 Private blnCloseHaseRun As Boolean
 
+Private Const constVersie As String = "Var_Glob_Versie"
+Private Const constDate As String = "Var_AfspraakDatum"
+
 Public Enum EnumAppLanguage
     Dutch = 1043
     English = 0
 End Enum
 
-Public Sub SetDontClose(blnClose As Boolean)
+Public Sub SetDontClose(ByVal blnClose As Boolean)
     
     blnDontClose = blnClose
 
@@ -17,8 +20,6 @@ End Sub
 
 Public Sub SetToDevelopmentMode()
 
-    Dim objSheet As Worksheet
-    
     ModProgress.StartProgress "Zet in Ontwikkel Modus"
     
     ModSheet.UnprotectUserInterfaceSheets True
@@ -87,7 +88,7 @@ Private Sub TestCloseAfspraken()
     MsgBox Application.DisplayAlerts
 End Sub
 
-Private Sub SetWindow(objWindow As Window, blnDisplay As Boolean)
+Private Sub SetWindow(ByRef objWindow As Window, ByRef blnDisplay As Boolean)
 
     blnDisplay = blnDisplay Or ModSetting.IsDevelopmentMode()
 
@@ -102,13 +103,13 @@ Private Sub SetWindow(objWindow As Window, blnDisplay As Boolean)
 
 End Sub
 
-Public Sub SetWindowToCloseApp(objWindow As Window)
+Public Sub SetWindowToCloseApp(ByRef objWindow As Window)
     
     SetWindow objWindow, True
 
 End Sub
 
-Public Sub SetWindowToOpenApp(objWindow As Window)
+Public Sub SetWindowToOpenApp(ByRef objWindow As Window)
     
     SetWindow objWindow, False
 
@@ -119,7 +120,6 @@ Public Sub InitializeAfspraken()
     Dim strError As String
     Dim strAction As String
     Dim strParams() As Variant
-    Dim objWindow As Window
     
     On Error GoTo InitializeError
     
@@ -146,7 +146,7 @@ Public Sub InitializeAfspraken()
     SetCaptionAndHideBars
     
     ' Clean everything
-    ModRange.SetRangeValue ModConst.CONST_RANGE_VERSIE, vbNullString
+    ModRange.SetRangeValue constVersie, vbNullString
     SetDateToDayFormula
     ModPatient.PatientClearAll False, True ' Default start with no patient
     ModSetting.SetDevelopmentMode False ' Default development mode is false
@@ -156,7 +156,7 @@ Public Sub InitializeAfspraken()
     Application.ScreenUpdating = True
     
     ModLog.LogActionEnd strAction
-    
+        
     Exit Sub
     
 InitializeError:
@@ -173,7 +173,7 @@ End Sub
 
 Public Sub SetDateToDayFormula()
 
-    ModRange.SetRangeFormula ModConst.CONST_RANGE_DATE, GetToDayFormula()
+    ModRange.SetRangeFormula constDate, GetToDayFormula()
 
 End Sub
 
@@ -202,9 +202,9 @@ Public Sub SetApplicationTitle()
     Dim strAN As String
     
     strTitle = ModConst.CONST_APPLICATION_NAME
-    strBed = ModRange.GetRangeValue(ModConst.CONST_RANGE_BED, "")
-    strVN = ModRange.GetRangeValue(ModConst.CONST_RANGE_VN, "")
-    strAN = ModRange.GetRangeValue(ModConst.CONST_RANGE_AN, "")
+    strBed = ModBed.GetBed()
+    strVN = ModPatient.PatientVoorNaam()
+    strAN = ModPatient.PatientAchterNaam()
     
     If Not strBed = "0" Then
         strTitle = strTitle & " Patient: " & strAN & " " & strVN & ", Bed: " & strBed
@@ -247,7 +247,7 @@ Private Function GetToDayFormula() As String
 
 End Function
 
-Private Function HasInPath(strDir As String) As Boolean
+Private Function HasInPath(ByVal strDir As String) As Boolean
 
     Dim strPath As String
 

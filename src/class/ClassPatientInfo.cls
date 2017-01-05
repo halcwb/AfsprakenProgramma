@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Const constNull = "0"
+Private Const constNull As Variant = "0"
 
 Private m_ID As String
 Private m_Bed As String
@@ -25,7 +25,7 @@ End Property
 
 Public Property Let Id(ByVal strID As String)
 
-    If Not strID = constNull Then m_ID = strID Else m_ID = ""
+    If Not strID = constNull Then m_ID = strID Else m_ID = vbNullString
 
 End Property
 
@@ -37,7 +37,7 @@ End Property
 
 Public Property Let Bed(ByVal strBed As String)
 
-    If Not strBed = constNull Then m_Bed = strBed Else m_Bed = ""
+    If Not strBed = constNull Then m_Bed = strBed Else m_Bed = vbNullString
 
 End Property
 
@@ -49,7 +49,7 @@ End Property
 
 Public Property Let AchterNaam(ByVal strAN As String)
 
-    If Not constNull = strAN Then m_AN = strAN Else m_AN = ""
+    If Not constNull = strAN Then m_AN = strAN Else m_AN = vbNullString
 
 End Property
 
@@ -59,9 +59,9 @@ Public Property Get VoorNaam() As String
 
 End Property
 
-Public Property Let VoorNaam(ByVal strVN As String)
+Public Property Let VoorNaam(ByRef strVN As String)
 
-    If Not strVN = constNull Then m_VN = strVN Else strVN = ""
+    If Not strVN = constNull Then m_VN = strVN Else strVN = vbNullString
 
 End Property
 
@@ -73,7 +73,7 @@ End Property
 
 Public Property Let BirthDate(ByVal strBD As String)
 
-    If Not strBD = constNull Then m_BD = strBD Else m_BD = ""
+    If Not strBD = constNull Then m_BD = strBD Else m_BD = vbNullString
 
 End Property
 
@@ -84,13 +84,13 @@ Public Function ToString() As String
     strString = Me.Bed() & ": "
     strString = strString & Me.Id()
     
-    If Me.AchterNaam() <> "" And Me.VoorNaam() <> "" Then
-        strString = Trim(strString) & " " & Me.AchterNaam & ", " & Me.VoorNaam()
+    If Me.AchterNaam() <> vbNullString And Me.VoorNaam() <> vbNullString Then
+        strString = Strings.Trim(strString) & " " & Me.AchterNaam & ", " & Me.VoorNaam()
     Else
-        strString = Trim(strString) & Me.AchterNaam() & Me.VoorNaam()
+        strString = Strings.Trim(strString) & Me.AchterNaam() & Me.VoorNaam()
     End If
     
-    strString = Trim(strString) & " " & Me.BirthDate()
+    strString = Strings.Trim(strString) & " " & Me.BirthDate()
 
     ToString = strString
 

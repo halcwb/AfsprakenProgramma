@@ -3,8 +3,9 @@ Option Explicit
 
 Public Sub SaveAndPrintAfspraken()
 
-    Dim frmPrintAfspraken As New FormPrintAfspraken
+    Dim frmPrintAfspraken As FormPrintAfspraken
     
+    Set frmPrintAfspraken = New FormPrintAfspraken
     ModBed.CloseBed (True)
     frmPrintAfspraken.Show
     

@@ -1,10 +1,10 @@
 Attribute VB_Name = "ModPedAfspr"
 Option Explicit
 
-Private Const constOverige = "_Ped_AfsprOverig"
-Private Const constCompens = "_Ped_AfsprD_Verliezen" 'ToDo Remove duplicate name _Ped_AfsprD_VerliezenStof
-Private Const constPedAfsprB = "_Ped_AfsprB_"
-Private Const constPedAfsprD = "_Ped_AfsprD_"
+Private Const constOverige As String = "_Ped_AfsprOverig"
+Private Const constCompens As String = "_Ped_AfsprD_Verliezen" 'ToDo Remove duplicate name _Ped_AfsprD_VerliezenStof
+Private Const constPedAfsprB As String = "_Ped_AfsprB_"
+Private Const constPedAfsprD As String = "_Ped_AfsprD_"
 
 Public Sub PedAfspr_Clear()
 
@@ -15,9 +15,11 @@ Public Sub PedAfspr_Clear()
 
 End Sub
 
-Private Sub EnterText(strCaption As String, strName As String, strRange As String)
+Private Sub EnterText(ByVal strCaption As String, ByVal strName As String, ByVal strRange As String)
 
-    Dim frmInvoer As New FormTekstInvoer
+    Dim frmInvoer As FormTekstInvoer
+    
+    Set frmInvoer = New FormTekstInvoer
     
     With frmInvoer
         .Caption = strCaption

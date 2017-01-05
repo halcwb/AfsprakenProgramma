@@ -1,14 +1,14 @@
 Attribute VB_Name = "ModRange"
 Option Explicit
 
-Function GetRow(sheetName As String, searchString As String)
+Private Function GetRow(ByVal sheetName As String, ByVal searchString As String) As Integer
 
     Dim currentRow As Integer
 
-    Sheets(sheetName).Select
+    WbkAfspraken.Sheets(sheetName).Select
     currentRow = 1
     
-    Do While (LCase(Cells(currentRow, 1).Value) <> LCase(searchString))
+    Do While (Strings.LCase(Cells(currentRow, 1).Value) <> Strings.LCase(searchString))
         currentRow = currentRow + 1
     Loop
     
@@ -16,7 +16,7 @@ Function GetRow(sheetName As String, searchString As String)
     
 End Function
 
-Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
+Public Sub CopyRangeNamesToRangeNames(ByRef arrFrom() As String, ByRef arrTo() As String)
     
     Dim intN As Integer
     
@@ -26,7 +26,7 @@ Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
     
 End Sub
 
-Public Function CopyTempSheetToNamedRanges(blnShowProgress As Boolean) As Boolean
+Public Function CopyTempSheetToNamedRanges(ByVal blnShowProgress As Boolean) As Boolean
 
     Dim intN As Integer
     Dim intC As Integer
@@ -50,7 +50,7 @@ Public Function CopyTempSheetToNamedRanges(blnShowProgress As Boolean) As Boolea
 
 End Function
 
-Public Sub SetNameToRange(strName As String, objRange As Range)
+Public Sub SetNameToRange(ByVal strName As String, ByRef objRange As Range)
 
     ModAssert.AssertTrue objRange.Rows.Count = 1 And objRange.Columns.Count = 1, "Name cannot be set to multi cell", True
     
@@ -64,7 +64,7 @@ Public Sub SetNameToRange(strName As String, objRange As Range)
 
 End Sub
 
-Public Function RangeHasName(objRange As Range) As Boolean
+Public Function RangeHasName(ByRef objRange As Range) As Boolean
     
     On Error GoTo NoName
 
@@ -77,7 +77,7 @@ NoName:
 
 End Function
 
-Public Function NameExists(strName As String) As Boolean
+Public Function NameExists(ByVal strName As String) As Boolean
 
 '    Dim objName As Name
 '
@@ -129,7 +129,7 @@ Public Function CreateName(ByVal strName As String, ByVal strGroup As String, By
 
 End Function
 
-Public Function SetRangeValue(strRange As String, varValue As Variant) As Boolean
+Public Function SetRangeValue(ByVal strRange As String, ByVal varValue As Variant) As Boolean
 
     Dim blnLog As Boolean
     Dim blnSet As Boolean
@@ -150,7 +150,7 @@ Public Function SetRangeValue(strRange As String, varValue As Variant) As Boolea
 
 End Function
 
-Public Sub SetRangeFormula(strRange As String, strFormula As String)
+Public Sub SetRangeFormula(ByVal strRange As String, ByVal strFormula As String)
 
     Dim blnLog As Boolean
     
@@ -166,7 +166,7 @@ Public Sub SetRangeFormula(strRange As String, strFormula As String)
 
 End Sub
 
-Public Function GetRangeValue(strRange As String, varDefault As Variant) As Variant
+Public Function GetRangeValue(ByVal strRange As String, ByVal varDefault As Variant) As Variant
 
     Dim blnLog As Boolean
     
@@ -183,7 +183,7 @@ Public Function GetRangeValue(strRange As String, varDefault As Variant) As Vari
 
 End Function
 
-Public Function GetCellAddress(objRange As Range) As String
+Public Function GetCellAddress(ByRef objRange As Range) As String
 
     Dim strAddress As String
     strAddress = "=" & "'" & objRange.Parent.Name & "'!" & objRange.Address(External:=False)
@@ -191,13 +191,13 @@ Public Function GetCellAddress(objRange As Range) As String
 
 End Function
 
-Public Function IsFormulaValue(strValue As String) As Boolean
+Public Function IsFormulaValue(ByVal strValue As String) As Boolean
 
     IsFormulaValue = ModString.StartsWith(strValue, "=")
 
 End Function
 
-Public Function IsDataName(strName As String) As Boolean
+Public Function IsDataName(ByVal strName As String) As Boolean
 
     Dim blnData As Boolean
     
@@ -214,19 +214,19 @@ Private Sub TestIsDataName()
 
 End Sub
 
-Public Function IsPedDataName(strName As String) As Boolean
+Public Function IsPedDataName(ByVal strName As String) As Boolean
 
     IsPedDataName = ModString.StartsWith(strName, "_Ped")
 
 End Function
 
-Public Function IsNeoDataName(strName As String) As Boolean
+Public Function IsNeoDataName(ByVal strName As String) As Boolean
 
     IsNeoDataName = ModString.StartsWith(strName, "_Neo")
 
 End Function
 
-Public Sub WriteNamesToSheet(shtSheet As Worksheet, blnShowProgress As Boolean)
+Public Sub WriteNamesToSheet(ByRef shtSheet As Worksheet, ByVal blnShowProgress As Boolean)
 
     Dim objName As Name
     Dim intN As Integer
@@ -254,7 +254,7 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet, blnShowProgress As Boolean)
     
     intN = 2
     intC = WbkAfspraken.Names.Count
-    strEmpty = Chr(34) & Chr(34)
+    strEmpty = Strings.Chr(34) & Strings.Chr(34)
     For Each objName In WbkAfspraken.Names
         blnIsFormula = IsFormulaValue(Range(objName.Name).Formula)
         blnIsData = IsDataName(objName.Name)
@@ -267,7 +267,7 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet, blnShowProgress As Boolean)
             varValue = Range(objName.Name).Value2
         End If
         
-        shtSheet.Cells(intN, 1).Value2 = Strings.Replace(objName.RefersTo, "=", "")
+        shtSheet.Cells(intN, 1).Value2 = Strings.Replace(objName.RefersTo, "=", vbNullString)
         shtSheet.Cells(intN, 2).Value2 = objName.Name
         shtSheet.Cells(intN, 4).Formula = "=IFERROR(VLOOKUP(B" & intN & ",PatData!$A$2:$A$2000,1,)," & strEmpty & ")<>" & strEmpty
         shtSheet.Cells(intN, 5).Value2 = varValue
@@ -332,8 +332,9 @@ End Sub
 ' But it works as otherwise.
 Public Sub GiveNameToRange()
 
-    Dim frmNaamGeven As New FormNaamGeven
+    Dim frmNaamGeven As FormNaamGeven
     
+    Set frmNaamGeven = New FormNaamGeven
     frmNaamGeven.Show vbModal
     
     Set frmNaamGeven = Nothing
@@ -366,8 +367,9 @@ End Sub
 
 Public Sub NaamGeven()
     
-    Dim frmNaam As New FormNaamGeven
+    Dim frmNaam As FormNaamGeven
     
+    Set frmNaam = New FormNaamGeven
     frmNaam.Show
     
     Set frmNaam = Nothing

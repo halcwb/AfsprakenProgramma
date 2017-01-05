@@ -1,28 +1,34 @@
 Attribute VB_Name = "ModPedEntTPN"
 Option Explicit
 
-Private Const constEntText = "_Ped_Ent_Opm"
-Private Const constTpnText = "_Ped_TPN_Opm"
-Private Const constNaCl1 = "_Ped_TPN_NaCl1"
-Private Const constKCl1 = "_Ped_TPN_KCl1"
-Private Const constNaCl2 = "_Ped_TPN_NaCl2"
-Private Const constKCl2 = "_Ped_TPN_KCl2"
-Private Const constCaGluc = "_Ped_TPN_CaCl"
-Private Const constMgCl = "_Ped_TPN_MgCl"
-Private Const constKNaFosf = "_Ped_TPN_KNaFosf"
-Private Const constNaCl1Vol = "_Ped_TPN_NaClVol1"
-Private Const constKCl1Vol = "_Ped_TPN_KClVol1"
-Private Const constNaCl2Vol = "_Ped_TPN_NaClVol2"
-Private Const constKCl2Vol = "_Ped_TPN_KClVol2"
-Private Const constCaGlucVol = "_Ped_TPN_CaGlucVol"
-Private Const constMgClVol = "_Ped_TPN_MgClVol"
-Private Const constTPNVol = "_Ped_TPN_Vol"
+Private Const CONST_TPN_1 As Integer = 2
+Private Const CONST_TPN_2 As Integer = 7
+Private Const CONST_TPN_3 As Integer = 16
+Private Const CONST_TPN_4 As Integer = 30
+Private Const CONST_TPN_5 As Integer = 50
+
+Private Const constEntText As String = "_Ped_Ent_Opm"
+Private Const constTpnText As String = "_Ped_TPN_Opm"
+Private Const constNaCl1 As String = "_Ped_TPN_NaCl1"
+Private Const constKCl1 As String = "_Ped_TPN_KCl1"
+Private Const constNaCl2 As String = "_Ped_TPN_NaCl2"
+Private Const constKCl2 As String = "_Ped_TPN_KCl2"
+Private Const constCaGluc As String = "_Ped_TPN_CaCl"
+Private Const constMgCl As String = "_Ped_TPN_MgCl"
+Private Const constKNaFosf As String = "_Ped_TPN_KNaFosf"
+Private Const constNaCl1Vol As String = "_Ped_TPN_NaClVol1"
+Private Const constKCl1Vol As String = "_Ped_TPN_KClVol1"
+Private Const constNaCl2Vol As String = "_Ped_TPN_NaClVol2"
+Private Const constKCl2Vol As String = "_Ped_TPN_KClVol2"
+Private Const constCaGlucVol As String = "_Ped_TPN_CaGlucVol"
+Private Const constMgClVol As String = "_Ped_TPN_MgClVol"
+Private Const constTPNVol As String = "_Ped_TPN_Vol"
 
 Public Sub PedEntTPN_SelectTPNPrint()
 
     Dim dblGew As Double
     
-    dblGew = Val(ModRange.GetRangeValue(ModConst.CONST_RANGE_GEWICHT, 0)) / 10
+    dblGew = ModPatient.GetGewichtFromRange
 
     If dblGew >= CONST_TPN_1 And dblGew <= CONST_TPN_2 Then
         shtPedPrtTPN2tot6.Select
@@ -84,7 +90,7 @@ Public Sub PedEntTPN_SelectTPN()
     
 End Sub
 
-Private Sub TPNAdvies(Dag As Integer)
+Private Sub TPNAdvies(ByVal intDag As Integer)
 
     Dim dblVol As Double
     Dim dblNaCl As Double
@@ -94,7 +100,7 @@ Private Sub TPNAdvies(Dag As Integer)
     Dim dblSolu As Double
     Dim dblGewicht As Double
     
-    dblGewicht = Val(ModRange.GetRangeValue(ModConst.CONST_RANGE_GEWICHT, 0)) / 10
+    dblGewicht = ModPatient.GetGewichtFromRange()
 
     Select Case dblGewicht
         Case 2 To 6
@@ -112,7 +118,7 @@ Private Sub TPNAdvies(Dag As Integer)
             ModRange.SetRangeValue "VitIntra", True
             ModRange.SetRangeValue "ModSetting", IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
             
-            Select Case Dag
+            Select Case intDag
                 Case 1
                     ModRange.SetRangeValue "SSTglucose", 2
                 
@@ -170,7 +176,7 @@ Private Sub TPNAdvies(Dag As Integer)
             ModRange.SetRangeValue "SoluVit", True
             ModRange.SetRangeValue "SoluVitVol", IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
             
-            Select Case Dag
+            Select Case intDag
                 Case 1
                     ModRange.SetRangeValue "SSTglucose", 2
                 
@@ -229,7 +235,7 @@ Private Sub TPNAdvies(Dag As Integer)
             
             ModRange.SetRangeValue "Peditrace", 15
             
-            Select Case Dag
+            Select Case intDag
                 Case 1
                     ModRange.SetRangeValue "SSTglucose", 2
                 
@@ -288,7 +294,7 @@ Private Sub TPNAdvies(Dag As Integer)
             
             ModRange.SetRangeValue "Peditrace", 15
             
-            Select Case Dag
+            Select Case intDag
                 Case 1
                     ModRange.SetRangeValue "SSTglucose", 2
                 
@@ -342,7 +348,7 @@ Private Sub TPNAdvies(Dag As Integer)
             ModRange.SetRangeValue "Peditrace", 15
             ModRange.SetRangeValue "SSTGlucose", 2
             
-            Select Case Dag
+            Select Case intDag
                 Case 1
                 
                     ModRange.SetRangeValue "TPNVol", 700
@@ -397,12 +403,12 @@ Public Sub PedEntTPN_TPNAdviceDayThree()
 
 End Sub
 
-Private Sub EnterOpmAfspr(strRange As String)
+Private Sub EnterOpmAfspr(ByVal strRange As String)
 
-    Dim frmOpmerking As New FormOpmerking
+    Dim frmOpmerking As FormOpmerking
     
+    Set frmOpmerking = New FormOpmerking
     frmOpmerking.txtOpmerking.Text = ModRange.GetRangeValue(strRange, vbNullString)
-    
     frmOpmerking.Show
     
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
@@ -428,10 +434,11 @@ Public Sub PedEntTPN_TPNText()
 
 End Sub
 
-Private Sub EnterHoeveelheid(strRange As String, strItem As String)
+Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String)
 
-    Dim frmInvoer As New FormInvoerNumeriek
+    Dim frmInvoer As FormInvoerNumeriek
     
+    Set frmInvoer = New FormInvoerNumeriek
     frmInvoer.SetValue strRange, strItem, ModRange.GetRangeValue(strRange, 0), "mL"
     frmInvoer.Show
     
@@ -531,8 +538,9 @@ End Sub
 
 Public Sub PedEntTPN_SpecVoed()
     
-    Dim frmSpecialeVoeding As New FormSpecialeVoeding
+    Dim frmSpecialeVoeding As FormSpecialeVoeding
 
+    Set frmSpecialeVoeding = New FormSpecialeVoeding
     frmSpecialeVoeding.Show
     
     Set frmSpecialeVoeding = Nothing

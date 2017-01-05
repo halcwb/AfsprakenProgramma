@@ -17,7 +17,7 @@ Option Explicit
 
 Private m_pats As Collection
 
-Private Sub lstPatienten_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+Private Sub lstPatienten_DblClick(ByVal blnCancel As MSForms.ReturnBoolean)
     
     Me.SetSelectedBed
     Me.Hide

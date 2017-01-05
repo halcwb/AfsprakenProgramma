@@ -15,7 +15,6 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private intN As Integer
 Private objMedicament As ClassMedicatieDisc
 Private objFormularium As ClassFormularium
 
@@ -40,14 +39,14 @@ Public Function GetGPK() As String
 
 End Function
 
-Public Sub LoadGPK(strGPK As String)
+Public Sub LoadGPK(ByVal strGPK As String)
 
     Set objMedicament = objFormularium.GPK(strGPK)
     LoadMedicament objMedicament
 
 End Sub
 
-Private Sub LoadMedicament(objMedicament As ClassMedicatieDisc)
+Private Sub LoadMedicament(ByRef objMedicament As ClassMedicatieDisc)
 
         With objMedicament
             lblTherapieGroep.Caption = .TherapieGroep
@@ -63,7 +62,8 @@ Private Sub LoadMedicament(objMedicament As ClassMedicatieDisc)
 
 End Sub
 
-Private Sub FillCombo(objCombo As ComboBox, arrItems() As String)
+Private Sub FillCombo(ByRef objCombo As ComboBox, ByRef arrItems() As String)
+
     Dim varItem As Variant
 
     objCombo.Clear
@@ -153,6 +153,8 @@ Private Sub txtSterkte_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 End Sub
 
 Private Sub UserForm_Initialize()
+
+    Dim intN As Integer
 
     MsgBox prompt:="Formularium wordt geladen, een ogenblik geduld a.u.b. ...", _
     Buttons:=vbInformation, Title:="Informedica 2016"

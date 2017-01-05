@@ -28,7 +28,7 @@ End Sub
 ' Write strText to a file
 ' Creates the file if it doesn't exist
 ' Overwrites the file if it does exist
-Public Sub WriteToFile(strFile As String, ByVal strText As String)
+Public Sub WriteToFile(ByVal strFile As String, ByVal strText As String)
 
     Dim strError As String
 
@@ -49,10 +49,12 @@ WriteToFileError:
 
 End Sub
 
-Public Function FileExists(strFile As String) As Boolean
+Public Function FileExists(ByVal strFile As String) As Boolean
 
-    Dim objFs As New FileSystemObject
+    Dim objFs As FileSystemObject
     Dim blnExists As Boolean
+    
+    Set objFs = New FileSystemObject
     
     blnExists = objFs.FileExists(strFile)
     Set objFs = Nothing
@@ -60,9 +62,11 @@ Public Function FileExists(strFile As String) As Boolean
 
 End Function
 
-Public Sub FileDelete(strFile As String)
+Public Sub FileDelete(ByVal strFile As String)
     
-    Dim objFs As New FileSystemObject
+    Dim objFs As FileSystemObject
+    
+    Set objFs = New FileSystemObject
     
     If FileExists(strFile) Then
         objFs.DeleteFile strFile
@@ -70,7 +74,7 @@ Public Sub FileDelete(strFile As String)
 
 End Sub
 
-Public Function GetFiles(strDir As String) As String()
+Public Function GetFiles(ByVal strDir As String) As String()
 
     Dim arrFiles() As String
     Dim strFile As String
@@ -90,13 +94,13 @@ Public Function GetFiles(strDir As String) As String()
 
 End Function
 
-Public Function StringArrayNotEmpty(arrArray() As String) As Boolean
+Public Function StringArrayNotEmpty(ByRef arrArray() As String) As Boolean
 
     StringArrayNotEmpty = Len(Join(arrArray)) > 0
 
 End Function
 
-Public Sub DeleteAllFilesInDir(strDir As String)
+Public Sub DeleteAllFilesInDir(ByVal strDir As String)
 
     Dim varFile As Variant
     Dim arrFiles() As String

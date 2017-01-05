@@ -29,9 +29,9 @@ Public Property Get Tekst() As String
 
 End Property
 
-Public Property Let Tekst(TekstString As String)
+Public Property Let Tekst(ByVal strText As String)
 
-    txtTekst = VBA.Trim$(TekstString)
+    txtTekst = VBA.Trim$(strText)
 
 End Property
 

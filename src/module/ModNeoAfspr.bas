@@ -1,9 +1,9 @@
 Attribute VB_Name = "ModNeoAfspr"
 Option Explicit
 
-Private Const constWondKweek = "_Neo_AfsprD_Wondkweek"
-Private Const constNeoAfsprB = "_Neo_AfsprB_"
-Private Const constNeoAfsprD = "_Neo_AfsprD_"
+Private Const constWondKweek As String = "_Neo_AfsprD_Wondkweek"
+Private Const constNeoAfsprB As String = "_Neo_AfsprB_"
+Private Const constNeoAfsprD As String = "_Neo_AfsprD_"
 
 Public Sub NeoAfspr_Clear()
 
@@ -14,9 +14,11 @@ Public Sub NeoAfspr_Clear()
 
 End Sub
 
-Private Sub EnterText(strCaption As String, strName As String, strRange As String)
+Private Sub EnterText(ByVal strCaption As String, ByVal strName As String, ByVal strRange As String)
 
-    Dim frmInvoer As New FormTekstInvoer
+    Dim frmInvoer As FormTekstInvoer
+    
+    Set frmInvoer = New FormTekstInvoer
     
     With frmInvoer
         .Caption = strCaption

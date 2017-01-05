@@ -8,31 +8,31 @@ Public Sub TestAssert()
 
 End Sub
 
-Public Sub AssertTrue(blnIsTrue As Boolean, strMsg As String, blnDisplay As Boolean)
+Public Sub AssertTrue(ByVal blnIsTrue As Boolean, ByVal strMsg As String, ByVal blnDisplay As Boolean)
 
     If Not blnIsTrue Then ProcessAssert True, False, strMsg, True, blnDisplay
 
 End Sub
 
-Public Sub AssertEqual(varV1 As Variant, varV2 As Variant, strMsg As String, blnDisplay As Boolean)
+Public Sub AssertEqual(ByVal varV1 As Variant, ByVal varV2 As Variant, ByVal strMsg As String, ByVal blnDisplay As Boolean)
 
     If varV1 <> varV2 Then ProcessAssert varV1, varV2, strMsg, True, blnDisplay
 
 End Sub
 
-Public Sub AssertNotEqual(varV1 As Variant, varV2 As Variant, strMsg As String, blnDisplay As Boolean)
+Public Sub AssertNotEqual(ByVal varV1 As Variant, ByVal varV2 As Variant, ByVal strMsg As String, ByVal blnDisplay As Boolean)
 
     If varV1 = varV2 Then ProcessAssert varV1, varV2, strMsg, False, blnDisplay
 
 End Sub
 
-Public Sub DisplayAssert(strMsg As String)
+Public Sub DisplayAssert(ByVal strMsg As String)
 
     ModMessage.ShowMsgBoxExclam strMsg
 
 End Sub
 
-Private Sub ProcessAssert(varV1 As Variant, varV2 As Variant, strMsg As String, blnEqual As Boolean, blnDisplay As Boolean)
+Private Sub ProcessAssert(ByVal varV1 As Variant, ByVal varV2 As Variant, ByVal strMsg As String, ByVal blnEqual As Boolean, ByVal blnDisplay As Boolean)
         
         If blnEqual Then
             strMsg = strMsg + vbNewLine + "Value " + CStr(varV1) + " is not equal to " + CStr(varV2)
