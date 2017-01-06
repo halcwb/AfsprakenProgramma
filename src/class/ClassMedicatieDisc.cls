@@ -23,7 +23,6 @@ Private m_Dosis As Variant
 Private m_DosisEenheid As Variant
 Private m_Indicaties As Variant
 
-
 Public Property Get GPK() As Variant
 
     GPK = m_GPK
@@ -168,13 +167,13 @@ Public Property Let DosisEenheid(ByVal v_DosisEenheid As Variant)
 
 End Property
 
-Public Property Get indicaties() As Variant
+Public Property Get Indicaties() As Variant
 
-    indicaties = m_Indicaties
+    Indicaties = m_Indicaties
 
 End Property
 
-Public Property Let indicaties(ByVal v_Indicaties As Variant)
+Public Property Let Indicaties(ByVal v_Indicaties As Variant)
 
     m_Indicaties = v_Indicaties
 
@@ -196,4 +195,10 @@ Public Function GetIndicaties() As String()
 
     GetIndicaties = Split(m_Indicaties, "/")
     
+End Function
+
+Public Function GetMedicamentText() As String
+
+    GetMedicamentText = Me.Generiek & " " & Me.Vorm & " " & Me.Sterkte & " " & Me.SterkteEenheid
+
 End Function

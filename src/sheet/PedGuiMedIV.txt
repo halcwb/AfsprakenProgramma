@@ -181,28 +181,28 @@ $F$25: 	=PedBerMedIV!W18
 $H$25: 	=PedBerMedIV!Y18
 $I$25: 	=PedBerMedIV!Z18
 $K$25: 	=IF(PedBerMedIV!K18<>0,PedBerMedIV!K18&"" ml"","""")
-$A$26: 	=IF(D26=0,"""",""verw"")
+$A$26: 	=PedBerMedIV!S18
 $D$26: 	=PedBerMedIV!U19
 $E$26: 	=PedBerMedIV!V19
 $F$26: 	=PedBerMedIV!W19
 $H$26: 	=PedBerMedIV!Y19
 $I$26: 	=PedBerMedIV!Z19
 $K$26: 	=IF(PedBerMedIV!K19<>0,PedBerMedIV!K19&"" ml"","""")
-$A$27: 	=IF(D27=0,"""",""verw"")
+$A$27: 	=PedBerMedIV!S19
 $D$27: 	=PedBerMedIV!U20
 $E$27: 	=PedBerMedIV!V20
 $F$27: 	=PedBerMedIV!W20
 $H$27: 	=PedBerMedIV!Y20
 $I$27: 	=PedBerMedIV!Z20
 $K$27: 	=IF(PedBerMedIV!K20<>0,PedBerMedIV!K20&"" ml"","""")
-$A$28: 	=IF(D28=0,"""",""verw"")
+$A$28: 	=PedBerMedIV!S20
 $D$28: 	=PedBerMedIV!U21
 $E$28: 	=PedBerMedIV!V21
 $F$28: 	=PedBerMedIV!W21
 $H$28: 	=PedBerMedIV!Y21
 $I$28: 	=PedBerMedIV!Z21
 $K$28: 	=IF(PedBerMedIV!K21<>0,PedBerMedIV!K21&"" ml"","""")
-$A$29: 	=IF(D29=0,"""",""verw"")
+$A$29: 	=PedBerMedIV!S21
 $D$29: 	=PedBerMedIV!U22
 $E$29: 	=PedBerMedIV!V22
 $F$29: 	=PedBerMedIV!W22

@@ -1,6 +1,8 @@
 Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
+Private Const constFormularium = "Formularium.xlsx"
+
 Private Const constATC As String = "_Glob_MedDisc_ATC_"
 Private Const constDoseUnit As String = "_Glob_MedDisc_DoseEenh_"
 Private Const constDoseQty As String = "_Glob_MedDisc_DoseHoev_"
@@ -50,51 +52,113 @@ Public Sub MedDisc_Clear_01()
 
 End Sub
 
+Public Sub GetMedicamenten(ByRef objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
+
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim objFormRange As Range
+    Dim objSheet As Worksheet
+    
+    Dim strFileName As String
+    Dim strName As String
+    Dim strSheet As String
+    
+    Dim strTitle As String
+    
+    On Error GoTo GetMedicamentenError
+    
+    strName = "Formularium.xlsx"
+    strSheet = "Table"
+    
+    Application.DisplayAlerts = False
+
+    strFileName = ModMedDisc.GetFormulariumDatabasePath() + strName
+
+    Workbooks.Open strFileName, True, True
+    
+    Set objSheet = Workbooks(strName).Worksheets(strSheet)
+    Set objFormRange = objSheet.Range("A1").CurrentRegion
+        
+    intC = objFormRange.Rows.Count
+    For intN = 2 To intC
+        objFormularium.AddMedicament (objFormRange.Cells(intN, 1))
+        With objFormularium.Item(intN - 1)
+            .ATC = objFormRange.Cells(intN, 2)
+            .TherapieGroep = objFormRange.Cells(intN, 3)
+            .TherapieSubgroep = objFormRange.Cells(intN, 4)
+            .Generiek = objFormRange.Cells(intN, 5)
+            .Etiket = objFormRange.Cells(intN, 6)
+            .Vorm = objFormRange.Cells(intN, 7)
+            .routes = objFormRange.Cells(intN, 8)
+            .Sterkte = objFormRange.Cells(intN, 9)
+            .SterkteEenheid = objFormRange.Cells(intN, 10)
+            .Dosis = objFormRange.Cells(intN, 11)
+            .DosisEenheid = objFormRange.Cells(intN, 12)
+            .Indicaties = objFormRange.Cells(intN, 13)
+        End With
+        
+        If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", intC, intN
+    Next intN
+    
+    Workbooks(strName).Close
+    Application.DisplayAlerts = True
+    
+    Exit Sub
+    
+GetMedicamentenError:
+    
+    ModLog.LogError "Could not retrieve medicament from: " & strFileName
+    
+End Sub
+
 Private Sub MedicamentInvoeren(ByVal intN As Integer)
 
-    Dim frmMedicament As FormMedicament
+    Dim objMed As ClassMedicatieDisc
     Dim strMed As String
     Dim strGeneric As String
     Dim strN As String
-    
-    Set frmMedicament = New FormMedicament
-    
+      
     strN = IIf(intN < 10, "0" & intN, intN)
     
-    With frmMedicament
+    With FormMedicament
         
         If ModRange.GetRangeValue(constGPK & strN, 0) > 0 Then
             .LoadGPK CStr(ModRange.GetRangeValue(constGPK & strN, vbNullString))
         Else
             .cboGeneriek.Text = ModRange.GetRangeValue(constGeneric & strN, vbNullString)
-            .txtSterkte = vbNullString
-            .txtSterkteEenheid = vbNullString
+            .txtSterkte.Text = vbNullString
+            .txtSterkteEenheid.Text = vbNullString
         End If
         
-        .txtDosisEenheid = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
-        .txtDosis = ModRange.GetRangeValue(constStandDose & strN, vbNullString)
-        .cboRoute = ModRange.GetRangeValue(constRoute & strN, vbNullString)
+        .txtDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
+        .txtDosis.Text = ModRange.GetRangeValue(constStandDose & strN, vbNullString)
+        .cboRoute.Text = ModRange.GetRangeValue(constRoute & strN, vbNullString)
         .Show
         
-        If .lblCancel.Caption = "OK" Then
-            strMed = .lblEtiket.Caption
-            strGeneric = .cboGeneriek.Text
-            
-            If strMed = vbNullString And .txtSterkte <> vbNullString Then
-                strMed = strGeneric & " " & .txtSterkte & " " & .txtSterkteEenheid
+        If .GetClickedButton = "OK" Then
+            If .HasSelectedMedicament() Then
+                Set objMed = .GetSelectedMedicament()
+                strMed = objMed.GetMedicamentText()
+                strGeneric = objMed.Generiek
+                
+                ModRange.SetRangeValue constDrug & strN, strMed
+                ModRange.SetRangeValue constGeneric & strN, strGeneric
+                ModRange.SetRangeValue constStandDose & strN, Val(Replace(objMed.Dosis, ",", "."))
+                ModRange.SetRangeValue constDoseUnit & strN, objMed.DosisEenheid
+                ModRange.SetRangeValue constRoute & strN, .GetSelectedRoute()
+                ModRange.SetRangeValue constIndic & strN, .GetSelectedIndication()
+                ModRange.SetRangeValue constGPK & strN, CLng(objMed.GPK)
+                ModRange.SetRangeValue constATC & strN, objMed.ATC
+                ModRange.SetRangeValue constConc & strN, Conversion.CDbl(objMed.Sterkte)
+                ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
+                ModRange.SetRangeValue constLabel & strN, objMed.Etiket
             End If
-            
-            ModRange.SetRangeValue constDrug & strN, strMed
-            ModRange.SetRangeValue constGeneric & strN, strGeneric
-            ModRange.SetRangeValue constStandDose & strN, Val(Replace(.txtDosis.Value, ",", "."))
-            ModRange.SetRangeValue constDoseUnit & strN, .txtDosisEenheid.Text
-            ModRange.SetRangeValue constRoute & strN, .cboRoute.Text
-            ModRange.SetRangeValue constGPK & strN, CLng(.GetGPK())
 
         Else
-            If .lblCancel.Caption = "Clear" Then
-            
+            If .GetClickedButton = "Clear" Then
+
                 ModRange.SetRangeValue constDrug & strN, vbNullString
+                ModRange.SetRangeValue constGeneric & strN, vbNullString
                 ModRange.SetRangeValue constStandDose & strN, vbNullString
                 ModRange.SetRangeValue constDoseUnit & strN, vbNullString
                 ModRange.SetRangeValue constRoute & strN, vbNullString
@@ -105,12 +169,14 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
                 ModRange.SetRangeValue constSolNo & strN, 0
                 ModRange.SetRangeValue constTime & strN, 0
                 ModRange.SetRangeValue constGPK & strN, 0
-                
+                ModRange.SetRangeValue constATC & strN, vbNullString
+                ModRange.SetRangeValue constConc & strN, 0
+                ModRange.SetRangeValue constConcUnit & strN, vbNullString
+                ModRange.SetRangeValue constLabel & strN, vbNullString
+
             End If
         End If
     End With
-    
-    Set frmMedicament = Nothing
 
 End Sub
 
@@ -301,10 +367,12 @@ Private Sub OpmMedDisc(ByVal intN As Integer)
     
     Set frmOpmerking = New FormOpmerking
     
-    strRange = shtGlobBerOpm.Name & "!C" & intN
+    strRange = constText
+    strRange = constText & IIf(intN < 10, "0" & intN, intN)
 
     frmOpmerking.txtOpmerking.Text = Range(strRange).Value
     frmOpmerking.Show
+    
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
         ModRange.SetRangeValue strRange, frmOpmerking.txtOpmerking.Text
     End If
@@ -316,180 +384,180 @@ End Sub
 
 Public Sub MedDisc_EnterText_01()
     
-    OpmMedDisc 16
+    OpmMedDisc 1
     
 End Sub
 
 Public Sub MedDisc_EnterText_02()
     
-    OpmMedDisc 17
+    OpmMedDisc 2
 
 End Sub
 
 Public Sub MedDisc_EnterText_03()
     
-    OpmMedDisc 18
+    OpmMedDisc 3
 
 End Sub
 Public Sub MedDisc_EnterText_04()
     
-    OpmMedDisc 19
+    OpmMedDisc 4
 
 End Sub
 
 Public Sub MedDisc_EnterText_05()
     
-    OpmMedDisc 20
+    OpmMedDisc 5
 
 End Sub
 
 Public Sub MedDisc_EnterText_06()
     
-    OpmMedDisc 21
+    OpmMedDisc 6
 
 End Sub
 
 Public Sub MedDisc_EnterText_07()
     
-    OpmMedDisc 22
+    OpmMedDisc 7
 
 End Sub
 
 Public Sub MedDisc_EnterText_08()
     
-    OpmMedDisc 23
+    OpmMedDisc 8
 
 End Sub
 
 Public Sub MedDisc_EnterText_09()
     
-    OpmMedDisc 24
+    OpmMedDisc 9
 
 End Sub
 
 Public Sub MedDisc_EnterText_10()
     
-    OpmMedDisc 25
+    OpmMedDisc 10
 
 End Sub
 
 Public Sub MedDisc_EnterText_11()
     
-    OpmMedDisc 26
+    OpmMedDisc 11
 
 End Sub
 
 Public Sub MedDisc_EnterText_12()
     
-    OpmMedDisc 27
+    OpmMedDisc 12
 
 End Sub
 
 Public Sub MedDisc_EnterText_13()
     
-    OpmMedDisc 28
+    OpmMedDisc 13
 
 End Sub
 
 Public Sub MedDisc_EnterText_14()
     
-    OpmMedDisc 29
+    OpmMedDisc 14
 
 End Sub
 
 Public Sub MedDisc_EnterText_15()
     
-    OpmMedDisc 30
+    OpmMedDisc 15
 
 End Sub
 
 Public Sub MedDisc_EnterText_16()
     
-    OpmMedDisc 31
+    OpmMedDisc 16
 
 End Sub
 
 Public Sub MedDisc_EnterText_17()
     
-    OpmMedDisc 32
+    OpmMedDisc 17
 
 End Sub
 
 Public Sub MedDisc_EnterText_18()
     
-    OpmMedDisc 33
+    OpmMedDisc 18
 
 End Sub
 
 Public Sub MedDisc_EnterText_19()
     
-    OpmMedDisc 34
+    OpmMedDisc 19
 
 End Sub
 
 Public Sub MedDisc_EnterText_20()
     
-    OpmMedDisc 35
+    OpmMedDisc 20
 
 End Sub
 
 Public Sub MedDisc_EnterText_21()
     
-    OpmMedDisc 36
+    OpmMedDisc 21
 
 End Sub
 
 Public Sub MedDisc_EnterText_22()
     
-    OpmMedDisc 37
+    OpmMedDisc 22
 
 End Sub
 
 Public Sub MedDisc_EnterText_23()
     
-    OpmMedDisc 38
+    OpmMedDisc 23
 
 End Sub
 
 Public Sub MedDisc_EnterText_24()
     
-    OpmMedDisc 39
+    OpmMedDisc 24
 
 End Sub
 
 Public Sub MedDisc_EnterText_25()
     
-    OpmMedDisc 40
+    OpmMedDisc 25
 
 End Sub
 
 Public Sub MedDisc_EnterText_26()
     
-    OpmMedDisc 41
+    OpmMedDisc 26
 
 End Sub
 
 Public Sub MedDisc_EnterText_27()
     
-    OpmMedDisc 42
+    OpmMedDisc 27
 
 End Sub
 
 Public Sub MedDisc_EnterText_28()
     
-    OpmMedDisc 43
+    OpmMedDisc 28
 
 End Sub
 
 Public Sub MedDisc_EnterText_29()
     
-    OpmMedDisc 44
+    OpmMedDisc 29
 
 End Sub
 
 Public Sub MedDisc_EnterText_30()
     
-    OpmMedDisc 45
+    OpmMedDisc 30
 
 End Sub
 

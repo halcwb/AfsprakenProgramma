@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedicament 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   6426
+   ClientHeight    =   5068
    ClientLeft      =   42
    ClientTop       =   329
-   ClientWidth     =   12397
+   ClientWidth     =   10647
    OleObjectBlob   =   "FormMedicament.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -15,14 +15,47 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private objMedicament As ClassMedicatieDisc
-Private objFormularium As ClassFormularium
+Private m_Medicament As ClassMedicatieDisc
+Private m_Formularium As ClassFormularium
+Private m_TherapieGroep As String
+Private m_SubGroep As String
+Private m_Etiket As String
+
+Public Function GetSelectedRoute() As String
+
+    GetSelectedRoute = cboRoute.Value
+
+End Function
+
+Public Function GetSelectedIndication() As String
+
+    GetSelectedIndication = cboIndicatie.Value
+
+End Function
+
+Public Function HasSelectedMedicament() As Boolean
+
+    HasSelectedMedicament = Not m_Medicament Is Nothing
+
+End Function
+
+Public Function GetSelectedMedicament() As ClassMedicatieDisc
+
+    Set GetSelectedMedicament = m_Medicament
+
+End Function
+
+Public Function GetClickedButton() As String
+
+    GetClickedButton = lblButton.Caption
+
+End Function
 
 Private Sub cboGeneriek_Change()
 
     If cboGeneriek.ListIndex > -1 Then
-        Set objMedicament = objFormularium.Item(cboGeneriek.ListIndex + 1)
-        LoadMedicament objMedicament
+        Set m_Medicament = m_Formularium.Item(cboGeneriek.ListIndex + 1)
+        LoadMedicament
     Else
         ClearForm
     End If
@@ -33,7 +66,7 @@ Public Function GetGPK() As String
     Dim strGPK As String
     
     strGPK = "0"
-    If Not objMedicament Is Nothing Then strGPK = objMedicament.GPK
+    If Not m_Medicament Is Nothing Then strGPK = m_Medicament.GPK
     
     GetGPK = strGPK
 
@@ -41,24 +74,25 @@ End Function
 
 Public Sub LoadGPK(ByVal strGPK As String)
 
-    Set objMedicament = objFormularium.GPK(strGPK)
-    LoadMedicament objMedicament
+    Set m_Medicament = m_Formularium.GPK(strGPK)
+    LoadMedicament
 
 End Sub
 
-Private Sub LoadMedicament(ByRef objMedicament As ClassMedicatieDisc)
+Private Sub LoadMedicament()
 
-        With objMedicament
-            lblTherapieGroep.Caption = .TherapieGroep
-            lblSubGroep.Caption = .TherapieSubgroep
-            lblEtiket.Caption = .Etiket
-            FillCombo cboIndicatie, .GetIndicaties()
-            txtSterkte.Text = .Sterkte
-            txtSterkteEenheid.Text = .SterkteEenheid
-            txtDosis.Text = .Dosis
-            txtDosisEenheid.Text = .DosisEenheid
-            FillCombo cboRoute, .GetRoutes()
-        End With
+    With m_Medicament
+        lblTherapieGroep.Caption = .TherapieGroep
+        lblSubGroep.Caption = .TherapieSubgroep
+        lblEtiket.Caption = .Etiket
+        cboGeneriek.Value = .Generiek
+        FillCombo cboIndicatie, .GetIndicaties()
+        txtSterkte.Text = .Sterkte
+        txtSterkteEenheid.Text = .SterkteEenheid
+        txtDosis.Text = .Dosis
+        txtDosisEenheid.Text = .DosisEenheid
+        FillCombo cboRoute, .GetRoutes()
+    End With
 
 End Sub
 
@@ -80,17 +114,28 @@ Private Sub ClearForm()
 
     cboGeneriek.Text = vbNullString
     
-    lblTherapieGroep.Caption = vbNullString
-    lblSubGroep.Caption = vbNullString
-    lblEtiket.Caption = vbNullString
+    lblTherapieGroep.Caption = m_TherapieGroep
+    lblSubGroep.Caption = m_SubGroep
+    lblEtiket.Caption = m_Etiket
+    
+    cboGeneriek.Value = vbNullString
     cboIndicatie.Clear
     txtSterkte.Text = vbNullString
     txtSterkteEenheid.Text = vbNullString
     cboRoute.Clear
+    chkPRN.Value = False
+    txtPRN.Value = vbNullString
     
-    Set objMedicament = Nothing
+    Set m_Medicament = Nothing
 
 End Sub
+
+Private Sub chkPRN_Change()
+
+    txtPRN.Visible = chkPRN.Value
+
+End Sub
+
 
 Private Sub cmdFormularium_Click()
     Dim strUrl As String
@@ -102,22 +147,23 @@ End Sub
 
 Private Sub cmdCancel_Click()
     
+    lblButton.Caption = "Cancel"
     Me.Hide
-    lblCancel.Caption = "Cancel"
 
 End Sub
 
 Private Sub cmdClear_Click()
 
+    ClearForm
+    lblButton.Caption = "Clear"
     Me.Hide
-    lblCancel.Caption = "Clear"
     
 End Sub
 
 Private Sub cmdOk_Click()
 
+    lblButton.Caption = "OK"
     Me.Hide
-    lblCancel.Caption = "OK"
 
 End Sub
 
@@ -152,17 +198,43 @@ Private Sub txtSterkte_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
 End Sub
 
+Private Sub UserForm_Activate()
+
+    If Not HasSelectedMedicament() Then ClearForm
+
+End Sub
+
 Private Sub UserForm_Initialize()
 
     Dim intN As Integer
+    Dim intC As Integer
+    Dim strTitle As String
 
-    MsgBox prompt:="Formularium wordt geladen, een ogenblik geduld a.u.b. ...", _
-    Buttons:=vbInformation, Title:="Informedica 2016"
+    strTitle = "Formularium wordt geladen, een ogenblik geduld a.u.b. ..."
     
-    Set objFormularium = New ClassFormularium
+    ModProgress.StartProgress strTitle
     
-    For intN = 1 To objFormularium.MedicamentCount
-        cboGeneriek.AddItem objFormularium.Item(intN).Generiek
+    m_TherapieGroep = lblTherapieGroep.Caption
+    m_SubGroep = lblSubGroep.Caption
+    m_Etiket = lblEtiket.Caption
+    
+    Set m_Formularium = New ClassFormularium
+    m_Formularium.GetMedicamenten (True)
+    
+    intC = m_Formularium.MedicamentCount
+    For intN = 1 To intC
+        cboGeneriek.AddItem m_Formularium.Item(intN).Generiek
+        
+        ModProgress.SetJobPercentage "Generieken toevoegen", intC, intN
     Next intN
+    
+    ModProgress.FinishProgress
+
+End Sub
+
+Private Sub UserForm_QueryClose(intCancel As Integer, intMode As Integer)
+    
+    ModMessage.ShowMsgBoxExclam "Dit formulier kan alleen worden afgesloten met 'OK', 'Clear' of 'Cancel'"
+    intCancel = True
 
 End Sub

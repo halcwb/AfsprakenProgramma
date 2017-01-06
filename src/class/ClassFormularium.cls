@@ -36,7 +36,10 @@ Public Function GPK(ByVal v_GPK As String) As ClassMedicatieDisc
     Dim objRes As ClassMedicatieDisc
 
     For Each objMed In m_colMedicamenten
-        If objMed.GPK = v_GPK Then Set objRes = objMed
+        If objMed.GPK = v_GPK Then
+            Set objRes = objMed
+            Exit For
+        End If
     Next objMed
     
     Set GPK = objRes
@@ -52,52 +55,12 @@ End Function
 Private Sub Class_Initialize()
 
     Set m_colMedicamenten = New Collection
-    GetMedicamenten
 
 End Sub
 
-Public Sub GetMedicamenten()
+Public Sub GetMedicamenten(ByVal blnShowProgress)
 
-    Dim intN As Integer
-    Dim oForm As Range
-    Dim oSheet As Worksheet
-    
-    Dim strFileName As String
-    Dim sName As String
-    Dim sSheet As String
-    
-    sName = "Formularium.xlsx"
-    sSheet = "Table"
-    
-    Application.DisplayAlerts = False
-
-    strFileName = ModMedDisc.GetFormulariumDatabasePath() + sName
-
-    Workbooks.Open strFileName, True, True
-    
-    Set oSheet = Workbooks(sName).Worksheets(sSheet)
-    Set oForm = oSheet.Range("A1").CurrentRegion
-        
-    For intN = 2 To oForm.Rows.Count
-        Me.AddMedicament (oForm.Cells(intN, 1))
-        With Me.Item(intN - 1)
-            .ATC = oForm.Cells(intN, 2)
-            .TherapieGroep = oForm.Cells(intN, 3)
-            .TherapieSubgroep = oForm.Cells(intN, 4)
-            .Generiek = oForm.Cells(intN, 5)
-            .Etiket = oForm.Cells(intN, 6)
-            .Vorm = oForm.Cells(intN, 7)
-            .routes = oForm.Cells(intN, 8)
-            .Sterkte = oForm.Cells(intN, 9)
-            .SterkteEenheid = oForm.Cells(intN, 10)
-            .Dosis = oForm.Cells(intN, 11)
-            .DosisEenheid = oForm.Cells(intN, 12)
-            .indicaties = oForm.Cells(intN, 13)
-        End With
-    Next intN
-    
-    Workbooks(sName).Close
-    Application.DisplayAlerts = True
+    ModMedDisc.GetMedicamenten Me, blnShowProgress
     
 End Sub
 
