@@ -22,7 +22,7 @@ Private Sub cmdCancel_Click()
 
 End Sub
 
-Private Sub cmdOk_Click()
+Private Sub cmdOK_Click()
 
     ModRange.SetRangeValue "SpecVoed_1", txtCalorieen.Text
     ModRange.SetRangeValue "SpecVoed_2", txtEiwit.Text

@@ -9,181 +9,175 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private m_GPK As Variant
-Private m_ATC As Variant
-Private m_TherapieGroep As Variant
-Private m_TherapieSubgroep As Variant
-Private m_Generiek As Variant
-Private m_Etiket As Variant
-Private m_Vorm As Variant
-Private m_Routes As Variant
-Private m_Sterkte As Variant
-Private m_SterkteEenheid As Variant
-Private m_Dosis As Variant
-Private m_DosisEenheid As Variant
-Private m_Indicaties As Variant
+Private m_GPK As String
+Private m_ATC As String
+Private m_TherapieGroep As String
+Private m_TherapieSubgroep As String
+Private m_Generiek As String
+Private m_Vorm As String
+Private m_Etiket As String
+Private m_Sterkte As String
+Private m_SterkteEenheid As String
+Private m_Dosis As String
+Private m_DosisEenheid As String
+Private m_Routes As String
+Private m_Indicaties As String
 
-Public Property Get GPK() As Variant
+Public Property Get GPK() As String
 
     GPK = m_GPK
 
 End Property
 
-Public Property Let GPK(ByVal v_GPK As Variant)
+Public Property Let GPK(ByVal strGPK As String)
 
-    m_GPK = v_GPK
+    m_GPK = strGPK
 
 End Property
 
-Public Property Get ATC() As Variant
+Public Property Get ATC() As String
 
     ATC = m_ATC
 
 End Property
 
-Public Property Let ATC(ByVal v_ATC As Variant)
+Public Property Let ATC(ByVal strATC As String)
 
-    m_ATC = v_ATC
+    m_ATC = strATC
 
 End Property
 
-Public Property Get TherapieGroep() As Variant
+Public Property Get TherapieGroep() As String
 
     TherapieGroep = m_TherapieGroep
 
 End Property
 
-Public Property Let TherapieGroep(ByVal v_TherapieGroep As Variant)
+Public Property Let TherapieGroep(ByVal strTherapieGroep As String)
 
-    m_TherapieGroep = v_TherapieGroep
+    m_TherapieGroep = strTherapieGroep
 
 End Property
 
-Public Property Get TherapieSubgroep() As Variant
+Public Property Get TherapieSubgroep() As String
 
     TherapieSubgroep = m_TherapieSubgroep
 
 End Property
 
-Public Property Let TherapieSubgroep(ByVal v_TherapieSubgroep As Variant)
+Public Property Let TherapieSubgroep(ByVal strTherapieSubgroep As String)
 
-    m_TherapieSubgroep = v_TherapieSubgroep
+    m_TherapieSubgroep = strTherapieSubgroep
 
 End Property
 
-Public Property Get Generiek() As Variant
+Public Property Get Generiek() As String
 
     Generiek = m_Generiek
 
 End Property
 
-Public Property Let Generiek(ByVal v_Generiek As Variant)
+Public Property Let Generiek(ByVal strGeneriek As String)
 
-    m_Generiek = v_Generiek
+    m_Generiek = strGeneriek
 
 End Property
 
-Public Property Get Etiket() As Variant
+Public Property Get Etiket() As String
 
     Etiket = m_Etiket
 
 End Property
 
-Public Property Let Etiket(ByVal v_Etiket As Variant)
+Public Property Let Etiket(ByVal strEtiket As String)
 
-    m_Etiket = v_Etiket
+    m_Etiket = strEtiket
 
 End Property
 
-Public Property Get Vorm() As Variant
+Public Property Get Vorm() As String
 
     Vorm = m_Vorm
 
 End Property
 
-Public Property Let Vorm(ByVal v_Vorm As Variant)
+Public Property Let Vorm(ByVal strVorm As String)
     
-    m_Vorm = v_Vorm
+    m_Vorm = strVorm
 
 End Property
 
-Public Property Get routes() As Variant
+Public Property Get Routes() As String
 
-    routes = m_Routes
-
-End Property
-
-Public Property Let routes(ByVal v_Routes As Variant)
-
-    m_Routes = v_Routes
+    Routes = m_Routes
 
 End Property
 
-Public Property Get Sterkte() As Variant
+Public Property Let Routes(ByVal strRoutes As String)
+
+    m_Routes = strRoutes
+
+End Property
+
+Public Property Get Sterkte() As String
 
     Sterkte = m_Sterkte
 
 End Property
 
-Public Property Let Sterkte(ByVal v_Sterkte As Variant)
+Public Property Let Sterkte(ByVal strSterkte As String)
 
-    m_Sterkte = v_Sterkte
+    m_Sterkte = strSterkte
 
 End Property
 
-Public Property Get SterkteEenheid() As Variant
+Public Property Get SterkteEenheid() As String
 
     SterkteEenheid = m_SterkteEenheid
 
 End Property
 
-Public Property Let SterkteEenheid(ByVal v_SterkteEenheid As Variant)
+Public Property Let SterkteEenheid(ByVal strSterkteEenheid As String)
 
-    m_SterkteEenheid = v_SterkteEenheid
+    m_SterkteEenheid = strSterkteEenheid
 
 End Property
 
-Public Property Get Dosis() As Variant
+Public Property Get Dosis() As String
 
     Dosis = m_Dosis
 
 End Property
 
-Public Property Let Dosis(ByVal v_Dosis As Variant)
+Public Property Let Dosis(ByVal strDosis As String)
 
-    m_Dosis = v_Dosis
+    m_Dosis = strDosis
 
 End Property
 
-Public Property Get DosisEenheid() As Variant
+Public Property Get DosisEenheid() As String
 
     DosisEenheid = m_DosisEenheid
 
 End Property
 
-Public Property Let DosisEenheid(ByVal v_DosisEenheid As Variant)
+Public Property Let DosisEenheid(ByVal strDosisEenheid As String)
 
-    m_DosisEenheid = v_DosisEenheid
+    m_DosisEenheid = strDosisEenheid
 
 End Property
 
-Public Property Get Indicaties() As Variant
+Public Property Get Indicaties() As String
 
     Indicaties = m_Indicaties
 
 End Property
 
-Public Property Let Indicaties(ByVal v_Indicaties As Variant)
+Public Property Let Indicaties(ByVal strIndicaties As String)
 
-    m_Indicaties = v_Indicaties
+    m_Indicaties = strIndicaties
 
 End Property
-
-Public Function GetPreparaat() As String
-
-    GetPreparaat = m_Generiek & " " & m_Vorm & " " & m_Sterkte & " " & m_SterkteEenheid
-
-End Function
 
 Public Function GetRoutes() As String()
 

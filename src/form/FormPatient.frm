@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPatient 
    Caption         =   "Nieuwe patient"
-   ClientHeight    =   3633
+   ClientHeight    =   3367
    ClientLeft      =   42
    ClientTop       =   329
-   ClientWidth     =   8694
+   ClientWidth     =   9051
    OleObjectBlob   =   "FormPatient.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -16,6 +16,45 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private m_Pat As ClassPatientDetails
+
+Private Sub Validate(ByVal strText As String)
+
+    Dim strValid As String
+    
+    strValid = vbNullString
+    
+    If BirthDateComplete() Then
+        If DateTime.DateDiff("d", GetBirthDate(), DateTime.Date) <= 28 Then
+            strValid = IIf(txtGestWeek.Value = vbNullString, "Voer zwangerschaps duur in", strValid)
+            strValid = IIf(txtBirthWeight.Value = vbNullString, "Voer geboortegewicht in", strValid)
+        End If
+    End If
+    
+    strValid = IIf(txtLength.Value = vbNullString, "Voer lengte in", strValid)
+    strValid = IIf(txtWeight.Value = vbNullString, "Voer gewicht in", strValid)
+    strValid = IIf(Not BirthDateComplete, "Voer geboorte datum in", strValid)
+    strValid = IIf(Not AdmDateComplete, "Voer opname datum in", strValid)
+    
+    strValid = IIf(txtFirstName.Value = vbNullString, "Vul voor naam  in", strValid)
+    strValid = IIf(txtLastName.Value = vbNullString, "Vul achter naam  in", strValid)
+    strValid = IIf(txtPatNum.Value = vbNullString, "Vul patient nummer in", strValid)
+    
+    strValid = IIf(strText = vbNullString, strValid, strText)
+    lblValid.Caption = strValid
+    cmdOK.Enabled = strValid = vbNullString
+
+End Sub
+
+Private Sub btnNow_Click()
+    
+    Dim dtmNow As Date
+    
+    dtmNow = DateTime.Date
+    txtAdmDay.Value = DateTime.Day(dtmNow)
+    txtAdmMonth.Value = DateTime.Month(dtmNow)
+    txtAdmYear.Value = DateTime.Year(dtmNow)
+
+End Sub
 
 Private Sub cmdCancel_Click()
 
@@ -87,7 +126,30 @@ Private Sub SetAdmDate(ByVal dtmDate As Date)
 
 End Sub
 
-Private Sub cmdOk_Click()
+Private Sub cmdClear_Click()
+
+    txtAdmDay.Value = vbNullString
+    txtAdmMonth.Value = vbNullString
+    txtAdmYear.Value = vbNullString
+    
+    txtPatNum.Value = vbNullString
+    txtLastName.Value = vbNullString
+    txtFirstName.Value = vbNullString
+    
+    txtBirthDay.Value = vbNullString
+    txtBirthMonth.Value = vbNullString
+    txtBirthYear.Value = vbNullString
+    
+    txtWeight.Value = vbNullString
+    txtLength.Value = vbNullString
+    
+    txtBirthWeight.Value = vbNullString
+    txtGestWeek.Value = vbNullString
+    txtGestDay.Value = vbNullString
+
+End Sub
+
+Private Sub cmdOK_Click()
     
     Dim dtmBd As Date
     Dim dtmAdm As Date
@@ -147,15 +209,24 @@ Private Sub txtAdmDay_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
 End Sub
 
+Private Sub txtFirstName_Change()
+
+    Validate vbNullString
+
+End Sub
+
 Private Sub txtGestDay_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
+
+    Dim strValid As String
 
     If txtGestDay.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidDagen(Val(txtGestDay.Value)) Then
-        ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor dagen: " & txtGestDay.Value
         txtGestDay.Value = vbNullString
         blnCancel = True
     End If
+    
+    Validate vbNullString
 
 End Sub
 
@@ -167,6 +238,7 @@ End Sub
 
 Private Function ValidateBirthDate() As Boolean
 
+    Dim strValid As String
     Dim dtmAdm As Date
     Dim dtmBd As Date
     
@@ -181,11 +253,13 @@ Private Function ValidateBirthDate() As Boolean
     End If
 
     If Not ModPatient.ValidBirthDate(dtmBd, dtmAdm) Then
-        ModMessage.ShowMsgBoxExclam "Geboortedatum kan niet na de opname datum liggen"
+        strValid = "Geboortedatum na opname datum"
+        Validate strValid
         
         ClearBirthDate
         ValidateBirthDate = False
     Else
+        Validate vbNullString
         ValidateBirthDate = True
     End If
     
@@ -215,12 +289,19 @@ End Sub
 
 Private Sub txtBirthWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
+    Dim strValid As String
+    
     If txtBirthWeight.Value = vbNullString Then Exit Sub
     
     If Not ModPatient.ValidBirthWeight(Val(txtBirthWeight.Value)) Then
-        ModMessage.ShowMsgBoxExclam "Geen geldig geboortegewicht: " & txtBirthWeight.Value
+        strValid = "Geen geldig geboortegewicht"
+        Validate strValid
+        
         txtBirthWeight.Value = vbNullString
         blnCancel = True
+    Else
+        Validate vbNullString
+        blnCancel = False
     End If
 
 End Sub
@@ -231,27 +312,54 @@ Private Sub txtBirthWeight_KeyPress(ByVal intKey As MSForms.ReturnInteger)
     
 End Sub
 
+Private Sub txtLastName_Change()
+
+    Validate vbNullString
+
+End Sub
+
 Private Sub txtLength_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
+    Dim strValid As String
+    
     If txtLength.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidLengthCm(txtLength.Value) Then
-        ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor lengte: " & txtLength.Value
+        strValid = "Geen geldige lengte"
+        Validate strValid
+        
         txtLength.Value = vbNullString
         blnCancel = True
+    Else
+        Validate vbNullString
+        blnCancel = False
     End If
+
+End Sub
+
+Private Sub txtPatNum_Change()
+
+    Validate vbNullString
 
 End Sub
 
 Private Sub txtWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
+    Dim strValid As String
+
     If txtWeight.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidWeightKg(txtWeight.Value) Then
-        ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor gewicht: " & txtWeight.Value
+        strValid = "Geen geldige gewicht"
+        Validate strValid
+        
         txtWeight.Value = vbNullString
         blnCancel = True
+    Else
+        Validate vbNullString
+        blnCancel = False
     End If
+    
             
 End Sub
 
@@ -269,7 +377,7 @@ End Sub
 
 Private Function ValidateAdmDate() As Boolean
 
-    Dim strText As String
+    Dim strValid As String
 
     Dim dtmAdm As Date
     Dim dtmBd As Date
@@ -277,7 +385,8 @@ Private Function ValidateAdmDate() As Boolean
     dtmAdm = GetAdmDate()
         
     If Not ModPatient.ValidAdmissionDate(dtmAdm) Then
-        ModMessage.ShowMsgBoxExclam "Geen geldige opname datum: " & ModString.DateToString(dtmAdm)
+        strValid = "Geen geldige opname datum"
+        Validate strValid
         
         ClearAdmDate
         ValidateAdmDate = False
@@ -285,32 +394,41 @@ Private Function ValidateAdmDate() As Boolean
         If BirthDateComplete() Then
             dtmBd = GetBirthDate()
             If Not ModPatient.ValidBirthDate(dtmBd, dtmAdm) Then
-                strText = "Opname datum " & ModString.DateToString(dtmAdm)
-                strText = strText & " kan niet voor geboortedatum " & ModString.DateToString(dtmBd) & " liggen"
-                ModMessage.ShowMsgBoxExclam "Opname datum kan niet voor de geboortedatum liggen"
-                ClearAdmDate
+                strValid = "Opname datum voor geboorte datum"
+                Validate strValid
                 
+                ClearAdmDate
                 ValidateAdmDate = False
             Else
+                Validate vbNullString
                 ValidateAdmDate = True
             End If
         Else
+            Validate vbNullString
             ValidateAdmDate = True
         End If
     End If
+    
 
 End Function
 
 Private Sub txtGestWeek_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
+    Dim strValid As String
+
     If txtGestWeek.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidWeken(Val(txtGestWeek.Value)) Then
-        ModMessage.ShowMsgBoxExclam "Geen geldige waarde voor weken: " & txtGestWeek.Value
+        strValid = "Geen zwangerschapsduur"
+        Validate strValid
+        
         txtGestWeek.Value = vbNullString
         blnCancel = True
+    Else
+        Validate vbNullString
+        blnCancel = False
     End If
-
+    
 End Sub
 
 Private Sub txtGestWeek_KeyPress(ByVal intKey As MSForms.ReturnInteger)
@@ -353,4 +471,10 @@ Private Sub txtAdmYear_KeyPress(ByVal intKey As MSForms.ReturnInteger)
 
     intKey = ModUtils.OnlyNumericAscii(intKey)
 
+End Sub
+
+Private Sub UserForm_Activate()
+
+    Validate vbNullString
+    
 End Sub

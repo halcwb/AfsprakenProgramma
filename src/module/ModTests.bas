@@ -125,7 +125,6 @@ Private Sub Test_GetPatientWorkBookName()
 
 End Sub
 
-
 Private Sub Test_OpenBed()
 
     Dim strBed As String
@@ -186,7 +185,6 @@ Private Sub Test_CanReadFormulariumDb()
     AssertTrue objMed.Generiek <> vbNullString, "Medicament should have a generic name", Not blnDontDisplay
     
 End Sub
-
 
 Private Sub Test_CountInterfaceSheets()
 
@@ -251,7 +249,6 @@ Private Sub UnhideAllSheets()
     Next ws
 End Sub
 
-
 Private Sub GetFormulas()
     Dim intRow As Integer
     Dim intCol As Integer
@@ -263,29 +260,6 @@ Private Sub GetFormulas()
             End If
         Next
     Next
-End Sub
-
-Private Sub ChangesNamedRangeScopes2Workbook()
-
-    Dim varNm As Variant
-    Dim strName As String
-    Dim strRange As String
-    Dim s As String
-
-    For Each varNm In ThisWorkbook.Names
-        If Strings.LCase(Strings.Left(varNm.Name, 8)) = "ber_lab!" Then
-            strName = varNm.Name
-            strRange = varNm.RefersTo
-            
-            s = Split(varNm.Name, "!")(UBound(Split(varNm.Name, "!")))
-            ' Add to "Workbook" scope
-            varNm.RefersToRange.Name = s
-            ' Remove from "Worksheet" scope
-            Debug.Print varNm.Name & " - " & varNm.RefersTo
-            varNm.Delete
-        End If
-    Next varNm
-    
 End Sub
 
 Private Sub UnlockAllA1Cells()

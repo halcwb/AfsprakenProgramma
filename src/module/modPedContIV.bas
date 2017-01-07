@@ -91,7 +91,7 @@ End Sub
 
 Public Sub PedContIV_Clear_09()
 
-    Clear 1
+    Clear 9
 
 End Sub
 

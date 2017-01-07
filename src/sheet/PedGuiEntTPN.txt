@@ -6,7 +6,7 @@ $D$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $G$3: 	=__4_GebDatum
 $I$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
 $D$4: 	=__0_PatNum
-$G$4: 	=PatDetails!F2
+$G$4: 	=PatDetails!B16
 $I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
 $D$5: 	=__1_Bed
 $C$9: 	=IF(PedBerEnt!M2<>0,PedBerEnt!J2&"" dd"","""")
@@ -31,7 +31,7 @@ $H$13: 	=IF(PedBerEnt!N5>1,PedBerEnt!M5&"" gram per dag"","""")
 $I$13: 	=IF(AND(PedBerEnt!M5<>0,PedBerEnt!M4<>0),""= ""&ROUND(PedBerEnt!M5*100/PedBerEnt!M2,1)&""% extra"","""")
 $N$13: 	=PedBerEnt!H6
 $N$14: 	=PedBerEnt!H7
-$D$15: 	=GlobBerOpm!C6
+$D$15: 	=GlobBerOpm!B6
 $N$15: 	=PedBerEnt!H8
 $N$16: 	=PedBerEnt!H9
 $D$17: 	=IF(PedBerTPN!F3<>0,IF(PedBerTPN!F3/24>=10,ROUND(PedBerTPN!F3/24,1),ROUND(PedBerTPN!F3/24,1))&"" ml/uur"","""")
@@ -60,7 +60,7 @@ $H$27: 	=IF(PedBerTPN!F12<>0,PedBerTPN!F12&"" ml per dag"","""")
 $E$28: 	=IF(PedBerTPN!F13<>0,ROUND(PedBerTPN!F13,0)&"" ml"","""")
 $E$29: 	=IF(PedBerTPN!C14,PedBerTPN!F14&"" ml"","""")
 $E$30: 	=IF(PedBerTPN!C15,PedBerTPN!F15&"" ml"","""")
-$D$32: 	=GlobBerOpm!C4
+$D$32: 	=GlobBerOpm!B4
 $D$34: 	=ROUND(PedBerTot!C2,0)&"" ml/kg""
 $E$34: 	=ROUND(GlobBerNorm!$A$18,0)&"" ml/kg""
 $F$34: 	=""= ""&ROUND(PedBerTot!C2*_Pat_Gewicht/10,0)&"" ml/dag""

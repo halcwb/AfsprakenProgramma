@@ -26,7 +26,7 @@ Private Sub cmdCancel_Click()
 
 End Sub
 
-Private Sub cmdOk_Click()
+Private Sub cmdOK_Click()
 
     Dim strRes As String
     Dim strName As String

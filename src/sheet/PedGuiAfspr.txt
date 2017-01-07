@@ -7,7 +7,7 @@ $E$3: 	=__4_GebDatum
 $F$3: 	=""Gewicht: ""&_Pat_Gewicht/10&"" kg""
 $G$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
 $C$4: 	=__0_PatNum
-$E$4: 	=PatDetails!F2
+$E$4: 	=PatDetails!B16
 $G$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
 $C$8: 	=IF(PedBerAfspr!C7=0,"""",PedBerAfspr!C7)
 $C$9: 	=IF(PedBerAfspr!C8=0,"""",PedBerAfspr!C8)

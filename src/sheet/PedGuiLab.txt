@@ -6,7 +6,7 @@ $D$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $H$3: 	=__4_GebDatum
 $J$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
 $D$4: 	=__0_PatNum
-$H$4: 	=PatDetails!F2
+$H$4: 	=PatDetails!B16
 $J$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
 $D$5: 	=__1_Bed
 $C$43: 	=IF(_Ped_Lab_Opm=0,"""",_Ped_Lab_Opm)

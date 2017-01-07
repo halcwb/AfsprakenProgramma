@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedicament 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   5068
+   ClientHeight    =   5446
    ClientLeft      =   42
    ClientTop       =   329
-   ClientWidth     =   10647
+   ClientWidth     =   9520
    OleObjectBlob   =   "FormMedicament.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -20,6 +20,34 @@ Private m_Formularium As ClassFormularium
 Private m_TherapieGroep As String
 Private m_SubGroep As String
 Private m_Etiket As String
+
+Private blnNoFormMed As Boolean
+
+Public Sub SetNoFormMed()
+
+    blnNoFormMed = True
+
+End Sub
+
+Private Sub Validate()
+
+    Dim strValid As String
+    
+    strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", vbNullString)
+    strValid = IIf(cboRoute.Value = vbNullString, "Kies een route", strValid)
+    
+    strValid = IIf(txtDosisEenheid.Value = vbNullString, "Voer dosering grootte in", strValid)
+    strValid = IIf(txtDosis.Value = vbNullString, "Voer dosering eenheid in", strValid)
+    strValid = IIf(txtSterkteEenheid.Value = vbNullString, "Voer sterkte eenheid in", strValid)
+    strValid = IIf(txtSterkte.Value = vbNullString, "Voer sterkte in", strValid)
+    
+    strValid = IIf(txtShape.Value = vbNullString, "Voer een vorm in", strValid)
+    strValid = IIf(cboGeneriek.Value = vbNullString, "Kies een generiek", strValid)
+    
+    lblValid.Caption = strValid
+    cmdOK.Enabled = strValid = vbNullString
+
+End Sub
 
 Public Function GetSelectedRoute() As String
 
@@ -54,11 +82,17 @@ End Function
 Private Sub cboGeneriek_Change()
 
     If cboGeneriek.ListIndex > -1 Then
+        blnNoFormMed = False
         Set m_Medicament = m_Formularium.Item(cboGeneriek.ListIndex + 1)
         LoadMedicament
     Else
-        ClearForm
+        If Not blnNoFormMed Then ' Only clear form once when no form med is discovered
+            blnNoFormMed = True
+            ClearForm False
+        End If
     End If
+    
+    Validate
 
 End Sub
 
@@ -76,6 +110,7 @@ Public Sub LoadGPK(ByVal strGPK As String)
 
     Set m_Medicament = m_Formularium.GPK(strGPK)
     LoadMedicament
+    cboGeneriek.Value = m_Medicament.Generiek
 
 End Sub
 
@@ -85,13 +120,17 @@ Private Sub LoadMedicament()
         lblTherapieGroep.Caption = .TherapieGroep
         lblSubGroep.Caption = .TherapieSubgroep
         lblEtiket.Caption = .Etiket
-        cboGeneriek.Value = .Generiek
-        FillCombo cboIndicatie, .GetIndicaties()
+        
+        txtShape.Value = .Vorm
+        
         txtSterkte.Text = .Sterkte
         txtSterkteEenheid.Text = .SterkteEenheid
+        
         txtDosis.Text = .Dosis
         txtDosisEenheid.Text = .DosisEenheid
+        
         FillCombo cboRoute, .GetRoutes()
+        FillCombo cboIndicatie, .GetIndicaties()
     End With
 
 End Sub
@@ -110,32 +149,41 @@ Private Sub FillCombo(ByRef objCombo As ComboBox, ByRef arrItems() As String)
     
 End Sub
 
-Private Sub ClearForm()
+Public Sub ClearForm(ByVal blnGeneric As Boolean)
 
-    cboGeneriek.Text = vbNullString
-    
     lblTherapieGroep.Caption = m_TherapieGroep
     lblSubGroep.Caption = m_SubGroep
     lblEtiket.Caption = m_Etiket
     
-    cboGeneriek.Value = vbNullString
-    cboIndicatie.Clear
+    If blnGeneric Then cboGeneriek.Value = vbNullString
+    txtShape.Value = vbNullString
+    
+    txtDosis.Value = vbNullString
+    txtDosisEenheid.Value = vbNullString
+    
     txtSterkte.Text = vbNullString
     txtSterkteEenheid.Text = vbNullString
+    
     cboRoute.Clear
-    chkPRN.Value = False
-    txtPRN.Value = vbNullString
+    cboRoute.Value = vbNullString
+    cboIndicatie.Clear
+    cboIndicatie.Value = vbNullString
     
     Set m_Medicament = Nothing
 
 End Sub
 
-Private Sub chkPRN_Change()
+Private Sub cboIndicatie_Change()
 
-    txtPRN.Visible = chkPRN.Value
+    Validate
 
 End Sub
 
+Private Sub cboRoute_Change()
+
+    Validate
+
+End Sub
 
 Private Sub cmdFormularium_Click()
     Dim strUrl As String
@@ -145,25 +193,44 @@ Private Sub cmdFormularium_Click()
 
 End Sub
 
+Private Sub CloseForm(ByVal strAction As String)
+
+    lblButton.Caption = strAction
+    blnNoFormMed = False
+    Me.Hide
+
+End Sub
+
 Private Sub cmdCancel_Click()
     
-    lblButton.Caption = "Cancel"
-    Me.Hide
+    CloseForm "Cancel"
 
 End Sub
 
 Private Sub cmdClear_Click()
 
-    ClearForm
-    lblButton.Caption = "Clear"
-    Me.Hide
+    ClearForm True
+    CloseForm "Clear"
     
 End Sub
 
-Private Sub cmdOk_Click()
+Private Sub cmdOK_Click()
 
-    lblButton.Caption = "OK"
-    Me.Hide
+    If blnNoFormMed Then
+        Set m_Medicament = New ClassMedicatieDisc
+        
+        m_Medicament.Dosis = Val(txtDosis.Value)
+        m_Medicament.DosisEenheid = txtDosisEenheid.Value
+        m_Medicament.Generiek = cboGeneriek.Value
+        m_Medicament.Indicaties = cboIndicatie.Value
+        m_Medicament.Routes = cboRoute.Value
+        m_Medicament.Sterkte = Val(txtSterkte.Value)
+        m_Medicament.SterkteEenheid = txtSterkteEenheid.Value
+        m_Medicament.Vorm = txtShape.Value
+        
+    End If
+
+    CloseForm "OK"
 
 End Sub
 
@@ -183,6 +250,24 @@ Private Sub txtAfronding_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
 End Sub
 
+Private Sub txtDosis_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+
+    Validate
+
+End Sub
+
+Private Sub txtShape_Change()
+
+    Validate
+
+End Sub
+
+Private Sub txtSterkte_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+
+    Validate
+
+End Sub
+
 Private Sub txtSterkte_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     If KeyAscii >= 48 And KeyAscii <= 57 Then
@@ -198,9 +283,15 @@ Private Sub txtSterkte_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
 End Sub
 
+Private Sub txtSterkteEenheid_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+
+    Validate
+
+End Sub
+
 Private Sub UserForm_Activate()
 
-    If Not HasSelectedMedicament() Then ClearForm
+    Validate
 
 End Sub
 
@@ -228,13 +319,28 @@ Private Sub UserForm_Initialize()
         ModProgress.SetJobPercentage "Generieken toevoegen", intC, intN
     Next intN
     
+    cboGeneriek.TabIndex = 0
+    txtShape.TabIndex = 1
+    txtSterkte.TabIndex = 2
+    txtSterkteEenheid.TabIndex = 3
+    txtDosis.TabIndex = 4
+    txtDosisEenheid.TabIndex = 5
+    cboRoute.TabIndex = 6
+    cboIndicatie.TabIndex = 7
+    
+    cmdFormularium.TabIndex = 8
+    cmdOK.TabIndex = 9
+    cmdClear.TabIndex = 10
+    cmdCancel.TabIndex = 11
+    
     ModProgress.FinishProgress
 
 End Sub
 
 Private Sub UserForm_QueryClose(intCancel As Integer, intMode As Integer)
     
-    ModMessage.ShowMsgBoxExclam "Dit formulier kan alleen worden afgesloten met 'OK', 'Clear' of 'Cancel'"
+    ' ModMessage.ShowMsgBoxExclam "Dit formulier kan alleen worden afgesloten met 'OK', 'Clear' of 'Cancel'"
     intCancel = True
+    cmdCancel_Click
 
 End Sub
