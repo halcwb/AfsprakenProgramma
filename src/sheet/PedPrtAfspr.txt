@@ -6,17 +6,17 @@ $F$3: 	=__4_GebDatum
 $I$3: 	=_Pat_Lengte&"" cm""
 $D$4: 	=__1_Bed
 $I$4: 	=ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
-$B$5: 	=PedGuiEntTPN!C8
+$B$5: 	=PedGuiEntTPN!C11
 $G$6: 	=INDEX(tblSonde,PedBerEnt!O2,1)
 $C$7: 	=IF(G7<>"""",INDEX(tblVoedingPO,_Ped_Ent_Keuze_1,1),)
-$F$7: 	=PedGuiEntTPN!G9
-$G$7: 	=PedGuiEntTPN!C9&"" ""&PedGuiEntTPN!D9
-$D$8: 	=IF(_Ped_Ent_Keuze_2>1,""met ""&PedGuiEntTPN!C11&"" ""&PedGuiEntTPN!D11&"" ""&INDEX(tblPO_poederlijst,_Ped_Ent_Keuze_2,1),"""")
-$H$8: 	=PedGuiEntTPN!I11
-$D$9: 	=IF(_Ped_Ent_Keuze_3>1,""met ""&PedGuiEntTPN!C12&"" ""&PedGuiEntTPN!D12&"" ""&INDEX(tblPO_poederlijst,_Ped_Ent_Keuze_3,1),"""")
-$H$9: 	=PedGuiEntTPN!I12
-$D$10: 	=IF(_Ped_Ent_Keuze_4>1,""met ""&PedGuiEntTPN!C13&"" ""&PedGuiEntTPN!D13&"" ""&INDEX(tblPO_poederlijst,_Ped_Ent_Keuze_4,1),"""")
-$H$10: 	=PedGuiEntTPN!I13
+$F$7: 	=PedGuiEntTPN!G12
+$G$7: 	=PedGuiEntTPN!C12&"" ""&PedGuiEntTPN!D12
+$D$8: 	=IF(_Ped_Ent_Keuze_2>1,""met ""&PedGuiEntTPN!C14&"" ""&PedGuiEntTPN!D14&"" ""&INDEX(tblPO_poederlijst,_Ped_Ent_Keuze_2,1),"""")
+$H$8: 	=PedGuiEntTPN!#REF!
+$D$9: 	=IF(_Ped_Ent_Keuze_3>1,""met ""&PedGuiEntTPN!C15&"" ""&PedGuiEntTPN!D15&"" ""&INDEX(tblPO_poederlijst,_Ped_Ent_Keuze_3,1),"""")
+$H$9: 	=PedGuiEntTPN!#REF!
+$D$10: 	=IF(_Ped_Ent_Keuze_4>1,""met ""&PedGuiEntTPN!C16&"" ""&PedGuiEntTPN!D16&"" ""&INDEX(tblPO_poederlijst,_Ped_Ent_Keuze_4,1),"""")
+$H$10: 	=PedGuiEntTPN!#REF!
 $D$12: 	=GlobBerOpm!B6
 $D$15: 	=TRIM(PedBerLab!B4&"" ""&PedBerLab!B5&"" ""&PedBerLab!B6&"" ""&PedBerLab!B7&"" ""&PedBerLab!B8&"" ""&PedBerLab!B9&"" ""&PedBerLab!B10&"" ""&PedBerLab!B11&"" ""&PedBerLab!B12&"" ""&PedBerLab!B13&"" ""&PedBerLab!B14&"" ""&PedBerLab!B15&"" ""&PedBerLab!B16&"" ""&PedBerLab!B17&"" ""&PedBerLab!B18&"" ""&PedBerLab!B19&"" ""&PedBerLab!B20&"" ""&PedBerLab!B21&"" ""&PedBerLab!B22&"" ""&PedBerLab!B23&"" ""&PedBerLab!B24&"" ""&PedBerLab!B25&"" ""&PedBerLab!B26&"" ""&PedBerLab!B27&"" ""&PedBerLab!B28&"" ""&PedBerLab!B29&"" ""&PedBerLab!B30&"" ""&PedBerLab!B31&"" ""&PedBerLab!B32&"" ""&PedBerLab!B33&"" ""&PedBerLab!B34&"" ""&PedBerLab!B35)
 $D$16: 	=TRIM(PedBerLab!D4&"" ""&PedBerLab!D5&"" ""&PedBerLab!D6&"" ""&PedBerLab!D7&"" ""&PedBerLab!D8&"" ""&PedBerLab!D9&"" ""&PedBerLab!D10&"" ""&PedBerLab!D11&"" ""&PedBerLab!D12&"" ""&PedBerLab!D13&"" ""&PedBerLab!D14&"" ""&PedBerLab!D15&"" ""&PedBerLab!D16&"" ""&PedBerLab!D17&"" ""&PedBerLab!D18&"" ""&PedBerLab!D19&"" ""&PedBerLab!D20&"" ""&PedBerLab!D21&"" ""&PedBerLab!D22&"" ""&PedBerLab!D23&"" ""&PedBerLab!D24&"" ""&PedBerLab!D25&"" ""&PedBerLab!D26&"" ""&PedBerLab!D27&"" ""&PedBerLab!D28&"" ""&PedBerLab!D29&"" ""&PedBerLab!D30&"" ""&PedBerLab!D31&"" ""&PedBerLab!D32&"" ""&PedBerLab!D33&"" ""&PedBerLab!D34)
@@ -124,33 +124,33 @@ $G$65: 	=IF(C65<>0,PedGuiMedIV!H30,"""")
 $J$65: 	=PedGuiMedIV!K30
 $L$65: 	=IF(C65=0,""D"","""")
 $D$67: 	=GlobBerOpm!B3
-$B$69: 	=PedGuiEntTPN!C16
-$D$70: 	=IF(E70<>"""",PedGuiEntTPN!C17,)
+$B$69: 	=PedGuiEntTPN!C20
+$D$70: 	=IF(E70<>"""",PedGuiEntTPN!C22,)
 $E$70: 	=IF(PedPrtTPN2tot6!G21<>0,PedPrtTPN2tot6!A14&"" ml"","""")
 $F$70: 	=IF(PedPrtTPN2tot6!G21<>0,PedPrtTPN2tot6!G21&"" ml"","""")
-$H$70: 	=IF(I70<>"""",PedGuiEntTPN!H17,)
-$I$70: 	=PedGuiEntTPN!I17
-$J$70: 	=PedGuiEntTPN!J17
+$H$70: 	=IF(I70<>"""",PedGuiEntTPN!H22,)
+$I$70: 	=PedGuiEntTPN!I22
+$J$70: 	=PedGuiEntTPN!J22
 $D$71: 	=IF(F71<>"""",PedBerTPN!A28,"""")
 $E$71: 	=IF(PedBerTPN!B4=4,ROUND(PedBerTPN!D4,1)&"" ml/uur"","""")
-$F$71: 	=PedGuiEntTPN!E18
+$F$71: 	=PedGuiEntTPN!E23
 $H$71: 	=IF(J71<>"""",INDEX(tblSSTGlucose,_Ped_TPN_SST2Keuze,1),)
-$J$71: 	=PedGuiEntTPN!J19
+$J$71: 	=PedGuiEntTPN!J24
 $L$71: 	=IF(AND(D71="""",H71=0),""D"","""")
-$D$72: 	=IF(PedGuiEntTPN!G18<>"""",""Peditrace"","""")
-$E$72: 	=IF(PedGuiEntTPN!G18<>"""",PedGuiEntTPN!G18&"" ""&PedGuiEntTPN!F19,"""")
-$H$72: 	=IF(J72<>"""",PedGuiEntTPN!H20,)
-$J$72: 	=PedGuiEntTPN!J20
+$D$72: 	=IF(PedGuiEntTPN!G23<>"""",""Peditrace"","""")
+$E$72: 	=IF(PedGuiEntTPN!G23<>"""",PedGuiEntTPN!G23&"" ""&PedGuiEntTPN!F24,"""")
+$H$72: 	=IF(J72<>"""",PedGuiEntTPN!H25,)
+$J$72: 	=PedGuiEntTPN!J25
 $L$72: 	=IF(AND(D72="""",H72=0),""D"","""")
 $D$73: 	=IF(F73<>"""",INDEX(tblSSTGlucose,_Ped_TPN_SST1Keuze,1),)
 $F$73: 	=IF(AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze<11,_Pat_Gewicht/10<=50),ROUND(PedBerTPN!F6,0)&"" ml"","""")
-$H$73: 	=IF(J73<>"""",PedGuiEntTPN!H21,)
-$J$73: 	=PedGuiEntTPN!J21
+$H$73: 	=IF(J73<>"""",PedGuiEntTPN!H26,)
+$J$73: 	=PedGuiEntTPN!J26
 $L$73: 	=IF(AND(D73="""",H73=0),""D"","""")
-$D$74: 	=IF(F74<>"""",PedGuiEntTPN!C20,)
+$D$74: 	=IF(F74<>"""",PedGuiEntTPN!C25,)
 $F$74: 	=IF(AND(PedPrtTPN2tot6!G14<>"""",PedBerTPN!$F$4>0),PedPrtTPN2tot6!G14&"" ml"","""")
 $L$74: 	=IF(D74=0,""D"","""")
-$D$75: 	=IF(F75<>"""",PedGuiEntTPN!C21,)
+$D$75: 	=IF(F75<>"""",PedGuiEntTPN!C26,)
 $F$75: 	=IF(AND(PedPrtTPN2tot6!G15<>"""",PedBerTPN!$F$4>0),PedPrtTPN2tot6!G15&"" ml"","""")
 $L$75: 	=IF(D75=0,""D"","""")
 $D$77: 	=IF(F77<>"""",""Electrolyt/Glucose mengsel"","""")
@@ -160,55 +160,55 @@ $D$78: 	=IF(F78<>"""",INDEX(tblSSTGlucose,_Ped_TPN_SST1Keuze,1),)
 $F$78: 	=IF(AND(OR(_Ped_TPN_Keuze=1,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10),_Pat_Gewicht/10>50),ROUND(PedBerTPN!F6,0)<>0,_Ped_TPN_SST1Keuze<>2),ROUND(PedBerTPN!F6,0)&"" ml"","""")
 $L$78: 	=IF(D78=0,""D"","""")
 $D$79: 	=IF(F79<>"""",""CaGluc 10%"",)
-$F$79: 	=PedGuiEntTPN!E23
+$F$79: 	=PedGuiEntTPN!E28
 $L$79: 	=IF(D79=0,""D"","""")
 $D$80: 	=IF(F80<>"""",""MgCl 10%"",)
-$F$80: 	=PedGuiEntTPN!E24
+$F$80: 	=PedGuiEntTPN!E29
 $L$80: 	=IF(D80=0,""D"","""")
-$D$81: 	=IF(F81<>"""",PedGuiEntTPN!C20,)
+$D$81: 	=IF(F81<>"""",PedGuiEntTPN!C25,)
 $F$81: 	=IF(AND(_Pat_Gewicht/10>50,PedPrtTPN50!G27<>0),PedPrtTPN50!G27&"" ml"",IF(OR(AND(PedPrtTPN2tot6!G29<>0,PedBerTPN!$F$4=0),AND(PedPrtTPN2tot6!G29<>0,_Pat_Gewicht/10>50)),PedPrtTPN2tot6!G29&"" ml"",""""))
 $L$81: 	=IF(D81=0,""D"","""")
-$D$82: 	=IF(F82<>"""",PedGuiEntTPN!C21,)
+$D$82: 	=IF(F82<>"""",PedGuiEntTPN!C26,)
 $F$82: 	=IF(AND(_Pat_Gewicht/10>51,PedPrtTPN50!G28<>0),PedPrtTPN50!G28&"" ml"",IF(OR(AND(PedPrtTPN2tot6!G30<>0,PedBerTPN!$F$4=0),AND(PedPrtTPN2tot6!G30<>0,_Pat_Gewicht/10>50)),PedPrtTPN2tot6!G30&"" ml"",""""))
 $L$82: 	=IF(D82=0,""D"","""")
 $D$83: 	=IF(F83<>"""",""Glucose 10%"","""")
 $F$83: 	=IF(AND(_Pat_Gewicht/10>51,PedPrtTPN50!G31<>0),PedPrtTPN50!G31&"" ml"",IF(AND(PedPrtTPN2tot6!G33<>0,_Pat_Gewicht/10<=50),PedPrtTPN2tot6!G33&"" ml"",""""))
 $L$83: 	=IF(D83=0,""D"","""")
 $D$85: 	=IF(E85<>"" "",""KNaFosfaat"",)
-$E$85: 	=PedGuiEntTPN!E26&"" ""&PedGuiEntTPN!H26
+$E$85: 	=PedGuiEntTPN!E31&"" ""&PedGuiEntTPN!H31
 $L$85: 	=IF(D85=0,""D"","""")
-$D$87: 	=IF(E87<>"""",PedGuiEntTPN!C27,)
-$E$87: 	=PedGuiEntTPN!D27
+$D$87: 	=IF(E87<>"""",PedGuiEntTPN!C33,)
+$E$87: 	=PedGuiEntTPN!D33
 $F$87: 	=IF(ROUND(PedBerTPN!F12,0)>0,ROUND(PedBerTPN!F12,0)&"" ml"","""")
 $D$88: 	=IF(F88<>"""",""Intralipid 20%"",)
-$F$88: 	=PedGuiEntTPN!E28
+$F$88: 	=PedGuiEntTPN!E34
 $L$88: 	=IF(D88=0,""D"","""")
 $D$89: 	=IF(F89<>"""",""Vitintra Infant"",)
-$F$89: 	=PedGuiEntTPN!E29
+$F$89: 	=PedGuiEntTPN!E35
 $L$89: 	=IF(D89=0,""D"","""")
 $D$90: 	=IF(F90<>"""",""Soluvit"",)
-$F$90: 	=PedGuiEntTPN!E30
+$F$90: 	=PedGuiEntTPN!E36
 $L$90: 	=IF(D90=0,""D"","""")
 $D$92: 	=GlobBerOpm!B4
-$C$96: 	=PedGuiEntTPN!B34
-$D$96: 	=PedGuiEntTPN!D34
-$E$96: 	=PedGuiEntTPN!B35
-$F$96: 	=PedGuiEntTPN!D35
-$G$96: 	=PedGuiEntTPN!B38
-$H$96: 	=PedGuiEntTPN!D38
-$I$96: 	=PedGuiEntTPN!B37
-$J$96: 	=PedGuiEntTPN!D37
-$C$97: 	=PedGuiEntTPN!H34
-$D$97: 	=PedGuiEntTPN!I34
-$E$97: 	=PedGuiEntTPN!H35
-$F$97: 	=PedGuiEntTPN!I35
-$G$97: 	=PedGuiEntTPN!H36
-$H$97: 	=PedGuiEntTPN!I36
-$I$97: 	=PedGuiEntTPN!H38
-$J$97: 	=PedGuiEntTPN!I38
-$C$98: 	=PedGuiEntTPN!B36
-$D$98: 	=PedGuiEntTPN!D36
-$H$98: 	=PedGuiEntTPN!I37
+$C$96: 	=PedGuiEntTPN!B40
+$D$96: 	=PedGuiEntTPN!D40
+$E$96: 	=PedGuiEntTPN!B41
+$F$96: 	=PedGuiEntTPN!D41
+$G$96: 	=PedGuiEntTPN!B44
+$H$96: 	=PedGuiEntTPN!D44
+$I$96: 	=PedGuiEntTPN!B43
+$J$96: 	=PedGuiEntTPN!D43
+$C$97: 	=PedGuiEntTPN!H40
+$D$97: 	=PedGuiEntTPN!I40
+$E$97: 	=PedGuiEntTPN!H41
+$F$97: 	=PedGuiEntTPN!I41
+$G$97: 	=PedGuiEntTPN!H42
+$H$97: 	=PedGuiEntTPN!I42
+$I$97: 	=PedGuiEntTPN!H44
+$J$97: 	=PedGuiEntTPN!I44
+$C$98: 	=PedGuiEntTPN!B42
+$D$98: 	=PedGuiEntTPN!D42
+$H$98: 	=PedGuiEntTPN!I43
 $D$99: 	=TODAY()
 $F$99: 	=__2_AchterNaam&"", ""&__3_VoorNaam
 $I$99: 	=_Pat_Gewicht/10&"" kg""

@@ -1,7 +1,7 @@
 "$B$2: 	=SUM(B3:B4)
 $C$2: 	=IF(_Pat_Gewicht>0,10*B2/_Pat_Gewicht,0)
 $B$3: 	=PedBerEnt!M2
-$B$4: 	=(PedBerMedIV!K23+PedBerTPN!F24+PedGuiLijnPM!J16+GlobBerMedDisc!P33)
+$B$4: 	=(PedBerMedIV!K23+PedBerTPN!F24+PedGuiLijnPM!K16+GlobBerMedDisc!P33)
 $B$5: 	=SUM(B6:B8)
 $C$5: 	=IF(_Pat_Gewicht>0, B5/(_Pat_Gewicht/10),0)
 $D$5: 	=SUM(D7:D7)
@@ -31,7 +31,7 @@ $B$17: 	=SUM(B18:B22)
 $C$17: 	=SUM(C18:C22)
 $B$18: 	=PedBerEnt!G6
 $C$18: 	=IF(_Pat_Gewicht>0,B18/(_Pat_Gewicht/10),0)
-$B$19: 	=PedGuiLijnPM!I16
+$B$19: 	=PedGuiLijnPM!J16
 $C$19: 	=IF(_Pat_Gewicht>0,B19/(_Pat_Gewicht/10),0)
 $B$20: 	=GlobBerMedDisc!R33
 $C$20: 	=IF(_Pat_Gewicht>0,B20/(_Pat_Gewicht/10),0)

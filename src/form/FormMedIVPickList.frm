@@ -30,67 +30,43 @@ End Function
 
 Public Function GetSelectedMedicatieCount() As Integer
 
-    Dim intN As Integer
-    Dim intC As Integer
-    
-    intC = 0
-    For intN = 0 To lstMedicamenten.ListCount - 1
-        If lstMedicamenten.Selected(intN) Then intC = intC + 1
-    Next intN
-    
-    GetSelectedMedicatieCount = intC
+    GetSelectedMedicatieCount = ModList.GetSelectedListCount(lstMedicamenten)
 
 End Function
 
-Public Sub LoadMedicamenten(colMeds As Collection)
+Public Sub LoadMedicamenten(ByRef colMeds As Collection)
 
-    Dim varMed As Variant
-    
-    For Each varMed In colMeds
-        lstMedicamenten.AddItem varMed
-    Next varMed
+    ModList.LoadListItems lstMedicamenten, colMeds
 
 End Sub
 
 Public Sub SelectMedicament(ByVal intN As Integer)
 
-    lstMedicamenten.Selected(intN - 2) = True
+    ModList.SelectListItem lstMedicamenten, intN
 
 End Sub
 
 Public Function IsMedicamentSelected(ByVal intN As Integer) As Boolean
 
-    IsMedicamentSelected = lstMedicamenten.Selected(intN - 2)
+    IsMedicamentSelected = ModList.IsListItemSelected(lstMedicamenten, intN)
 
 End Function
 
 Public Sub UnselectMedicament(ByVal intN As Integer)
 
-    lstMedicamenten.Selected(intN - 2) = False
+    ModList.UnselectListItem lstMedicamenten, intN
 
 End Sub
 
 Public Function HasSelectedMedicamenten() As Boolean
     
-    HasSelectedMedicamenten = Not GetFirstSelectedMedicament(False) = 1
+    HasSelectedMedicamenten = ModList.HasSelectedListItems(lstMedicamenten)
 
 End Function
 
 Public Function GetFirstSelectedMedicament(ByVal blnUnSelect As Boolean) As Integer
 
-    Dim intN As Integer
-    Dim intC As Integer
-    
-    intC = lstMedicamenten.ListCount - 1
-    For intN = 0 To intC
-        If lstMedicamenten.Selected(intN) Then
-            If blnUnSelect Then lstMedicamenten.Selected(intN) = False
-            GetFirstSelectedMedicament = intN + 2
-            Exit Function
-        End If
-    Next intN
-    
-    GetFirstSelectedMedicament = 1
+    GetFirstSelectedMedicament = ModList.GetFirstSelectedListItem(lstMedicamenten, blnUnSelect)
 
 End Function
 
@@ -143,9 +119,16 @@ Private Sub lstMedicamenten_MouseUp(ByVal Button As Integer, ByVal Shift As Inte
 
 End Sub
 
+Private Sub UserForm_Initialize()
+
+    lstMedicamenten.Clear
+
+End Sub
+
 Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
 
     Cancel = True
     cmdCancel_Click
 
 End Sub
+

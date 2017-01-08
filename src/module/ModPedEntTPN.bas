@@ -7,6 +7,14 @@ Private Const CONST_TPN_3 As Integer = 16
 Private Const CONST_TPN_4 As Integer = 30
 Private Const CONST_TPN_5 As Integer = 50
 
+Private Const constTblVoeding = "tblPerOs"         ' ToDo rename tbl_Ped_Voeding
+Private Const constTblToevoeging = "tblPoeder" ' ToDo rename tbl_Ped_Toevoeging
+
+Private Const constVoedingCount = 1
+Private Const constToevoegingCount = 3
+
+Private Const constSode As String = "_Ped_Ent_Sonde"
+Private Const constVoeding As String = "_Ped_Ent_Keuze_"
 Private Const constEntText As String = "_Ped_Ent_Opm"
 Private Const constTpnText As String = "_Ped_TPN_Opm"
 Private Const constNaCl1 As String = "_Ped_TPN_NaCl1"
@@ -23,6 +31,144 @@ Private Const constKCl2Vol As String = "_Ped_TPN_KClVol2"
 Private Const constCaGlucVol As String = "_Ped_TPN_CaGlucVol"
 Private Const constMgClVol As String = "_Ped_TPN_MgClVol"
 Private Const constTPNVol As String = "_Ped_TPN_Vol"
+
+Public Sub PedEntTPN_ShowVoedingPickList()
+
+    Dim frmPickList As FormVoedingPickList
+    Dim colVoeding As Collection
+    Dim colToevoeging As Collection
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim intVoeding As Integer
+    Dim intToevoeging As Integer
+    
+    Set colVoeding = New Collection
+    intC = Range(constTblVoeding).Rows.Count
+    For intN = 2 To intC
+        colVoeding.Add Range(constTblVoeding).Cells(intN, 1)
+    Next intN
+    
+    Set colToevoeging = New Collection
+    intC = Range(constTblToevoeging).Rows.Count
+    For intN = 2 To intC
+        colToevoeging.Add Range(constTblToevoeging).Cells(intN, 1)
+    Next intN
+    
+    Set frmPickList = New FormVoedingPickList
+    frmPickList.LoadVoedingen colVoeding
+    frmPickList.LoadToevoegingen colToevoeging
+    
+    For intN = 1 To constVoedingCount
+        intVoeding = ModRange.GetRangeValue(constVoeding & intN, 1)
+        If intVoeding > 1 Then frmPickList.SelectVoeding intVoeding
+    Next intN
+    
+    For intN = 2 To constToevoegingCount + 1
+        intToevoeging = ModRange.GetRangeValue(constVoeding & intN, 1)
+        If intToevoeging > 1 Then frmPickList.SelectToevoeging intToevoeging
+    Next intN
+    
+    frmPickList.Show
+    
+    If frmPickList.GetAction = vbNullString Then
+    
+        ' -- Process Voeding
+    
+        For intN = 1 To constVoedingCount            ' First remove nonselected items
+            intVoeding = ModRange.GetRangeValue(constVoeding & intN, 1)
+            If intVoeding > 1 Then
+                If frmPickList.IsVoedingSelected(intVoeding) Then
+                    frmPickList.UnselectVoeding (intVoeding)
+                Else
+                    ClearEnt intN
+                End If
+            End If
+        Next intN
+        
+        Do While frmPickList.HasSelectedVoedingen()  ' Then add selected items
+            For intN = 1 To constVoedingCount
+                intVoeding = ModRange.GetRangeValue(constVoeding & intN, 1)
+                If intVoeding = 1 Then
+                    intVoeding = frmPickList.GetFirstSelectedVoeding(True)
+                    ModRange.SetRangeValue constVoeding & intN, intVoeding
+                    Exit For
+                End If
+            Next intN
+        Loop
+    
+        ' -- Process Toevoegingen
+    
+        For intN = 2 To constToevoegingCount + 1       ' First remove nonselected items
+            intToevoeging = ModRange.GetRangeValue(constVoeding & intN, 1)
+            If intToevoeging > 1 Then
+                If frmPickList.IsToevoegingSelected(intToevoeging) Then
+                    frmPickList.UnselectToevoeging (intToevoeging)
+                Else
+                    ClearEnt intN
+                End If
+            End If
+        Next intN
+        
+        Do While frmPickList.HasSelectedToevoegingen()  ' Then add selected items
+            For intN = 2 To constToevoegingCount + 1
+                intToevoeging = ModRange.GetRangeValue(constVoeding & intN, 1)
+                If intToevoeging = 1 Then
+                    intToevoeging = frmPickList.GetFirstSelectedToevoeging(True)
+                    ModRange.SetRangeValue constVoeding & intN, intToevoeging
+                    Exit For
+                End If
+            Next intN
+        Loop
+    
+    End If
+    
+    Set frmPickList = Nothing
+    
+End Sub
+
+
+Public Sub PedEntTPN_ClearSonde()
+
+    ModRange.SetRangeValue constSode, 1
+
+End Sub
+
+Private Sub ClearEnt(ByVal intN As Integer)
+
+    ModRange.SetRangeValue constVoeding & intN, 1
+
+End Sub
+
+Public Sub PedEntTPN_ClearVoeding_1()
+
+    ClearEnt 1
+
+End Sub
+
+Public Sub PedEntTPN_ClearVoeding_2()
+
+    ClearEnt 2
+
+End Sub
+
+Public Sub PedEntTPN_ClearVoeding_3()
+
+    ClearEnt 3
+
+End Sub
+
+Public Sub PedEntTPN_ClearVoeding_4()
+
+    ClearEnt 4
+
+End Sub
+
+Public Sub PedEntTPN_ClearOpm()
+
+    ModRange.SetRangeValue constEntText, vbNullString
+
+End Sub
+
 
 Public Sub PedEntTPN_SelectTPNPrint()
 
@@ -414,13 +560,10 @@ Private Sub EnterOpmAfspr(ByVal strRange As String)
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
         ModRange.SetRangeValue strRange, frmOpmerking.txtOpmerking.Text
     End If
-    
-    frmOpmerking.txtOpmerking.Text = vbNullString
-    
+       
     Set frmOpmerking = Nothing
 
 End Sub
-
 
 Public Sub PedEntTPN_EntText()
     

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormOpmerking 
    Caption         =   "Opmerkingen ..."
-   ClientHeight    =   1904
+   ClientHeight    =   1981
    ClientLeft      =   42
    ClientTop       =   329
    ClientWidth     =   8211
@@ -14,16 +14,29 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+Private Sub CloseForm()
+
+    Me.Hide
+
+End Sub
+
 Private Sub cmdCancel_Click()
 
     txtOpmerking.Text = "Cancel"
-    Me.Hide
+    CloseForm
+
+End Sub
+
+Private Sub cmdClear_Click()
+
+    txtOpmerking.Value = vbNullString
 
 End Sub
 
 Private Sub cmdOK_Click()
 
-    Me.Hide
+    CloseForm
 
 End Sub
 
@@ -39,3 +52,9 @@ Public Sub SetText(ByVal strText As String)
 
 End Sub
 
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+
+    Cancel = True
+    CloseForm
+
+End Sub
