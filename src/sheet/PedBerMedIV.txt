@@ -426,7 +426,4 @@ $O$23: 	=SUM(O3:O22)+SUM(N3:N22)
 $P$23: 	=SUM(P3:P22)
 $Q$23: 	=SUM(Q3:Q22)
 $R$23: 	=SUM(R3:R22)
-$S$23: 	=IF(B23>1,""verw"","""")
-$AE$23: 	=LEFT(D23,FIND("" "",D23))
-$AF$23: 	=MID(D23, FIND("" "",D23), LEN(D23) - FIND("" "",D23) + 1)
 "

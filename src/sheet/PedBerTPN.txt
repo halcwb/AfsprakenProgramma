@@ -46,7 +46,7 @@ $D$16: 	=IF(E16<50,E16/10,E16-45)
 $F$16: 	=IF(C16,D16,0)
 $F$17: 	=IF(AND(_Ped_TPN_Keuze=2,_Pat_Gewicht/10<=50,_Ped_TPN_SST1Keuze<11),ROUND((F9*4+F10*4)/10,0)*10,IF(AND(_Ped_TPN_Keuze=2,_Pat_Gewicht/10>50),100,0))
 $G$17: 	=F17*0.1
-$F$18: 	=(ROUND(PedBerTPN!F11*1.5/(_Pat_Gewicht/10)/24/0.01,1)*24-PedBerTPN!F11)
+$F$18: 	=IF(_Pat_Gewicht>0,(ROUND(PedBerTPN!F11*1.5/(_Pat_Gewicht/10)/24/0.01,1)*24-PedBerTPN!F11),0)
 $G$18: 	=F18*0.05
 $N$18: 	=4*G18
 $E$19: 	=IF(D19<50,D19/10,D19-45)

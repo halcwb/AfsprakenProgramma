@@ -8,6 +8,65 @@ Private Const constMedIVOpm As String = "_Ped_MedIV_Opm"
 Private Const constMedIVOplVol As String = "_Ped_MedIV_OplVol_"
 Private Const constMedIVOplVlst As String = "_Ped_MedIV_OplVlst_"
 Private Const constMedIVStand As String = "_Ped_MedIV_Stand_"
+Private Const constMedIVCount As Integer = 15
+
+Public Sub PedContIV_ShowPickList()
+
+    Dim frmPickList As FormMedIVPickList
+    Dim colMedIV As Collection
+    Dim intN As Integer
+    Dim strN As String
+    Dim intC As Integer
+    Dim intKeuze As Integer
+    
+    Set colMedIV = New Collection
+    intC = Range(constTblMed).Rows.Count
+    For intN = 2 To intC
+        colMedIV.Add Range(constTblMed).Cells(intN, 1)
+    Next intN
+    
+    Set frmPickList = New FormMedIVPickList
+    frmPickList.LoadMedicamenten colMedIV
+    
+    For intN = 1 To constMedIVCount
+        strN = IIf(intN < 10, "0" & intN, intN)
+        intKeuze = ModRange.GetRangeValue(constMedIVKeuze & strN, 1)
+        If intKeuze > 1 Then frmPickList.SelectMedicament intKeuze
+    Next intN
+    
+    frmPickList.Show
+    
+    If frmPickList.GetAction = vbNullString Then
+    
+        For intN = 1 To constMedIVCount                 ' First remove nonselected items
+            strN = IIf(intN < 10, "0" & intN, intN)
+            intKeuze = ModRange.GetRangeValue(constMedIVKeuze & strN, 1)
+            If intKeuze > 1 Then
+                If frmPickList.IsMedicamentSelected(intKeuze) Then
+                    frmPickList.UnselectMedicament (intKeuze)
+                Else
+                    Clear intN
+                End If
+            End If
+        Next intN
+        
+        Do While frmPickList.HasSelectedMedicamenten()  ' Then add selected items
+            For intN = 1 To constMedIVCount
+                strN = IIf(intN < 10, "0" & intN, intN)
+                intKeuze = ModRange.GetRangeValue(constMedIVKeuze & strN, 1)
+                If intKeuze = 1 Then
+                    intKeuze = frmPickList.GetFirstSelectedMedicament(True)
+                    ModRange.SetRangeValue constMedIVKeuze & strN, intKeuze
+                    Exit For
+                End If
+            Next intN
+        Loop
+    
+    End If
+    
+    Set frmPickList = Nothing
+    
+End Sub
 
 Private Sub Clear(ByVal intN As Integer)
 
@@ -186,11 +245,11 @@ Private Sub SetToStandard(ByVal intN As Integer)
     ModRange.SetRangeValue strStand, 0
     
     intKeuze = ModRange.GetRangeValue(strMedicament, 0)
-    If intKeuze = 0 Then GoTo SetToStandardError    ' Something is wrong, 0 is no valid value
+    If intKeuze = 0 Then GoTo SetToStandardError ' Something is wrong, 0 is no valid value
     
-    If intKeuze = 1 Then                            ' No medicament was selected so clear the line
+    If intKeuze = 1 Then                         ' No medicament was selected so clear the line
         Clear intN
-    Else                                            ' Else find the right standard concentration
+    Else                                         ' Else find the right standard concentration
         varOplossing = Application.VLookup(Range(constTblMed).Cells(intKeuze, 1), Range(constTblMed), 22, False)
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
@@ -605,4 +664,3 @@ Public Sub PedContIV_Text()
     Set frmOpmerking = Nothing
 
 End Sub
-

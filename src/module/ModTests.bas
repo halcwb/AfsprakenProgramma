@@ -276,12 +276,12 @@ End Sub
 
 Private Sub GetAllNamedRangesOnCurrentWorksheet()
     Dim curSheet As Worksheet
-    Dim x As Name
+    Dim X As Name
     Set curSheet = ActiveSheet
     
-    For Each x In ActiveWorkbook.Names
-        If Strings.InStr(1, x.Name, "Werkbrief") > 0 Then
-            Debug.Print x.Name
+    For Each X In ActiveWorkbook.Names
+        If Strings.InStr(1, X.Name, "Werkbrief") > 0 Then
+            Debug.Print X.Name
         End If
     Next
     
