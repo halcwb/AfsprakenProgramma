@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormProgress 
    ClientHeight    =   1099
-   ClientLeft      =   21
-   ClientTop       =   322
-   ClientWidth     =   6384
+   ClientLeft      =   15
+   ClientTop       =   315
+   ClientWidth     =   6390
    OleObjectBlob   =   "FormProgress.frx":0000
    ShowModal       =   0   'False
    StartUpPosition =   1  'CenterOwner

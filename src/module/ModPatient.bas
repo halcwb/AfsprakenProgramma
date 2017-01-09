@@ -26,60 +26,43 @@ End Function
 
 Public Sub Patient_EnterWeight()
 
-    Dim frmGewichtInvoer As FormInvoerNumeriek
-    Dim objPatient As ClassPatientDetails
+    Dim frmInvoer As FormInvoerNumeriek
+    Dim dblWeight As Double
     
-    Set frmGewichtInvoer = New FormInvoerNumeriek
-    Set objPatient = New ClassPatientDetails
+    dblWeight = GetGewichtFromRange()
+    Set frmInvoer = New FormInvoerNumeriek
     
-    With frmGewichtInvoer
-        .Caption = "Gewicht invoeren ..."
-        .lblParameter.Caption = "Gewicht:"
-        .lblEenheid = "kg"
-        .txtWaarde = ModRange.GetRangeValue(constGewicht, 0) / 10
+    With frmInvoer
+        .SetValue vbNullString, "Gewicht:", dblWeight, "kg", "Gewicht"
         .Show
-        If .txtWaarde.Text <> vbNullString Then
-            objPatient.Gewicht = .txtWaarde.Text
-            If Not IsNull(objPatient.Gewicht) Then
-                ModRange.SetRangeValue constGewicht, objPatient.Gewicht * 10
-                
-            End If
+        
+        If Not .txtWaarde.Value = vbNullString Then
+            dblWeight = Val(.txtWaarde.Value) * 10
+            ModRange.SetRangeValue constGewicht, dblWeight
         End If
-        .txtWaarde = vbNullString
     End With
     
-    PedEntTPN_SelectTPN
+    ModPedEntTPN.PedEntTPN_SelectTPN
     
-    Set objPatient = Nothing
-    Set frmGewichtInvoer = Nothing
+    Set frmInvoer = Nothing
 
 End Sub
 
 Public Sub Patient_EnterLength()
 
-    Dim frmLengteInvoer As FormInvoerNumeriek
-    Dim objPatient As ClassPatientDetails
+    Dim frmInvoer As FormInvoerNumeriek
+    Dim dblLength As Double
     
-    Set frmLengteInvoer = New FormInvoerNumeriek
-    Set objPatient = New ClassPatientDetails
+    dblLength = ModRange.GetRangeValue(constLengte, 0)
+    Set frmInvoer = New FormInvoerNumeriek
     
-    With frmLengteInvoer
-        .Caption = "Lengte invoeren ..."
-        .lblParameter.Caption = "Lengte:"
-        .lblEenheid = "cm"
-        .txtWaarde = ModRange.GetRangeValue(constLengte, 0)
+    With frmInvoer
+        .SetValue constLengte, "Lengte:", dblLength, "cm", "Lengte"
         .Show
-        If .txtWaarde.Text <> vbNullString Then
-            objPatient.Lengte = .txtWaarde.Text
-            If Not IsNull(objPatient.Lengte) Then
-                ModRange.SetRangeValue constLengte, objPatient.Lengte
-            End If
-        End If
-        .txtWaarde = vbNullString
+        
     End With
     
-    Set objPatient = Nothing
-    Set frmLengteInvoer = Nothing
+    Set frmInvoer = Nothing
 
 End Sub
 
@@ -257,16 +240,21 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             ModProgress.FinishProgress
         End If
         
+        DoEvents
         objResult = ModMessage.ShowMsgBoxYesNo("Patient gegevens echt verwijderen?")
     Else
+        strTitle = FormProgress.Caption
         objResult = vbYes
     End If
     
     If objResult = vbYes Then
-        If blnShowProgress And blnShowWarn Then ModProgress.StartProgress strTitle
+        If blnShowProgress And blnShowWarn Then
+            DoEvents
+            ModProgress.StartProgress strTitle
+        End If
         
         With shtPatData
-            strJob = "Patient gegevens verwijderen ..."
+            strJob = "Patient gegevens verwijderen"
             intC = .Range("A1").CurrentRegion.Rows.Count
             
             For intN = 2 To intC
@@ -292,26 +280,9 @@ End Sub
 
 Public Sub PatientClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
     
-    Dim strTitle As String
-    Dim objResult As VbMsgBoxResult
-            
-    If blnShowWarn Then
-        If blnShowProgress Then
-            strTitle = FormProgress.Caption
-            ModProgress.FinishProgress
-        End If
-        
-        objResult = ModMessage.ShowMsgBoxYesNo("Alle patient gegevens echt verwijderen?")
-    Else
-        objResult = vbYes
-    End If
-    
-    If objResult = vbYes Then
-        ModProgress.StartProgress strTitle
-        ClearPatientData vbNullString, False, True
-        ModApplication.SetDateToDayFormula
-        ModApplication.SetApplicationTitle
-    End If
+    ClearPatientData vbNullString, blnShowWarn, blnShowProgress
+    ModApplication.SetDateToDayFormula
+    ModApplication.SetApplicationTitle
     
 End Sub
 

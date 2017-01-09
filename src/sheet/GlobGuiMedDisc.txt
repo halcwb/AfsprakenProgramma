@@ -1,13 +1,13 @@
 "$F$2: 	=Var_AfspraakDatum
 $J$2: 	=PatDetails!B13
-$M$2: 	=PatDetails!B21
-$Q$2: 	=__1_Bed
+$L$2: 	=PatDetails!B21
+$P$2: 	=__1_Bed
 $F$3: 	=PatDetails!B19
 $J$3: 	=PatDetails!B14
-$M$3: 	=PatDetails!B22
+$L$3: 	=PatDetails!B22
 $F$4: 	=PatDetails!B15
 $J$4: 	=PatDetails!B18
-$M$4: 	=PatDetails!B23
+$L$4: 	=PatDetails!B23
 $A$9: 	=GlobBerMedDisc!AL2
 $B$9: 	=GlobBerMedDisc!AO2
 $D$9: 	=GlobBerMedDisc!AP2

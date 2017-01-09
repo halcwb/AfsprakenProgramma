@@ -94,7 +94,7 @@ Public Sub HideAndUnProtectNonUserInterfaceSheets(ByVal blnShowProgress As Boole
             .Unprotect Password:=CONST_PASSWORD
         End With
         
-        If blnShowProgress Then ModProgress.SetJobPercentage "Verberg Bladen", intC, intN
+        If blnShowProgress Then ModProgress.SetJobPercentage "Verberg reken bladen ...", intC, intN
         intN = intN + 1
 
     Next shtSheet
@@ -149,7 +149,7 @@ Public Sub ProtectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
             .Protect ModConst.CONST_PASSWORD
         End With
         
-        If blnShowProgress Then ModProgress.SetJobPercentage "Zet Beveiliging", intC, intN
+        If blnShowProgress Then ModProgress.SetJobPercentage "Stel beveiliging in", intC, intN
         
     Next objItem
 

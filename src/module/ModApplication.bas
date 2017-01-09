@@ -130,7 +130,7 @@ Public Sub InitializeAfspraken()
     
     Application.WindowState = xlMaximized
     
-    ModProgress.StartProgress "Start Afspraken Programma ... "
+    ModProgress.StartProgress "Start Afspraken Programma"
     
     ModSheet.SelectPedOrNeoStartSheet ' Select the first GUI sheet
     DoEvents                          ' Make sure sheet is shown before proceding
@@ -147,7 +147,6 @@ Public Sub InitializeAfspraken()
     
     ' Clean everything
     ModRange.SetRangeValue constVersie, vbNullString
-    SetDateToDayFormula
     ModPatient.PatientClearAll False, True ' Default start with no patient
     ModSetting.SetDevelopmentMode False ' Default development mode is false
     

@@ -49,7 +49,7 @@ Public Sub PedLijnPM_ShowPickList()
         Do While frmPickList.HasSelectedLijnen()  ' Then add selected items
             For intN = 1 To constLijnCount
                 intKeuze = ModRange.GetRangeValue(constLijnKeuze & intN, 1)
-                If intKeuze = 1 Then
+                If intKeuze <= 1 Then
                     intKeuze = frmPickList.GetFirstSelectedLijn(True)
                     ModRange.SetRangeValue constLijnKeuze & intN, intKeuze
                     Exit For

@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormLijnenPickList 
    Caption         =   "Kies lijnen ..."
    ClientHeight    =   7063
-   ClientLeft      =   21
-   ClientTop       =   322
-   ClientWidth     =   6699
+   ClientLeft      =   15
+   ClientTop       =   315
+   ClientWidth     =   6705
    OleObjectBlob   =   "FormLijnenPickList.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

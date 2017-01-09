@@ -17,20 +17,109 @@ Private Const constSode As String = "_Ped_Ent_Sonde"
 Private Const constVoeding As String = "_Ped_Ent_Keuze_"
 Private Const constEntText As String = "_Ped_Ent_Opm"
 Private Const constTpnText As String = "_Ped_TPN_Opm"
+
+Private Const constSST1Stand = "_Ped_TPN_SST1Stand"
+Private Const constSST1Keuze = "_Ped_TPN_SST1Keuze"
+Private Const constSST2Stand = "_Ped_TPN_SST2Stand"
+Private Const constSST2Keuze = "_Ped_TPN_SST2Keuze"
+
+Private Const constTPN = "_Ped_TPN_Keuze"
+Private Const constTPNVol = "_Ped_TPN_Vol"
+
 Private Const constNaCl1 As String = "_Ped_TPN_NaCl1"
-Private Const constKCl1 As String = "_Ped_TPN_KCl1"
-Private Const constNaCl2 As String = "_Ped_TPN_NaCl2"
-Private Const constKCl2 As String = "_Ped_TPN_KCl2"
-Private Const constCaGluc As String = "_Ped_TPN_CaCl"
-Private Const constMgCl As String = "_Ped_TPN_MgCl"
-Private Const constKNaFosf As String = "_Ped_TPN_KNaFosf"
 Private Const constNaCl1Vol As String = "_Ped_TPN_NaClVol1"
+Private Const constKCl1 As String = "_Ped_TPN_KCl1"
 Private Const constKCl1Vol As String = "_Ped_TPN_KClVol1"
-Private Const constNaCl2Vol As String = "_Ped_TPN_NaClVol2"
-Private Const constKCl2Vol As String = "_Ped_TPN_KClVol2"
+Private Const constCaGluc As String = "_Ped_TPN_CaCl"
 Private Const constCaGlucVol As String = "_Ped_TPN_CaGlucVol"
+Private Const constMgCl As String = "_Ped_TPN_MgCl"
 Private Const constMgClVol As String = "_Ped_TPN_MgClVol"
-Private Const constTPNVol As String = "_Ped_TPN_Vol"
+
+Private Const constNaCl2 As String = "_Ped_TPN_NaCl2"
+Private Const constNaCl2Vol As String = "_Ped_TPN_NaClVol2"
+Private Const constKCl2 As String = "_Ped_TPN_KCl2"
+Private Const constKCl2Vol As String = "_Ped_TPN_KClVol2"
+
+Private Const constKNaFosf As String = "_Ped_TPN_KNaFosf"
+Private Const constKNaFosfVol As String = "_Ped_TPN_KNaFosfVol"
+
+Private Const constPediTrace As String = "_Ped_TPN_PediTrace"
+
+Private Const constLipid As String = "_Ped_TPN_LipidStand"
+
+Private Const constSoluvit As String = "_Ped_TPN_Soluvit"
+Private Const constSoluvitVol As String = "_Ped_TPN_SoluvitVol"
+Private Const constVitIntra As String = "_Ped_TPN_VitIntra"
+Private Const constVitIntraVol As String = "_Ped_TPN_VitIntraVol"
+
+
+
+Public Sub PedEntTPN_ClearSSt()
+
+    ModRange.SetRangeValue constTPN, 1
+    ModRange.SetRangeValue constTPNVol, 0
+    
+    ModRange.SetRangeValue constSST1Stand, 0
+    ModRange.SetRangeValue constSST1Keuze, 1
+    
+    ModRange.SetRangeValue constNaCl1, False
+    ModRange.SetRangeValue constNaCl1Vol, 0
+    
+    ModRange.SetRangeValue constKCl1, False
+    ModRange.SetRangeValue constKCl1Vol, 0
+    
+    ModRange.SetRangeValue constSST2Stand, 0
+    ModRange.SetRangeValue constSST2Keuze, 1
+    
+    ModRange.SetRangeValue constNaCl2, False
+    ModRange.SetRangeValue constNaCl2Vol, 0
+    
+    ModRange.SetRangeValue constKCl2, False
+    ModRange.SetRangeValue constKCl2Vol, 0
+    
+    ModRange.SetRangeValue constCaGluc, False
+    ModRange.SetRangeValue constCaGlucVol, 0
+    
+    ModRange.SetRangeValue constMgCl, False
+    ModRange.SetRangeValue constMgClVol, 0
+    
+End Sub
+
+Public Sub PedEntTPN_clearPeditrace()
+
+    ModRange.SetRangeValue constPediTrace, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearCaGluc()
+
+    ModRange.SetRangeValue constCaGluc, False
+    ModRange.SetRangeValue constCaGlucVol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearKNAP()
+    
+    ModRange.SetRangeValue constKNaFosf, False
+    ModRange.SetRangeValue constKNaFosfVol, 0
+    
+End Sub
+
+Public Sub PedEntTPN_ClearLipid()
+
+    ModRange.SetRangeValue constLipid, 0
+    ModRange.SetRangeValue constSoluvit, False
+    ModRange.SetRangeValue constSoluvitVol, 0
+    ModRange.SetRangeValue constVitIntra, False
+    ModRange.SetRangeValue constVitIntraVol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearOpmTPN()
+
+    ModRange.SetRangeValue constTpnText, vbNullString
+
+End Sub
 
 Public Sub PedEntTPN_ShowVoedingPickList()
 
@@ -88,7 +177,7 @@ Public Sub PedEntTPN_ShowVoedingPickList()
         Do While frmPickList.HasSelectedVoedingen()  ' Then add selected items
             For intN = 1 To constVoedingCount
                 intVoeding = ModRange.GetRangeValue(constVoeding & intN, 1)
-                If intVoeding = 1 Then
+                If intVoeding <= 1 Then
                     intVoeding = frmPickList.GetFirstSelectedVoeding(True)
                     ModRange.SetRangeValue constVoeding & intN, intVoeding
                     Exit For
@@ -112,7 +201,7 @@ Public Sub PedEntTPN_ShowVoedingPickList()
         Do While frmPickList.HasSelectedToevoegingen()  ' Then add selected items
             For intN = 2 To constToevoegingCount + 1
                 intToevoeging = ModRange.GetRangeValue(constVoeding & intN, 1)
-                If intToevoeging = 1 Then
+                If intToevoeging <= 1 Then
                     intToevoeging = frmPickList.GetFirstSelectedToevoeging(True)
                     ModRange.SetRangeValue constVoeding & intN, intToevoeging
                     Exit For
@@ -228,7 +317,10 @@ Public Sub PedEntTPN_SelectTPN()
             .Range(strTPNE).Copy
         ElseIf dblGewicht > 50 Then
             .Range(strTPNnutri).Copy
+        Else          ' Not a valid weight
+            Exit Sub  ' So exit sub
         End If
+        
         .Range(strSelected).PasteSpecial xlPasteValues
     End With
     
@@ -582,7 +674,7 @@ Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String)
     Dim frmInvoer As FormInvoerNumeriek
     
     Set frmInvoer = New FormInvoerNumeriek
-    frmInvoer.SetValue strRange, strItem, ModRange.GetRangeValue(strRange, 0), "mL"
+    frmInvoer.SetValue strRange, strItem, ModRange.GetRangeValue(strRange, 0), "mL", vbNullString
     frmInvoer.Show
     
     Set frmInvoer = Nothing
@@ -678,6 +770,20 @@ Public Sub PedEntTPN_ChangeKNaFosf()
     ModRange.SetRangeValue constKNaFosf, True
 
 End Sub
+
+
+Public Sub PedEntTPN_ChangeVitIntra()
+
+    ModRange.SetRangeValue constVitIntra, True
+
+End Sub
+
+Public Sub PedEntTPN_ChangeSoluvit()
+
+    ModRange.SetRangeValue constSoluvit, True
+
+End Sub
+
 
 Public Sub PedEntTPN_SpecVoed()
     

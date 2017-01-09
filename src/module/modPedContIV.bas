@@ -54,7 +54,7 @@ Public Sub PedContIV_ShowPickList()
             For intN = 1 To constMedIVCount
                 strN = IIf(intN < 10, "0" & intN, intN)
                 intKeuze = ModRange.GetRangeValue(constMedIVKeuze & strN, 1)
-                If intKeuze = 1 Then
+                If intKeuze <= 1 Then
                     intKeuze = frmPickList.GetFirstSelectedMedicament(True)
                     ModRange.SetRangeValue constMedIVKeuze & strN, intKeuze
                     Exit For

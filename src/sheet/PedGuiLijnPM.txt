@@ -1,14 +1,13 @@
 "$D$2: 	=Var_AfspraakDatum
 $F$2: 	=PatDetails!B13
-$H$2: 	=PatDetails!B21
+$G$2: 	=PatDetails!B21
 $J$2: 	=__1_Bed
-$P$2: 	=__1_Bed
 $D$3: 	=PatDetails!B19
 $F$3: 	=PatDetails!B14
-$H$3: 	=PatDetails!B22
+$G$3: 	=PatDetails!B22
 $D$4: 	=PatDetails!B15
 $F$4: 	=PatDetails!B18
-$H$4: 	=PatDetails!B23
+$G$4: 	=PatDetails!B23
 $A$9: 	=PedBerIVenPM!D2
 $G$9: 	=PedBerIVenPM!C2
 $J$9: 	=IF(INDEX(tblInfusenBer,PedBerIVenPM!B2,2)<>0,INDEX(tblInfusenBer,PedBerIVenPM!B2,3))
