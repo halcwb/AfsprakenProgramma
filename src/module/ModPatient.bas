@@ -18,8 +18,6 @@ Private Const constDateReplace As String = "{DATEFORMAT}"
 Private Const constDateFormula As String = ""
 Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
 
-
-
 Public Function PatientAchterNaam() As String
 
     PatientAchterNaam = ModRange.GetRangeValue(constAN, vbNullString)

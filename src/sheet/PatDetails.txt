@@ -1,5 +1,5 @@
 "$B$11: 	= TODAY()
-$B$13: 	=IF(_Pat_OpnDatum>EmptyDate(),TEXT(_Pat_OpnDatum,dd-mmm-yy)&"" ""&B20,"""")
+$B$13: 	=IF(IsEmptyDate(_Pat_OpnDatum),"""",DateToString(_Pat_OpnDatum)&"" ""&B20)
 $B$14: 	=IF(NOW()-__4_GebDatum>100,"""",TEXT(__4_GebDatum,""dd-mmm-yy""))
 $B$15: 	=IF(__0_PatNum>0,__0_PatNum,"""")
 $B$16: 	=IF(((Var_AfspraakDatum-__4_GebDatum)/365)>100,"""",TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)"")
