@@ -1,14 +1,13 @@
 "$C$2: 	=Var_AfspraakDatum
-$E$2: 	=_Pat_OpnDatum
-$F$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_Pat_OpnDatum+1
-$H$2: 	=__1_Bed
-$C$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
-$E$3: 	=__4_GebDatum
-$F$3: 	=""Gewicht: ""&_Pat_Gewicht/10&"" kg""
-$G$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
-$C$4: 	=__0_PatNum
-$E$4: 	=PatDetails!B16
-$G$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
+$E$2: 	=PatDetails!B13
+$F$2: 	=PatDetails!B21
+$I$2: 	=__1_Bed
+$C$3: 	=PatDetails!B19
+$E$3: 	=PatDetails!B14
+$F$3: 	=PatDetails!B22
+$C$4: 	=PatDetails!B15
+$E$4: 	=PatDetails!B18
+$F$4: 	=PatDetails!B23
 $C$8: 	=IF(PedBerAfspr!C7=0,"""",PedBerAfspr!C7)
 $C$9: 	=IF(PedBerAfspr!C8=0,"""",PedBerAfspr!C8)
 $G$9: 	=CONCATENATE(""à "",PedBerAfspr!G16,"" uur"")
@@ -20,8 +19,8 @@ $C$18: 	=CONCATENATE(PedBerAfspr!$C$42,"" dd"")
 $F$18: 	=IF(_Ped_AfsprOverig=0,"""",_Ped_AfsprOverig)
 $C$19: 	=CONCATENATE(PedBerAfspr!$C$43,"" dd"")
 $D$35: 	=PedBerAfspr!D40
-$C$41: 	=IFERROR(LEFT(Var_Ped_AfsprControles,LEN(Var_Ped_AfsprControles)-3),"""")
-$C$42: 	=IFERROR(LEFT(Var_Ped_AfsprOnderzoeken,LEN(Var_Ped_AfsprOnderzoeken)-3),"""")
-$C$43: 	=IFERROR(LEFT(Var_Ped_AfsprInstellingen,LEN(Var_Ped_AfsprInstellingen)-3),"""")
-$C$44: 	=IFERROR(LEFT(Var_Ped_AfsprOverig,LEN(Var_Ped_AfsprOverig)-3),"""")
+$C$38: 	=IFERROR(LEFT(Var_Ped_AfsprControles,LEN(Var_Ped_AfsprControles)-3),"""")
+$C$39: 	=IFERROR(LEFT(Var_Ped_AfsprOnderzoeken,LEN(Var_Ped_AfsprOnderzoeken)-3),"""")
+$C$40: 	=IFERROR(LEFT(Var_Ped_AfsprInstellingen,LEN(Var_Ped_AfsprInstellingen)-3),"""")
+$C$41: 	=IFERROR(LEFT(Var_Ped_AfsprOverig,LEN(Var_Ped_AfsprOverig)-3),"""")
 "

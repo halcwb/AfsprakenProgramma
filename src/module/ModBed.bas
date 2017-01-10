@@ -287,6 +287,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     End If
     
     Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
         
     strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.Count)
     strTextRange = "A1:C" + CStr(shtPatText.Range("C1").CurrentRegion.Rows.Count)
@@ -317,7 +318,9 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     End With
             
     If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 100
+    
     Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
         
     SaveBedToFile = True
         

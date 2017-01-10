@@ -49,10 +49,10 @@ $C$48: 	=GlobBerMedDisc!AC28
 $C$49: 	=GlobBerMedDisc!AC29
 $C$50: 	=GlobBerMedDisc!AC30
 $C$51: 	=GlobBerMedDisc!AC31
-$C$52: 	=IF(PedGuiAfspr!C41="""","""",CONCATENATE(PedGuiAfspr!B41,"": "",PedGuiAfspr!C41))
-$C$53: 	=IF(PedGuiAfspr!C42="""","""",CONCATENATE(PedGuiAfspr!B42,"": "",PedGuiAfspr!C42))
-$C$54: 	=IF(PedGuiAfspr!C43="""","""",CONCATENATE(PedGuiAfspr!B43,"": "",PedGuiAfspr!C43))
-$C$55: 	=IF(PedGuiAfspr!C44="""","""",CONCATENATE(PedGuiAfspr!B44,"": "",PedGuiAfspr!C44))
+$C$52: 	=IF(PedGuiAfspr!C38="""","""",CONCATENATE(PedGuiAfspr!B38,"": "",PedGuiAfspr!C38))
+$C$53: 	=IF(PedGuiAfspr!C39="""","""",CONCATENATE(PedGuiAfspr!B39,"": "",PedGuiAfspr!C39))
+$C$54: 	=IF(PedGuiAfspr!C40="""","""",CONCATENATE(PedGuiAfspr!B40,"": "",PedGuiAfspr!C40))
+$C$55: 	=IF(PedGuiAfspr!C41="""","""",CONCATENATE(PedGuiAfspr!B41,"": "",PedGuiAfspr!C41))
 $C$56: 	=IF(PedPrtAfspr!C39<>0,PedPrtAfspr!C39,"""")
 $C$57: 	=IF(PedPrtAfspr!C40<>0,PedPrtAfspr!C40,"""")
 $C$58: 	=IF(PedPrtAfspr!C41<>0,PedPrtAfspr!C41,"""")
@@ -68,7 +68,7 @@ $C$67: 	=IF(PedPrtAfspr!E77<>"""",PedPrtAfspr!D77&"": ""&PedPrtAfspr!E77,"""")&I
 $C$68: 	=IF(PedPrtAfspr!E85<>"" "",PedPrtAfspr!D85&"": ""&PedPrtAfspr!E85,"""")
 $C$69: 	=IF(PedPrtAfspr!E87<>"""",PedPrtAfspr!D87&"": ""&PedPrtAfspr!E87,"""")&IF(PedPrtAfspr!F88<>"""","", ""&PedPrtAfspr!D88&"" ""&PedPrtAfspr!F88,"""")&IF(PedPrtAfspr!F89<>"""","", ""&PedPrtAfspr!D89&"" ""&PedPrtAfspr!F89,"""")&IF(PedPrtAfspr!F90<>"""","", ""&PedPrtAfspr!D90&"" ""&PedPrtAfspr!F90,"""")
 $C$70: 	=IF(PedPrtAfspr!I70<>"""",PedPrtAfspr!H70&"": ""&PedPrtAfspr!I70,"""")&IF(PedPrtAfspr!J71<>"""","", ""&PedPrtAfspr!H71&"" ""&PedPrtAfspr!J71,"""")&IF(PedPrtAfspr!J72<>"""","", ""&PedPrtAfspr!H72&"" ""&PedPrtAfspr!J72,"""")&IF(PedPrtAfspr!J73<>"""","", ""&PedPrtAfspr!H73&"" ""&PedPrtAfspr!J73,"""")
-$C$71: 	=IF(PedGuiEntTPN!D39<>0,""Opmerkingen: ""&PedGuiEntTPN!D39,"""")
+$C$71: 	=IF(PedGuiEntTPN!E39<>0,""Opmerkingen: ""&PedGuiEntTPN!E39,"""")
 $C$72: 	=IF(PedPrtAfspr!D15<>"""",PedPrtAfspr!C15&"": ""&PedPrtAfspr!D15,"""")
 $C$73: 	=IF(PedPrtAfspr!D16<>"""",PedPrtAfspr!C16&"": ""&PedPrtAfspr!D16,"""")
 $C$74: 	=IF(PedPrtAfspr!D17<>"""",PedPrtAfspr!C17&"": ""&PedPrtAfspr!D17,"""")

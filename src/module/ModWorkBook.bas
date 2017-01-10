@@ -135,6 +135,7 @@ Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook 
     strJob = "Kopieer Data Van File"
     With Application
         .DisplayAlerts = False
+        .ScreenUpdating = False
         
         ' Clear the target sheet
         shtTarget.Range("A1").CurrentRegion.Clear
@@ -158,6 +159,7 @@ Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook 
         If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 100
         
         .DisplayAlerts = True
+        .ScreenUpdating = True
     End With
         
     CopyWorkbookRangeToSheet = True

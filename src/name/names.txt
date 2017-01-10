@@ -1882,6 +1882,7 @@ Var_Neo_WerkbriefTPNSoluvitTekst:	=NeoPrtWerkbr!$H$12
 Var_Neo_WerkbriefTPNStand:	=NeoPrtWerkbr!$A$8
 Var_Neo_WerkbriefTPNTotaalBreuk:	=NeoPrtWerkbr!$N$17
 Var_Neo_WerkbriefTPNTotaalGeheel:	=NeoPrtWerkbr!$M$17
+Var_Pat_OpnameDat:	=PatDetails!$B$13
 Var_Ped_AfsprControles:	=PedBerAfspr!$B$47
 Var_Ped_AfsprInstellingen:	=PedBerAfspr!$B$49
 Var_Ped_AfsprOnderzoeken:	=PedBerAfspr!$B$48

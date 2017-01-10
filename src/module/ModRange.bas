@@ -1,6 +1,10 @@
 Attribute VB_Name = "ModRange"
 Option Explicit
 
+Private Const constReplEmpty As String = "{EMPTY}"
+Private Const constReplRefersTo As String = "{REFERSTO}"
+Private Const constRefreshFormula As String = "=IF(ISBLANK({REFERSTO}),{EMPTY},{REFERSTO})"
+
 Private Function GetRow(ByVal sheetName As String, ByVal searchString As String) As Integer
 
     Dim currentRow As Integer
@@ -346,6 +350,7 @@ Public Sub RefreshPatientData()
     Dim intN As Integer
     Dim intC As Integer
     Dim strName As String
+    Dim strFormula As String
     Dim objName As Name
     
     ModProgress.StartProgress "Ververs Patient Data Blad"
@@ -355,7 +360,11 @@ Public Sub RefreshPatientData()
         strName = shtPatData.Cells(intN, 1).Value2
         If NameExists(strName) Then
             Set objName = WbkAfspraken.Names(strName)
-            shtPatData.Cells(intN, 2).Formula = objName.RefersTo
+            strFormula = Strings.Replace(objName.RefersTo, "=", "")
+            strFormula = Strings.Replace(constRefreshFormula, constReplRefersTo, strFormula)
+            strFormula = Strings.Replace(strFormula, constReplEmpty, Chr(34) & Chr(34))
+            
+            shtPatData.Cells(intN, 2).Formula = strFormula
         End If
         
         ModProgress.SetJobPercentage "Ververs", intC, intN

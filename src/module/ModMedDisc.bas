@@ -252,7 +252,8 @@ Public Sub GetMedicamenten(ByRef objFormularium As ClassFormularium, ByVal blnSh
     strSheet = "Table"
     
     Application.DisplayAlerts = False
-
+    Application.ScreenUpdating = False
+    
     strFileName = ModMedDisc.GetFormulariumDatabasePath() + strName
 
     Workbooks.Open strFileName, True, True
@@ -283,7 +284,9 @@ Public Sub GetMedicamenten(ByRef objFormularium As ClassFormularium, ByVal blnSh
     Next intN
     
     Workbooks(strName).Close
+
     Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
     
     Exit Sub
     

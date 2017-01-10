@@ -1,13 +1,11 @@
 "$D$2: 	=Var_AfspraakDatum
-$H$2: 	=_Pat_OpnDatum
-$I$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_Pat_OpnDatum+1
-$J$2: 	=""Gewicht: ""&_Pat_Gewicht/10&"" kg""
-$D$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
-$H$3: 	=__4_GebDatum
-$J$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
-$D$4: 	=__0_PatNum
-$H$4: 	=PatDetails!B16
-$J$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
-$D$5: 	=__1_Bed
-$C$43: 	=IF(_Ped_Lab_Opm=0,"""",_Ped_Lab_Opm)
+$H$2: 	=PatDetails!B13
+$J$2: 	=PatDetails!B21
+$D$3: 	=PatDetails!B19
+$H$3: 	=PatDetails!B14
+$J$3: 	=PatDetails!B22
+$D$4: 	=PatDetails!B15
+$H$4: 	=PatDetails!B18
+$J$4: 	=PatDetails!B23
+$D$43: 	=IF(_Ped_Lab_Opm=0,"""",_Ped_Lab_Opm)
 "

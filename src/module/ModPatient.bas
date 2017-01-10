@@ -12,6 +12,14 @@ Private Const constDagen As String = "_Pat_Dagen"
 Private Const constWeken As String = "_Pat_Weken"
 Private Const constGebGew As String = "_Pat_GebGew"
 
+Private Const constDateFormatDutch As String = "dd-mmm-jj"
+Private Const constDateFormatEnglish As String = "dd-mmm-yy"
+Private Const constDateReplace As String = "{DATEFORMAT}"
+Private Const constDateFormula As String = ""
+Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
+
+
+
 Public Function PatientAchterNaam() As String
 
     PatientAchterNaam = ModRange.GetRangeValue(constAN, vbNullString)

@@ -7,6 +7,14 @@ Private blnCloseHaseRun As Boolean
 Private Const constVersie As String = "Var_Glob_Versie"
 Private Const constDate As String = "Var_AfspraakDatum"
 
+Private Const constDateFormatDutch As String = "dd-mmm-jj"
+Private Const constDateFormatEnglish As String = "dd-mmm-yy"
+Private Const constReplDate As String = "{DATEFORMAT}"
+Private Const constReplSpace As String = "{SPACE}"
+Private Const constReplEmpty As String = "{EMPTYSTRING}"
+Private Const constDateFormula As String = "=IF(_Pat_OpnDatum>EmptyDate(),TEXT(_Pat_OpnDatum,{DATEFORMAT})&{SPACE}&B20,{EMPTYSTRING})"
+Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
+
 Public Enum EnumAppLanguage
     Dutch = 1043
     English = 0
@@ -98,6 +106,8 @@ Private Sub SetWindow(ByRef objWindow As Window, ByRef blnDisplay As Boolean)
         .DisplayHeadings = blnDisplay
         .DisplayOutline = blnDisplay
         .DisplayZeros = blnDisplay
+        .DisplayVerticalScrollBar = True
+        .DisplayHorizontalScrollBar = blnDisplay
         .WindowState = xlMaximized
     End With
 
@@ -127,32 +137,33 @@ Public Sub InitializeAfspraken()
     strParams = Array()
     
     ModLog.LogActionStart strAction, strParams
-    
-    Application.WindowState = xlMaximized
-    
+        
     ModProgress.StartProgress "Start Afspraken Programma"
+        
+    SetCaptionAndHideBars              ' Setup Excel Application
     
-    ModSheet.SelectPedOrNeoStartSheet ' Select the first GUI sheet
-    DoEvents                          ' Make sure sheet is shown before proceding
+    ModSheet.SelectPedOrNeoStartSheet  ' Select the first GUI sheet
+    DoEvents                           ' Make sure sheet is shown before proceding
+    ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)
+    DoEvents
     
     Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
     
     ' Setup sheets
     ModSheet.ProtectUserInterfaceSheets True
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
-    ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)
-
-    ' Setup Excel Application
-    SetCaptionAndHideBars
+    
+    Application.ScreenUpdating = True
+    
+    ' Localization of formula's
+    SetOpnameDateFormula
     
     ' Clean everything
     ModRange.SetRangeValue constVersie, vbNullString
     ModPatient.PatientClearAll False, True ' Default start with no patient
-    ModSetting.SetDevelopmentMode False ' Default development mode is false
+    ModSetting.SetDevelopmentMode False    ' Default development mode is false
     
     ModProgress.FinishProgress
-    
-    Application.ScreenUpdating = True
     
     ModLog.LogActionEnd strAction
         
@@ -185,10 +196,11 @@ Private Sub SetCaptionAndHideBars()
     SetApplicationTitle
     
     With Application
-         .DisplayFormulaBar = blnIsDevelop
-         .DisplayStatusBar = blnIsDevelop
-         .DisplayFullScreen = False
-         .DisplayScrollBars = True
+        .DisplayFormulaBar = blnIsDevelop
+        .DisplayStatusBar = blnIsDevelop
+        .DisplayFullScreen = False
+        .DisplayScrollBars = True
+        .WindowState = xlMaximized
     End With
     
 End Sub
@@ -267,4 +279,36 @@ Public Function IsNeoDir() As Boolean
     IsNeoDir = HasInPath(ModSetting.GetNeoDir())
 
 End Function
+
+Private Sub SetOpnameDateFormula()
+
+    Dim strFormula As String
+    Dim strError As String
+    
+    Select Case GetLanguage()
+    
+        Case Dutch
+            strFormula = Strings.Replace(constDateFormula, constReplDate, constDateFormatDutch)
+            
+        Case English
+            strFormula = Strings.Replace(constDateFormula, constReplDate, constDateFormatEnglish)
+        Case Else
+            GoTo SetOpnameDateFormulaError
+    
+    End Select
+    
+    strFormula = Strings.Replace(strFormula, constReplSpace, Chr(34) & " " & Chr(34))
+    strFormula = Strings.Replace(strFormula, constReplEmpty, Chr(34) & Chr(34))
+    
+    ModRange.SetRangeFormula constOpnameDate, strFormula
+    
+    Exit Sub
+    
+SetOpnameDateFormulaError:
+
+    strError = "Language setting is not supported. Only English and Dutch"
+    ModMessage.ShowMsgBoxError "Language setting is not supported. Only English and Dutch"
+    ModLog.LogError strError
+
+End Sub
 
