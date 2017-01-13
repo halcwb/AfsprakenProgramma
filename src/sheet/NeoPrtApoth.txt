@@ -1,7 +1,7 @@
 "$J$1: 	=TODAY()
 $N$1: 	=__1_Bed
 $D$2: 	=__3_VoorNaam&"" ""&__2_AchterNaam
-$J$2: 	=IF(_Neo_InfB_Arts>0,_Neo_InfB_Arts,"""")
+$J$2: 	=IF(Var_Neo_InfB_Arts>0,Var_Neo_InfB_Arts,"""")
 $N$2: 	=NOW()
 $D$3: 	=(_Pat_Gewicht/10)
 $B$5: 	=IF(NeoPrtWerkbr!C26<>""zijlijn"",NeoPrtWerkbr!A26,"""")

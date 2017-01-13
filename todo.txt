@@ -27,3 +27,36 @@
 	- Aanpassen van code voor ophalen van medicatie. Met name toevoegen van GPK, ATC, indicatie en etiket tekst.
 	- Aanpassen van inplannen van medicatie, toevoegen van originele etiket tekst en GPK nummer.
 	- Updaten van de medicatie services. Met name ophalen van medicatie historie.
+	
+
+Dutch
+
+Bespreking 11-jan-2017
+
+- Neo_Remove -> rename to Change
+- Neo quick pick for voeding/continue medicatie
+- Neo overzetten act -> 17:00 alles, 17:00 -> act obv keuze
+- MetaVision parameter voor voeding bestelling
+- Enterale zouten doseren in mL
+- Continue medicatie naar 12 stuks
+- Continue medicatie instellingen: vol op 12, stand op 0,5 gluc 10%, uitgezonderd NaCl voor...
+- Doorekenen disc med in totalen
+- TPN adviezen herzien -> wordt aangeleverd door Daniel Vijlbrief
+
+
+Documentatie
+- Handleiding gebruiker
+- Administratie:
+	- Installatie
+	- Toevoegen continue medicatie
+	- Toevoegen discontinue medicatie
+
+- Med disc formulier, disabling bij GPK
+- Verw opmerking
+- Aanpassen layout headers (met name leeftijd)
+- Frequenties aanpassen
+- Indien voeding verwijderen dan ook toevoegingen
+- Lab -> Chloor doorzichtig
+- Verw lab voor kolommen
+- Blanco waarde pupil controle
+- Empty date in patient lijst niet tonen	

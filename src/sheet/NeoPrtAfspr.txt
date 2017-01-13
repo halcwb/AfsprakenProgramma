@@ -16,7 +16,7 @@ $D$9: 	=NeoGui1700!C14
 $I$9: 	=NeoGui1700!G16
 $K$9: 	=NeoGui1700!H16
 $B$10: 	=NeoGui1700!B15
-$F$10: 	=_Neo_InfB_Arts
+$F$10: 	=Var_Neo_InfB_Arts
 $I$10: 	=""Leeftijd: ""&NeoGui1700!$H$15
 $B$13: 	=NeoGui1700!B18
 $F$13: 	=NeoGui1700!E18
@@ -65,7 +65,7 @@ $B$28: 	=IF(NeoBer1700!J14=1,""De voeding is extra"","""")
 $B$30: 	=NeoGui1700!B28
 $G$30: 	=NeoGui1700!E28
 $H$30: 	=NeoGui1700!F28
-$B$32: 	=IF(_Neo_InfB_ArtLijn>0,NeoGui1700!B30,"""")
+$B$32: 	=IF(Var_Neo_InfB_ArtLijn>0,NeoGui1700!B30,"""")
 $K$32: 	=IF(NeoGui1700!G30<> ""0 ml/uur"",NeoGui1700!G30,"""")
 $P$32: 	=IF(B32="""","""",IF(NeoBer1700!J18,""ja"",""nee""))
 $B$33: 	=INDEX(tbl_Neo_MedIV,NeoBer1700!B20,1)

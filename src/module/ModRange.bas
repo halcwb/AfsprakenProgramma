@@ -306,6 +306,8 @@ Public Sub ReplaceRangeNames()
     Dim intC As Integer
     Dim strOld As String
     Dim strNew As String
+    Dim strRefersTo As String
+    Dim objRange As Range
     
     ModProgress.StartProgress "Namen Vervangen"
     
@@ -316,12 +318,22 @@ Public Sub ReplaceRangeNames()
         If strNew <> vbNullString Then
             strOld = shtGlobNames.Cells(intN, 2).Value2
             
-            WbkAfspraken.Names(strOld).Name = strNew
+            If ModRange.NameExists(strOld) Then
+                WbkAfspraken.Names(strOld).Name = strNew
+            Else
+                strRefersTo = shtGlobNames.Cells(intN, 1).Value2
+                If strRefersTo <> vbNullString Then
+                    Set objRange = Range(strRefersTo)
+                    SetNameToRange strNew, objRange
+                End If
+            End If
         End If
         
         ModProgress.SetJobPercentage "Vervang", intC, intN
     
     Next intN
+    
+    Set objRange = Nothing
     
     ModProgress.FinishProgress
     ModMessage.ShowMsgBoxExclam "Names have been replaced"
