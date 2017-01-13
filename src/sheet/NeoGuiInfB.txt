@@ -5,6 +5,7 @@ $E$3: 	=ROUND(NeoBerInfB!K47/(_Pat_Gewicht/10),0)&"" ml/kg  ""&""= ""&ROUND(NeoB
 $H$3: 	=ROUND(NeoBerInfB!L50/(_Pat_Gewicht/10),1)&"" mmol/kg""
 $I$3: 	=ROUND(NeoBerInfB!L49/(_Pat_Gewicht/10),1)&"" mmol/kg""
 $J$3: 	=ROUND(NeoBerInfB!L47/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$K$3: 	=NeoBerInfB!H1
 $C$4: 	=ROUND(NeoBerInfB!Q50/(_Pat_Gewicht/10),1)&"" g/kg""
 $D$4: 	=ROUND(NeoBerInfB!Q49/(_Pat_Gewicht/10),1)&"" g/kg""
 $E$4: 	=ROUND(NeoBerInfB!Q47/(_Pat_Gewicht/10),1)&"" g/kg""

@@ -3,6 +3,100 @@ Option Explicit
 
 Private Const constTblMedIV As String = "tbl_Neo_MedIV"
 
+Private Const constActInfB = "Actuele Afspraken"
+Private Const const1700InfB As String = "17.00 uur Afspraken"
+Private Const constInfbVersie = "H1"
+
+Private Const constInfBVa = "Var_Neo_InfB"
+Private Const constInfBDataAct = "_Neo_InfB"
+Private Const constInfBData1700 = "_Neo_1700"
+
+Private Function Is1700() As Boolean
+
+    Is1700 = shtNeoBerInfB.Range(constInfbVersie) = const1700InfB
+
+End Function
+
+Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, blnShowProgress As Boolean)
+
+    Dim objName As Name
+    Dim strStartsWith As String
+    Dim varVarValue As Variant
+    Dim varDataValue As Variant
+    Dim strVarName As String
+    Dim strDataName As String
+    
+    Dim intN As Integer
+    Dim intC As Integer
+    
+    strStartsWith = IIf(bln1700, constInfBData1700, constInfBDataAct)
+    
+    intN = 1
+    intC = WbkAfspraken.Names.Count
+    For Each objName In WbkAfspraken.Names
+        If ModString.StartsWith(objName.Name, strStartsWith) Then
+            strDataName = objName.Name
+            strVarName = "Var" & IIf(bln1700, Strings.Replace(objName.Name, "1700", "InfB"), objName.Name)
+            
+            varVarValue = ModRange.GetRangeValue(strVarName, vbNullString)
+            varDataValue = ModRange.GetRangeValue(strDataName, vbNullString)
+            
+            If blnToVar Then
+                ModRange.SetRangeValue strVarName, varDataValue
+            Else
+                ModRange.SetRangeValue strDataName, varVarValue
+            End If
+            
+            If blnShowProgress Then
+                ModProgress.SetJobPercentage "Data verplaatsen", intC, intN
+                intN = intN + 1
+            End If
+            
+        End If
+    Next
+
+End Sub
+
+Private Sub TestCopyVarData()
+
+    CopyVarData True, True, True
+
+End Sub
+
+Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean)
+
+    If bln1700 And Is1700() Then                ' InfB is same as 1700
+        ModSheet.GoToSheet shtNeoGuiInfB, "A9"
+        
+    ElseIf Not bln1700 And Not Is1700() Then     ' InfB is same as act
+        ModSheet.GoToSheet shtNeoGuiInfB, "A9"
+        
+    ElseIf bln1700 And Not Is1700() Then         ' Infb is currently act
+        ModProgress.StartProgress "Infuus brief klaar maken"
+        
+        CopyVarData False, False, True   ' First copy var data to act data
+        CopyVarData True, True, True   ' Then copy 1700 data to var data
+        shtNeoBerInfB.Range(constInfbVersie).Value2 = const1700InfB
+        
+        ModProgress.FinishProgress
+        
+        ModSheet.GoToSheet shtNeoGuiInfB, "A9"
+    
+    ElseIf Not bln1700 And Is1700() Then         ' Infb is currently 1700
+        ModProgress.StartProgress "Infuus brief klaar maken"
+        
+        CopyVarData True, False, True ' First copy var data to act data
+        CopyVarData False, True, True   ' Then copy act data to var data
+        shtNeoBerInfB.Range(constInfbVersie).Value2 = constActInfB
+        
+        ModProgress.FinishProgress
+        
+        ModSheet.GoToSheet shtNeoGuiInfB, "A9"
+    
+    End If
+
+End Sub
+
 
 ' ToDo: Add comment
 Public Sub NeoInfB_CopyActTo1700()

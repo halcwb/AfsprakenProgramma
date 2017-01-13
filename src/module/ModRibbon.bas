@@ -59,7 +59,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpNeonatologie                                    ' -- NEONATOLOGIE --
         
         Case "btnNeoMedIV"                                  ' -> Infuusbrief
-            ModSheet.GoToSheet shtNeoGuiInfB, "A9"
+            ModNeoInfB.NeoInfB_SelectInfB False
         
         Case "btnNeoMedDisc"                                ' -> Discontinue Medicatie
             ModSheet.GoToSheet shtGlobGuiMedDisc, "A6"
@@ -74,7 +74,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoGuiLab, "A1"
         
         Case "btnNeo1700"                                   ' -> Infuusbrief 17:00
-            ModSheet.GoToSheet shtNeoGui1700, "A9"
+            ModNeoInfB.NeoInfB_SelectInfB True
         
         'grpRemoveData                                      ' -- ACTIES --
                 
@@ -126,7 +126,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoPrtApoth, "A1"
         
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
-            ModSheet.GoToSheet shtNeoPrtWerkbr, "A1"
+            ' ModSheet.GoToSheet shtNeoPrtWerkbr, "A1"
             
         'grpDevelopment                                     ' -- DEVELOPMENT --
         
