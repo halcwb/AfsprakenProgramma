@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPatient 
    Caption         =   "Nieuwe patient"
-   ClientHeight    =   3367
+   ClientHeight    =   3360
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   9045

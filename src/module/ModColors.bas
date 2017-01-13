@@ -39,7 +39,7 @@ Private Sub SetRangeColor(ByRef objTarget As Range, objSetting As Range, ByVal b
 
 End Sub
 
-Public Sub ModColors_ColorRanges()
+Public Sub ColorPedRanges()
 
     Dim objPed As Range
     Dim objSettings As Range
@@ -62,10 +62,14 @@ Public Sub ModColors_ColorRanges()
     Set objSettings = shtGlobSettings.Range(constColorSettings).CurrentRegion
     Set objPed = shtGlobSettings.Range(constPedTable).CurrentRegion
     
+    ModProgress.StartProgress "Kleuren Instellen"
+    
     intC = objSettings.Rows.Count
     For intN = 2 To intC
         strSetting = objSettings.Cells(intN, 1).Value2
         blnSheet = False
+        
+        ModProgress.SetJobPercentage strSetting, intC, intN
         
         If strSetting = "Backgrounds" Then
             lngBackGround = objSettings.Cells(intN, 2).Interior.Color
@@ -78,6 +82,7 @@ Public Sub ModColors_ColorRanges()
             strSheet = objPed.Cells(intTargetN, 1).Value2
             strTarget = objPed.Cells(intTargetN, 2).Value2
             strRange = Strings.Replace(objPed.Cells(intTargetN, 3).Formula, "=", vbNullString)
+            strRange = Strings.Replace(strRange, strSheet & "!", vbNullString)
             
             If strTarget = strSetting And Not strRange = vbNullString Then
                 Set objSetting = objSettings.Cells(intN, 2)
@@ -94,6 +99,8 @@ Public Sub ModColors_ColorRanges()
             End If
         Next
     Next
+    
+    ModProgress.FinishProgress
 
 End Sub
 

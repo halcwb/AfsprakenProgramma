@@ -1,6 +1,18 @@
 Attribute VB_Name = "ModAdmin"
 Option Explicit
 
+Public Sub ShowColorPicker()
+
+    Dim frmPicker As FormColorPicker
+    
+    Set frmPicker = New FormColorPicker
+    
+    frmPicker.Show
+    
+    Set frmPicker = Nothing
+
+End Sub
+
 ' ToDo add methods to setup data files and refresh patient data admin jobs
 
 Private Sub SetUpDataDir(ByRef arrBeds() As Variant)

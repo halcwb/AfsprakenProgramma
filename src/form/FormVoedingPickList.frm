@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormVoedingPickList 
    Caption         =   "Kies Voedingen ..."
-   ClientHeight    =   7861
+   ClientHeight    =   7875
    ClientLeft      =   15
    ClientTop       =   315
    ClientWidth     =   6705

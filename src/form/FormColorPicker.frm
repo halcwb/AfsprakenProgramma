@@ -42,6 +42,21 @@ Private Sub Validate()
 
 End Sub
 
+Private Sub ColorRanges()
+
+    If optPed.Value Then
+        WriteGroup constPed
+        ModColors.ColorPedRanges
+    End If
+    
+    If optNeo.Value Then
+        WriteGroup constNeo
+        MsgBox "Nog niet werkzaam"
+    End If
+    
+
+End Sub
+
 Private Sub SetLabelBold(blnBold As Boolean)
 
     Dim objCtrl As MSForms.Label
@@ -201,10 +216,9 @@ End Sub
 
 Private Sub cmdApply_Click()
 
-    If optPed.Value Then WriteGroup constPed
-    If optNeo.Value Then WriteGroup constNeo
-    
-    ModColors.ModColors_ColorRanges
+    Hide
+    ColorRanges
+    Show
 
 End Sub
 
@@ -276,11 +290,8 @@ End Sub
 
 Private Sub cmdOK_Click()
 
-    If optPed.Value Then WriteGroup constPed
-    If optNeo.Value Then WriteGroup constNeo
-    
-    ModColors.ModColors_ColorRanges
     Hide
+    ColorRanges
 
 End Sub
 

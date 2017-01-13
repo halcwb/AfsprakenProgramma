@@ -150,7 +150,8 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         'grpAdmin                                           ' -- ADMISTRATION --
         
-        
+        Case "btnSetColors"                                 ' -> Kleuren Instellen
+             ModAdmin.ShowColorPicker
         
         Case Else
             MsgBox ctrlMenuItem.Id & " has no select case", vbCritical
