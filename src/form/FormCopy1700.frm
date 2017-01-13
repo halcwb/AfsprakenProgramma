@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormCopy1700 
    Caption         =   "17.00 uur Afspraken overnemen naar actuele afspraken"
-   ClientHeight    =   11123
+   ClientHeight    =   11130
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   16590
@@ -53,6 +53,7 @@ Private Sub AddItemToList(ByVal strList As String, ByVal strItem As String, ByVa
     strItem = IIf(bln1700, Replace(strItem, "#", "1700"), Replace(strItem, "#", "InfB"))
     strItem = IIf(intN < 10, strItem & "_0" & intN, strItem & "_" & intN)
     
+    On Error Resume Next ' ToDo Improve error handling in Rubberduck
     Me.Controls(strList).AddItem ModRange.GetRangeValue(strItem, vbNullString)
     
 End Sub
