@@ -15,8 +15,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Const constVoeding As String = "Var_Neo_#_ContIV"
-Private Const constIVCont As String = "Var_Neo_#_Voeding"
+Private Const constVoeding As String = "Txt_Neo_InfB_ContIV"
+Private Const constIVCont As String = "Txt_Neo_InfB_Voeding"
 
 Private Sub cmdCancel_Click()
     
@@ -50,7 +50,6 @@ End Sub
 Private Sub AddItemToList(ByVal strList As String, ByVal strItem As String, ByVal intN As Integer, ByVal bln1700 As Boolean)
 
     strList = IIf(bln1700, Replace(strList, "Act", "1700"), strList)
-    strItem = IIf(bln1700, Replace(strItem, "#", "1700"), Replace(strItem, "#", "InfB"))
     strItem = IIf(intN < 10, strItem & "_0" & intN, strItem & "_" & intN)
     
     On Error Resume Next ' ToDo Improve error handling in Rubberduck
@@ -58,31 +57,57 @@ Private Sub AddItemToList(ByVal strList As String, ByVal strItem As String, ByVa
     
 End Sub
 
-Private Sub UserForm_Activate()
+Private Sub UserForm_Initialize()
 
     Dim intN As Integer
     Dim strList As String
     Dim strItem As String
     
+    
+    ModProgress.StartProgress "Afspraken laden"
+    
+    ' First get the actual items
+    ModNeoInfB.NeoInfB_SelectInfB False
+    
     strList = "lstActVoed"
     strItem = constVoeding
     For intN = 1 To 15
-        AddItemToList strList, strItem, intN, True
         AddItemToList strList, strItem, intN, False
     Next intN
 
     strList = "lstActMed"
     strItem = constIVCont
     For intN = 1 To 15
-        AddItemToList strList, strItem, intN, True
         AddItemToList strList, strItem, intN, False
     Next intN
 
     strList = "lstActTPN"
     strItem = constIVCont
     For intN = 16 To 27
-        AddItemToList strList, strItem, intN, True
         AddItemToList strList, strItem, intN, False
     Next intN
+    
+    ' Then get the 1700 items
+    ModNeoInfB.NeoInfB_SelectInfB True
+    
+    strList = "lstActVoed"
+    strItem = constVoeding
+    For intN = 1 To 15
+        AddItemToList strList, strItem, intN, True
+    Next intN
+
+    strList = "lstActMed"
+    strItem = constIVCont
+    For intN = 1 To 15
+        AddItemToList strList, strItem, intN, True
+    Next intN
+
+    strList = "lstActTPN"
+    strItem = constIVCont
+    For intN = 16 To 27
+        AddItemToList strList, strItem, intN, True
+    Next intN
+    
+    ModProgress.FinishProgress
 
 End Sub

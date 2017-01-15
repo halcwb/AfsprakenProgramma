@@ -485,5 +485,4 @@ $O$23: 	=SUM(O3:O22)+SUM(N3:N22)
 $P$23: 	=SUM(P3:P22)
 $Q$23: 	=SUM(Q3:Q22)
 $R$23: 	=SUM(R3:R22)
-$B$27: 	=PedGuiMedIV!B1:N5
 "

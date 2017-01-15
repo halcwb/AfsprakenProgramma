@@ -142,6 +142,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnWriteNames"                                ' -> Write Names
             ModRange.WriteNamesToGlobNames
             
+        Case "btnReplaceNames"                              ' -> Replace Names
+            ModRange.ReplaceRangeNames
+            
         Case "btnRefreshPatientData"                        ' -> Refresh Patient Data
             ModRange.RefreshPatientData
             
@@ -150,11 +153,20 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         'grpAdmin                                           ' -- ADMISTRATION --
         
+        Case "btnOpenSettings"                              ' -> Instellingen
+             ModMessage.ShowMsgBoxExclam "Nog niet geimplementeerd"
+        
         Case "btnSetColors"                                 ' -> Kleuren Instellen
              ModAdmin.ShowColorPicker
         
+        Case "btnCreatePedData"                             ' -> Pediatrie DataFiles
+             ModMessage.ShowMsgBoxExclam "Nog niet geimplementeerd"
+        
+        Case "btnCreateNeoData"                             ' -> Neonatologie DataFiles
+             ModMessage.ShowMsgBoxExclam "Nog niet geimplementeerd"
+        
         Case Else
-            MsgBox ctrlMenuItem.Id & " has no select case", vbCritical
+            ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
             
         
     End Select

@@ -97,7 +97,6 @@ Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean)
 
 End Sub
 
-
 ' ToDo: Add comment
 Public Sub NeoInfB_CopyActTo1700()
 
@@ -268,11 +267,16 @@ End Sub
 Public Sub NeoInfB_ShowFormCopy1700ToAct()
 
     Dim frmCopy1700 As FormCopy1700
+    Dim bln1700 As Boolean
+    
+    bln1700 = Is1700()
     
     Set frmCopy1700 = New FormCopy1700
     frmCopy1700.Show
 
     Set frmCopy1700 = Nothing
+    
+    NeoInfB_SelectInfB bln1700
     
 End Sub
 
@@ -290,7 +294,7 @@ Private Sub test()
 
 End Sub
 
-Private Sub RemoveContIV(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
+Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
 
     Dim strMedicament As String
     Dim varMedicament As Variant
@@ -328,111 +332,57 @@ Private Sub RemoveContIV(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
     
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_1()
+Public Sub NeoInfB_ChangeMedContIV_1()
 
-    RemoveContIV 1, False
+    ChangeMedContIV 1, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_2()
+Public Sub NeoInfB_ChangeMedContIV_2()
     
-    RemoveContIV 2, False
+    ChangeMedContIV 2, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_3()
+Public Sub NeoInfB_ChangeMedContIV_3()
     
-    RemoveContIV 3, False
+    ChangeMedContIV 3, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_4()
+Public Sub NeoInfB_ChangeMedContIV_4()
     
-    RemoveContIV 4, False
+    ChangeMedContIV 4, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_5()
+Public Sub NeoInfB_ChangeMedContIV_5()
     
-    RemoveContIV 5, False
+    ChangeMedContIV 5, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_6()
+Public Sub NeoInfB_ChangeMedContIV_6()
     
-    RemoveContIV 6, False
+    ChangeMedContIV 6, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_7()
+Public Sub NeoInfB_ChangeMedContIV_7()
     
-    RemoveContIV 7, False
+    ChangeMedContIV 7, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_8()
+Public Sub NeoInfB_ChangeMedContIV_8()
     
-    RemoveContIV 8, False
+    ChangeMedContIV 8, False
 
 End Sub
 
-Public Sub NeoInfB_RemoveContIV_9()
+Public Sub NeoInfB_ChangeMedContIV_9()
     
-    RemoveContIV 9, False
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_1()
-
-    RemoveContIV 1, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_2()
-    
-    RemoveContIV 2, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_3()
-    
-    RemoveContIV 3, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_4()
-    
-    RemoveContIV 4, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_5()
-    
-    RemoveContIV 5, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_6()
-    
-    RemoveContIV 6, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_7()
-    
-    RemoveContIV 7, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_8()
-    
-    RemoveContIV 8, True
-
-End Sub
-
-Public Sub NeoInfB_RemoveContIV1700_9()
-    
-    RemoveContIV 9, True
+    ChangeMedContIV 9, False
 
 End Sub
 
@@ -512,59 +462,6 @@ Public Sub NeoInfB_MedConc_9()
 
 End Sub
 
-Public Sub NeoInfB_MedConc1700_1()
-    
-    MedSterkte 1, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_2()
-    
-    MedSterkte 2, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_3()
-    
-    MedSterkte 3, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_4()
-    
-    MedSterkte 4, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_5()
-    
-    MedSterkte 5, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_6()
-    
-    MedSterkte 6, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_7()
-    
-    MedSterkte 7, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_8()
-    
-    MedSterkte 8, True
-
-End Sub
-
-Public Sub NeoInfB_MedConc1700_9()
-    
-    MedSterkte 9, True
-
-End Sub
 
 Private Sub RemoveIV(ByVal intRegel As Integer)
 
@@ -642,18 +539,5 @@ End Sub
 Public Sub NeoInfB_MedText_2()
 
     EnterText "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst_2"
-    
-End Sub
-
-
-Public Sub NeoInfB_MedText1700_1()
-
-    EnterText "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst1700_1"
-    
-End Sub
-
-Public Sub NeoInfB_MedText1700_2()
-
-    EnterText "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst1700_2"
     
 End Sub

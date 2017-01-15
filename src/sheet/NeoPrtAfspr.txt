@@ -65,7 +65,7 @@ $B$28: 	=IF(NeoGuiInfB!J14=1,""De voeding is extra"","""")
 $B$30: 	=NeoGuiInfB!B28
 $G$30: 	=NeoGuiInfB!E28
 $H$30: 	=NeoGuiInfB!F28
-$B$32: 	=IF(Var_Neo_InfB_ArtLijn>0,NeoGuiInfB!B30,"""")
+$B$32: 	=IF(Var_Neo_InfB_Cont_ArtLijn>0,NeoGuiInfB!B30,"""")
 $K$32: 	=IF(NeoGuiInfB!G30<> ""0 ml/uur"",NeoGuiInfB!G30,"""")
 $P$32: 	=IF(B32="""","""",IF(NeoGuiInfB!J18,""ja"",""nee""))
 $B$33: 	=INDEX(tbl_Neo_MedIV,NeoGuiInfB!B20,1)
