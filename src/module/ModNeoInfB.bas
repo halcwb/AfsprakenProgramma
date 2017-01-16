@@ -5,7 +5,7 @@ Private Const constTblMedIV As String = "tbl_Neo_MedIV"
 
 Private Const constActInfB = "Actuele Afspraken"
 Private Const const1700InfB As String = "17.00 uur Afspraken"
-Private Const constInfbVersie = "H1"
+Private Const constInfbVersie = "B2"
 
 Private Const constInfBVa = "Var_Neo_InfB"
 Private Const constInfBDataAct = "_Neo_InfB"

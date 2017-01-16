@@ -1,8 +1,8 @@
 "$B$2: 	=""Patient: ""&__2_AchterNaam&"", ""&__3_VoorNaam
 $B$3: 	=""Geb datum.: ""
 $C$3: 	=__4_GebDatum
-$C$5: 	=_Pat_Weken
-$D$5: 	=_Pat_Dagen
+$C$5: 	=_Pat_GestWeken
+$D$5: 	=_Pat_GestDagen
 $E$5: 	=(_Pat_Gewicht/10)
 $D$7: 	=""Maat: ""&IF((_Pat_Gewicht/10)<1,2.5,IF(AND((_Pat_Gewicht/10)>=1,(_Pat_Gewicht/10)<2),3,3.5))
 $D$8: 	=""Nasaal: ""&((_Pat_Gewicht/10)+6)*1.2

@@ -1,13 +1,13 @@
 "$C$2: 	=Var_AfspraakDatum
-$E$2: 	=PatDetails!B13
-$F$2: 	=PatDetails!B21
+$E$2: 	=PatDetails!B15
+$F$2: 	=PatDetails!B23
 $I$2: 	=__1_Bed
-$C$3: 	=PatDetails!B19
-$E$3: 	=PatDetails!B14
-$F$3: 	=PatDetails!B22
-$C$4: 	=PatDetails!B15
-$E$4: 	=PatDetails!B18
-$F$4: 	=PatDetails!B23
+$C$3: 	=PatDetails!B21
+$E$3: 	=PatDetails!B16
+$F$3: 	=PatDetails!B24
+$C$4: 	=PatDetails!B17
+$E$4: 	=PatDetails!B20
+$F$4: 	=PatDetails!B25
 $C$8: 	=IF(PedBerAfspr!C7=0,"""",PedBerAfspr!C7)
 $C$9: 	=IF(PedBerAfspr!C8=0,"""",PedBerAfspr!C8)
 $G$9: 	=CONCATENATE(""à "",PedBerAfspr!G16,"" uur"")

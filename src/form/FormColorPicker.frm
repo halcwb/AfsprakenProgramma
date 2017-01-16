@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormColorPicker
    ClientHeight    =   7035
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   9495.001
+   ClientWidth     =   9495
    OleObjectBlob   =   "FormColorPicker.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

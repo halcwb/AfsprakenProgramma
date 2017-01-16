@@ -1,7 +1,7 @@
 Attribute VB_Name = "modPedContIV"
 Option Explicit
 
-Private Const constTblMed As String = "tblMedicationContIV"
+Private Const constTblMed As String = "Tbl_Ped_MedContIV"
 Private Const constMedIVKeuze As String = "_Ped_MedIV_Keuze_"
 Private Const constMedIVSterkte As String = "_Ped_MedIV_Sterkte_"
 Private Const constMedIVOpm As String = "_Ped_MedIV_Opm"
@@ -230,9 +230,12 @@ Private Sub SetToStandard(ByVal intN As Integer)
     Dim strStand As String
     Dim strN As String
     Dim intKeuze As Integer
+    Dim intOplKeuze As Integer
     
     On Error GoTo SetToStandardError
 
+    intOplKeuze = 13
+    
     strN = IIf(intN < 10, "0" & intN, intN)
     strMedicament = constMedIVKeuze & strN
     strMedSterkte = constMedIVSterkte & strN
@@ -249,8 +252,8 @@ Private Sub SetToStandard(ByVal intN As Integer)
     
     If intKeuze = 1 Then                         ' No medicament was selected so clear the line
         Clear intN
-    Else                                         ' Else find the right standard concentration
-        varOplossing = Application.VLookup(Range(constTblMed).Cells(intKeuze, 1), Range(constTblMed), 22, False)
+    Else                                         ' Else find the right standard solution
+        varOplossing = Application.VLookup(Range(constTblMed).Cells(intKeuze, 1), Range(constTblMed), intOplKeuze, False)
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
     

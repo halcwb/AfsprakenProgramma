@@ -207,7 +207,7 @@ Public Sub SelectNeoOrPedSheet(ByRef shtPed As Worksheet, ByRef shtNeo As Worksh
     If ModString.ContainsCaseInsensitive(strPath, strPeli) Or blnIsDevelop Then
         GoToSheet shtPed, "A1"
     Else
-        GoToSheet shtNeo, "A1" ' ToDo may change this to allow setting act data?
+        ModNeoInfB.NeoInfB_SelectInfB False
     End If
     
 End Sub

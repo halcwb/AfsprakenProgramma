@@ -1,11 +1,11 @@
 "$D$2: 	=Var_AfspraakDatum
-$H$2: 	=PatDetails!B13
-$J$2: 	=PatDetails!B21
-$D$3: 	=PatDetails!B19
-$H$3: 	=PatDetails!B14
-$J$3: 	=PatDetails!B22
-$D$4: 	=PatDetails!B15
-$H$4: 	=PatDetails!B18
-$J$4: 	=PatDetails!B23
+$H$2: 	=PatDetails!B15
+$J$2: 	=PatDetails!B23
+$D$3: 	=PatDetails!B21
+$H$3: 	=PatDetails!B16
+$J$3: 	=PatDetails!B24
+$D$4: 	=PatDetails!B17
+$H$4: 	=PatDetails!B20
+$J$4: 	=PatDetails!B25
 $D$43: 	=IF(_Ped_Lab_Opm=0,"""",_Ped_Lab_Opm)
 "
