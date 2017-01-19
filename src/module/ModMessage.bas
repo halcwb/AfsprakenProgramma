@@ -27,6 +27,7 @@ End Function
 
 Public Function ShowMsgBoxError(ByVal strText As String) As VbMsgBoxResult
 
+    strText = strText & vbNewLine & ModConst.CONST_DEFAULTERROR_MSG
     ShowMsgBoxError = ShowMsgBox(strText, vbCritical)
     
 End Function

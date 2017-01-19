@@ -1,176 +1,213 @@
-"$B$1: 	=IF(E60<0,""Te weinig volume voor TPN!"","""")
-$C$3: 	=ROUND(NeoBerInfB!R52/(_Pat_Gewicht/10),0)&"" ml/kg""
-$D$3: 	=ROUND(NeoBerInfB!R51/(_Pat_Gewicht/10),0)&"" ml/kg""
-$E$3: 	=ROUND(NeoBerInfB!R53/(_Pat_Gewicht/10),0)&"" ml/kg  ""&""= ""&ROUND(NeoBerInfB!R53,0)&"" ml""
-$H$3: 	=ROUND(NeoBerInfB!S52/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$I$3: 	=ROUND(NeoBerInfB!S51/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$J$3: 	=ROUND(NeoBerInfB!S53/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$K$3: 	=NeoBerInfB!B3
-$C$4: 	=ROUND(NeoBerInfB!X52/(_Pat_Gewicht/10),1)&"" g/kg""
-$D$4: 	=ROUND(NeoBerInfB!X51/(_Pat_Gewicht/10),1)&"" g/kg""
-$E$4: 	=ROUND(NeoBerInfB!X53/(_Pat_Gewicht/10),1)&"" g/kg""
-$H$4: 	=ROUND(NeoBerInfB!T52/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$I$4: 	=ROUND(NeoBerInfB!T51/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$J$4: 	=ROUND(NeoBerInfB!T53/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$C$5: 	=ROUND(NeoBerInfB!Z52/(_Pat_Gewicht/10),1)&"" g/kg""
-$D$5: 	=ROUND(NeoBerInfB!Z51/(_Pat_Gewicht/10),1)&"" g/kg""
-$E$5: 	=ROUND(NeoBerInfB!Z53/(_Pat_Gewicht/10),1)&"" g/kg""
-$H$5: 	=ROUND(NeoBerInfB!U52/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$I$5: 	=ROUND(NeoBerInfB!U51/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$J$5: 	=ROUND(NeoBerInfB!U53/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$C$6: 	=ROUND(1000*NeoBerInfB!Y52/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
-$D$6: 	=ROUND(1000*NeoBerInfB!Y51/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
-$E$6: 	=ROUND(1000*NeoBerInfB!Y53/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
-$H$6: 	=ROUND(NeoBerInfB!V52/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$I$6: 	=ROUND(NeoBerInfB!V51/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$J$6: 	=ROUND(NeoBerInfB!V53/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$C$7: 	=ROUND(NeoBerInfB!AA52/(_Pat_Gewicht/10),1)& "" kcal/kg""
-$D$7: 	=ROUND(NeoBerInfB!AA51/(_Pat_Gewicht/10),1)& "" kcal/kg""
-$E$7: 	=ROUND(NeoBerInfB!AA53/(_Pat_Gewicht/10),1)& "" kcal/kg""
-$H$7: 	=ROUND(NeoBerInfB!AB52/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$I$7: 	=ROUND(NeoBerInfB!AB51/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$J$7: 	=ROUND(NeoBerInfB!AB53/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$C$8: 	=ROUND(NeoBerInfB!AC52,0)& "" IE""
-$D$8: 	=ROUND(NeoBerInfB!AC51,0)& "" IE""
-$E$8: 	=ROUND(NeoBerInfB!AC53,0)& "" IE""
-$H$8: 	=ROUND(NeoBerInfB!W52/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$I$8: 	=ROUND(NeoBerInfB!W51/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$J$8: 	=ROUND(NeoBerInfB!W53/(_Pat_Gewicht/10),1)&"" mmol/kg""
-$I$10: 	=__0_PatNum
-$I$11: 	=__2_AchterNaam &"",  ""&__3_VoorNaam
-$I$12: 	=NeoBerInfB!#REF!-NeoBerInfB!#REF!
-$J$12: 	=""=dag ""&NeoBerInfB!B4
-$H$13: 	=NeoBerInfB!#REF!
-$J$13: 	=NeoBerInfB!#REF!
-$C$14: 	=NeoBerInfB!#REF!
-$C$15: 	=__1_Bed
-$H$15: 	=IF(PatDetails!B18<>"""",TRUNC((H13*7+J13+NeoBerInfB!B4-1)/7)&"" weken en ""& H13*7+J13+NeoBerInfB!B4-1-TRUNC((H13*7+J13+NeoBerInfB!B4-1)/7)*7&"" dag(-en)"","""")
-$H$16: 	=IF(_Pat_Gewicht>0,(_Pat_Gewicht/10)&"" kg"","""")
-$E$18: 	=IF(NeoBerInfB!B21,NeoBerInfB!C7,ROUND(NeoBerInfB!R53/(_Pat_Gewicht/10),1))
-$K$18: 	=ROUND(NeoBerInfB!B7,0)&"" ml/ kg/ 24 uur""
-$E$21: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!F9,"""")
-$G$21: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!C10/10&"" ml"","""")
-$E$22: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!F10,"""")
-$G$22: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!C9/10&"" ml"","""")
-$K$23: 	=INDEX(tbl_Neo_NutrBMFWaard,NeoBerInfB!H11)&"" %""
-$K$24: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H12)&"" %""
-$O$24: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H16)&"" %""
-$K$25: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H13)&"" %""
-$O$25: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H17)&"" %""
-$K$26: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H14)&"" %""
-$O$26: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H18)&"" %""
-$K$27: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H15)&"" %""
-$O$27: 	=INDEX(tbl_Neo_NutrToevWaard,NeoBerInfB!H19)&"" %""
-$E$28: 	=IF(NeoBerInfB!B21,NeoBerInfB!C21,NeoBerInfB!R52)
-$G$30: 	=NeoBerInfB!B22/10&"" ml/uur""
-$C$32: 	=IF(NeoBerInfB!C23>0,IF(NeoBerInfB!B23<>5,NeoBerInfB!C23/10&"" mg"",NeoBerInfB!C23/10&"" mg""),"""")
-$D$32: 	=IF(NeoBerInfB!D23>0,""in ""&NeoBerInfB!D23&"" ml"","""")
-$G$32: 	=IF(NeoBerInfB!F23/10>0,NeoBerInfB!F23/10&"" ml/uur"","""")
-$H$32: 	=IF(AND(NeoBerInfB!G23>0),ROUND(NeoBerInfB!G23,2),"""")
-$I$32: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B23,6),"""")
-$K$32: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B23,2)
-$N$32: 	=IF(NeoBerInfB!G23>0,IF(NeoBerInfB!AF23*10>1,NeoBerInfB!AE23&"" uren"",NeoBerInfB!AE23&"" minuten""),"""")
-$C$33: 	=IF(NeoBerInfB!C24>0,NeoBerInfB!C24/10&"" mg"","""")
-$D$33: 	=IF(NeoBerInfB!D24>0,""in ""&NeoBerInfB!D24&"" ml"","""")
-$G$33: 	=IF(NeoBerInfB!F24/10>0,NeoBerInfB!F24/10&"" ml/uur"","""")
-$H$33: 	=IF(AND(NeoBerInfB!G24>0),ROUND(NeoBerInfB!G24,2),"""")
-$I$33: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B24,6),"""")
-$K$33: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B24,2)
-$N$33: 	=IF(NeoBerInfB!G24>0,IF(NeoBerInfB!AF24*10>1,NeoBerInfB!AE24&"" uren"",NeoBerInfB!AE24&"" minuten""),"""")
-$C$34: 	=IF(NeoBerInfB!C25>0,NeoBerInfB!C25/10&"" mg"","""")
-$D$34: 	=IF(NeoBerInfB!D25>0,""in ""&NeoBerInfB!D25&"" ml"","""")
-$G$34: 	=IF(NeoBerInfB!F25/10>0,NeoBerInfB!F25/10&"" ml/uur"","""")
-$H$34: 	=IF(AND(NeoBerInfB!G25>0),ROUND(NeoBerInfB!G25,2),"""")
-$I$34: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B25,6),"""")
-$K$34: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B25,2)
-$N$34: 	=IF(NeoBerInfB!G25>0,IF(NeoBerInfB!AF25*10>1,NeoBerInfB!AE25&"" uren"",NeoBerInfB!AE25&"" minuten""),"""")
-$C$35: 	=IF(NeoBerInfB!C26>0,NeoBerInfB!C26/10&"" mg"","""")
-$D$35: 	=IF(NeoBerInfB!D26>0,""in ""&NeoBerInfB!D26&"" ml"","""")
-$G$35: 	=IF(NeoBerInfB!F26/10>0,NeoBerInfB!F26/10&"" ml/uur"","""")
-$H$35: 	=IF(AND(NeoBerInfB!G26>0),ROUND(NeoBerInfB!G26,2),"""")
-$I$35: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B26,6),"""")
-$K$35: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B26,2)
-$N$35: 	=IF(NeoBerInfB!G26>0,IF(NeoBerInfB!AF26*10>1,NeoBerInfB!AE26&"" uren"",NeoBerInfB!AE26&"" minuten""),"""")
-$C$36: 	=IF(NeoBerInfB!C27>0,NeoBerInfB!C27/10&"" mg"","""")
-$D$36: 	=IF(NeoBerInfB!D27>0,""in ""&NeoBerInfB!D27&"" ml"","""")
-$G$36: 	=IF(NeoBerInfB!F27/10>0,NeoBerInfB!F27/10&"" ml/uur"","""")
-$H$36: 	=IF(AND(NeoBerInfB!G27>0),ROUND(NeoBerInfB!G27,2),"""")
-$I$36: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B27,6),"""")
-$K$36: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B27,2)
-$N$36: 	=IF(NeoBerInfB!G27>0,IF(NeoBerInfB!AF27*10>1,NeoBerInfB!AE27&"" uren"",NeoBerInfB!AE27&"" minuten""),"""")
-$C$37: 	=IF(NeoBerInfB!C28>0,NeoBerInfB!C28/10&"" mg"","""")
-$D$37: 	=IF(NeoBerInfB!D28>0,""in ""&NeoBerInfB!D28&"" ml"","""")
-$G$37: 	=IF(NeoBerInfB!F28/10>0,NeoBerInfB!F28/10&"" ml/uur"","""")
-$H$37: 	=IF(AND(NeoBerInfB!G28>0),ROUND(NeoBerInfB!G28,2),"""")
-$I$37: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B28,6),"""")
-$K$37: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B28,2)
-$N$37: 	=IF(NeoBerInfB!G28>0,IF(NeoBerInfB!AF28*10>1,NeoBerInfB!AE28&"" uren"",NeoBerInfB!AE28&"" minuten""),"""")
-$C$38: 	=IF(NeoBerInfB!C29>0,NeoBerInfB!C29/10&"" mg"","""")
-$D$38: 	=IF(NeoBerInfB!D29>0,""in ""&NeoBerInfB!D29&"" ml"","""")
-$G$38: 	=IF(NeoBerInfB!F29/10>0,NeoBerInfB!F29/10&"" ml/uur"","""")
-$H$38: 	=IF(AND(NeoBerInfB!G29>0),ROUND(NeoBerInfB!G29,2),"""")
-$I$38: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B29,6),"""")
-$K$38: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B29,2)
-$N$38: 	=IF(NeoBerInfB!G29>0,IF(NeoBerInfB!AF29*10>1,NeoBerInfB!AE29&"" uren"",NeoBerInfB!AE29&"" minuten""),"""")
-$C$39: 	=IF(NeoBerInfB!C30>0,NeoBerInfB!C30/10&"" mg"","""")
-$D$39: 	=IF(NeoBerInfB!D30>0,""in ""&NeoBerInfB!D30&"" ml"","""")
-$G$39: 	=IF(NeoBerInfB!F30/10>0,NeoBerInfB!F30/10&"" ml/uur"","""")
-$H$39: 	=IF(AND(NeoBerInfB!G30>0),ROUND(NeoBerInfB!G30,2),"""")
-$I$39: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B30,6),"""")
-$K$39: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B30,2)
-$N$39: 	=IF(NeoBerInfB!G30>0,IF(NeoBerInfB!AF30*10>1,NeoBerInfB!AE30&"" uren"",NeoBerInfB!AE30&"" minuten""),"""")
-$C$40: 	=IF(NeoBerInfB!C31>0,NeoBerInfB!C31/10&"" mg"","""")
-$D$40: 	=IF(NeoBerInfB!D31>0,""in ""&NeoBerInfB!D31&"" ml"","""")
-$G$40: 	=IF(NeoBerInfB!F31/10>0,NeoBerInfB!F31/10&"" ml/uur"","""")
-$H$40: 	=IF(AND(NeoBerInfB!G31>0),ROUND(NeoBerInfB!G31,2),"""")
-$I$40: 	=IF(Var_Neo_InfB_Cont_MedKeuze_1>0,INDEX(Tbl_Neo_MedIV,NeoBerInfB!B31,6),"""")
-$K$40: 	=INDEX(Tbl_Neo_MedIV,NeoBerInfB!B31,2)
-$N$40: 	=IF(NeoBerInfB!G31>0,IF(NeoBerInfB!AF31*10>1,NeoBerInfB!AE31&"" uren"",NeoBerInfB!AE31&"" minuten""),"""")
-$G$42: 	=IF(NeoBerInfB!F32/10>0,NeoBerInfB!F32/10&"" ml/uur"","""")
-$H$42: 	=IF(NeoBerInfB!G35>0,""= ""&ROUND(NeoBerInfB!G35,2),"""")
-$G$43: 	=IF(NeoBerInfB!F33/10>0,NeoBerInfB!F33/10&"" ml/uur"","""")
-$H$43: 	=IF(NeoBerInfB!G36>0,""= ""&ROUND(NeoBerInfB!G36,2),"""")
-$G$44: 	=IF(NeoBerInfB!F34/10>0,NeoBerInfB!F34/10&"" ml/uur"","""")
-$H$44: 	=IF(NeoBerInfB!G38>0,""= ""&ROUND(NeoBerInfB!G38,2),"""")
-$B$45: 	=IF(Var_Neo_InfB_Cont_MedTekst_1="""","""",Var_Neo_InfB_Cont_MedTekst_1)
-$B$46: 	=IF(Var_Neo_InfB_Cont_MedTekst_2="""","""",Var_Neo_InfB_Cont_MedTekst_2)
-$E$48: 	=IF(NeoBerInfB!C39>0,NeoBerInfB!C39&"" ml"","""")
-$F$48: 	=IF(E48<>"""",ROUND(NeoBerInfB!C39/(_Pat_Gewicht/10),0)&"" ml/ kg"","""")
-$K$48: 	=IF(NeoBerInfB!B39>0,NeoBerInfB!B39&"" ml"","""")
-$E$52: 	=IF(NeoBerInfB!$D$40=1,NeoBerInfB!C41&"" ml"","""")
-$I$52: 	=IF(NeoBerInfB!$D$40=3,NeoBerInfB!C41&"" ml"","""")
-$K$52: 	=IF(NeoBerInfB!B41>0,NeoBerInfB!B41&"" ml"","""")
-$E$53: 	=IF(NeoBerInfB!$D$40=1,NeoBerInfB!C42&"" ml"","""")
-$I$53: 	=IF(NeoBerInfB!$D$40=3,NeoBerInfB!C42&"" ml"","""")
-$K$53: 	=IF(NeoBerInfB!B42>0,NeoBerInfB!B42&"" ml"","""")
-$E$54: 	=IF(NeoBerInfB!$D$40=1,NeoBerInfB!C43&"" ml"","""")
-$K$54: 	=IF(NeoBerInfB!B43>0,NeoBerInfB!B43&"" ml"","""")
-$E$55: 	=IF(NeoBerInfB!$D$40=1,NeoBerInfB!C44&"" ml"","""")
-$K$55: 	=IF(NeoBerInfB!B44>0,NeoBerInfB!B44&"" ml"","""")
-$E$56: 	=IF(NeoBerInfB!$D$40=1,NeoBerInfB!C45&"" ml"","""")
-$K$56: 	=IF(NeoBerInfB!B45>0,NeoBerInfB!B45&"" ml"","""")
-$E$57: 	=IF(NeoBerInfB!$D$40=1,NeoBerInfB!C46&"" ml"","""")
-$K$57: 	=IF(NeoBerInfB!B46>0,NeoBerInfB!B46&"" ml"","""")
-$G$58: 	=IF(NeoBerInfB!D40=2,NeoBerInfB!C47&"" ml"","""")
-$H$58: 	=IF(G58<>"""",""(""&ROUND(NeoBerInfB!C47/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
-$K$58: 	=IF(NeoBerInfB!B47>0,NeoBerInfB!B47&"" ml"","""")
-$I$59: 	=IF(NeoBerInfB!$D$40=3,NeoBerInfB!C48&"" ml"","""")
-$J$59: 	=IF(I59<>"""",""(""&ROUND(NeoBerInfB!C48/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
-$K$59: 	=IF(NeoBerInfB!B48>0,NeoBerInfB!B48&"" ml"","""")
-$E$60: 	=IF(NeoBerInfB!D40=1,NeoBerInfB!R49,"""")
-$F$60: 	=IF(E60<>"""",""ml"","""")
-$G$60: 	=IF(NeoBerInfB!D40=2,NeoBerInfB!R49,"""")
-$H$60: 	=IF(G60<>"""",""ml"","""")
-$I$60: 	=IF(NeoBerInfB!D40=3,NeoBerInfB!R49,"""")
-$J$60: 	=IF(I60<>"""",""ml"","""")
-$D$65: 	=TRIM(NeoBerLab!B4&"" ""&NeoBerLab!B5&"" ""&NeoBerLab!B6&"" ""&NeoBerLab!B7&"" ""&NeoBerLab!B8&"" ""&NeoBerLab!B9&"" ""&NeoBerLab!B10&"" ""&NeoBerLab!B11&"" ""&NeoBerLab!B12&"" ""&NeoBerLab!B13&"" ""&NeoBerLab!B14&"" ""&NeoBerLab!B15&"" ""&NeoBerLab!B16&"" ""&NeoBerLab!B17&"" ""&NeoBerLab!B18&"" ""&NeoBerLab!B19&"" ""&NeoBerLab!B20&"" ""&NeoBerLab!B21&"" ""&NeoBerLab!B22&"" ""&NeoBerLab!B23&"" ""&NeoBerLab!B24&"" ""&NeoBerLab!B25&"" ""&NeoBerLab!B26&"" ""&NeoBerLab!B27&"" ""&NeoBerLab!B28&"" ""&NeoBerLab!B29&"" ""&NeoBerLab!B30&"" ""&NeoBerLab!B31&"" ""&NeoBerLab!B32&"" ""&NeoBerLab!B33&"" ""&NeoBerLab!B34&"" ""&NeoBerLab!B35)
-$D$66: 	=TRIM(NeoBerLab!D4&"" ""&NeoBerLab!D5&"" ""&NeoBerLab!D6&"" ""&NeoBerLab!D7&"" ""&NeoBerLab!D8&"" ""&NeoBerLab!D9&"" ""&NeoBerLab!D10&"" ""&NeoBerLab!D11&"" ""&NeoBerLab!D12&"" ""&NeoBerLab!D13&"" ""&NeoBerLab!D14&"" ""&NeoBerLab!D15&"" ""&NeoBerLab!D16&"" ""&NeoBerLab!D17&"" ""&NeoBerLab!D18&"" ""&NeoBerLab!D19&"" ""&NeoBerLab!D20&"" ""&NeoBerLab!D21&"" ""&NeoBerLab!D22&"" ""&NeoBerLab!D23&"" ""&NeoBerLab!D24&"" ""&NeoBerLab!D25&"" ""&NeoBerLab!D26&"" ""&NeoBerLab!D27&"" ""&NeoBerLab!D28&"" ""&NeoBerLab!D29&"" ""&NeoBerLab!D30&"" ""&NeoBerLab!D31&"" ""&NeoBerLab!D32&"" ""&NeoBerLab!D33&"" ""&NeoBerLab!D34)
-$D$67: 	=TRIM(NeoBerLab!F4&"" ""&NeoBerLab!F5&"" ""&NeoBerLab!F6&"" ""&NeoBerLab!F7&"" ""&NeoBerLab!F8&"" ""&NeoBerLab!F9&"" ""&NeoBerLab!F10&"" ""&NeoBerLab!F11&"" ""&NeoBerLab!F12&"" ""&NeoBerLab!F13&"" ""&NeoBerLab!F14&"" ""&NeoBerLab!F15&"" ""&NeoBerLab!F16&"" ""&NeoBerLab!F17&"" ""&NeoBerLab!F18&"" ""&NeoBerLab!F19&"" ""&NeoBerLab!F20&"" ""&NeoBerLab!F21&"" ""&NeoBerLab!F22&"" ""&NeoBerLab!F23&"" ""&NeoBerLab!F24&"" ""&NeoBerLab!F25&"" ""&NeoBerLab!F26&"" ""&NeoBerLab!F27&"" ""&NeoBerLab!F28&"" ""&NeoBerLab!F29&"" ""&NeoBerLab!F30&"" ""&NeoBerLab!F31&"" ""&NeoBerLab!F32&"" ""&NeoBerLab!F33&"" ""&NeoBerLab!F34)
-$D$68: 	=TRIM(NeoBerLab!H4&"" ""&NeoBerLab!H5&"" ""&NeoBerLab!H6&"" ""&NeoBerLab!H7&"" ""&NeoBerLab!H8&"" ""&NeoBerLab!H9&"" ""&NeoBerLab!H10&"" ""&NeoBerLab!H11&"" ""&NeoBerLab!H12&"" ""&NeoBerLab!H13&"" ""&NeoBerLab!H14&"" ""&NeoBerLab!H15&"" ""&NeoBerLab!H16&"" ""&NeoBerLab!H17&"" ""&NeoBerLab!H18&"" ""&NeoBerLab!H19&"" ""&NeoBerLab!H20&"" ""&NeoBerLab!H21&"" ""&NeoBerLab!H22&"" ""&NeoBerLab!H23&"" ""&NeoBerLab!H24&"" ""&NeoBerLab!H25&"" ""&NeoBerLab!H26&"" ""&NeoBerLab!H27&"" ""&NeoBerLab!H28&"" ""&NeoBerLab!H29&"" ""&NeoBerLab!H30&"" ""&NeoBerLab!H31&"" ""&NeoBerLab!H32&"" ""&NeoBerLab!H33&"" ""&NeoBerLab!H34)
-$D$69: 	=TRIM(NeoBerLab!J4&"" ""&NeoBerLab!J5&"" ""&NeoBerLab!J6&"" ""&NeoBerLab!J7&"" ""&NeoBerLab!J8&"" ""&NeoBerLab!J9&"" ""&NeoBerLab!J10&"" ""&NeoBerLab!J11&"" ""&NeoBerLab!J12&"" ""&NeoBerLab!J13&"" ""&NeoBerLab!J14&"" ""&NeoBerLab!J15&"" ""&NeoBerLab!J16&"" ""&NeoBerLab!J17&"" ""&NeoBerLab!J18&"" ""&NeoBerLab!J19&"" ""&NeoBerLab!J20&"" ""&NeoBerLab!J21&"" ""&NeoBerLab!J22&"" ""&NeoBerLab!J23&"" ""&NeoBerLab!J24&"" ""&NeoBerLab!J25&"" ""&NeoBerLab!J26&"" ""&NeoBerLab!J27&"" ""&NeoBerLab!J28&"" ""&NeoBerLab!J29&"" ""&NeoBerLab!J30&"" ""&NeoBerLab!J31&"" ""&NeoBerLab!J32&"" ""&NeoBerLab!J33&"" ""&NeoBerLab!J34)
-$D$70: 	=TRIM(NeoBerLab!L4&"" ""&NeoBerLab!L5&"" ""&NeoBerLab!L6&"" ""&NeoBerLab!L7&"" ""&NeoBerLab!L8&"" ""&NeoBerLab!L9&"" ""&NeoBerLab!L10&"" ""&NeoBerLab!L11&"" ""&NeoBerLab!L12&"" ""&NeoBerLab!L13&"" ""&NeoBerLab!L14&"" ""&NeoBerLab!L15&"" ""&NeoBerLab!L16&"" ""&NeoBerLab!L17&"" ""&NeoBerLab!L18&"" ""&NeoBerLab!L19&"" ""&NeoBerLab!L20&"" ""&NeoBerLab!L21&"" ""&NeoBerLab!L22&"" ""&NeoBerLab!L23&"" ""&NeoBerLab!L24&"" ""&NeoBerLab!L25&"" ""&NeoBerLab!L26&"" ""&NeoBerLab!L27&"" ""&NeoBerLab!L28&"" ""&NeoBerLab!L29&"" ""&NeoBerLab!L30&"" ""&NeoBerLab!L31&"" ""&NeoBerLab!L32&"" ""&NeoBerLab!L33&"" ""&NeoBerLab!L34)
-$D$71: 	=TRIM(NeoBerLab!N4&"" ""&NeoBerLab!N5&"" ""&NeoBerLab!N6&"" ""&NeoBerLab!N7&"" ""&NeoBerLab!N8&"" ""&NeoBerLab!N9&"" ""&NeoBerLab!N10&"" ""&NeoBerLab!N11&"" ""&NeoBerLab!N12&"" ""&NeoBerLab!N13&"" ""&NeoBerLab!N14&"" ""&NeoBerLab!N15&"" ""&NeoBerLab!N16&"" ""&NeoBerLab!N17&"" ""&NeoBerLab!N18&"" ""&NeoBerLab!N19&"" ""&NeoBerLab!N20&"" ""&NeoBerLab!N21&"" ""&NeoBerLab!N22&"" ""&NeoBerLab!N23&"" ""&NeoBerLab!N24&"" ""&NeoBerLab!N25&"" ""&NeoBerLab!N26&"" ""&NeoBerLab!N27&"" ""&NeoBerLab!N28&"" ""&NeoBerLab!N29&"" ""&NeoBerLab!N30&"" ""&NeoBerLab!N31&"" ""&NeoBerLab!N32&"" ""&NeoBerLab!N33&"" ""&NeoBerLab!N34)
-$D$72: 	=TRIM(NeoBerLab!P4&"" ""&NeoBerLab!P5&"" ""&NeoBerLab!P6&"" ""&NeoBerLab!P7&"" ""&NeoBerLab!P8&"" ""&NeoBerLab!P9&"" ""&NeoBerLab!P10&"" ""&NeoBerLab!P11&"" ""&NeoBerLab!P12&"" ""&NeoBerLab!P13&"" ""&NeoBerLab!P14&"" ""&NeoBerLab!P15&"" ""&NeoBerLab!P16&"" ""&NeoBerLab!P17&"" ""&NeoBerLab!P18&"" ""&NeoBerLab!P19&"" ""&NeoBerLab!P20&"" ""&NeoBerLab!P21&"" ""&NeoBerLab!P22&"" ""&NeoBerLab!P23&"" ""&NeoBerLab!P24&"" ""&NeoBerLab!P25&"" ""&NeoBerLab!P26&"" ""&NeoBerLab!P27&"" ""&NeoBerLab!P28&"" ""&NeoBerLab!P29&"" ""&NeoBerLab!P30&"" ""&NeoBerLab!P31&"" ""&NeoBerLab!P32&"" ""&NeoBerLab!P33&"" ""&NeoBerLab!P34)
-$D$73: 	=TRIM(NeoBerLab!R4&"" ""&NeoBerLab!R5&"" ""&NeoBerLab!R6&"" ""&NeoBerLab!R7&"" ""&NeoBerLab!R8&"" ""&NeoBerLab!R9&"" ""&NeoBerLab!R10&"" ""&NeoBerLab!R11&"" ""&NeoBerLab!R12&"" ""&NeoBerLab!R13&"" ""&NeoBerLab!R14&"" ""&NeoBerLab!R15&"" ""&NeoBerLab!R16&"" ""&NeoBerLab!R17&"" ""&NeoBerLab!R18&"" ""&NeoBerLab!R19&"" ""&NeoBerLab!R20&"" ""&NeoBerLab!R21&"" ""&NeoBerLab!R22&"" ""&NeoBerLab!R23&"" ""&NeoBerLab!R24&"" ""&NeoBerLab!R25&"" ""&NeoBerLab!R26&"" ""&NeoBerLab!R27&"" ""&NeoBerLab!R28&"" ""&NeoBerLab!R29&"" ""&NeoBerLab!R30&"" ""&NeoBerLab!R31&"" ""&NeoBerLab!R32&"" ""&NeoBerLab!R33&"" ""&NeoBerLab!R34)
-$D$74: 	=IF(_Neo_Lab_Opm=0,"""",_Neo_Lab_Opm)
+"$D$1: 	=IF(G59<0,""Te weinig volume voor TPN!"","""")
+$E$3: 	=ROUND(NeoBerInfB!T53/(_Pat_Gewicht/10),0)&"" ml/kg""
+$F$3: 	=ROUND(NeoBerInfB!T52/(_Pat_Gewicht/10),0)&"" ml/kg""
+$G$3: 	=ROUND(NeoBerInfB!T54/(_Pat_Gewicht/10),0)&"" ml/kg  ""&""= ""&ROUND(NeoBerInfB!T54,0)&"" ml""
+$J$3: 	=ROUND(NeoBerInfB!U53/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$K$3: 	=ROUND(NeoBerInfB!U52/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$L$3: 	=ROUND(NeoBerInfB!U54/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$O$3: 	=ROUND(NeoBerInfB!AD53/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$P$3: 	=ROUND(NeoBerInfB!AD52/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$Q$3: 	=ROUND(NeoBerInfB!AD54/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$E$4: 	=ROUND(NeoBerInfB!Z53/(_Pat_Gewicht/10),1)&"" g/kg""
+$F$4: 	=ROUND(NeoBerInfB!Z52/(_Pat_Gewicht/10),1)&"" g/kg""
+$G$4: 	=ROUND(NeoBerInfB!Z54/(_Pat_Gewicht/10),1)&"" g/kg""
+$J$4: 	=ROUND(NeoBerInfB!V53/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$K$4: 	=ROUND(NeoBerInfB!V52/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$L$4: 	=ROUND(NeoBerInfB!V54/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$O$4: 	=ROUND(NeoBerInfB!Y53/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$P$4: 	=ROUND(NeoBerInfB!Y52/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$Q$4: 	=ROUND(NeoBerInfB!Y54/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$E$5: 	=ROUND(NeoBerInfB!AB53/(_Pat_Gewicht/10),1)&"" g/kg""
+$F$5: 	=ROUND(NeoBerInfB!AB52/(_Pat_Gewicht/10),1)&"" g/kg""
+$G$5: 	=ROUND(NeoBerInfB!AB54/(_Pat_Gewicht/10),1)&"" g/kg""
+$J$5: 	=ROUND(NeoBerInfB!W53/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$K$5: 	=ROUND(NeoBerInfB!W52/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$L$5: 	=ROUND(NeoBerInfB!W54/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$O$5: 	=ROUND(NeoBerInfB!AE53,0)& "" IE""
+$P$5: 	=ROUND(NeoBerInfB!AE52,0)& "" IE""
+$Q$5: 	=ROUND(NeoBerInfB!AE54,0)& "" IE""
+$E$6: 	=ROUND(1000*NeoBerInfB!AA53/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
+$F$6: 	=ROUND(1000*NeoBerInfB!AA52/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
+$G$6: 	=ROUND(1000*NeoBerInfB!AA54/(_Pat_Gewicht/10)/1440,1)&"" mg/kg/min""
+$J$6: 	=ROUND(NeoBerInfB!X53/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$K$6: 	=ROUND(NeoBerInfB!X52/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$L$6: 	=ROUND(NeoBerInfB!X54/(_Pat_Gewicht/10),1)&"" mmol/kg""
+$E$7: 	=ROUND(NeoBerInfB!AC53/(_Pat_Gewicht/10),1)& "" kcal/kg""
+$F$7: 	=ROUND(NeoBerInfB!AC52/(_Pat_Gewicht/10),1)& "" kcal/kg""
+$G$7: 	=ROUND(NeoBerInfB!AC54/(_Pat_Gewicht/10),1)& "" kcal/kg""
+$C$9: 	=NeoBerInfB!B3
+$K$9: 	=__0_PatNum
+$O$9: 	=IF(PatDetails!B18<>"""",TRUNC((O12*7+Q12+NeoBerInfB!B4-1)/7)&"" weken en ""& O12*7+Q12+NeoBerInfB!B4-1-TRUNC((O12*7+Q12+NeoBerInfB!B4-1)/7)*7&"" dag(-en)"","""")
+$K$10: 	=PatDetails!B21
+$O$10: 	=IF(_Pat_Gewicht>0,(_Pat_Gewicht/10)&"" kg"","""")
+$J$11: 	=TODAY()
+$P$11: 	=__4_GebDatum
+$Q$11: 	=""=dag ""&NeoBerInfB!B4
+$J$12: 	=__1_Bed
+$O$12: 	=_Pat_GestWeken
+$Q$12: 	=_Pat_GestDagen
+$A$15: 	=NeoBerInfB!R7
+$F$15: 	=NeoBerInfB!N7
+$M$15: 	=ROUND(NeoBerInfB!B7,0)&"" ml/ kg/ 24 uur""
+$A$17: 	=NeoBerInfB!R9
+$H$17: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!F9,"""")
+$J$17: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!C10/10&"" ml"","""")
+$H$18: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!F10,"""")
+$J$18: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!C9/10&"" ml"","""")
+$N$18: 	=NeoBerInfB!K11
+$N$19: 	=NeoBerInfB!K12
+$R$19: 	=NeoBerInfB!K16
+$N$20: 	=NeoBerInfB!K13
+$R$20: 	=NeoBerInfB!K17
+$N$21: 	=NeoBerInfB!K14
+$R$21: 	=NeoBerInfB!K18
+$H$22: 	=IF(NeoBerInfB!B21,NeoBerInfB!C21,NeoBerInfB!T53)
+$N$22: 	=NeoBerInfB!K15
+$R$22: 	=NeoBerInfB!K19
+$A$26: 	=NeoBerInfB!R22
+$K$26: 	=NeoBerInfB!N22
+$A$28: 	=NeoBerInfB!R23
+$B$28: 	=NeoBerInfB!S23
+$G$28: 	=NeoBerInfB!K23
+$H$28: 	=NeoBerInfB!L23
+$K$28: 	=NeoBerInfB!N23
+$L$28: 	=IF(NeoBerInfB!G23>0,NeoBerInfB!G23,"""")
+$M$28: 	=NeoBerInfB!O23
+$O$28: 	=NeoBerInfB!P23
+$R$28: 	=NeoBerInfB!Q23
+$A$29: 	=NeoBerInfB!R24
+$B$29: 	=NeoBerInfB!S24
+$G$29: 	=NeoBerInfB!K24
+$H$29: 	=NeoBerInfB!L24
+$K$29: 	=NeoBerInfB!N24
+$L$29: 	=IF(NeoBerInfB!G24>0,NeoBerInfB!G24,"""")
+$M$29: 	=NeoBerInfB!O24
+$O$29: 	=NeoBerInfB!P24
+$R$29: 	=NeoBerInfB!Q24
+$A$30: 	=NeoBerInfB!R25
+$B$30: 	=NeoBerInfB!S25
+$G$30: 	=NeoBerInfB!K25
+$H$30: 	=NeoBerInfB!L25
+$K$30: 	=NeoBerInfB!N25
+$L$30: 	=IF(NeoBerInfB!G25>0,NeoBerInfB!G25,"""")
+$M$30: 	=NeoBerInfB!O25
+$O$30: 	=NeoBerInfB!P25
+$R$30: 	=NeoBerInfB!Q25
+$A$31: 	=NeoBerInfB!R26
+$B$31: 	=NeoBerInfB!S26
+$G$31: 	=NeoBerInfB!K26
+$H$31: 	=NeoBerInfB!L26
+$K$31: 	=NeoBerInfB!N26
+$L$31: 	=IF(NeoBerInfB!G26>0,NeoBerInfB!G26,"""")
+$M$31: 	=NeoBerInfB!O26
+$O$31: 	=NeoBerInfB!P26
+$R$31: 	=NeoBerInfB!Q26
+$A$32: 	=NeoBerInfB!R27
+$B$32: 	=NeoBerInfB!S27
+$G$32: 	=NeoBerInfB!K27
+$H$32: 	=NeoBerInfB!L27
+$K$32: 	=NeoBerInfB!N27
+$L$32: 	=IF(NeoBerInfB!G27>0,NeoBerInfB!G27,"""")
+$M$32: 	=NeoBerInfB!O27
+$O$32: 	=NeoBerInfB!P27
+$R$32: 	=NeoBerInfB!Q27
+$A$33: 	=NeoBerInfB!R28
+$B$33: 	=NeoBerInfB!S28
+$G$33: 	=NeoBerInfB!K28
+$H$33: 	=NeoBerInfB!L28
+$K$33: 	=NeoBerInfB!N28
+$L$33: 	=IF(NeoBerInfB!G28>0,NeoBerInfB!G28,"""")
+$M$33: 	=NeoBerInfB!O28
+$O$33: 	=NeoBerInfB!P28
+$R$33: 	=NeoBerInfB!Q28
+$A$34: 	=NeoBerInfB!R29
+$B$34: 	=NeoBerInfB!S29
+$G$34: 	=NeoBerInfB!K29
+$H$34: 	=NeoBerInfB!L29
+$K$34: 	=NeoBerInfB!N29
+$L$34: 	=IF(NeoBerInfB!G29>0,NeoBerInfB!G29,"""")
+$M$34: 	=NeoBerInfB!O29
+$O$34: 	=NeoBerInfB!P29
+$R$34: 	=NeoBerInfB!Q29
+$A$35: 	=NeoBerInfB!R30
+$B$35: 	=NeoBerInfB!S30
+$G$35: 	=NeoBerInfB!K30
+$H$35: 	=NeoBerInfB!L30
+$K$35: 	=NeoBerInfB!N30
+$L$35: 	=IF(NeoBerInfB!G30>0,NeoBerInfB!G30,"""")
+$M$35: 	=NeoBerInfB!O30
+$O$35: 	=NeoBerInfB!P30
+$R$35: 	=NeoBerInfB!Q30
+$A$36: 	=NeoBerInfB!R31
+$B$36: 	=NeoBerInfB!S31
+$G$36: 	=NeoBerInfB!K31
+$H$36: 	=NeoBerInfB!L31
+$K$36: 	=NeoBerInfB!N31
+$L$36: 	=IF(NeoBerInfB!G31>0,NeoBerInfB!G31,"""")
+$M$36: 	=NeoBerInfB!O31
+$O$36: 	=NeoBerInfB!P31
+$R$36: 	=NeoBerInfB!Q31
+$A$37: 	=NeoBerInfB!R32
+$B$37: 	=NeoBerInfB!S32
+$G$37: 	=NeoBerInfB!K32
+$H$37: 	=NeoBerInfB!L32
+$K$37: 	=NeoBerInfB!N32
+$L$37: 	=IF(NeoBerInfB!G32>0,NeoBerInfB!G32,"""")
+$M$37: 	=NeoBerInfB!O32
+$O$37: 	=NeoBerInfB!P32
+$R$37: 	=NeoBerInfB!Q32
+$A$39: 	=NeoBerInfB!R33
+$K$39: 	=IF(NeoBerInfB!F33/10>0,NeoBerInfB!F33/10&"" ml/uur"","""")
+$L$39: 	=IF(NeoBerInfB!G36>0,""= ""&ROUND(NeoBerInfB!G36,2),"""")
+$A$40: 	=NeoBerInfB!R34
+$K$40: 	=IF(NeoBerInfB!F34/10>0,NeoBerInfB!F34/10&"" ml/uur"","""")
+$L$40: 	=IF(NeoBerInfB!G37>0,""= ""&ROUND(NeoBerInfB!G37,2),"""")
+$A$41: 	=NeoBerInfB!R35
+$K$41: 	=IF(NeoBerInfB!F35/10>0,NeoBerInfB!F35/10&"" ml/uur"","""")
+$L$41: 	=IF(NeoBerInfB!G39>0,""= ""&ROUND(NeoBerInfB!G39,2),"""")
+$A$42: 	=NeoBerInfB!R36
+$D$42: 	=IF(Var_Neo_InfB_Cont_MedTekst_1="""","""",Var_Neo_InfB_Cont_MedTekst_1)
+$A$43: 	=NeoBerInfB!R37
+$D$43: 	=IF(Var_Neo_InfB_Cont_MedTekst_2="""","""",Var_Neo_InfB_Cont_MedTekst_2)
+$A$47: 	=NeoBerInfB!R40
+$B$47: 	=NeoBerInfB!S40
+$G$47: 	=IF(NeoBerInfB!C40>0,NeoBerInfB!C40&"" ml"","""")
+$H$47: 	=IF(G47<>"""",ROUND(NeoBerInfB!C40/(_Pat_Gewicht/10),0)&"" ml/ kg"","""")
+$M$47: 	=IF(NeoBerInfB!B40>0,NeoBerInfB!B40&"" ml"","""")
+$G$51: 	=IF(NeoBerInfB!$D$41=1,NeoBerInfB!C42&"" ml"","""")
+$K$51: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C42&"" ml"","""")
+$M$51: 	=IF(NeoBerInfB!B42>0,NeoBerInfB!B42&"" ml"","""")
+$G$52: 	=IF(NeoBerInfB!$D$41=1,NeoBerInfB!C43&"" ml"","""")
+$K$52: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C43&"" ml"","""")
+$M$52: 	=IF(NeoBerInfB!B43>0,NeoBerInfB!B43&"" ml"","""")
+$G$53: 	=IF(NeoBerInfB!$D$41=1,NeoBerInfB!C44&"" ml"","""")
+$M$53: 	=IF(NeoBerInfB!B44>0,NeoBerInfB!B44&"" ml"","""")
+$G$54: 	=IF(NeoBerInfB!$D$41=1,NeoBerInfB!C45&"" ml"","""")
+$M$54: 	=IF(NeoBerInfB!B45>0,NeoBerInfB!B45&"" ml"","""")
+$G$55: 	=IF(NeoBerInfB!$D$41=1,NeoBerInfB!C46&"" ml"","""")
+$M$55: 	=IF(NeoBerInfB!B46>0,NeoBerInfB!B46&"" ml"","""")
+$G$56: 	=IF(NeoBerInfB!$D$41=1,NeoBerInfB!C47&"" ml"","""")
+$M$56: 	=IF(NeoBerInfB!B47>0,NeoBerInfB!B47&"" ml"","""")
+$I$57: 	=IF(NeoBerInfB!D41=2,NeoBerInfB!C48&"" ml"","""")
+$J$57: 	=IF(I57<>"""",""(""&ROUND(NeoBerInfB!C48/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
+$M$57: 	=IF(NeoBerInfB!B48>0,NeoBerInfB!B48&"" ml"","""")
+$K$58: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C49&"" ml"","""")
+$L$58: 	=IF(K58<>"""",""(""&ROUND(NeoBerInfB!C49/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
+$M$58: 	=IF(NeoBerInfB!B49>0,NeoBerInfB!B49&"" ml"","""")
+$G$59: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!T50,"""")
+$H$59: 	=IF(G59<>"""",""ml"","""")
+$I$59: 	=IF(NeoBerInfB!D41=2,NeoBerInfB!T50,"""")
+$J$59: 	=IF(I59<>"""",""ml"","""")
+$K$59: 	=IF(NeoBerInfB!D41=3,NeoBerInfB!T50,"""")
+$L$59: 	=IF(K59<>"""",""ml"","""")
+$F$62: 	=TRIM(NeoBerLab!B4&"" ""&NeoBerLab!B5&"" ""&NeoBerLab!B6&"" ""&NeoBerLab!B7&"" ""&NeoBerLab!B8&"" ""&NeoBerLab!B9&"" ""&NeoBerLab!B10&"" ""&NeoBerLab!B11&"" ""&NeoBerLab!B12&"" ""&NeoBerLab!B13&"" ""&NeoBerLab!B14&"" ""&NeoBerLab!B15&"" ""&NeoBerLab!B16&"" ""&NeoBerLab!B17&"" ""&NeoBerLab!B18&"" ""&NeoBerLab!B19&"" ""&NeoBerLab!B20&"" ""&NeoBerLab!B21&"" ""&NeoBerLab!B22&"" ""&NeoBerLab!B23&"" ""&NeoBerLab!B24&"" ""&NeoBerLab!B25&"" ""&NeoBerLab!B26&"" ""&NeoBerLab!B27&"" ""&NeoBerLab!B28&"" ""&NeoBerLab!B29&"" ""&NeoBerLab!B30&"" ""&NeoBerLab!B31&"" ""&NeoBerLab!B32&"" ""&NeoBerLab!B33&"" ""&NeoBerLab!B34&"" ""&NeoBerLab!B35)
+$F$63: 	=TRIM(NeoBerLab!D4&"" ""&NeoBerLab!D5&"" ""&NeoBerLab!D6&"" ""&NeoBerLab!D7&"" ""&NeoBerLab!D8&"" ""&NeoBerLab!D9&"" ""&NeoBerLab!D10&"" ""&NeoBerLab!D11&"" ""&NeoBerLab!D12&"" ""&NeoBerLab!D13&"" ""&NeoBerLab!D14&"" ""&NeoBerLab!D15&"" ""&NeoBerLab!D16&"" ""&NeoBerLab!D17&"" ""&NeoBerLab!D18&"" ""&NeoBerLab!D19&"" ""&NeoBerLab!D20&"" ""&NeoBerLab!D21&"" ""&NeoBerLab!D22&"" ""&NeoBerLab!D23&"" ""&NeoBerLab!D24&"" ""&NeoBerLab!D25&"" ""&NeoBerLab!D26&"" ""&NeoBerLab!D27&"" ""&NeoBerLab!D28&"" ""&NeoBerLab!D29&"" ""&NeoBerLab!D30&"" ""&NeoBerLab!D31&"" ""&NeoBerLab!D32&"" ""&NeoBerLab!D33&"" ""&NeoBerLab!D34)
+$F$64: 	=TRIM(NeoBerLab!F4&"" ""&NeoBerLab!F5&"" ""&NeoBerLab!F6&"" ""&NeoBerLab!F7&"" ""&NeoBerLab!F8&"" ""&NeoBerLab!F9&"" ""&NeoBerLab!F10&"" ""&NeoBerLab!F11&"" ""&NeoBerLab!F12&"" ""&NeoBerLab!F13&"" ""&NeoBerLab!F14&"" ""&NeoBerLab!F15&"" ""&NeoBerLab!F16&"" ""&NeoBerLab!F17&"" ""&NeoBerLab!F18&"" ""&NeoBerLab!F19&"" ""&NeoBerLab!F20&"" ""&NeoBerLab!F21&"" ""&NeoBerLab!F22&"" ""&NeoBerLab!F23&"" ""&NeoBerLab!F24&"" ""&NeoBerLab!F25&"" ""&NeoBerLab!F26&"" ""&NeoBerLab!F27&"" ""&NeoBerLab!F28&"" ""&NeoBerLab!F29&"" ""&NeoBerLab!F30&"" ""&NeoBerLab!F31&"" ""&NeoBerLab!F32&"" ""&NeoBerLab!F33&"" ""&NeoBerLab!F34)
+$F$65: 	=TRIM(NeoBerLab!H4&"" ""&NeoBerLab!H5&"" ""&NeoBerLab!H6&"" ""&NeoBerLab!H7&"" ""&NeoBerLab!H8&"" ""&NeoBerLab!H9&"" ""&NeoBerLab!H10&"" ""&NeoBerLab!H11&"" ""&NeoBerLab!H12&"" ""&NeoBerLab!H13&"" ""&NeoBerLab!H14&"" ""&NeoBerLab!H15&"" ""&NeoBerLab!H16&"" ""&NeoBerLab!H17&"" ""&NeoBerLab!H18&"" ""&NeoBerLab!H19&"" ""&NeoBerLab!H20&"" ""&NeoBerLab!H21&"" ""&NeoBerLab!H22&"" ""&NeoBerLab!H23&"" ""&NeoBerLab!H24&"" ""&NeoBerLab!H25&"" ""&NeoBerLab!H26&"" ""&NeoBerLab!H27&"" ""&NeoBerLab!H28&"" ""&NeoBerLab!H29&"" ""&NeoBerLab!H30&"" ""&NeoBerLab!H31&"" ""&NeoBerLab!H32&"" ""&NeoBerLab!H33&"" ""&NeoBerLab!H34)
+$F$66: 	=TRIM(NeoBerLab!J4&"" ""&NeoBerLab!J5&"" ""&NeoBerLab!J6&"" ""&NeoBerLab!J7&"" ""&NeoBerLab!J8&"" ""&NeoBerLab!J9&"" ""&NeoBerLab!J10&"" ""&NeoBerLab!J11&"" ""&NeoBerLab!J12&"" ""&NeoBerLab!J13&"" ""&NeoBerLab!J14&"" ""&NeoBerLab!J15&"" ""&NeoBerLab!J16&"" ""&NeoBerLab!J17&"" ""&NeoBerLab!J18&"" ""&NeoBerLab!J19&"" ""&NeoBerLab!J20&"" ""&NeoBerLab!J21&"" ""&NeoBerLab!J22&"" ""&NeoBerLab!J23&"" ""&NeoBerLab!J24&"" ""&NeoBerLab!J25&"" ""&NeoBerLab!J26&"" ""&NeoBerLab!J27&"" ""&NeoBerLab!J28&"" ""&NeoBerLab!J29&"" ""&NeoBerLab!J30&"" ""&NeoBerLab!J31&"" ""&NeoBerLab!J32&"" ""&NeoBerLab!J33&"" ""&NeoBerLab!J34)
+$F$67: 	=TRIM(NeoBerLab!L4&"" ""&NeoBerLab!L5&"" ""&NeoBerLab!L6&"" ""&NeoBerLab!L7&"" ""&NeoBerLab!L8&"" ""&NeoBerLab!L9&"" ""&NeoBerLab!L10&"" ""&NeoBerLab!L11&"" ""&NeoBerLab!L12&"" ""&NeoBerLab!L13&"" ""&NeoBerLab!L14&"" ""&NeoBerLab!L15&"" ""&NeoBerLab!L16&"" ""&NeoBerLab!L17&"" ""&NeoBerLab!L18&"" ""&NeoBerLab!L19&"" ""&NeoBerLab!L20&"" ""&NeoBerLab!L21&"" ""&NeoBerLab!L22&"" ""&NeoBerLab!L23&"" ""&NeoBerLab!L24&"" ""&NeoBerLab!L25&"" ""&NeoBerLab!L26&"" ""&NeoBerLab!L27&"" ""&NeoBerLab!L28&"" ""&NeoBerLab!L29&"" ""&NeoBerLab!L30&"" ""&NeoBerLab!L31&"" ""&NeoBerLab!L32&"" ""&NeoBerLab!L33&"" ""&NeoBerLab!L34)
+$F$68: 	=TRIM(NeoBerLab!N4&"" ""&NeoBerLab!N5&"" ""&NeoBerLab!N6&"" ""&NeoBerLab!N7&"" ""&NeoBerLab!N8&"" ""&NeoBerLab!N9&"" ""&NeoBerLab!N10&"" ""&NeoBerLab!N11&"" ""&NeoBerLab!N12&"" ""&NeoBerLab!N13&"" ""&NeoBerLab!N14&"" ""&NeoBerLab!N15&"" ""&NeoBerLab!N16&"" ""&NeoBerLab!N17&"" ""&NeoBerLab!N18&"" ""&NeoBerLab!N19&"" ""&NeoBerLab!N20&"" ""&NeoBerLab!N21&"" ""&NeoBerLab!N22&"" ""&NeoBerLab!N23&"" ""&NeoBerLab!N24&"" ""&NeoBerLab!N25&"" ""&NeoBerLab!N26&"" ""&NeoBerLab!N27&"" ""&NeoBerLab!N28&"" ""&NeoBerLab!N29&"" ""&NeoBerLab!N30&"" ""&NeoBerLab!N31&"" ""&NeoBerLab!N32&"" ""&NeoBerLab!N33&"" ""&NeoBerLab!N34)
+$F$69: 	=TRIM(NeoBerLab!P4&"" ""&NeoBerLab!P5&"" ""&NeoBerLab!P6&"" ""&NeoBerLab!P7&"" ""&NeoBerLab!P8&"" ""&NeoBerLab!P9&"" ""&NeoBerLab!P10&"" ""&NeoBerLab!P11&"" ""&NeoBerLab!P12&"" ""&NeoBerLab!P13&"" ""&NeoBerLab!P14&"" ""&NeoBerLab!P15&"" ""&NeoBerLab!P16&"" ""&NeoBerLab!P17&"" ""&NeoBerLab!P18&"" ""&NeoBerLab!P19&"" ""&NeoBerLab!P20&"" ""&NeoBerLab!P21&"" ""&NeoBerLab!P22&"" ""&NeoBerLab!P23&"" ""&NeoBerLab!P24&"" ""&NeoBerLab!P25&"" ""&NeoBerLab!P26&"" ""&NeoBerLab!P27&"" ""&NeoBerLab!P28&"" ""&NeoBerLab!P29&"" ""&NeoBerLab!P30&"" ""&NeoBerLab!P31&"" ""&NeoBerLab!P32&"" ""&NeoBerLab!P33&"" ""&NeoBerLab!P34)
+$F$70: 	=TRIM(NeoBerLab!R4&"" ""&NeoBerLab!R5&"" ""&NeoBerLab!R6&"" ""&NeoBerLab!R7&"" ""&NeoBerLab!R8&"" ""&NeoBerLab!R9&"" ""&NeoBerLab!R10&"" ""&NeoBerLab!R11&"" ""&NeoBerLab!R12&"" ""&NeoBerLab!R13&"" ""&NeoBerLab!R14&"" ""&NeoBerLab!R15&"" ""&NeoBerLab!R16&"" ""&NeoBerLab!R17&"" ""&NeoBerLab!R18&"" ""&NeoBerLab!R19&"" ""&NeoBerLab!R20&"" ""&NeoBerLab!R21&"" ""&NeoBerLab!R22&"" ""&NeoBerLab!R23&"" ""&NeoBerLab!R24&"" ""&NeoBerLab!R25&"" ""&NeoBerLab!R26&"" ""&NeoBerLab!R27&"" ""&NeoBerLab!R28&"" ""&NeoBerLab!R29&"" ""&NeoBerLab!R30&"" ""&NeoBerLab!R31&"" ""&NeoBerLab!R32&"" ""&NeoBerLab!R33&"" ""&NeoBerLab!R34)
+$F$71: 	=IF(_Neo_Lab_Opm=0,"""",_Neo_Lab_Opm)
 "

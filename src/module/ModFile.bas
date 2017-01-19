@@ -20,7 +20,6 @@ AppenToFileError:
 
     strError = "AppenToFileError" & vbNewLine
     strError = strError & "Kan '" & strText & "' niet wegschrijven naar '" & strFile & "'"
-    strError = strError & vbNewLine & ModConst.CONST_DEFAULTERROR_MSG
     ModMessage.ShowMsgBoxError strError
 
 End Sub
@@ -44,7 +43,6 @@ WriteToFileError:
 
     strError = "WriteToFileError" & vbNewLine
     strError = strError & "Kan '" & strText & "' niet wegschrijven naar '" & strFile & "'"
-    strError = strError & vbNewLine & ModConst.CONST_DEFAULTERROR_MSG
     ModMessage.ShowMsgBoxError strError
 
 End Sub

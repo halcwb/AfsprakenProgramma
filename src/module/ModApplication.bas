@@ -162,7 +162,7 @@ InitializeError:
     
     ModProgress.FinishProgress
 
-    strError = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & " Kan de applicatie niet opstarten"
+    strError = "Kan de applicatie niet opstarten"
     ModMessage.ShowMsgBoxError strError
     
     strError = strError & vbNewLine & strAction

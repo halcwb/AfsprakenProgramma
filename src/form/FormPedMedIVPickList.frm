@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedIVPickList 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPedMedIVPickList 
    Caption         =   "Kies medicamenten"
    ClientHeight    =   7125
    ClientLeft      =   15
    ClientTop       =   315
    ClientWidth     =   5835
-   OleObjectBlob   =   "FormMedIVPickList.frx":0000
+   OleObjectBlob   =   "FormPedMedIVPickList.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "FormMedIVPickList"
+Attribute VB_Name = "FormPedMedIVPickList"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True

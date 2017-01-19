@@ -10,27 +10,24 @@ Private Const constMedIVOplVlst As String = "_Ped_MedIV_OplVlst_"
 Private Const constMedIVStand As String = "_Ped_MedIV_Stand_"
 Private Const constMedIVCount As Integer = 15
 
-Public Sub PedContIV_ShowPickList()
+' Copy paste function cannot be reused because of private clear method
+Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
 
-    Dim frmPickList As FormMedIVPickList
-    Dim colMedIV As Collection
+    Dim frmPickList As FormPedMedIVPickList
+    Dim colTbl As Collection
     Dim intN As Integer
     Dim strN As String
     Dim intC As Integer
     Dim intKeuze As Integer
     
-    Set colMedIV = New Collection
-    intC = Range(constTblMed).Rows.Count
-    For intN = 2 To intC
-        colMedIV.Add Range(constTblMed).Cells(intN, 1)
-    Next intN
+    Set colTbl = ModRange.CollectionFromRange(strTbl, intStart)
     
-    Set frmPickList = New FormMedIVPickList
-    frmPickList.LoadMedicamenten colMedIV
+    Set frmPickList = New FormPedMedIVPickList
+    frmPickList.LoadMedicamenten colTbl
     
-    For intN = 1 To constMedIVCount
-        strN = IIf(intN < 10, "0" & intN, intN)
-        intKeuze = ModRange.GetRangeValue(constMedIVKeuze & strN, 1)
+    For intN = 1 To intMax
+        strN = IIf(intMax > 9, IIf(intN < 10, "0" & intN, intN), intN)
+        intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
         If intKeuze > 1 Then frmPickList.SelectMedicament intKeuze
     Next intN
     
@@ -38,25 +35,25 @@ Public Sub PedContIV_ShowPickList()
     
     If frmPickList.GetAction = vbNullString Then
     
-        For intN = 1 To constMedIVCount                 ' First remove nonselected items
+        For intN = 1 To intMax                 ' First remove nonselected items
             strN = IIf(intN < 10, "0" & intN, intN)
-            intKeuze = ModRange.GetRangeValue(constMedIVKeuze & strN, 1)
+            intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
             If intKeuze > 1 Then
                 If frmPickList.IsMedicamentSelected(intKeuze) Then
                     frmPickList.UnselectMedicament (intKeuze)
                 Else
-                    Clear intN
+                    Clear intN ' Remove is specific to PedContIV replace with appropriate sub when copy paste
                 End If
             End If
         Next intN
         
         Do While frmPickList.HasSelectedMedicamenten()  ' Then add selected items
-            For intN = 1 To constMedIVCount
+            For intN = 1 To intMax
                 strN = IIf(intN < 10, "0" & intN, intN)
-                intKeuze = ModRange.GetRangeValue(constMedIVKeuze & strN, 1)
+                intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
                 If intKeuze <= 1 Then
                     intKeuze = frmPickList.GetFirstSelectedMedicament(True)
-                    ModRange.SetRangeValue constMedIVKeuze & strN, intKeuze
+                    ModRange.SetRangeValue strRange & strN, intKeuze
                     Exit For
                 End If
             Next intN
@@ -65,6 +62,13 @@ Public Sub PedContIV_ShowPickList()
     End If
     
     Set frmPickList = Nothing
+
+
+End Sub
+
+Public Sub PedContIV_ShowPickList()
+
+    ShowPickList constTblMed, constMedIVKeuze, 2, constMedIVCount
     
 End Sub
 

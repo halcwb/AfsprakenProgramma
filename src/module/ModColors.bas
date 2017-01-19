@@ -8,11 +8,29 @@ Public Enum RGBColors
 End Enum
 
 Private Const constColorSettings As String = "G2"
-Private Const constPedTable As String = "K2"
+Private Const constSheetRangeTable As String = "K2"
 
-Private Sub SetRangeColor(ByRef objTarget As Range, objSetting As Range, ByVal blnSheet As Boolean, Optional ByVal varGridColor As Variant)
+Private Function IsNeoSheet(ByVal strSheet As String) As Boolean
+
+    IsNeoSheet = ModString.StartsWith(strSheet, "NeoGui")
+
+End Function
+
+Private Sub NoFill(ByRef objTarget As Range)
+
+    With objTarget.Interior
+        .Pattern = xlNone
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+
+End Sub
+
+' ToDo Grid lines thick is somehow not working for Neo
+Private Sub SetRangeColor(ByRef objTarget As Range, ByRef objSetting As Range, ByVal blnSheet As Boolean, Optional ByVal varGridColor As Variant)
 
     Dim lngGridColor As Long
+    Dim objCell As Range
     
     If blnSheet Then
         Set objTarget = objTarget.Worksheet.Cells
@@ -27,27 +45,31 @@ Private Sub SetRangeColor(ByRef objTarget As Range, objSetting As Range, ByVal b
     
     If Not IsMissing(varGridColor) Then
         lngGridColor = Conversion.CLng(varGridColor)
+                    
+        For Each objCell In objTarget.Cells
+            objCell.Borders(xlEdgeTop).LineStyle = xlContinuous
+            objCell.Borders(xlEdgeTop).Weight = xlThick
+            objCell.Borders(xlEdgeTop).Color = lngGridColor
+                        
+            objCell.Borders(xlEdgeBottom).LineStyle = xlContinuous
+            objCell.Borders(xlEdgeBottom).Weight = xlThick
+            objCell.Borders(xlEdgeBottom).Color = lngGridColor
+        Next
         
-        objTarget.Borders(xlInsideHorizontal).LineStyle = xlContinuous
-        objTarget.Borders(xlInsideHorizontal).Weight = xlThick
-        objTarget.Borders(xlInsideHorizontal).Color = lngGridColor
-    
-        objTarget.Borders(xlInsideVertical).LineStyle = xlContinuous
-        objTarget.Borders(xlInsideVertical).Weight = xlThick
-        objTarget.Borders(xlInsideVertical).Color = lngGridColor
     End If
 
 End Sub
 
-Public Sub ColorPedRanges()
+Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
 
-    Dim objPed As Range
+    Dim objSheetRanges As Range
     Dim objSettings As Range
     Dim intN As Integer
     Dim intC As Integer
     
     Dim strSetting As String
     Dim objSetting As Range
+    Dim intSetting As Integer
     Dim blnSheet As Boolean
     
     Dim intTargetN As Integer
@@ -59,8 +81,10 @@ Public Sub ColorPedRanges()
     
     Dim lngBackGround As Long
     
+    ' On Error Resume Next
+    
     Set objSettings = shtGlobSettings.Range(constColorSettings).CurrentRegion
-    Set objPed = shtGlobSettings.Range(constPedTable).CurrentRegion
+    Set objSheetRanges = shtGlobSettings.Range(constSheetRangeTable).CurrentRegion
     
     ModProgress.StartProgress "Kleuren Instellen"
     
@@ -76,17 +100,36 @@ Public Sub ColorPedRanges()
             blnSheet = True
         End If
         
-        intTargetC = objPed.Rows.Count
+        intTargetC = objSheetRanges.Rows.Count
         For intTargetN = 2 To intTargetC
             
-            strSheet = objPed.Cells(intTargetN, 1).Value2
-            strTarget = objPed.Cells(intTargetN, 2).Value2
-            strRange = Strings.Replace(objPed.Cells(intTargetN, 3).Formula, "=", vbNullString)
+            strSheet = objSheetRanges.Cells(intTargetN, 1).Value2
+            
+            If blnNeo And IsNeoSheet(strSheet) Then
+                intSetting = 3
+            ElseIf Not IsNeoSheet(strSheet) Then
+                intSetting = 2
+            Else
+                intSetting = -1
+            End If
+            
+            strTarget = objSheetRanges.Cells(intTargetN, 2).Value2
+            strRange = Strings.Replace(objSheetRanges.Cells(intTargetN, 3).Formula, "=", vbNullString)
             strRange = Strings.Replace(strRange, strSheet & "!", vbNullString)
             
-            If strTarget = strSetting And Not strRange = vbNullString Then
-                Set objSetting = objSettings.Cells(intN, 2)
+            If strTarget = strSetting And Not strRange = vbNullString And Not intSetting = -1 Then
+                Set objSetting = objSettings.Cells(intN, intSetting)
                 Set objTarget = WbkAfspraken.Sheets(strSheet).Range(strRange)
+                
+                If objTarget.Worksheet.ProtectContents Then
+                    ModMessage.ShowMsgBoxExclam "Kan kleuren niet instellen, zorg dat het systeem in development modus staat"
+                    
+                    ModProgress.FinishProgress
+                    Set objSetting = Nothing
+                    Set objTarget = Nothing
+                    
+                    Exit Sub
+                End If
                 
                 If strSetting = "Fields" Then
                     SetRangeColor objTarget, objSetting, blnSheet, lngBackGround
@@ -97,6 +140,8 @@ Public Sub ColorPedRanges()
                 Set objSetting = Nothing
                 Set objTarget = Nothing
             End If
+            
+            ModProgress.SetJobPercentage strSheet & ": " & strTarget, intTargetC, intTargetN
         Next
     Next
     
@@ -165,7 +210,8 @@ Public Function GetFontNames() As Variant()
     Dim varIds() As Variant
 
     Set objWd = CreateObject("Word.Application")
-
+    varIds = Array()
+    
     For Each varID In objWd.FontNames
         ModArray.AddItemToVariantArray varIds, varID
     Next

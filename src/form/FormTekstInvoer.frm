@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormTekstInvoer 
    Caption         =   "UserForm1"
-   ClientHeight    =   1560
+   ClientHeight    =   2400
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   8460
+   ClientWidth     =   9285
    OleObjectBlob   =   "FormTekstInvoer.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -49,3 +49,9 @@ Private Sub cmdOK_Click()
 
 End Sub
 
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+
+    Cancel = True
+    Me.Hide
+    
+End Sub

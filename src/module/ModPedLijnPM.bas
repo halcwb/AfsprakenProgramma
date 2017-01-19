@@ -4,14 +4,14 @@ Option Explicit
 Private Const constOpm As String = "_Ped_IVLijn_Opm"
 Private Const constTblLijn As String = "tblInfusen" ' ToDo rename to tbl_Ped_Lijnen
 Private Const constLijnCount As Integer = 6
-Private Const constLijnKeuze = "_Ped_IVLijn_" 'ToDo rename to _Ped_Lijn_
+Private Const constLijnKeuze As String = "_Ped_IVLijn_"  'ToDo rename to _Ped_Lijn_
 Private Const constPM As String = "_Ped_PM_"
 Private Const constTblPMStand As String = "tbl_Ped_PMStandaard"
 Private Const constTblPMSet As String = "tbl_Ped_PMInstelling"
 
 Public Sub PedLijnPM_ShowPickList()
 
-    Dim frmPickList As FormLijnenPickList
+    Dim frmPickList As FormPedLijnenPickList
     Dim colLijnen As Collection
     Dim intN As Integer
     Dim intC As Integer
@@ -23,7 +23,7 @@ Public Sub PedLijnPM_ShowPickList()
         colLijnen.Add Range(constTblLijn).Cells(intN, 1)
     Next intN
     
-    Set frmPickList = New FormLijnenPickList
+    Set frmPickList = New FormPedLijnenPickList
     frmPickList.LoadLijnen colLijnen
     
     For intN = 1 To constLijnCount

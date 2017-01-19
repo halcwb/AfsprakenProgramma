@@ -372,7 +372,7 @@ Public Sub RefreshPatientData()
         strName = shtPatData.Cells(intN, 1).Value2
         If NameExists(strName) Then
             Set objName = WbkAfspraken.Names(strName)
-            strFormula = Strings.Replace(objName.RefersTo, "=", "")
+            strFormula = Strings.Replace(objName.RefersTo, "=", vbNullString)
             strFormula = Strings.Replace(constRefreshFormula, constReplRefersTo, strFormula)
             strFormula = Strings.Replace(strFormula, constReplEmpty, Chr(34) & Chr(34))
             
@@ -397,5 +397,32 @@ Public Sub NaamGeven()
 
 End Sub
 
+
+Public Function CollectionFromRange(ByVal strRange As String, ByVal intStart As Integer) As Collection
+
+    Dim colCol As Collection
+    Dim intN As Integer
+    Dim intC As Integer
+    
+    On Error GoTo CollectionFromRangeError
+    
+    Set colCol = New Collection
+    intC = Range(strRange).Rows.Count
+    For intN = intStart To intC
+        colCol.Add Range(strRange).Cells(intN, 1)
+    Next intN
+    
+    Set CollectionFromRange = colCol
+    
+    Exit Function
+
+CollectionFromRangeError:
+
+    ModLog.LogError "Could not get values from range: " & strRange
+    ModMessage.ShowMsgBoxError "Kan waarden niet ophalen"
+
+    Set CollectionFromRange = colCol
+
+End Function
 
 

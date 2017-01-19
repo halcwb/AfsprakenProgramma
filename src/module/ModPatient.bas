@@ -15,7 +15,7 @@ Private Const constGebGew As String = "_Pat_GebGew"
 Private Const constDateFormatDutch As String = "dd-mmm-jj"
 Private Const constDateFormatEnglish As String = "dd-mmm-yy"
 Private Const constDateReplace As String = "{DATEFORMAT}"
-Private Const constDateFormula As String = ""
+Private Const constDateFormula As String = vbNullString
 Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
 
 Public Function PatientAchterNaam() As String
@@ -113,7 +113,7 @@ Public Sub OpenPatientLijst(ByVal strCaption As String)
     
 OpenPatientListError:
 
-    ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
+    ModMessage.ShowMsgBoxError "Kan patient lijst niet openen"
     ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & Err.Number
     
 End Sub
@@ -240,6 +240,10 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
     Dim strJob As String
     Dim objResult As VbMsgBoxResult
             
+    Dim blnInfB As Boolean
+    
+    blnInfB = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentMode()
+            
     If blnShowWarn Then
         If blnShowProgress Then
             strTitle = FormProgress.Caption
@@ -258,7 +262,7 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             DoEvents
             ModProgress.StartProgress strTitle
         End If
-        
+                
         With shtPatData
             strJob = "Patient gegevens verwijderen"
             intC = .Range("A1").CurrentRegion.Rows.Count
@@ -279,14 +283,21 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             Next intN
         End With
         
+        If blnInfB Then
+            ModNeoInfB.CopyCurrentInfDataToVar blnShowProgress
+            ModNeoInfB.NeoInfB_RemoveVoed
+        End If
+        
         ModApplication.SetDateToDayFormula
         ModApplication.SetApplicationTitle
     End If
+    
 End Sub
 
 Public Sub PatientClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
     
     ClearPatientData vbNullString, blnShowWarn, blnShowProgress
+    
     ModApplication.SetDateToDayFormula
     ModApplication.SetApplicationTitle
     

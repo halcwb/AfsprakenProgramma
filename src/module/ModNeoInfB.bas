@@ -2,14 +2,68 @@ Attribute VB_Name = "ModNeoInfB"
 Option Explicit
 
 Private Const constTblMedIV As String = "tbl_Neo_MedIV"
+Private Const constMedIVMax As Integer = 10
 
-Private Const constActInfB = "Actuele Afspraken"
-Private Const const1700InfB As String = "17.00 uur Afspraken"
-Private Const constInfbVersie = "B2"
+Private Const constActInfB As String = "Actuele Afspraken"
+Private Const const1700InfB As String = "17:00 uur Afspraken"
+Private Const constInfbVersie As String = "B3"
 
-Private Const constInfBVa = "Var_Neo_InfB"
-Private Const constInfBDataAct = "_Neo_InfB"
-Private Const constInfBData1700 = "_Neo_1700"
+Private Const constInfBVa As String = "Var_Neo_InfB"
+Private Const constInfBDataAct As String = "_Neo_InfB"
+Private Const constInfBData1700 As String = "_Neo_1700"
+
+Private Const constCont As String = "_Cont_"
+Private Const constEnt As String = "_Ent_"
+Private Const constTPN As String = "_TPN_"
+
+Private Const constIntakePerKg As String = "Var_Neo_InfB_TPN_IntakePerKg"
+Private Const constTPNParEnt As String = "Var_Neo_InfB_TPN_Parenteraal"
+
+Private Const constLipidKeuze As String = "Var_NeoInfB_TPN_IntralipidSmof"
+Private Const constLipidStand As String = "Var_Neo_InfB_TPN_IntraLipid"
+Private Const constLipidAdvies As String = "Var_Neo_LipidAdv"
+
+Private Const constNaCl As String = "Var_Neo_TPN_NaCl"
+Private Const constKAct As String = "Var_Neo_TPN_KCl"
+Private Const constCaCl As String = "Var_Neo_TPN_CaCl2"
+Private Const constMgCl As String = "Var_Neo_TPN_MgCl2"
+Private Const constSolu As String = "Var_Neo_TPN_Soluvit"
+Private Const constPrim As String = "Var_Neo_TPN_Primene"
+
+Private Const constNICUMixStand As String = "Var_Neo_InfB_TPN_NICUMix"
+Private Const constNICUMixAdv As String = "Var_Neo_NICUMixAdv"
+Private Const constSSTBStand As String = "Var_Neo_InfB_TPN_SSTB"
+Private Const constSSTBAdv As String = "Var_Neo_SSTBAdv"
+
+Private Const constAdvOplIndex As Integer = 9
+Private Const constUnitIndex As Integer = 2
+
+Private Const constMedKeuze As String = "Var_Neo_InfB_Cont_MedKeuze_"
+Private Const constMedSterkte As String = "Var_Neo_InfB_Cont_MedSterkte_"
+Private Const constOplHoev As String = "Var_Neo_InfB_Cont_OplHoev_"
+Private Const constOplossing As String = "Var_Neo_InfB_Cont_Oplossing_"
+Private Const constStand As String = "Var_Neo_InfB_Cont_Stand_"
+Private Const constExtra As String = "Var_Neo_InfB_Cont_VochtExtra_"
+
+Private Const constPrevVoed As String = "Var_Neo_PrevVoed"
+Private Const constEntVoed As String = "Var_Neo_InfB_Ent_Voeding"
+Private Const constEntFreq As String = "Var_Neo_InfB_Ent_Frequentie_"
+Private Const constEntHoev As String = "Var_Neo_InfB_Ent_Hoeveelheid_"
+Private Const constEntToev As String = "Var_Neo_InfB_Ent_Toevoeging_"
+Private Const constEntPerc As String = "Var_Neo_InfB_Ent_PercentageKeuze_"
+Private Const constEntExtra As String = "Var_Neo_InfB_Ent_Extra"
+
+Private Const constArtLijn As String = "Var_Neo_InfB_Cont_ArtLijn"
+
+Private Const constMedText As String = "Var_Neo_InfB_Cont_MedTekst_"
+
+Private Const constTblVoeding As String = "Tbl_Neo_Voed"
+Private Const constVoedingCount As Integer = 1
+Private Const constTblToevoegMM As String = "Tbl_Neo_PoedMM"
+Private Const constToevoegMMCount As Integer = 4
+Private Const constTblToevoegKV As String = "Tbl_Neo_PoedKV"
+Private Const constToevoegKVCount As Integer = 4
+
 
 Private Function Is1700() As Boolean
 
@@ -17,7 +71,7 @@ Private Function Is1700() As Boolean
 
 End Function
 
-Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, blnShowProgress As Boolean)
+Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, ByVal blnShowProgress As Boolean)
 
     Dim objName As Name
     Dim strStartsWith As String
@@ -57,6 +111,18 @@ Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, bln
 
 End Sub
 
+Public Sub CopyCurrentInfVarToData(ByVal blnShowProgress As Boolean)
+
+    CopyVarData Is1700(), False, blnShowProgress
+    
+End Sub
+
+Public Sub CopyCurrentInfDataToVar(ByVal blnShowProgress As Boolean)
+
+    CopyVarData Is1700(), True, blnShowProgress
+    
+End Sub
+
 Private Sub TestCopyVarData()
 
     CopyVarData True, True, True
@@ -65,7 +131,7 @@ End Sub
 
 Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean)
 
-    If bln1700 And Is1700() Then                ' InfB is same as 1700
+    If bln1700 And Is1700() Then                 ' InfB is same as 1700
         ModSheet.GoToSheet shtNeoGuiInfB, "A9"
         
     ElseIf Not bln1700 And Not Is1700() Then     ' InfB is same as act
@@ -75,7 +141,7 @@ Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean)
         ModProgress.StartProgress "Infuus brief klaar maken"
         
         CopyVarData False, False, True   ' First copy var data to act data
-        CopyVarData True, True, True   ' Then copy 1700 data to var data
+        CopyVarData True, True, True     ' Then copy 1700 data to var data
         shtNeoBerInfB.Range(constInfbVersie).Value2 = const1700InfB
         
         ModProgress.FinishProgress
@@ -85,7 +151,7 @@ Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean)
     ElseIf Not bln1700 And Is1700() Then         ' Infb is currently 1700
         ModProgress.StartProgress "Infuus brief klaar maken"
         
-        CopyVarData True, False, True ' First copy var data to act data
+        CopyVarData True, False, True   ' First copy var data to act data
         CopyVarData False, True, True   ' Then copy act data to var data
         shtNeoBerInfB.Range(constInfbVersie).Value2 = constActInfB
         
@@ -100,94 +166,65 @@ End Sub
 ' ToDo: Add comment
 Public Sub NeoInfB_CopyActTo1700()
 
+    ModProgress.StartProgress "Overzetten Actueel naar 17:00 uur"
+
+    CopyCurrentInfVarToData True
+
+    ModProgress.SetJobPercentage "Voeding", 3, 1
     CopyRangeNamesToRangeNames NeoInfB_GetVoedingItems(), ChangeTo1700(NeoInfB_GetVoedingItems())
+    ModProgress.SetJobPercentage "Continue IV", 3, 2
     CopyRangeNamesToRangeNames NeoInfB_GetIVAfsprItems(), ChangeTo1700(NeoInfB_GetIVAfsprItems())
+    ModProgress.SetJobPercentage "TPN", 3, 3
     CopyRangeNamesToRangeNames NeoInfB_GetTPNItems(), ChangeTo1700(NeoInfB_GetTPNItems())
+    
+    ModProgress.FinishProgress
     
 End Sub
 
-Public Function NeoInfB_GetVoedingItems() As String()
+Private Function GetItems(ByVal strGrp As String) As String()
 
     Dim arrItems() As String
-    ReDim arrItems(0)
-        
-    arrItems(0) = "_InfB_Voeding"
-    AddItemsToArray arrItems, "_Frequentie", 1, 2
-    AddItemsToArray arrItems, "_Fototherapie", 1, 1
-    AddItemsToArray arrItems, "_Parenteraal", 1, 1
-    AddItemsToArray arrItems, "_Toevoeging", 1, 8
-    AddItemsToArray arrItems, "_PercentageKeuze", 0, 8
-    AddItemsToArray arrItems, "_IntakePerKg", 1, 1
-    AddItemsToArray arrItems, "_Extra", 1, 1
+    Dim objName As Name
+    Dim strStartsWith As String
     
-    NeoInfB_GetVoedingItems = arrItems
+    strStartsWith = constInfBDataAct & strGrp
+    arrItems = Array()
+    
+    For Each objName In WbkAfspraken.Names
+        If ModString.StartsWith(objName.Name, strStartsWith) Then ModArray.AddItemToStringArray arrItems, objName.Name
+    Next
+    
+    GetItems = arrItems
 
 End Function
 
-Public Function NeoInfB_GetIVAfsprItems() As String()
+Public Function NeoInfB_GetVoedingItems() As String()
 
-    Dim arrItems() As String
-    ReDim arrItems(0)
-        
-    arrItems(0) = "_InfB_ArtLijn"
-    AddItemsToArray arrItems, "_Medicament", 1, 9
-    AddItemsToArray arrItems, "_MedSterkte", 1, 9
-    AddItemsToArray arrItems, "_OplHoev", 1, 9
-    AddItemsToArray arrItems, "_Oplossing", 1, 12
-    AddItemsToArray arrItems, "_Stand", 1, 12
-    AddItemsToArray arrItems, "_Extra", 1, 12
-    AddItemsToArray arrItems, "_MedTekst", 1, 2
+    NeoInfB_GetVoedingItems = GetItems(constEnt)
+
+End Function
+
+Private Sub Test_NeoInfB_GetVoedingItems()
+
+    Dim strItem As Variant
     
-    NeoInfB_GetIVAfsprItems = arrItems
+    For Each strItem In NeoInfB_GetVoedingItems()
+        MsgBox strItem
+    Next
+
+End Sub
+
+Public Function NeoInfB_GetIVAfsprItems() As String()
+    
+    NeoInfB_GetIVAfsprItems = GetItems(constCont)
 
 End Function
 
 Public Function NeoInfB_GetTPNItems() As String()
-
-    Dim arrItems() As String
-    ReDim arrItems(0)
     
-    arrItems(0) = "_InfB_Parenteraal"
-    AddItemsToArray arrItems, "_IntraLipid", 1, 1
-    AddItemsToArray arrItems, "_DagKeuze", 1, 1
-    
-    AddItemsToArray arrItems, "_NaCl", 1, 1
-    AddItemsToArray arrItems, "_KCl", 1, 1
-    AddItemsToArray arrItems, "_CaCl2", 1, 1
-    AddItemsToArray arrItems, "_MgCl2", 1, 1
-    AddItemsToArray arrItems, "_SoluVit", 1, 1
-    AddItemsToArray arrItems, "_Primene", 1, 1
-    AddItemsToArray arrItems, "_NICUMix", 1, 1
-    AddItemsToArray arrItems, "_SSTB", 1, 1
-    AddItemsToArray arrItems, "_GlucSterkte", 1, 1
-    
-    NeoInfB_GetTPNItems = arrItems
+    NeoInfB_GetTPNItems = GetItems(constTPN)
     
 End Function
-
-Private Sub AddItemsToArray(ByRef arrItems() As String, ByVal strItem As String, ByVal intStart As Integer, ByVal intStop As Boolean)
-
-    Dim intC As Integer
-    Dim intU As Integer
-    Dim strInfB As String
-    Dim strN As String
-    
-    strInfB = "_Neo_InfB"
-    
-    If intStart = intStop Then
-        ModArray.AddItemToStringArray arrItems, strItem
-    Else
-        intU = UBound(arrItems)
-        ReDim Preserve arrItems(0 To intU + intStop - intStart + 1)
-        
-        For intC = intStart To intStop
-            intU = intU + 1
-            strN = IIf(intStop > 9 And intC < 10, "0" & intC, intC)
-            arrItems(intU) = strInfB & strItem & "_" & strN
-        Next intC
-    End If
-    
-End Sub
 
 Private Function ChangeTo1700(ByRef arrItems() As String) As String()
     
@@ -294,7 +331,7 @@ Private Sub test()
 
 End Sub
 
-Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
+Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolean)
 
     Dim strMedicament As String
     Dim varMedicament As Variant
@@ -310,94 +347,180 @@ Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
     Set objTblMed = Range(constTblMedIV)
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
     
-    strMedicament = IIf(bln1700, "_Neo_1700_Medicament_" & intRegel, "_Neo_InfB_Medicament_" & intRegel)
-    strMedSterkte = IIf(bln1700, "_Neo_1700_MedSterkte_" & intRegel, "_Neo_InfB_MedSterkte_" & intRegel)
-    strOplHoev = IIf(bln1700, "_Neo_1700_OplHoev_" & intRegel, "_Neo_InfB_OplHoev_" & intRegel)
+    strMedicament = constMedKeuze & strRegel
+    strMedSterkte = constMedSterkte & strRegel
+    strOplHoev = constOplHoev & strRegel
     
-    strOplossing = IIf(bln1700, "_Neo_1700_Oplossing_" & strRegel, "_Neo_InfB_Oplossing_" & strRegel)
-    strStand = IIf(bln1700, "_Neo_1700_Stand_" & strRegel, "_Neo_InfB_Stand_" & strRegel)
-    strExtra = IIf(bln1700, "_Neo_1700_VochtExtra_" & strRegel, "_Neo_InfB_VochtExtra_" & strRegel)
+    strOplossing = constOplossing & strRegel
+    strStand = constStand & strRegel
+    strExtra = constExtra & IIf(intRegel + 1 < 10, "0" & (intRegel + 1), intRegel + 1)
 
-    varMedicament = ModRange.GetRangeValue(strMedicament, vbNullString)
+    varMedicament = IIf(blnRemove, 1, ModRange.GetRangeValue(strMedicament, vbNullString))
     
+    If blnRemove Then ModRange.SetRangeValue strMedicament, 1
     ModRange.SetRangeValue strMedSterkte, 0
-    ModRange.SetRangeValue strOplHoev, 0
-    ModRange.SetRangeValue strStand, 0
-    ModRange.SetRangeValue strExtra, vbNullString
+    ModRange.SetRangeValue strOplHoev, IIf(blnRemove, 0, 12)
+    ModRange.SetRangeValue strStand, IIf(blnRemove, 0, 5)
+    ModRange.SetRangeValue strExtra, False
     
-    ModRange.SetRangeValue strOplossing, Application.VLookup(objTblMed.Cells(varMedicament, 1), objTblMed, 10, False)
+    ModRange.SetRangeValue strOplossing, Application.VLookup(objTblMed.Cells(varMedicament, 1), objTblMed, constAdvOplIndex, False)
     If Not IsNumeric(ModRange.GetRangeValue(strOplossing, vbNullString)) Then
         ModRange.SetRangeValue strOplossing, 1
     End If
     
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_1()
+Public Sub NeoInfB_ChangeMedContIV_01()
 
     ChangeMedContIV 1, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_2()
+Public Sub NeoInfB_ChangeMedContIV_02()
     
     ChangeMedContIV 2, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_3()
+Public Sub NeoInfB_ChangeMedContIV_03()
     
     ChangeMedContIV 3, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_4()
+Public Sub NeoInfB_ChangeMedContIV_04()
     
     ChangeMedContIV 4, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_5()
+Public Sub NeoInfB_ChangeMedContIV_05()
     
     ChangeMedContIV 5, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_6()
+Public Sub NeoInfB_ChangeMedContIV_06()
     
     ChangeMedContIV 6, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_7()
+Public Sub NeoInfB_ChangeMedContIV_07()
     
     ChangeMedContIV 7, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_8()
+Public Sub NeoInfB_ChangeMedContIV_08()
     
     ChangeMedContIV 8, False
 
 End Sub
 
-Public Sub NeoInfB_ChangeMedContIV_9()
+Public Sub NeoInfB_ChangeMedContIV_09()
     
     ChangeMedContIV 9, False
 
 End Sub
 
-Private Sub MedSterkte(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
+Public Sub NeoInfB_ChangeMedContIV_10()
+    
+    ChangeMedContIV 10, False
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_01()
+
+    ChangeMedContIV 1, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_02()
+    
+    ChangeMedContIV 2, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_03()
+    
+    ChangeMedContIV 3, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_04()
+    
+    ChangeMedContIV 4, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_05()
+    
+    ChangeMedContIV 5, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_06()
+    
+    ChangeMedContIV 6, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_07()
+    
+    ChangeMedContIV 7, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_08()
+    
+    ChangeMedContIV 8, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_09()
+    
+    ChangeMedContIV 9, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedContIV_10()
+    
+    ChangeMedContIV 10, True
+
+End Sub
+
+Public Sub NeoInfB_RemvoveArtLijn()
+
+    ModRange.SetRangeValue constArtLijn, 0
+    ModRange.SetRangeValue constExtra + "01", False
+
+End Sub
+
+Private Sub MedSterkte(ByVal intN As Integer)
 
     Dim frmInvoer As FormInvoerNumeriek
     Dim strSterkte As String
+    Dim strN As String
+    Dim intMedKeuze As Integer
+    Dim strUnit As String
+    
+    Dim objTblMed As Range
+    
+    strN = IIf(intN < 10, "0" & intN, intN)
+    intMedKeuze = ModRange.GetRangeValue(constMedKeuze & strN, 1)
+    If intMedKeuze <= 1 Then Exit Sub
+    
+    Set objTblMed = Range(constTblMedIV)
+    strUnit = Application.VLookup(objTblMed.Cells(intMedKeuze, 1), objTblMed, constUnitIndex, False)
+    strSterkte = constMedSterkte & strN
     
     Set frmInvoer = New FormInvoerNumeriek
-    strSterkte = IIf(bln1700, "_Neo_1700_MedSterkte_" & intRegel, "_Neo_InfB_MedSterkte_" & intRegel)
     
     With frmInvoer
-        .Caption = "Medicament " & intRegel
+        .Caption = "Medicament " & intN
         .lblParameter = "Sterkte"
-        .lblEenheid = "mg"
+        .lblEenheid = strUnit
         .txtWaarde = ModRange.GetRangeValue(strSterkte, 0) / 10
         .Show
         If IsNumeric(.txtWaarde) Then _
@@ -408,89 +531,113 @@ Private Sub MedSterkte(ByVal intRegel As Integer, ByVal bln1700 As Boolean)
 
 End Sub
 
-Public Sub NeoInfB_MedConc_1()
+Public Sub NeoInfB_MedConc_01()
 
-    MedSterkte 1, False
-
-End Sub
-
-Public Sub NeoInfB_MedConc_2()
-
-    MedSterkte 2, False
+    MedSterkte 1
 
 End Sub
 
-Public Sub NeoInfB_MedConc_3()
+Public Sub NeoInfB_MedConc_02()
 
-    MedSterkte 3, False
-
-End Sub
-
-Public Sub NeoInfB_MedConc_4()
-
-    MedSterkte 4, False
+    MedSterkte 2
 
 End Sub
 
-Public Sub NeoInfB_MedConc_5()
+Public Sub NeoInfB_MedConc_03()
 
-        MedSterkte 5, False
-
-End Sub
-
-Public Sub NeoInfB_MedConc_6()
-
-    MedSterkte 6, False
+    MedSterkte 3
 
 End Sub
 
-Public Sub NeoInfB_MedConc_7()
+Public Sub NeoInfB_MedConc_04()
 
-    MedSterkte 7, False
-
-End Sub
-
-Public Sub NeoInfB_MedConc_8()
-
-    MedSterkte 8, False
+    MedSterkte 4
 
 End Sub
 
-Public Sub NeoInfB_MedConc_9()
+Public Sub NeoInfB_MedConc_05()
 
-    MedSterkte 9, False
+        MedSterkte 5
 
 End Sub
 
+Public Sub NeoInfB_MedConc_06()
 
-Private Sub RemoveIV(ByVal intRegel As Integer)
+    MedSterkte 6
+
+End Sub
+
+Public Sub NeoInfB_MedConc_07()
+
+    MedSterkte 7
+
+End Sub
+
+Public Sub NeoInfB_MedConc_08()
+
+    MedSterkte 8
+
+End Sub
+
+Public Sub NeoInfB_MedConc_09()
+
+    MedSterkte 9
+
+End Sub
+
+Public Sub NeoInfB_MedConc_10()
+
+    MedSterkte 10
+
+End Sub
+
+Private Sub ChangeIV(ByVal intRegel As Integer, ByVal blnRemove As Boolean)
 
     Dim strStand As String
     Dim strExtra As String
 
-    strStand = "_Neo_InfB_Stand_" & intRegel
-    strExtra = "_Neo_InfB_VochtExtra_" & intRegel + 1
+    strStand = constStand & intRegel
+    strExtra = constExtra & intRegel + 1
     
+    If blnRemove Then ModRange.SetRangeValue constOplossing & intRegel, 1
     ModRange.SetRangeValue strStand, 0
     ModRange.SetRangeValue strExtra, vbNullString
     
 End Sub
 
-Public Sub NeoInfB_RemoveIV_10()
+Public Sub NeoInfB_ChangeIV_11()
     
-    RemoveIV 10
+    ChangeIV 11, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeIV_12()
+    
+    ChangeIV 12, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeIV_13()
+    
+    ChangeIV 13, False
 
 End Sub
 
 Public Sub NeoInfB_RemoveIV_11()
     
-    RemoveIV 11
+    ChangeIV 11, True
 
 End Sub
 
 Public Sub NeoInfB_RemoveIV_12()
     
-    RemoveIV 12
+    ChangeIV 12, True
+
+End Sub
+
+Public Sub NeoInfB_RemoveIV_13()
+    
+    ChangeIV 13, True
 
 End Sub
 
@@ -532,12 +679,384 @@ End Sub
 
 Public Sub NeoInfB_MedText_1()
 
-    EnterText "Voer tekst in ...", "Tekst voor medicatie 13", "_MedTekst_1"
+    EnterText "Voer tekst in ...", "Tekst voor medicatie 14", constMedText & "1"
 
 End Sub
 
 Public Sub NeoInfB_MedText_2()
 
-    EnterText "Voer tekst in ...", "Tekst voor medicatie 14", "_MedTekst_2"
+    EnterText "Voer tekst in ...", "Tekst voor medicatie 15", constMedText & "2"
+    
+End Sub
+
+Public Sub NeoInfB_RemoveMedText_1()
+
+    ModRange.SetRangeValue constMedText & "1", vbNullString
+
+End Sub
+
+Public Sub NeoInfB_RemoveMedText_2()
+
+    ModRange.SetRangeValue constMedText & "2", vbNullString
+
+End Sub
+
+Private Sub ChangeVoeding(ByVal blnRemove As Boolean)
+
+    Dim intN As Integer
+
+    If blnRemove Then
+        ModRange.SetRangeValue constEntVoed, 1
+        ModRange.SetRangeValue constPrevVoed, 1
+    Else
+        ModRange.SetRangeValue constPrevVoed, ModRange.GetRangeValue(constEntVoed, 1)
+    End If
+    
+    ModRange.SetRangeValue constEntFreq & 1, 0
+    ModRange.SetRangeValue constEntFreq & 2, 0
+    ModRange.SetRangeValue constEntHoev & 1, 0
+    ModRange.SetRangeValue constEntHoev & 2, 0
+    
+    ModRange.SetRangeValue constEntExtra, 2
+    
+    ModRange.SetRangeValue constEntPerc & 0, 1
+    For intN = 1 To 8
+        ModRange.SetRangeValue constEntToev & intN, 1
+        ModRange.SetRangeValue constEntPerc & intN, 1
+    Next intN
+    
+End Sub
+
+Public Sub NeoInfB_ChangeVoed()
+
+    Dim intPrev As Integer
+    Dim intVoed As Integer
+    
+    intPrev = ModRange.GetRangeValue(constPrevVoed, 1)
+    intVoed = ModRange.GetRangeValue(constEntVoed, 1)
+    
+    If intPrev = 1 Then
+        ChangeVoeding False
+    ElseIf intVoed = 1 Then
+        ChangeVoeding True
+    End If
+    
+End Sub
+
+Public Sub NeoInfB_RemoveVoed()
+
+    ChangeVoeding True
+    
+End Sub
+
+Private Sub ChangeToevoeg(ByVal blnMM As Boolean, ByVal intN As Integer, ByVal blnRemove As Boolean)
+
+    intN = IIf(blnMM, intN, intN + 4)
+    blnRemove = blnRemove Or (ModRange.GetRangeValue(constEntToev & intN, 1) = 1)
+    
+    ModRange.SetRangeValue constEntPerc & intN, 1
+    If blnRemove Then ModRange.SetRangeValue constEntToev & intN, 1
+    
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevMM_1()
+
+    ChangeToevoeg True, 1, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevMM_2()
+
+    ChangeToevoeg True, 2, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevMM_3()
+
+    ChangeToevoeg True, 3, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevMM_4()
+
+    ChangeToevoeg True, 4, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevKV_1()
+
+    ChangeToevoeg False, 1, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevKV_2()
+
+    ChangeToevoeg False, 2, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevKV_3()
+
+    ChangeToevoeg False, 3, False
+
+End Sub
+
+Public Sub NeoInfB_ChangeToevKV_4()
+
+    ChangeToevoeg False, 4, False
+
+End Sub
+
+Private Sub ChangeIntakePerKg(ByVal blnRemove As Boolean)
+
+    If blnRemove Then
+        ModRange.SetRangeValue constIntakePerKg, 5000
+        ModRange.SetRangeValue constTPNParEnt, False
+    Else
+        ModRange.SetRangeValue constTPNParEnt, True
+    End If
+
+End Sub
+
+Public Sub NeoInfB_ChangeIntakePerKg()
+
+    ChangeIntakePerKg False
+
+End Sub
+
+Public Sub NeoInfB_RemoveIntakePerKg()
+
+    ChangeIntakePerKg True
+
+End Sub
+
+Private Function CalcAdviceNullValue(ByVal strRange As String) As Long
+
+    CalcAdviceNullValue = 5000 - ModRange.GetRangeValue(strRange, 0)
+
+End Function
+
+Public Sub NeoInfB_StandardLipid()
+
+    Dim lngNullVal As Long
+    
+    ModRange.SetRangeValue constLipidStand, 5000
+
+End Sub
+
+Public Sub NeoInfB_RemoveLipid()
+
+    Dim lngNullVal As Long
+    
+    lngNullVal = CalcAdviceNullValue(constLipidAdvies)
+    ModRange.SetRangeValue constLipidStand, lngNullVal
+
+End Sub
+
+' ToDo Implement and assign
+Public Sub NeoInfB_RemoveTPN()
+
+    Dim lngNullVal As Long
+    
+    lngNullVal = CalcAdviceNullValue(constLipidAdvies)
+    ModRange.SetRangeValue constLipidStand, lngNullVal
+
+
+End Sub
+
+' Copy paste function cannot be reused because of private clear method
+Private Sub ShowMedIVPickList(ByVal strTbl As String, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
+
+    Dim frmPickList As FormNeoMedIVPickList
+    Dim colTbl As Collection
+    Dim intN As Integer
+    Dim strN As String
+    Dim intC As Integer
+    Dim intKeuze As Integer
+    
+    Set colTbl = ModRange.CollectionFromRange(strTbl, intStart)
+    
+    Set frmPickList = New FormNeoMedIVPickList
+    frmPickList.LoadMedicamenten colTbl
+    
+    For intN = 1 To intMax
+        strN = IIf(intMax > 9, IIf(intN < 10, "0" & intN, intN), intN)
+        intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
+        If intKeuze > 1 Then frmPickList.SelectMedicament intKeuze
+    Next intN
+    
+    frmPickList.Show
+    
+    If frmPickList.GetAction = vbNullString Then
+    
+        For intN = 1 To intMax                 ' First remove nonselected items
+            strN = IIf(intN < 10, "0" & intN, intN)
+            intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
+            If intKeuze > 1 Then
+                If frmPickList.IsMedicamentSelected(intKeuze) Then
+                    frmPickList.UnselectMedicament (intKeuze)
+                Else
+                    ChangeMedContIV intN, True ' Remove is specific to PedContIV replace with appropriate sub when copy paste
+                End If
+            End If
+        Next intN
+        
+        Do While frmPickList.HasSelectedMedicamenten()  ' Then add selected items
+            For intN = 1 To intMax
+                strN = IIf(intN < 10, "0" & intN, intN)
+                intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
+                If intKeuze <= 1 Then
+                    intKeuze = frmPickList.GetFirstSelectedMedicament(True)
+                    ModRange.SetRangeValue strRange & strN, intKeuze
+                    Exit For
+                End If
+            Next intN
+        Loop
+    
+    End If
+    
+    Set frmPickList = Nothing
+
+End Sub
+
+
+Public Sub NeoInfB_ShowMedIVPickList()
+
+    ShowMedIVPickList constTblMedIV, constMedKeuze, 2, constMedIVMax
+
+End Sub
+
+Public Sub NeoInfB_ShowVoedingPickList()
+
+    Dim frmPickList As FormNeoEntPickList
+    Dim colVoeding As Collection
+    Dim colToevoegMM As Collection
+    Dim colToevoegKV As Collection
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim intVoeding As Integer
+    Dim intToevoegMM As Integer
+    Dim intToevoegKV As Integer
+    
+    Dim intMaxLoop As Integer
+    Dim intLoop As Integer
+    
+    intMaxLoop = 100
+    
+    Set colVoeding = ModRange.CollectionFromRange(constTblVoeding, 2)
+    Set colToevoegMM = ModRange.CollectionFromRange(constTblToevoegMM, 2)
+    Set colToevoegKV = ModRange.CollectionFromRange(constTblToevoegKV, 2)
+    
+    Set frmPickList = New FormNeoEntPickList
+    frmPickList.LoadVoedingen colVoeding
+    frmPickList.LoadToevoegMM colToevoegMM
+    frmPickList.LoadToevoegKV colToevoegKV
+    
+    intVoeding = ModRange.GetRangeValue(constEntVoed, 1)
+    If intVoeding > 1 Then frmPickList.SelectVoeding intVoeding
+    
+    For intN = 1 To constToevoegMMCount
+        intToevoegMM = ModRange.GetRangeValue(constEntToev & intN, 1)
+        If intToevoegMM > 1 Then frmPickList.SelectToevoegMM intToevoegMM
+    Next intN
+    
+    For intN = 1 To constToevoegKVCount
+        intToevoegKV = ModRange.GetRangeValue(constEntToev & intN + 4, 1)
+        If intToevoegKV > 1 Then frmPickList.SelectToevoegKV intToevoegKV
+    Next intN
+    
+    frmPickList.Show
+    
+    If frmPickList.GetAction = vbNullString Then
+    
+        ' -- Process Voeding
+    
+        ' First remove nonselected items
+        intVoeding = ModRange.GetRangeValue(constEntVoed, 1)
+        If intVoeding > 1 Then
+            If frmPickList.IsVoedingSelected(intVoeding) Then
+                frmPickList.UnselectVoeding (intVoeding)
+            Else
+                ChangeVoeding True
+            End If
+        End If
+        
+        Do While frmPickList.HasSelectedVoedingen()  ' Then add selected items
+            intVoeding = ModRange.GetRangeValue(constEnt, 1)
+            If intVoeding <= 1 Then
+                intVoeding = frmPickList.GetFirstSelectedVoeding(True)
+                ModRange.SetRangeValue constEntVoed, intVoeding
+            End If
+        Loop
+    
+        ' -- Process Toevoegingen Moedermelk = Var_Neo_InFfB_Toevoeging_ 1 t/m 4
+    
+        For intN = 1 To constToevoegMMCount         ' First remove nonselected items
+            intToevoegMM = ModRange.GetRangeValue(constEntToev & intN, 1)
+            If intToevoegMM > 1 Then
+                If frmPickList.IsToevoegMMSelected(intToevoegMM) Then
+                    frmPickList.UnselectToevoegMM intToevoegMM
+                Else
+                    ChangeToevoeg True, intN, True  ' Remove toevoeging
+                End If
+            End If
+        Next intN
+        
+        intLoop = 1
+        Do While frmPickList.HasSelectedToevMM()    ' Then add selected items
+            For intN = 1 To constToevoegMMCount
+                intToevoegMM = ModRange.GetRangeValue(constEntToev & intN, 1)
+                If intToevoegMM <= 1 Then
+                    intToevoegMM = frmPickList.GetFirstSelectedToevoegMM(True)
+                    ModRange.SetRangeValue constEntToev & intN, intToevoegMM
+                    Exit For
+                End If
+            Next intN
+            
+            intLoop = intLoop + 1
+            If intLoop > intMaxLoop Then GoTo NeoInfB_ShowVoedingPickListError
+        Loop
+    
+        ' -- Process Toevoegingen Kunstvoeding = Var_Neo_InFfB_Toevoeging_ 5 t/m 8
+    
+        For intN = 1 To constToevoegKVCount     ' First remove nonselected items
+            intToevoegKV = ModRange.GetRangeValue(constEntToev & intN + 4, 1)
+            If intToevoegKV > 1 Then
+                If frmPickList.IsToevoegKVSelected(intToevoegKV) Then
+                    frmPickList.UnselectToevoegKV intToevoegKV
+                Else
+                    ChangeToevoeg False, intN, True
+                End If
+            End If
+        Next intN
+        
+        intLoop = 1
+        Do While frmPickList.HasSelectedToevKV()    ' Then add selected items
+            For intN = 1 To constToevoegKVCount
+                intToevoegKV = ModRange.GetRangeValue(constEntToev & intN + 4, 1)
+                If intToevoegKV <= 1 Then
+                    intToevoegKV = frmPickList.GetFirstSelectedToevoegKV(True)
+                    ModRange.SetRangeValue constEntToev & intN + 4, intToevoegKV
+                    Exit For
+                End If
+            Next intN
+            
+            intLoop = intLoop + 1
+            If intLoop > intMaxLoop Then GoTo NeoInfB_ShowVoedingPickListError
+        Loop
+    
+    End If
+    
+    Set frmPickList = Nothing
+    
+    Exit Sub
+    
+NeoInfB_ShowVoedingPickListError:
+
+    ModMessage.ShowMsgBoxError "Zit in een loop"
+    ModLog.LogError "Loop error for NeoInfB_ShowVoedingPickList"
+    
+    Set frmPickList = Nothing
     
 End Sub

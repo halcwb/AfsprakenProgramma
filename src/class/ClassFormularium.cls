@@ -58,7 +58,7 @@ Private Sub Class_Initialize()
 
 End Sub
 
-Public Sub GetMedicamenten(ByVal blnShowProgress)
+Public Sub GetMedicamenten(ByVal blnShowProgress As Boolean)
 
     ModMedDisc.GetMedicamenten Me, blnShowProgress
     

@@ -34,7 +34,7 @@ Private Function GetSetting(ByVal strSetting As String) As Variant
     
 GetSettingError:
 
-    strMsg = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & "Kan setting: " & strSetting & " niet ophalen"
+    strMsg = "Kan setting: " & strSetting & " niet ophalen"
     ModMessage.ShowMsgBoxError strMsg
 
 End Function
@@ -51,7 +51,7 @@ Private Sub SetSetting(ByVal strSetting As String, ByVal varValue As Variant)
 
 SetSettingError:
 
-    strMsg = ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & "Kan setting: " & strSetting & " niet opslaan"
+    strMsg = "Kan setting: " & strSetting & " niet opslaan"
     ModMessage.ShowMsgBoxError strMsg
     
 End Sub

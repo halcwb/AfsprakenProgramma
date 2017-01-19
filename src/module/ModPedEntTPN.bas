@@ -7,24 +7,24 @@ Private Const CONST_TPN_3 As Integer = 16
 Private Const CONST_TPN_4 As Integer = 30
 Private Const CONST_TPN_5 As Integer = 50
 
-Private Const constTblVoeding = "tblPerOs"         ' ToDo rename tbl_Ped_Voeding
-Private Const constTblToevoeging = "tblPoeder" ' ToDo rename tbl_Ped_Toevoeging
+Private Const constTblVoeding As String = "Tbl_Ped_Voeding"
+Private Const constTblToevoeging As String = "Tbl_Ped_Poeder"
 
-Private Const constVoedingCount = 1
-Private Const constToevoegingCount = 3
+Private Const constVoedingCount As Integer = 1
+Private Const constToevoegingCount As Integer = 3
 
 Private Const constSode As String = "_Ped_Ent_Sonde"
 Private Const constVoeding As String = "_Ped_Ent_Keuze_"
 Private Const constEntText As String = "_Ped_Ent_Opm"
 Private Const constTpnText As String = "_Ped_TPN_Opm"
 
-Private Const constSST1Stand = "_Ped_TPN_SST1Stand"
-Private Const constSST1Keuze = "_Ped_TPN_SST1Keuze"
-Private Const constSST2Stand = "_Ped_TPN_SST2Stand"
-Private Const constSST2Keuze = "_Ped_TPN_SST2Keuze"
+Private Const constSST1Stand As String = "_Ped_TPN_SST1Stand"
+Private Const constSST1Keuze As String = "_Ped_TPN_SST1Keuze"
+Private Const constSST2Stand As String = "_Ped_TPN_SST2Stand"
+Private Const constSST2Keuze As String = "_Ped_TPN_SST2Keuze"
 
-Private Const constTPN = "_Ped_TPN_Keuze"
-Private Const constTPNVol = "_Ped_TPN_Vol"
+Private Const constTPN As String = "_Ped_TPN_Keuze"
+Private Const constTPNVol As String = "_Ped_TPN_Vol"
 
 Private Const constNaCl1 As String = "_Ped_TPN_NaCl1"
 Private Const constNaCl1Vol As String = "_Ped_TPN_NaClVol1"
@@ -51,7 +51,6 @@ Private Const constSoluvit As String = "_Ped_TPN_Soluvit"
 Private Const constSoluvitVol As String = "_Ped_TPN_SoluvitVol"
 Private Const constVitIntra As String = "_Ped_TPN_VitIntra"
 Private Const constVitIntraVol As String = "_Ped_TPN_VitIntraVol"
-
 
 
 Public Sub PedEntTPN_ClearSSt()
@@ -123,7 +122,7 @@ End Sub
 
 Public Sub PedEntTPN_ShowVoedingPickList()
 
-    Dim frmPickList As FormVoedingPickList
+    Dim frmPickList As FormPedEntPickList
     Dim colVoeding As Collection
     Dim colToevoeging As Collection
     Dim intN As Integer
@@ -131,19 +130,10 @@ Public Sub PedEntTPN_ShowVoedingPickList()
     Dim intVoeding As Integer
     Dim intToevoeging As Integer
     
-    Set colVoeding = New Collection
-    intC = Range(constTblVoeding).Rows.Count
-    For intN = 2 To intC
-        colVoeding.Add Range(constTblVoeding).Cells(intN, 1)
-    Next intN
+    Set colVoeding = ModRange.CollectionFromRange(constTblVoeding, 2)
+    Set colToevoeging = ModRange.CollectionFromRange(constTblToevoeging, 2)
     
-    Set colToevoeging = New Collection
-    intC = Range(constTblToevoeging).Rows.Count
-    For intN = 2 To intC
-        colToevoeging.Add Range(constTblToevoeging).Cells(intN, 1)
-    Next intN
-    
-    Set frmPickList = New FormVoedingPickList
+    Set frmPickList = New FormPedEntPickList
     frmPickList.LoadVoedingen colVoeding
     frmPickList.LoadToevoegingen colToevoeging
     

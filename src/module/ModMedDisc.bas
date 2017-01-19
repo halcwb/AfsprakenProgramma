@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
-Private Const constFormularium = "Formularium.xlsx"
+Private Const constFormularium As String = "Formularium.xlsx"
 
 ' --- Medicament ---
 Private Const constGPK As String = "_Glob_MedDisc_GPK_"              ' GPK code

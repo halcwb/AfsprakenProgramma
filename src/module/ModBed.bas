@@ -70,8 +70,11 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
     Dim strBookName As String
     Dim strRange As String
     Dim blnAll As Boolean
+    Dim blnNeo As Boolean
     
     strBed = GetBed()
+    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentMode()
+    
     If blnAsk Then
         If blnShowProgress Then
             strTitle = FormProgress.Caption
@@ -104,6 +107,9 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
         SetFileVersie FileSystem.FileDateTime(strFileName)
         SetBed strBed
         
+        If shtGlobTemp.Range("A1").CurrentRegion.Rows <= 1 Then ModPatient.ClearPatientData vbNullString, False, True   ' Patient data was empty so clean all current data
+        If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar blnShowProgress                                               ' Make sure that infuusbrief data is updated
+        
         blnAll = ModRange.CopyTempSheetToNamedRanges(True)
         If Not blnAll And blnAsk Then
             If blnShowProgress Then
@@ -118,14 +124,15 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
         End If
     End If
 
-    ModPedEntTPN.PedEntTPN_SelectTPN
+    If Not blnNeo Then ModPedEntTPN.PedEntTPN_SelectTPN
+    
     ModLog.LogActionEnd strAction
     
     Exit Sub
 
 ErrorOpenBed:
 
-    ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
+    ModMessage.ShowMsgBoxError "Kan bed " & strBed & " niet openenen"
     ModLog.LogError Err.Description
     
 End Sub
@@ -147,9 +154,12 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
     
     Dim varReply As VbMsgBoxResult
     
+    Dim blnNeo As Boolean
+
     On Error GoTo CloseBedError
     
     strBed = GetBed()
+    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentMode()
     
     strAction = "ModBed.CloseBed"
     strParams = Array(blnAsk, strBed)
@@ -175,6 +185,8 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
 
     If varReply = vbYes Then
         ModProgress.StartProgress "Bed Opslaan"
+        
+        If blnNeo Then ModNeoInfB.CopyCurrentInfVarToData True ' Make sure that neo data is updated with latest current infuusbrief
     
         If SaveBedToFile(strBed, False, True) Then
             ModProgress.FinishProgress
@@ -231,7 +243,7 @@ CloseBedError:
 
     ModProgress.FinishProgress
     
-    ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG & vbNewLine & "Kan patient niet opslaan op bed: " & strBed
+    ModMessage.ShowMsgBoxError "Kan patient niet opslaan op bed: " & strBed
     ModLog.LogError strAction
 
 End Sub

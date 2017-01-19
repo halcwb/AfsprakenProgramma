@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormColorPicker
    ClientHeight    =   7035
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   9495
+   ClientWidth     =   11955
    OleObjectBlob   =   "FormColorPicker.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -37,6 +37,9 @@ Private Sub Validate()
 
     Dim strValid As String
     
+    strValid = IIf(cboItem.Value = vbNullString, "Maak een veld selectie", vbNullString)
+    strValid = IIf(optNeo.Value = 0 And optPed.Value = 0, "Maak een afdeling selectie", strValid)
+    
     cmdOK.Enabled = strValid = vbNullString
     lblValid.Caption = strValid
 
@@ -46,18 +49,17 @@ Private Sub ColorRanges()
 
     If optPed.Value Then
         WriteGroup constPed
-        ModColors.ColorPedRanges
+        ModColors.ColorPedNeoRanges False
     End If
     
     If optNeo.Value Then
         WriteGroup constNeo
-        MsgBox "Nog niet werkzaam"
+        ModColors.ColorPedNeoRanges True
     End If
-    
 
 End Sub
 
-Private Sub SetLabelBold(blnBold As Boolean)
+Private Sub SetLabelBold(ByVal blnBold As Boolean)
 
     Dim objCtrl As MSForms.Label
     
@@ -70,7 +72,7 @@ Private Sub SetLabelBold(blnBold As Boolean)
 
 End Sub
 
-Private Sub SetLabelItalic(blnItalic As Boolean)
+Private Sub SetLabelItalic(ByVal blnItalic As Boolean)
 
     Dim objCtrl As MSForms.Label
     
@@ -132,7 +134,7 @@ Private Sub SetLabelColors(ByRef objLabel As MSForms.Label, ByRef objRange As Ra
 
 End Sub
 
-Private Sub SetRangeColors(ByRef objRange As Range, objLabel As MSForms.Label)
+Private Sub SetRangeColors(ByRef objRange As Range, ByRef objLabel As MSForms.Label)
 
     objRange.Interior.Color = objLabel.BackColor
     objRange.Font.Color = objLabel.ForeColor
@@ -211,14 +213,16 @@ Private Sub cboItem_Change()
     Set objLabel = frmLabels.Controls("lbl" & cboItem.Value)
     
     SelectLabel objLabel
+    
+    Validate
 
 End Sub
 
 Private Sub cmdApply_Click()
 
-    Hide
+    Me.Hide
     ColorRanges
-    Show
+    Me.Show
 
 End Sub
 
@@ -239,7 +243,7 @@ End Sub
 
 Private Sub cmdCancel_Click()
 
-    Hide
+    Me.Hide
 
 End Sub
 
@@ -290,7 +294,7 @@ End Sub
 
 Private Sub cmdOK_Click()
 
-    Hide
+    Me.Hide
     ColorRanges
 
 End Sub
@@ -298,12 +302,14 @@ End Sub
 Private Sub optPed_Click()
 
     SetGroup constPed
+    Validate
 
 End Sub
 
 Private Sub optNeo_Click()
 
     SetGroup constNeo
+    Validate
 
 End Sub
 

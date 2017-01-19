@@ -69,8 +69,10 @@ End Sub
 
 Private Sub UserForm_Activate()
 
-    Me.txtWaarde.SetFocus
     Me.Caption = ModConst.CONST_APPLICATION_NAME
+    Me.txtWaarde.SetFocus
+    Me.txtWaarde.SelStart = 0
+    Me.txtWaarde.SelLength = Len(Me.txtWaarde.Value)
 
 End Sub
 
@@ -93,7 +95,6 @@ Public Sub SetValue(ByVal strRange As String, ByVal strItem As String, ByVal var
 SetValueError:
 
     strError = varValue & " is geen numerieke waarde" & vbNewLine
-    strError = strError & ModConst.CONST_DEFAULTERROR_MSG
     ModMessage.ShowMsgBoxError strError
     
     Me.Hide

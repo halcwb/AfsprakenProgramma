@@ -4,7 +4,7 @@ Option Explicit
 ' Module to handle ribbon events
 ' Note: blnVisible in GetVisible functions is not a boolean!! Using blnVisible As Boolean will result in a type mismatch!
 
-Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
+Public Sub ButtonOnAction(ByRef ctrlMenuItem As IRibbonControl)
 '
 ' Code for onAction callback. Ribbon control button
 '
@@ -175,17 +175,17 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
     
 End Sub
 
-Public Sub RibbonOnLoad(objRibbon As IRibbonUI)
+Public Sub RibbonOnLoad(ByRef objRibbon As IRibbonUI)
 
     ModLog.LogInfo "RibbonOnLoad"
 
 End Sub
 
-Public Sub GetVisiblePed(ctrContr As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisiblePed(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
     Dim strPath As String
     Dim strPedDir As String
-    Dim blnIsDevelop
+    Dim blnIsDevelop As Boolean
 
     blnIsDevelop = ModSetting.IsDevelopmentMode()
     strPath = Application.ActiveWorkbook.Path
@@ -199,11 +199,11 @@ Public Sub GetVisiblePed(ctrContr As IRibbonControl, ByRef blnVisible)
     
 End Sub
 
-Public Sub GetVisibleNeo(ctrContr As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisibleNeo(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
     
     Dim strPath As String
     Dim strPedDir As String
-    Dim blnIsDevelop
+    Dim blnIsDevelop As Boolean
 
     blnIsDevelop = ModSetting.IsDevelopmentMode()
     strPath = Application.ActiveWorkbook.Path
@@ -217,13 +217,13 @@ Public Sub GetVisibleNeo(ctrContr As IRibbonControl, ByRef blnVisible)
     
 End Sub
 
-Public Sub GetVisibleDevelopment(ctrContr As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisibleDevelopment(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
     blnVisible = ModSetting.IsDevelopmentMode()
     
 End Sub
 
-Public Sub GetVisibleAdmin(ctrContr As IRibbonControl, ByRef blnVisible)
+Public Sub GetVisibleAdmin(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
     blnVisible = ModSetting.IsDevelopmentMode()
     

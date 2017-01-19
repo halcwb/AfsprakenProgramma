@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormLijnenPickList 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPedLijnenPickList 
    Caption         =   "Kies lijnen ..."
    ClientHeight    =   7065
    ClientLeft      =   15
    ClientTop       =   315
    ClientWidth     =   6705
-   OleObjectBlob   =   "FormLijnenPickList.frx":0000
+   OleObjectBlob   =   "FormPedLijnenPickList.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "FormLijnenPickList"
+Attribute VB_Name = "FormPedLijnenPickList"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True

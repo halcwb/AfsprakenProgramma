@@ -110,7 +110,7 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As Stri
     
 CreatePatientsWorkBookError:
 
-    ModMessage.ShowMsgBoxError ModConst.CONST_DEFAULTERROR_MSG
+    ModMessage.ShowMsgBoxError "Kan patient data file niet aanmaken"
     ModLog.LogError "Cannot create patients workbook: " & Join(Array(strDataFile, strTextFile, strFormula), ", ")
 
 End Sub
