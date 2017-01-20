@@ -129,16 +129,15 @@ Public Sub InitializeAfspraken()
     strParams = Array()
     
     ModLog.LogActionStart strAction, strParams
+    
+    SetCaptionAndHideBars              ' Setup Excel Application
+    shtGlobGuiFront.Select
+    SetWindowToOpenApp WbkAfspraken.Windows(1)
+    
+    DoEvents                           ' Make sure sheet is shown before proceding
         
     ModProgress.StartProgress "Start Afspraken Programma"
-        
-    SetCaptionAndHideBars              ' Setup Excel Application
-    
-    ModSheet.SelectPedOrNeoStartSheet  ' Select the first GUI sheet
-    DoEvents                           ' Make sure sheet is shown before proceding
-    ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)
-    DoEvents
-    
+            
     Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
     
     ' Setup sheets
@@ -153,6 +152,8 @@ Public Sub InitializeAfspraken()
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
     
     ModProgress.FinishProgress
+    
+    ModSheet.SelectPedOrNeoStartSheet  ' Select the first GUI sheet
     
     ModLog.LogActionEnd strAction
         
