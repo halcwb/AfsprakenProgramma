@@ -73,7 +73,7 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
     Dim blnNeo As Boolean
     
     strBed = GetBed()
-    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentMode()
+    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()
     
     If blnAsk Then
         If blnShowProgress Then
@@ -159,7 +159,7 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
     On Error GoTo CloseBedError
     
     strBed = GetBed()
-    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentMode()
+    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()
     
     strAction = "ModBed.CloseBed"
     strParams = Array(blnAsk, strBed)

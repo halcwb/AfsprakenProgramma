@@ -50,4 +50,15 @@ $M$68: 	=NeoGuiInfB!C15:E15,NeoGuiInfB!I15,NeoGuiInfB!L15,NeoGuiInfB!C17:D17,Neo
 $M$69: 	=NeoGuiInfB!C9:R12
 $M$70: 	=NeoGuiInfB!C14:R14,NeoGuiInfB!C24:R24,NeoGuiInfB!C45:R45,NeoGuiInfB!C61:R61
 $M$71: 	=NeoGuiInfB!C2:R7
+$M$74: 	=NeoGuiAfspr!A1
+$M$75: 	=NeoGuiAfspr!C8:C10,NeoGuiAfspr!C12,NeoGuiAfspr!J8,NeoGuiAfspr!J17:K17,NeoGuiAfspr!J20,NeoGuiAfspr!D27,NeoGuiAfspr!G31,NeoGuiAfspr!D41
+$M$76: 	=NeoGuiAfspr!C27,NeoGuiAfspr!E41:F41
+$M$77: 	=NeoGuiAfspr!B2:K4
+$M$78: 	=NeoGuiAfspr!B6:K6,NeoGuiAfspr!B21:E21,NeoGuiAfspr!B34:E34
+$M$79: 	=NeoGuiAfspr!B44:J49
+$M$82: 	=NeoGuiLab!A1
+$M$84: 	=NeoGuiLab!B42,NeoGuiLab!B9:T9
+$M$85: 	=NeoGuiLab!B2:T5
+$M$86: 	=NeoGuiLab!B7:T7
+$M$88: 	=NeoGuiLab!B10:M41,NeoGuiLab!O10:T41
 "

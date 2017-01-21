@@ -20,16 +20,30 @@ End Sub
 
 Public Sub SetToDevelopmentMode()
 
-    ModProgress.StartProgress "Zet in Ontwikkel Modus"
+    Dim blnDevelop As Boolean
     
-    ModSheet.UnprotectUserInterfaceSheets True
-    ModSheet.UnhideNonUserInterfaceSheets True
-            
-    ModSetting.SetDevelopmentMode True
+    blnDevelop = Not ModSetting.GetDevelopmentMode()
     
-    ModProgress.FinishProgress
-    
-    Application.DisplayFormulaBar = True
+    If blnDevelop Then
+        ModProgress.StartProgress "Zet in Ontwikkel Modus"
+        Application.ScreenUpdating = False
+        
+        ModSheet.UnprotectUserInterfaceSheets True
+        ModSheet.UnhideNonUserInterfaceSheets True
+                
+        ModSetting.SetDevelopmentMode True
+        SetWindowToCloseApp WbkAfspraken.Windows(1)
+        
+        Application.ScreenUpdating = True
+        ModProgress.FinishProgress
+        
+        Application.DisplayFormulaBar = True
+    Else
+        ModMessage.ShowMsgBoxInfo "Weer terug zetten in Gebruikers Modus"
+        ModSetting.SetDevelopmentMode False
+        
+        InitializeAfspraken
+    End If
 
 End Sub
 
@@ -55,8 +69,8 @@ Public Sub CloseAfspraken()
     ModProgress.StartProgress "Afspraken Programma Afsluiten"
     
     intN = 1
-    intC = Application.Windows.Count
-    For Each objWindow In Application.Windows
+    intC = WbkAfspraken.Windows.Count
+    For Each objWindow In WbkAfspraken.Windows
         SetWindowToCloseApp objWindow
         ModProgress.SetJobPercentage "Windows Terugzetten", intC, intN
         intN = intN + 1
@@ -69,6 +83,8 @@ Public Sub CloseAfspraken()
          .DisplayFormulaBar = True
          .Cursor = xlDefault
     End With
+    
+    ModSetting.SetDevelopmentMode False
         
     ModProgress.FinishProgress
     ModLog.LogActionEnd strAction
@@ -90,8 +106,6 @@ End Sub
 
 Private Sub SetWindow(ByRef objWindow As Window, ByRef blnDisplay As Boolean)
 
-    blnDisplay = blnDisplay Or ModSetting.IsDevelopmentMode()
-
     With objWindow
         .DisplayWorkbookTabs = blnDisplay
         .DisplayGridlines = blnDisplay
@@ -102,7 +116,9 @@ Private Sub SetWindow(ByRef objWindow As Window, ByRef blnDisplay As Boolean)
         .DisplayHorizontalScrollBar = blnDisplay
         .WindowState = xlMaximized
     End With
-
+    
+    Application.DisplayFormulaBar = blnDisplay
+    
 End Sub
 
 Public Sub SetWindowToCloseApp(ByRef objWindow As Window)
@@ -122,6 +138,7 @@ Public Sub InitializeAfspraken()
     Dim strError As String
     Dim strAction As String
     Dim strParams() As Variant
+    Dim objWind As Window
     
     On Error GoTo InitializeError
     
@@ -132,7 +149,10 @@ Public Sub InitializeAfspraken()
     
     SetCaptionAndHideBars              ' Setup Excel Application
     shtGlobGuiFront.Select
-    SetWindowToOpenApp WbkAfspraken.Windows(1)
+    
+    For Each objWind In WbkAfspraken.Windows
+        SetWindowToOpenApp objWind
+    Next
     
     DoEvents                           ' Make sure sheet is shown before proceding
         
@@ -181,7 +201,7 @@ Private Sub SetCaptionAndHideBars()
 
     Dim blnIsDevelop As Boolean
     
-    blnIsDevelop = ModSetting.IsDevelopmentMode()
+    blnIsDevelop = ModSetting.GetDevelopmentMode()
     
     SetApplicationTitle
     

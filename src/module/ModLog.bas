@@ -56,13 +56,7 @@ End Sub
 
 Public Sub LogInfo(ByVal strInfo As String)
 
-    Dim blnLog As Boolean
-    
-    blnLog = ModSetting.GetEnableLogging()
-
-    EnableLogging
     LogToFile ModSetting.GetLogPath(), Info, strInfo
-    If Not blnLog Then ModLog.DisableLogging
 
 End Sub
 

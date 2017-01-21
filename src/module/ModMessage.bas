@@ -44,3 +44,19 @@ Public Function ShowMsgBoxYesNo(ByVal strText As String) As VbMsgBoxResult
     
 End Function
 
+Public Function ShowPasswordBox(ByVal strText As String) As String
+
+    Dim objPw As FormPassword
+    Dim strPw As String
+    
+    Set objPw = New FormPassword
+    objPw.Caption = strText
+    objPw.Show
+    
+    If objPw.lblValid.Caption = vbNullString Then strPw = objPw.txtPassword.Value
+    
+    Set objPw = Nothing
+    
+    ShowPasswordBox = strPw
+
+End Function

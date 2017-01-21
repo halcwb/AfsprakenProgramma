@@ -10,11 +10,13 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Private Sub Worksheet_Activate()
-    Dim objWindow As Window
     
-    If Not ModSetting.IsDevelopmentMode() Then
-        Set objWindow = Windows(1)
-        ModApplication.SetWindowToOpenApp objWindow
+    If ModSetting.GetDevelopmentMode() Then
+        ModApplication.SetWindowToCloseApp WbkAfspraken.Windows(1)
+    Else
+        ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)
     End If
     
 End Sub
+
+

@@ -202,7 +202,7 @@ Public Sub SelectNeoOrPedSheet(ByRef shtPed As Worksheet, ByRef shtNeo As Worksh
     
     strPath = WbkAfspraken.Path
     strPeli = ModSetting.GetPedDir()
-    blnIsDevelop = ModSetting.IsDevelopmentMode()
+    blnIsDevelop = ModSetting.IsDevelopmentDir()
     
     If ModString.ContainsCaseInsensitive(strPath, strPeli) Or blnIsDevelop Then
         GoToSheet shtPed, "A1"

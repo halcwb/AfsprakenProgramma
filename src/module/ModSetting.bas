@@ -62,7 +62,7 @@ Public Function GetDevelopmentMode() As Boolean
 
 End Function
 
-Public Function IsDevelopmentMode() As Boolean
+Public Function IsDevelopmentDir() As Boolean
 
     Dim blnDevDir As Boolean
     Dim strActDir As String
@@ -70,7 +70,7 @@ Public Function IsDevelopmentMode() As Boolean
     strActDir = WbkAfspraken.Path
     blnDevDir = ModString.ContainsCaseInsensitive(strActDir, GetDevelopmentDir)
     
-    IsDevelopmentMode = GetDevelopmentMode() Or blnDevDir
+    IsDevelopmentDir = blnDevDir
 
 End Function
 
@@ -94,7 +94,16 @@ End Sub
 
 Public Sub ToggleLogging()
 
-    SetEnableLogging Not GetEnableLogging()
+    Dim blnLog As Boolean
+    
+    blnLog = Not GetEnableLogging()
+    SetEnableLogging blnLog
+    
+    If blnLog Then
+        ModMessage.ShowMsgBoxInfo "Logging staat nu aan"
+    Else
+        ModMessage.ShowMsgBoxInfo "Logging staat nu uit"
+    End If
 
 End Sub
 

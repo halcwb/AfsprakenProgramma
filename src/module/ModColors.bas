@@ -47,10 +47,6 @@ Private Sub SetRangeColor(ByRef objTarget As Range, ByRef objSetting As Range, B
         lngGridColor = Conversion.CLng(varGridColor)
                     
         For Each objCell In objTarget.Cells
-            objCell.Borders(xlEdgeTop).LineStyle = xlContinuous
-            objCell.Borders(xlEdgeTop).Weight = xlThick
-            objCell.Borders(xlEdgeTop).Color = lngGridColor
-                        
             objCell.Borders(xlEdgeBottom).LineStyle = xlContinuous
             objCell.Borders(xlEdgeBottom).Weight = xlThick
             objCell.Borders(xlEdgeBottom).Color = lngGridColor
@@ -80,9 +76,8 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
     Dim objTarget As Range
     
     Dim lngBackGround As Long
-    
-    ' On Error Resume Next
-    
+    Dim blnProtected As Boolean
+       
     Set objSettings = shtGlobSettings.Range(constColorSettings).CurrentRegion
     Set objSheetRanges = shtGlobSettings.Range(constSheetRangeTable).CurrentRegion
     
@@ -117,18 +112,14 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
             strRange = Strings.Replace(objSheetRanges.Cells(intTargetN, 3).Formula, "=", vbNullString)
             strRange = Strings.Replace(strRange, strSheet & "!", vbNullString)
             
+            blnProtected = False
             If strTarget = strSetting And Not strRange = vbNullString And Not intSetting = -1 Then
                 Set objSetting = objSettings.Cells(intN, intSetting)
                 Set objTarget = WbkAfspraken.Sheets(strSheet).Range(strRange)
                 
                 If objTarget.Worksheet.ProtectContents Then
-                    ModMessage.ShowMsgBoxExclam "Kan kleuren niet instellen, zorg dat het systeem in development modus staat"
-                    
-                    ModProgress.FinishProgress
-                    Set objSetting = Nothing
-                    Set objTarget = Nothing
-                    
-                    Exit Sub
+                    blnProtected = True
+                    objTarget.Worksheet.Unprotect ModConst.CONST_PASSWORD
                 End If
                 
                 If strSetting = "Fields" Then
@@ -136,6 +127,8 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
                 Else
                     SetRangeColor objTarget, objSetting, blnSheet
                 End If
+                
+                If blnProtected Then objTarget.Worksheet.Protect ModConst.CONST_PASSWORD
                 
                 Set objSetting = Nothing
                 Set objTarget = Nothing

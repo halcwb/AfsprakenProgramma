@@ -55,6 +55,7 @@ Public Sub ExportFormulas(ByVal blnShowProgress As Boolean)
     Dim intC As Integer
     Dim strText As String
     Dim strPath As String
+    Dim blnProtected As Boolean
     
     strPath = WbkAfspraken.Path & "\src\sheet\"
     
@@ -62,10 +63,12 @@ Public Sub ExportFormulas(ByVal blnShowProgress As Boolean)
     intC = WbkAfspraken.Sheets.Count
     For Each shtSheet In WbkAfspraken.Sheets
     
+        blnProtected = False
         strText = vbNullString
     
-        If ModSheet.IsUserInterface(shtSheet) Then
+        If shtSheet.ProtectContents Then
             shtSheet.Unprotect ModConst.CONST_PASSWORD
+            blnProtected = True
         End If
     
         For Each objCell In shtSheet.Range("A1:AX200")
@@ -78,7 +81,7 @@ Public Sub ExportFormulas(ByVal blnShowProgress As Boolean)
         
         If strText <> vbNullString Then ModFile.WriteToFile strPath & shtSheet.Name & ".txt", strText
         
-        If ModSheet.IsUserInterface(shtSheet) Then
+        If blnProtected Then
             shtSheet.Protect ModConst.CONST_PASSWORD
         End If
         
@@ -141,6 +144,7 @@ ExportVbaCodeError:
     
     strError = "Kan VBA bestanden niet exporteren." & vbNewLine
     strError = strError & "Waarschijnlijk is het Afspraken project niet geopend (beveiligd met een passwoord)." & vbNewLine
+    strError = strError & "Ook moet Tools|macro|security|trusted publishers tab|check trust access to visual basic project." & vbNewLine
     strError = strError & "Open dit eerst en probeer het opnieuw"
 
     ModMessage.ShowMsgBoxError strError

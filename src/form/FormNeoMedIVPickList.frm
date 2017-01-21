@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormNeoMedIVPickList 
    Caption         =   "Kies medicamenten"
    ClientHeight    =   6045
-   ClientLeft      =   15
+   ClientLeft      =   14
    ClientTop       =   315
-   ClientWidth     =   5835
+   ClientWidth     =   5838
    OleObjectBlob   =   "FormNeoMedIVPickList.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

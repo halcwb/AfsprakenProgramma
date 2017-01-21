@@ -242,7 +242,7 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             
     Dim blnInfB As Boolean
     
-    blnInfB = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentMode()
+    blnInfB = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()
             
     If blnShowWarn Then
         If blnShowProgress Then

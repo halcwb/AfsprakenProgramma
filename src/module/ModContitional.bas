@@ -101,5 +101,8 @@ Public Sub SetNeoMedIVConditionalFormatting()
     SetConditionalFormattingInfo shtNeoGuiInfB, "H", strInfoVol, 28, 37, 5
     SetConditionalFormattingWarnErr shtNeoGuiInfB, "L", strErr, strWarn, 28, 37, 5
     
+    strErr = "=NeoBerInfB!X"
+    SetConditionalFormattingWarnErr shtNeoGuiInfB, "C", strErr, strErr, 9, 9, 6
+    
 End Sub
 

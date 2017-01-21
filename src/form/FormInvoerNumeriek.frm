@@ -1,8 +1,8 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormInvoerNumeriek 
    ClientHeight    =   1515
-   ClientLeft      =   45
-   ClientTop       =   330
+   ClientLeft      =   42
+   ClientTop       =   329
    ClientWidth     =   5040
    OleObjectBlob   =   "FormInvoerNumeriek.frx":0000
    StartUpPosition =   1  'CenterOwner

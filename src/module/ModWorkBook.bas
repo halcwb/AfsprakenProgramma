@@ -63,17 +63,24 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As Stri
         objDataWb.Sheets(1).Name = ModSetting.CONST_DATA_SHEET
         objTextWb.Sheets(1).Name = ModSetting.CONST_DATA_SHEET
                 
-        SaveWorkBookAsShared objDataWb, strDataFile
-        SaveWorkBookAsShared objTextWb, strTextFile
+        If Not ModFile.FileExists(strDataFile) Then
+            SaveWorkBookAsShared objDataWb, strDataFile
+            ModLog.LogInfo "Created: " & strDataFile
+        Else
+            ModLog.LogInfo "Already exists: " & strDataFile
+        End If
+        If Not ModFile.FileExists(strTextFile) Then
+            SaveWorkBookAsShared objTextWb, strTextFile
+            ModLog.LogInfo "Created: " & strTextFile
+        Else
+            ModLog.LogInfo "Already exists: " & strTextFile
+        End If
         
         objDataWb.Close
         objTextWb.Close
         
         Set objDataWb = Nothing
         Set objTextWb = Nothing
-        
-        ModLog.LogInfo "Created: " & strDataFile
-        ModLog.LogInfo "Created: " & strTextFile
         
         shtPats.Range("A" & intN).Value2 = varBed
         
@@ -95,7 +102,10 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As Stri
         strFormula = Replace(strFormula, constNumReplace, intN)
         shtPats.Range("E" & intN).Formula = strFormula
         
-        If blnShowProgress Then ModProgress.SetJobPercentage "Created " & CStr(varBed), intN - 1, intC
+        If blnShowProgress Then
+            DoEvents
+            ModProgress.SetJobPercentage "Created " & CStr(varBed), intC, intN - 1
+        End If
         intN = intN + 1
     
     Next varBed

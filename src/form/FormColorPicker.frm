@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormColorPicker 
    Caption         =   "Application Colors"
    ClientHeight    =   7035
-   ClientLeft      =   45
-   ClientTop       =   375
-   ClientWidth     =   11955
+   ClientLeft      =   42
+   ClientTop       =   378
+   ClientWidth     =   11956
    OleObjectBlob   =   "FormColorPicker.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

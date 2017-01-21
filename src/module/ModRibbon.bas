@@ -160,10 +160,10 @@ Public Sub ButtonOnAction(ByRef ctrlMenuItem As IRibbonControl)
              ModAdmin.ShowColorPicker
         
         Case "btnCreatePedData"                             ' -> Pediatrie DataFiles
-             ModMessage.ShowMsgBoxExclam "Nog niet geimplementeerd"
+             ModAdmin.SetUpPedDataDir
         
         Case "btnCreateNeoData"                             ' -> Neonatologie DataFiles
-             ModMessage.ShowMsgBoxExclam "Nog niet geimplementeerd"
+             ModAdmin.SetUpNeoDataDir
         
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
@@ -187,7 +187,7 @@ Public Sub GetVisiblePed(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     Dim strPedDir As String
     Dim blnIsDevelop As Boolean
 
-    blnIsDevelop = ModSetting.IsDevelopmentMode()
+    blnIsDevelop = ModSetting.IsDevelopmentDir()
     strPath = Application.ActiveWorkbook.Path
     strPedDir = ModSetting.GetPedDir()
     
@@ -205,7 +205,7 @@ Public Sub GetVisibleNeo(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     Dim strPedDir As String
     Dim blnIsDevelop As Boolean
 
-    blnIsDevelop = ModSetting.IsDevelopmentMode()
+    blnIsDevelop = ModSetting.IsDevelopmentDir()
     strPath = Application.ActiveWorkbook.Path
     strPedDir = ModSetting.GetNeoDir()
     
@@ -219,19 +219,19 @@ End Sub
 
 Public Sub GetVisibleDevelopment(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
-    blnVisible = ModSetting.IsDevelopmentMode()
+    blnVisible = ModSetting.IsDevelopmentDir()
     
 End Sub
 
 Public Sub GetVisibleAdmin(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
-    blnVisible = ModSetting.IsDevelopmentMode()
+    blnVisible = True ' ModSetting.IsDevelopmentMode()
     
 End Sub
 
 Private Sub ClearLab()
     
-    If ModSetting.IsDevelopmentMode Then
+    If ModSetting.IsDevelopmentDir Then
         ModNeoLab.NeoLab_Clear
         ModPedLab.PedLab_Clear
     Else
@@ -243,7 +243,7 @@ End Sub
 
 Private Sub ClearAfspraken()
 
-    If ModSetting.IsDevelopmentMode Then
+    If ModSetting.IsDevelopmentDir Then
         ModNeoAfspr.NeoAfspr_Clear
         ModPedAfspr.PedAfspr_Clear
     Else
