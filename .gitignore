@@ -39,3 +39,8 @@
 # Add range names
 !/src/name/
 !/src/name/*.txt
+
+# Add docs
+!/docs/
+!/docs/img/
+!/docs/img/*.png
