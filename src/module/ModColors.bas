@@ -4,7 +4,7 @@ Option Explicit
 Public Enum RGBColors
     R = 1
     G = 2
-    B = 3
+    b = 3
 End Enum
 
 Private Const constColorSettings As String = "G2"
@@ -83,7 +83,7 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
     
     ModProgress.StartProgress "Kleuren Instellen"
     
-    intC = objSettings.Rows.Count
+    intC = objSettings.Rows.count
     For intN = 2 To intC
         strSetting = objSettings.Cells(intN, 1).Value2
         blnSheet = False
@@ -95,7 +95,7 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
             blnSheet = True
         End If
         
-        intTargetC = objSheetRanges.Rows.Count
+        intTargetC = objSheetRanges.Rows.count
         For intTargetN = 2 To intTargetC
             
             strSheet = objSheetRanges.Cells(intTargetN, 1).Value2
@@ -170,7 +170,7 @@ Public Function ShowColorDialog(ByVal lngC As Long) As Long
 
     lngR = ConvertLongToRGB(lngC, R)
     lngG = ConvertLongToRGB(lngC, G)
-    lngB = ConvertLongToRGB(lngC, B)
+    lngB = ConvertLongToRGB(lngC, b)
 
     If Application.Dialogs(xlDialogEditColor).Show(10, lngR, lngG, lngB) = True Then
       'user pressed OK

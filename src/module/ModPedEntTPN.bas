@@ -298,15 +298,15 @@ Public Sub PedEntTPN_SelectTPN()
 
     With shtPedBerTPN
         If dblGewicht >= 2 And dblGewicht < 7 Then
-            .Range(strTPNB).Copy
+            .Range(strTPNB).copy
         ElseIf dblGewicht >= 7 And dblGewicht < 15 Then
-            .Range(strTPNC).Copy
+            .Range(strTPNC).copy
         ElseIf dblGewicht >= 15 And dblGewicht < 30 Then
-            .Range(strTPND).Copy
+            .Range(strTPND).copy
         ElseIf dblGewicht >= 30 And dblGewicht <= 50 Then
-            .Range(strTPNE).Copy
+            .Range(strTPNE).copy
         ElseIf dblGewicht > 50 Then
-            .Range(strTPNnutri).Copy
+            .Range(strTPNnutri).copy
         Else          ' Not a valid weight
             Exit Sub  ' So exit sub
         End If
@@ -788,7 +788,7 @@ End Sub
 
 Public Sub PedEntTPN_ChangeEnt()
 
-    If Range("_Ped_Ent_Keuze_1").Value = 1 Then
+    If Range("_Ped_Ent_Keuze_1").value = 1 Then
     
         ModRange.SetRangeValue "_Ped_Ent_Keuze_2", vbNullString
         ModRange.SetRangeValue "_Ped_Ent_Keuze_3", vbNullString

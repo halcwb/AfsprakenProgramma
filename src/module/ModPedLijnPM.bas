@@ -18,7 +18,7 @@ Public Sub PedLijnPM_ShowPickList()
     Dim intKeuze As Integer
     
     Set colLijnen = New Collection
-    intC = Range(constTblLijn).Rows.Count
+    intC = Range(constTblLijn).Rows.count
     For intN = 2 To intC
         colLijnen.Add Range(constTblLijn).Cells(intN, 1)
     Next intN
@@ -145,7 +145,7 @@ End Sub
 
 Public Sub PedLijnPM_PaceMaker()
 
-    shtPedBerIVenPM.Range(constTblPMStand).Copy
+    shtPedBerIVenPM.Range(constTblPMStand).copy
     shtPedBerIVenPM.Range(constTblPMSet).PasteSpecial xlPasteValues
 
 End Sub

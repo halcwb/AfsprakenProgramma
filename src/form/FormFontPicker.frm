@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormFontPicker 
    Caption         =   "Kies een font"
    ClientHeight    =   3900
-   ClientLeft      =   42
-   ClientTop       =   378
-   ClientWidth     =   4956
+   ClientLeft      =   45
+   ClientTop       =   375
+   ClientWidth     =   4950
    OleObjectBlob   =   "FormFontPicker.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -19,8 +19,8 @@ Private Sub Validate()
 
     Dim strValid As String
     
-    strValid = IIf(cboSize.Value = vbNullString, "Kies een grootte", strValid)
-    strValid = IIf(cboFont.Value = vbNullString, "Kies een font", vbNullString)
+    strValid = IIf(cboSize.value = vbNullString, "Kies een grootte", strValid)
+    strValid = IIf(cboFont.value = vbNullString, "Kies een font", vbNullString)
     
     cmdOK.Enabled = strValid = vbNullString
     lblValid.Caption = strValid
@@ -29,8 +29,8 @@ End Sub
 
 Private Sub cboFont_Change()
 
-    If Not cboFont.Value = vbNullString Then
-        lblExample.Font.Name = cboFont.Value
+    If Not cboFont.value = vbNullString Then
+        lblExample.Font.Name = cboFont.value
     End If
 
     Validate
@@ -39,8 +39,8 @@ End Sub
 
 Private Sub cboSize_Change()
 
-    If Not cboSize.Value = vbNullString Then
-        lblExample.Font.Size = Int(cboSize.Value)
+    If Not cboSize.value = vbNullString Then
+        lblExample.Font.Size = Int(cboSize.value)
     End If
     
     Validate
@@ -49,22 +49,22 @@ End Sub
 
 Private Sub chkBold_Click()
 
-    lblExample.Font.Bold = chkBold.Value
+    lblExample.Font.Bold = chkBold.value
 
 End Sub
 
 Private Sub chkItalic_Click()
 
-    lblExample.Font.Italic = chkItalic.Value
+    lblExample.Font.Italic = chkItalic.value
 
 End Sub
 
 Private Sub cmdClear_Click()
 
-    cboFont.Value = vbNullString
-    cboSize.Value = vbNullString
-    chkBold.Value = False
-    chkItalic.Value = False
+    cboFont.value = vbNullString
+    cboSize.value = vbNullString
+    chkBold.value = False
+    chkItalic.value = False
 
 End Sub
 

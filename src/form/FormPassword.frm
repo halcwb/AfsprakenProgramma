@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPassword 
    Caption         =   "Voer paswoord in"
    ClientHeight    =   1605
-   ClientLeft      =   42
-   ClientTop       =   378
-   ClientWidth     =   5089
+   ClientLeft      =   45
+   ClientTop       =   375
+   ClientWidth     =   5085
    OleObjectBlob   =   "FormPassword.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -19,7 +19,7 @@ Private Sub Validate()
 
     Dim strValidate As String
     
-    strValidate = IIf(txtPassword.Value = vbNullString, "Voer paswoord in", vbNullString)
+    strValidate = IIf(txtPassword.value = vbNullString, "Voer paswoord in", vbNullString)
     
     cmdOK.Enabled = strValidate = vbNullString
     lblValid.Caption = strValidate

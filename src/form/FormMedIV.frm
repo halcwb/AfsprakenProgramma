@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedIV 
    Caption         =   "Geef de naam van het medicament ..."
    ClientHeight    =   1620
-   ClientLeft      =   42
-   ClientTop       =   329
-   ClientWidth     =   5824
+   ClientLeft      =   45
+   ClientTop       =   330
+   ClientWidth     =   5820
    OleObjectBlob   =   "FormMedIV.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

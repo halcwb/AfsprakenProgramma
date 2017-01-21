@@ -160,7 +160,7 @@ Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook 
         
         ' Copy the range to the target
         .Workbooks(strBook).Sheets(1).Range(strRange).CurrentRegion.Select
-        Selection.Copy
+        Selection.copy
         shtTarget.Range("A1").PasteSpecial xlPasteValues
         If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 75
         
@@ -178,7 +178,7 @@ Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook 
     
 CopyWorkbookRangeToSheetError:
 
-    If Workbooks.Count = 2 Then Workbooks.Item(2).Close ' To Do Improve by che
+    If Workbooks.count = 2 Then Workbooks.Item(2).Close ' To Do Improve by che
 
     ModLog.LogError "CopyWorkbookRangeToSheet " & strFile & ", " & strBook & ", " & strRange & ", " & shtTarget.Name
     

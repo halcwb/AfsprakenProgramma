@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPrintAfspraken 
    Caption         =   "Afspraken printen"
    ClientHeight    =   2610
-   ClientLeft      =   42
-   ClientTop       =   329
-   ClientWidth     =   2975
+   ClientLeft      =   45
+   ClientTop       =   330
+   ClientWidth     =   2970
    OleObjectBlob   =   "FormPrintAfspraken.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -34,34 +34,34 @@ Private Sub cmdOK_Click()
     
     Application.Dialogs(xlDialogPrinterSetup).Show
     
-    If chkAcuteOpvang.Value Then
+    If chkAcuteOpvang.value Then
         shtPedGuiAcuut.Select
         shtPedGuiAcuut.PageSetup.CenterHeader = "Bed " & strBed
         shtPedGuiAcuut.PrintOut preview:=False
     End If
-    If chkMedicatie.Value Then
+    If chkMedicatie.value Then
         shtPedPrtMedDisc.Select
         shtPedPrtMedDisc.PageSetup.LeftHeader = "Bed " & strBed
         shtPedPrtMedDisc.PrintOut preview:=False
     End If
-    If chkTPNBlad.Value Then
-        If Val(Range("Gewicht").Text) / 10 < 7 Then
+    If chkTPNBlad.value Then
+        If val(Range("Gewicht").Text) / 10 < 7 Then
             shtPedPrtTPN2tot6.Select
             shtPedPrtTPN2tot6.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN2tot6.PrintOut preview:=False
-        ElseIf Val(Range("Gewicht").Text) / 10 < 16 Then
+        ElseIf val(Range("Gewicht").Text) / 10 < 16 Then
             shtPedPrtTPN7tot15.Select
             shtPedPrtTPN7tot15.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN7tot15.PrintOut preview:=False
-        ElseIf Val(Range("Gewicht").Text) / 10 < 31 Then
+        ElseIf val(Range("Gewicht").Text) / 10 < 31 Then
             shtPedPrtTPN16tot30.Select
             shtPedPrtTPN16tot30.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN16tot30.PrintOut preview:=False
-        ElseIf Val(Range("Gewicht").Text) / 10 <= 50 Then
+        ElseIf val(Range("Gewicht").Text) / 10 <= 50 Then
             shtPedPrtTPN31tot50.Select
             shtPedPrtTPN31tot50.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN31tot50.PrintOut preview:=False
-        ElseIf Val(Range("Gewicht").Text) / 10 > 50 Then
+        ElseIf val(Range("Gewicht").Text) / 10 > 50 Then
             shtPedPrtTPN50.Select
             shtPedPrtTPN50.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN50.PrintOut preview:=False

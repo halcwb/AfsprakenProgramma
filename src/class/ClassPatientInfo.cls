@@ -77,7 +77,7 @@ Public Property Let BirthDate(ByVal strBD As String)
 
 End Property
 
-Public Function ToString() As String
+Public Function toString() As String
 
     Dim strString As String
     
@@ -92,6 +92,6 @@ Public Function ToString() As String
     
     strString = Strings.Trim(strString) & " " & Me.BirthDate()
 
-    ToString = strString
+    toString = strString
 
 End Function

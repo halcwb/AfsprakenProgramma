@@ -45,7 +45,7 @@ Public Sub LogError(ByVal strError As String)
 
     Dim blnLog As Boolean
     
-    strError = " Number: " & Err.Number & " Source: " & Err.Source & " Description: " & strError
+    strError = " Number: " & err.Number & " Source: " & err.source & " Description: " & strError
     blnLog = ModSetting.GetEnableLogging()
 
     EnableLogging

@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPedEntPickList 
    Caption         =   "Kies Voedingen ..."
    ClientHeight    =   7875
-   ClientLeft      =   14
+   ClientLeft      =   15
    ClientTop       =   315
-   ClientWidth     =   6706
+   ClientWidth     =   6705
    OleObjectBlob   =   "FormPedEntPickList.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

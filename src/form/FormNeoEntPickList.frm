@@ -2,7 +2,7 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormNeoEntPickList 
    Caption         =   "Kies Voedingen ..."
    ClientHeight    =   5625
-   ClientLeft      =   14
+   ClientLeft      =   15
    ClientTop       =   315
    ClientWidth     =   10920
    OleObjectBlob   =   "FormNeoEntPickList.frx":0000

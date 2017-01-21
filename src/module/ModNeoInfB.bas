@@ -86,7 +86,7 @@ Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, ByV
     strStartsWith = IIf(bln1700, constInfBData1700, constInfBDataAct)
     
     intN = 1
-    intC = WbkAfspraken.Names.Count
+    intC = WbkAfspraken.Names.count
     For Each objName In WbkAfspraken.Names
         If ModString.StartsWith(objName.Name, strStartsWith) Then
             strDataName = objName.Name

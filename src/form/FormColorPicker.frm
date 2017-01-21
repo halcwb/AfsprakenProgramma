@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormColorPicker 
    Caption         =   "Application Colors"
    ClientHeight    =   7035
-   ClientLeft      =   42
-   ClientTop       =   378
-   ClientWidth     =   11956
+   ClientLeft      =   45
+   ClientTop       =   375
+   ClientWidth     =   11955
    OleObjectBlob   =   "FormColorPicker.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -37,8 +37,8 @@ Private Sub Validate()
 
     Dim strValid As String
     
-    strValid = IIf(cboItem.Value = vbNullString, "Maak een veld selectie", vbNullString)
-    strValid = IIf(optNeo.Value = 0 And optPed.Value = 0, "Maak een afdeling selectie", strValid)
+    strValid = IIf(cboItem.value = vbNullString, "Maak een veld selectie", vbNullString)
+    strValid = IIf(optNeo.value = 0 And optPed.value = 0, "Maak een afdeling selectie", strValid)
     
     cmdOK.Enabled = strValid = vbNullString
     lblValid.Caption = strValid
@@ -47,12 +47,12 @@ End Sub
 
 Private Sub ColorRanges()
 
-    If optPed.Value Then
+    If optPed.value Then
         WriteGroup constPed
         ModColors.ColorPedNeoRanges False
     End If
     
-    If optNeo.Value Then
+    If optNeo.value Then
         WriteGroup constNeo
         ModColors.ColorPedNeoRanges True
     End If
@@ -210,7 +210,7 @@ Private Sub cboItem_Change()
 
     Dim objLabel As MSForms.Label
     
-    Set objLabel = frmLabels.Controls("lbl" & cboItem.Value)
+    Set objLabel = frmLabels.Controls("lbl" & cboItem.value)
     
     SelectLabel objLabel
     
@@ -252,23 +252,23 @@ Private Sub cmdFont_Click()
     Dim enmItem As Items
     
     If Not m_SelectedLabel Is Nothing Then
-        enmItem = GetItem(cboItem.Value)
+        enmItem = GetItem(cboItem.value)
                 
-        If optPed.Value Or optNeo.Value Then
+        If optPed.value Or optNeo.value Then
             
             FormFontPicker.lblValid.Caption = vbNullString
-            FormFontPicker.cboFont.Value = m_SelectedLabel.Font.Name
-            FormFontPicker.cboSize.Value = m_SelectedLabel.Font.Size
-            FormFontPicker.chkBold.Value = m_SelectedLabel.Font.Bold
-            FormFontPicker.chkItalic.Value = m_SelectedLabel.Font.Italic
+            FormFontPicker.cboFont.value = m_SelectedLabel.Font.Name
+            FormFontPicker.cboSize.value = m_SelectedLabel.Font.Size
+            FormFontPicker.chkBold.value = m_SelectedLabel.Font.Bold
+            FormFontPicker.chkItalic.value = m_SelectedLabel.Font.Italic
             
             FormFontPicker.Show
             
             If FormFontPicker.lblValid.Caption = vbNullString Then
-                m_SelectedLabel.Font.Name = FormFontPicker.cboFont.Value
-                m_SelectedLabel.Font.Size = FormFontPicker.cboSize.Value
-                SetLabelBold FormFontPicker.chkBold.Value
-                SetLabelItalic FormFontPicker.chkItalic.Value
+                m_SelectedLabel.Font.Name = FormFontPicker.cboFont.value
+                m_SelectedLabel.Font.Size = FormFontPicker.cboSize.value
+                SetLabelBold FormFontPicker.chkBold.value
+                SetLabelItalic FormFontPicker.chkItalic.value
             End If
             
         End If

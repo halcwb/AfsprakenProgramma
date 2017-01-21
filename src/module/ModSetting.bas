@@ -251,7 +251,7 @@ Private Function GetBeds(ByVal strRange As String) As Variant()
     
     Set objBeds = shtGlobSettings.Range(strRange)
     arrBeds = Array() ' Assign but keep empty
-    intC = objBeds.Rows.Count
+    intC = objBeds.Rows.count
     For intN = 1 To intC
         ModArray.AddItemToVariantArray arrBeds, objBeds.Cells(intN, 1).Value2
     Next intN

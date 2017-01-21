@@ -377,13 +377,13 @@ Private Sub EnterNumeric(ByVal intRegel As Integer, ByVal strRange As String, By
         .lblParameter = "Oplossing"
         .lblEenheid = strUnit
         If ModRange.GetRangeValue(constMedIVOplVol & strRegel, 0) = 0 Then
-            .txtWaarde = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, 12)
+            .txtWaarde = Application.WorksheetFunction.index(Range(constTblMed), varKeuze, 12)
         Else
             .txtWaarde = ModRange.GetRangeValue(strRange & strRegel, vbNullString)
         End If
         .Show
         If IsNumeric(.txtWaarde) Then
-            If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, 12) Then
+            If CDbl(.txtWaarde) = Application.WorksheetFunction.index(Range(constTblMed), varKeuze, 12) Then
                 ModRange.SetRangeValue strRange & strRegel, 0
             Else
                 ModRange.SetRangeValue strRange & strRegel, .txtWaarde
@@ -410,7 +410,7 @@ Private Sub SetMedConc(ByVal intRegel As Integer)
     On Error GoTo SetMedConcError
 
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
-    strUnit = Application.WorksheetFunction.Index(Range(constTblMed), Range(constMedIVKeuze & strRegel), 4)
+    strUnit = Application.WorksheetFunction.index(Range(constTblMed), Range(constMedIVKeuze & strRegel), 4)
     EnterNumeric intRegel, constMedIVSterkte, strUnit, 11
     
     Exit Sub

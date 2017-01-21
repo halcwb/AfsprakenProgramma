@@ -1,8 +1,8 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormInvoerNumeriek 
    ClientHeight    =   1515
-   ClientLeft      =   42
-   ClientTop       =   329
+   ClientLeft      =   45
+   ClientTop       =   330
    ClientWidth     =   5040
    OleObjectBlob   =   "FormInvoerNumeriek.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -23,9 +23,9 @@ Private Function Validate() As Boolean
     
     Select Case m_Validate
         Case "Gewicht"
-            strMsg = IIf(Not ModPatient.ValidWeightKg(Val(txtWaarde.Value)), "Geen geldig gewicht", vbNullString)
+            strMsg = IIf(Not ModPatient.ValidWeightKg(val(txtWaarde.value)), "Geen geldig gewicht", vbNullString)
         Case "Lengte"
-            strMsg = IIf(Not ModPatient.ValidLengthCm(Val(txtWaarde.Value)), "Geen geldige lengte", vbNullString)
+            strMsg = IIf(Not ModPatient.ValidLengthCm(val(txtWaarde.value)), "Geen geldige lengte", vbNullString)
         Case Else
             strMsg = vbNullString
     End Select
@@ -44,13 +44,13 @@ End Sub
 
 Private Sub cmdClear_Click()
 
-    txtWaarde.Value = vbNullString
+    txtWaarde.value = vbNullString
 
 End Sub
 
 Private Sub cmdOK_Click()
     
-    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, Val(txtWaarde.Value)
+    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, val(txtWaarde.value)
     Me.Hide
 
 End Sub
@@ -72,7 +72,7 @@ Private Sub UserForm_Activate()
     Me.Caption = ModConst.CONST_APPLICATION_NAME
     Me.txtWaarde.SetFocus
     Me.txtWaarde.SelStart = 0
-    Me.txtWaarde.SelLength = Len(Me.txtWaarde.Value)
+    Me.txtWaarde.SelLength = Len(Me.txtWaarde.value)
 
 End Sub
 
@@ -87,7 +87,7 @@ Public Sub SetValue(ByVal strRange As String, ByVal strItem As String, ByVal var
     m_Validate = strValidate
     
     lblParameter.Caption = strItem
-    txtWaarde.Value = Val(varValue)
+    txtWaarde.value = val(varValue)
     lblEenheid.Caption = strUnit
     
     Exit Sub

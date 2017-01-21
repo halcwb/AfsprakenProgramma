@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormCopy1700 
    Caption         =   "17.00 uur Afspraken overnemen naar actuele afspraken"
    ClientHeight    =   11130
-   ClientLeft      =   42
-   ClientTop       =   378
+   ClientLeft      =   45
+   ClientTop       =   375
    ClientWidth     =   16590
    OleObjectBlob   =   "FormCopy1700.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -30,7 +30,7 @@ End Sub
 
 Private Sub cmdOK_Click()
     
-    ModNeoInfB.NeoInfB_Copy1700ToAct Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
+    ModNeoInfB.NeoInfB_Copy1700ToAct Me.optAlles.value, Me.chkVoeding.value, Me.chkContinueMedicatie.value, Me.chkTPN.value
     Me.Hide
 
 End Sub

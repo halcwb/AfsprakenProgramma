@@ -60,7 +60,7 @@ Public Sub ExportFormulas(ByVal blnShowProgress As Boolean)
     strPath = WbkAfspraken.Path & "\src\sheet\"
     
     intN = 1
-    intC = WbkAfspraken.Sheets.Count
+    intC = WbkAfspraken.Sheets.count
     For Each shtSheet In WbkAfspraken.Sheets
     
         blnProtected = False
@@ -103,7 +103,7 @@ Public Sub ExportNames(ByVal blnShowProgress As Boolean)
     strPath = WbkAfspraken.Path & "\src\name\names.txt"
     
     intN = 1
-    intC = WbkAfspraken.Names.Count
+    intC = WbkAfspraken.Names.count
     For Each objName In WbkAfspraken.Names
         strText = strText & objName.NameLocal & ":" & vbTab & objName.RefersTo & vbNewLine
         
@@ -129,7 +129,7 @@ Public Sub ExportVbaCode(ByVal blnShowProgress As Boolean)
     strPath = WbkAfspraken.Path
     
     intN = 1
-    intC = WbkAfspraken.VBProject.VBComponents.Count
+    intC = WbkAfspraken.VBProject.VBComponents.count
     For Each vbcItem In WbkAfspraken.VBProject.VBComponents
         strFile = GetComponentFileName(vbcItem)
         vbcItem.Export (strPath & "\src\" & strFile)
@@ -170,7 +170,7 @@ Public Function GetComponentFileName(ByRef vbcComp As VBComponent) As String
             strPath = "module"
             strExt = ".bas"
         Case Else
-            Err.Raise 17, "GetComponentFileName", "ComponentType not supported: " & vbext_ComponentType.vbext_ct_ActiveXDesigner
+            err.Raise 17, "GetComponentFileName", "ComponentType not supported: " & vbext_ComponentType.vbext_ct_ActiveXDesigner
         End Select
         
         GetComponentFileName = strPath & "\" & vbcComp.Name & strExt

@@ -42,8 +42,8 @@ Public Sub Patient_EnterWeight()
         .SetValue vbNullString, "Gewicht:", dblWeight, "kg", "Gewicht"
         .Show
         
-        If Not .txtWaarde.Value = vbNullString Then
-            dblWeight = Val(.txtWaarde.Value) * 10
+        If Not .txtWaarde.value = vbNullString Then
+            dblWeight = val(.txtWaarde.value) * 10
             ModRange.SetRangeValue constGewicht, dblWeight
         End If
     End With
@@ -74,7 +74,7 @@ End Sub
 
 Public Function GetGewichtFromRange() As Double
 
-    GetGewichtFromRange = Val(ModRange.GetRangeValue(constGewicht, 0)) / 10
+    GetGewichtFromRange = val(ModRange.GetRangeValue(constGewicht, 0)) / 10
 
 End Function
 
@@ -114,7 +114,7 @@ Public Sub OpenPatientLijst(ByVal strCaption As String)
 OpenPatientListError:
 
     ModMessage.ShowMsgBoxError "Kan patient lijst niet openen"
-    ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & Err.Number
+    ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & err.Number
     
 End Sub
 
@@ -151,13 +151,13 @@ Public Function GetPatients() As Collection
 
     If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "a1", shtGlobTemp, False) Then
         With colPatienten
-            For intN = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.Count
+            For intN = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.count
                 With shtGlobTemp
                     strBed = .Cells(intN, 1).Value2
                     strPN = .Cells(intN, 2).Value2
                     strAN = .Cells(intN, 3).Value2
                     strVN = .Cells(intN, 4).Value2
-                    strBD = IIf(.Cells(intN, 5).Value2 > 0, ModString.DateToString(.Cells(intN, 5).Value), vbNullString)
+                    strBD = IIf(.Cells(intN, 5).Value2 > 0, ModString.DateToString(.Cells(intN, 5).value), vbNullString)
                 End With
                 .Add CreatePatientInfo(strPN, strBed, strAN, strVN, strBD)
             Next intN
@@ -265,7 +265,7 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
                 
         With shtPatData
             strJob = "Patient gegevens verwijderen"
-            intC = .Range("A1").CurrentRegion.Rows.Count
+            intC = .Range("A1").CurrentRegion.Rows.count
             
             For intN = 2 To intC
                 strRange = .Cells(intN, 1).Value2

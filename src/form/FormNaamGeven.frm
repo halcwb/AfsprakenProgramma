@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormNaamGeven 
    Caption         =   "Naam geven"
    ClientHeight    =   1800
-   ClientLeft      =   42
-   ClientTop       =   329
-   ClientWidth     =   6979
+   ClientLeft      =   45
+   ClientTop       =   330
+   ClientWidth     =   6975
    OleObjectBlob   =   "FormNaamGeven.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -54,14 +54,14 @@ Private Sub cmdOK_Click()
     If strName = vbNullString Or strGroup = vbNullString Then Exit Sub
     
     With Selection
-        intRows = .Rows.Count
+        intRows = .Rows.count
         If intRows = 1 Then
-            strRes = IIf(chkIsData.Value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
+            strRes = IIf(chkIsData.value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
             ModRange.SetNameToRange strRes, .Cells(1, 1)
         Else
             intMax = intStart + intRows - 1
             For intN = 1 To intRows
-                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.Value)
+                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.value)
                 ModRange.SetNameToRange strRes, .Cells(intN, 1)
             Next intN
         End If

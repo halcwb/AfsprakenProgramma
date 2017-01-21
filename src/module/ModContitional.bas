@@ -30,7 +30,7 @@ Public Sub SetContionalFormatting(ByRef objSheet As Worksheet, ByVal strRange As
     
     With objSheet.Range(strRange)
         .FormatConditions.Add Type:=xlExpression, Formula1:=strFormula
-        Set objForm = .FormatConditions(.FormatConditions.Count)
+        Set objForm = .FormatConditions(.FormatConditions.count)
         objForm.Interior.Color = shtGlobSettings.Range(strSet).Interior.Color
         objForm.Font.Bold = shtGlobSettings.Range(strSet).Font.Bold
         objForm.Font.Italic = shtGlobSettings.Range(strSet).Font.Italic

@@ -133,7 +133,7 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
 ErrorOpenBed:
 
     ModMessage.ShowMsgBoxError "Kan bed " & strBed & " niet openenen"
-    ModLog.LogError Err.Description
+    ModLog.LogError err.Description
     
 End Sub
 
@@ -301,15 +301,15 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
         
-    strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.Count)
-    strTextRange = "A1:C" + CStr(shtPatText.Range("C1").CurrentRegion.Rows.Count)
+    strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.count)
+    strTextRange = "A1:C" + CStr(shtPatText.Range("C1").CurrentRegion.Rows.count)
     
     FileSystem.SetAttr strDataFile, Attributes:=vbNormal ' Open Patient Data File
     Application.Workbooks.Open strDataFile, True
     
     With Workbooks(strDataName) ' Save Patient Data
         .Sheets(1).Cells.Clear
-        shtPatData.Range(strDataRange).Copy
+        shtPatData.Range(strDataRange).copy
         .Sheets(1).Range("A1").PasteSpecial xlPasteValues
         .Save
         .Close
@@ -323,7 +323,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     
     With Workbooks(strTextName) ' Save Patient Text
         .Sheets(1).Cells.Clear
-        shtPatText.Range(strTextRange).Copy
+        shtPatText.Range(strTextRange).copy
         .Sheets(1).Range("A1").PasteSpecial xlPasteValues
         .Save
         .Close
