@@ -12,7 +12,7 @@ Private Function GetRow(ByVal sheetName As String, ByVal searchString As String)
     WbkAfspraken.Sheets(sheetName).Select
     currentRow = 1
     
-    Do While (Strings.LCase(Cells(currentRow, 1).value) <> Strings.LCase(searchString))
+    Do While (Strings.LCase(Cells(currentRow, 1).Value) <> Strings.LCase(searchString))
         currentRow = currentRow + 1
     Loop
     
@@ -40,7 +40,7 @@ Public Function CopyTempSheetToNamedRanges(ByVal blnShowProgress As Boolean) As 
     
     blnAll = True
     With shtGlobTemp
-        intC = .Range("A1").CurrentRegion.Rows.count
+        intC = .Range("A1").CurrentRegion.Rows.Count
         For intN = 2 To intC
             strRange = .Cells(intN, 1).Value2
             varValue = .Cells(intN, 2).Value2
@@ -56,7 +56,7 @@ End Function
 
 Public Sub SetNameToRange(ByVal strName As String, ByRef objRange As Range)
 
-    ModAssert.AssertTrue objRange.Rows.count = 1 And objRange.Columns.count = 1, "Name cannot be set to multi cell", True
+    ModAssert.AssertTrue objRange.Rows.Count = 1 And objRange.Columns.Count = 1, "Name cannot be set to multi cell", True
     
     If NameExists(strName) Then WbkAfspraken.Names(strName).Delete
     
@@ -257,7 +257,7 @@ Public Sub WriteNamesToSheet(ByRef shtSheet As Worksheet, ByVal blnShowProgress 
     shtSheet.Cells(1, 9).Value2 = "IsPed"
     
     intN = 2
-    intC = WbkAfspraken.Names.count
+    intC = WbkAfspraken.Names.Count
     strEmpty = Strings.Chr(34) & Strings.Chr(34)
     For Each objName In WbkAfspraken.Names
         blnIsFormula = IsFormulaValue(Range(objName.Name).Formula)
@@ -311,7 +311,7 @@ Public Sub ReplaceRangeNames()
     
     ModProgress.StartProgress "Namen Vervangen"
     
-    intC = shtGlobNames.Range("A1").CurrentRegion.count - 1
+    intC = shtGlobNames.Range("A1").CurrentRegion.Count - 1
     For intN = 2 To intC
         strNew = shtGlobNames.Cells(intN, 3).Value2
 
@@ -367,7 +367,7 @@ Public Sub RefreshPatientData()
     
     ModProgress.StartProgress "Ververs Patient Data Blad"
     
-    intC = shtPatData.Range("A1").CurrentRegion.Rows.count
+    intC = shtPatData.Range("A1").CurrentRegion.Rows.Count
     For intN = 2 To intC
         strName = shtPatData.Cells(intN, 1).Value2
         If NameExists(strName) Then
@@ -407,7 +407,7 @@ Public Function CollectionFromRange(ByVal strRange As String, ByVal intStart As 
     On Error GoTo CollectionFromRangeError
     
     Set colCol = New Collection
-    intC = Range(strRange).Rows.count
+    intC = Range(strRange).Rows.Count
     For intN = intStart To intC
         colCol.Add Range(strRange).Cells(intN, 1)
     Next intN

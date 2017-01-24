@@ -10,6 +10,8 @@ Private Const constMedIVOplVlst As String = "_Ped_MedIV_OplVlst_"
 Private Const constMedIVStand As String = "_Ped_MedIV_Stand_"
 Private Const constMedIVCount As Integer = 15
 
+Private Const constStandOplKeuze As Integer = 2
+
 ' Copy paste function cannot be reused because of private clear method
 Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
 
@@ -54,6 +56,7 @@ Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal
                 If intKeuze <= 1 Then
                     intKeuze = frmPickList.GetFirstSelectedMedicament(True)
                     ModRange.SetRangeValue strRange & strN, intKeuze
+                    SetToStandard intN
                     Exit For
                 End If
             Next intN
@@ -258,6 +261,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
         Clear intN
     Else                                         ' Else find the right standard solution
         varOplossing = Application.VLookup(Range(constTblMed).Cells(intKeuze, 1), Range(constTblMed), intOplKeuze, False)
+        varOplossing = IIf(varOplossing = 1, constStandOplKeuze, varOplossing) ' Use NaCl 0.9% as stand solution if not specified otherwise
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
     

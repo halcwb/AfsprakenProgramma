@@ -43,18 +43,17 @@ Documentatie
 	- toevoegen voedingen
 	- toevoegen poeders
 
-- Med disc formulier, disabling bij GPK
-- Verw opmerking
-- Aanpassen layout headers (met name leeftijd)
-- Frequenties aanpassen
-- Indien voeding verwijderen dan ook toevoegingen
 - Verw lab voor kolommen
-- Blanco waarde pupil controle
-- Empty date in patient lijst niet tonen	
 - Voorkeurs oplossingen en standen voor continue medicatie
 
 Uitgevoerd:
-
+- Frequenties aanpassen
+- Empty date in patient lijst niet tonen	
+- Indien voeding verwijderen dan ook toevoegingen
+- Aanpassen layout headers (met name leeftijd)
+- Verw opmerking
+- Blanco waarde pupil controle
+- Med disc formulier, disabling bij GPK
 - Neo_Remove -> rename to Change
 - Continue medicatie instellingen: vol op 12, stand op 0,5 gluc 10%, uitgezonderd NaCl voor...
 - Lab -> Chloor doorzichtig

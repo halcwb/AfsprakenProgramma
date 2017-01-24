@@ -30,7 +30,7 @@ End Sub
 
 Private Sub cmdOK_Click()
     
-    ModNeoInfB.NeoInfB_Copy1700ToAct Me.optAlles.value, Me.chkVoeding.value, Me.chkContinueMedicatie.value, Me.chkTPN.value
+    ModNeoInfB.NeoInfB_Copy1700ToAct Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
     Me.Hide
 
 End Sub

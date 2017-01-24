@@ -69,7 +69,7 @@ Public Sub CloseAfspraken()
     ModProgress.StartProgress "Afspraken Programma Afsluiten"
     
     intN = 1
-    intC = WbkAfspraken.Windows.count
+    intC = WbkAfspraken.Windows.Count
     For Each objWindow In WbkAfspraken.Windows
         SetWindowToCloseApp objWindow
         ModProgress.SetJobPercentage "Windows Terugzetten", intC, intN

@@ -83,8 +83,8 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
     
         ModPatient.OpenPatientLijst "Selecteer een patient"
         If GetBed() = vbNullString Then ' No bed was selected
-            SetBed strBed ' Put back the old bed
-            Exit Sub      ' And exit sub
+            SetBed strBed               ' Put back the old bed
+            Exit Sub                    ' And exit sub
         Else
             strBed = GetBed()
             
@@ -107,8 +107,12 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
         SetFileVersie FileSystem.FileDateTime(strFileName)
         SetBed strBed
         
-        If shtGlobTemp.Range("A1").CurrentRegion.Rows <= 1 Then ModPatient.ClearPatientData vbNullString, False, True   ' Patient data was empty so clean all current data
-        If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar blnShowProgress                                               ' Make sure that infuusbrief data is updated
+        If shtGlobTemp.Range("A1").CurrentRegion.Rows.Count <= 1 Then
+            ModPatient.ClearPatientData vbNullString, False, True               ' Patient data was empty so clean all current data
+            SetBed strBed
+        End If
+        
+        If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar blnShowProgress       ' Make sure that infuusbrief data is updated
         
         blnAll = ModRange.CopyTempSheetToNamedRanges(True)
         If Not blnAll And blnAsk Then
@@ -301,8 +305,8 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
         
-    strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.count)
-    strTextRange = "A1:C" + CStr(shtPatText.Range("C1").CurrentRegion.Rows.count)
+    strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.Count)
+    strTextRange = "A1:C" + CStr(shtPatText.Range("C1").CurrentRegion.Rows.Count)
     
     FileSystem.SetAttr strDataFile, Attributes:=vbNormal ' Open Patient Data File
     Application.Workbooks.Open strDataFile, True

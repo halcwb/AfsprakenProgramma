@@ -194,6 +194,7 @@ Public Sub GetMedicamenten(ByVal blnShowProgress As Boolean)
     
     Set objC = New ClassStringComparer
     ModCollection.CollectionSort m_colVorm, objC
+    ModCollection.CollectionSort m_colSterkteEenheden, objC
 
 End Sub
 

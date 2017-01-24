@@ -34,7 +34,7 @@ Public Function CollectionIndexOf(varValue As Variant, objCol As Collection) As 
 
     Dim lngIndex As Long
     
-    For lngIndex = 1 To objCol.count Step 1
+    For lngIndex = 1 To objCol.Count Step 1
         If objCol(lngIndex) = varValue Then
             CollectionIndexOf = lngIndex
             Exit Function
@@ -54,6 +54,8 @@ Public Sub CollectionSort(objCol As Collection, Optional ByRef objC As IVariantC
     Dim varA() As Variant
     Dim varB() As Variant
     
+    If objCol.Count = 0 Then Exit Sub
+    
     varA = CollectionToArray(objCol)
     ModArray.ArraySort varA(), objC
     
@@ -68,9 +70,9 @@ Public Function CollectionToArray(objCol As Collection) As Variant
     Dim varA() As Variant
     Dim lngN As Long
     
-    ReDim varA(0 To objCol.count)
+    ReDim varA(0 To objCol.Count)
     
-    For lngN = 0 To objCol.count - 1
+    For lngN = 0 To objCol.Count - 1
         varA(lngN) = objCol(lngN + 1)
     Next lngN
     
@@ -101,13 +103,13 @@ Public Function CollectionAddAllFromCol(ByRef colSrc As Collection, ByRef colDes
     Dim lngCount As Long
     Dim varElement As Variant
     
-    lngCount = colDest.count
+    lngCount = colDest.Count
     
     For Each varElement In colSrc
         colDest.Add varElement
     Next varElement
     
-    CollectionAddAllFromCol = (colDest.count = lngCount)
+    CollectionAddAllFromCol = (colDest.Count = lngCount)
     
 End Function
 
@@ -118,13 +120,13 @@ Public Function CollectionAddAllFromArray(ByRef varSrc() As Variant, ByRef colDe
     Dim lngCount As Long
     Dim varElement As Variant
     
-    lngCount = colDest.count
+    lngCount = colDest.Count
     
     For Each varElement In varSrc
         colDest.Add varElement
     Next varElement
     
-    CollectionAddAllFromArray = (colDest.count = lngCount)
+    CollectionAddAllFromArray = (colDest.Count = lngCount)
     
 End Function
 

@@ -1,11 +1,17 @@
-"$D$2: 	=Var_AfspraakDatum
-$H$2: 	=PatDetails!B15
-$J$2: 	=PatDetails!B23
-$D$3: 	=PatDetails!B21
-$H$3: 	=PatDetails!B16
-$J$3: 	=PatDetails!B24
-$D$4: 	=PatDetails!B17
-$H$4: 	=PatDetails!B20
-$J$4: 	=PatDetails!B25
+"$D$2: 	=Txt_Pat_AfspraakDat
+$J$2: 	=Txt_Pat_OpnameDat
+$M$2: 	=Txt_Pat_Gewicht
+$O$2: 	=Txt_Pat_Bed
+$D$3: 	=Txt_Pat_FullName
+$J$3: 	=Txt_Pat_GeboorteDat
+$M$3: 	=Txt_Pat_Lengte
+$D$4: 	=Txt_Pat_PatNo
+$J$4: 	=Txt_Pat_Leeftijd
+$M$4: 	=Txt_Pat_Oppervlak
+$C$9: 	=PedBerLab!C3
+$E$9: 	=PedBerLab!E3
+$G$9: 	=PedBerLab!G3
+$I$9: 	=PedBerLab!I3
+$L$9: 	=PedBerLab!L3
 $D$43: 	=IF(_Ped_Lab_Opm=0,"""",_Ped_Lab_Opm)
 "

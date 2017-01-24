@@ -53,7 +53,7 @@ Public Function ShowPasswordBox(ByVal strText As String) As String
     objPw.Caption = strText
     objPw.Show
     
-    If objPw.lblValid.Caption = vbNullString Then strPw = objPw.txtPassword.value
+    If objPw.lblValid.Caption = vbNullString Then strPw = objPw.txtPassword.Value
     
     Set objPw = Nothing
     

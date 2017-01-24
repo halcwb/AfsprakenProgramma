@@ -19,8 +19,8 @@ Private Sub Validate()
 
     Dim strValid As String
     
-    strValid = IIf(cboSize.value = vbNullString, "Kies een grootte", strValid)
-    strValid = IIf(cboFont.value = vbNullString, "Kies een font", vbNullString)
+    strValid = IIf(cboSize.Value = vbNullString, "Kies een grootte", strValid)
+    strValid = IIf(cboFont.Value = vbNullString, "Kies een font", vbNullString)
     
     cmdOK.Enabled = strValid = vbNullString
     lblValid.Caption = strValid
@@ -29,8 +29,8 @@ End Sub
 
 Private Sub cboFont_Change()
 
-    If Not cboFont.value = vbNullString Then
-        lblExample.Font.Name = cboFont.value
+    If Not cboFont.Value = vbNullString Then
+        lblExample.Font.Name = cboFont.Value
     End If
 
     Validate
@@ -39,8 +39,8 @@ End Sub
 
 Private Sub cboSize_Change()
 
-    If Not cboSize.value = vbNullString Then
-        lblExample.Font.Size = Int(cboSize.value)
+    If Not cboSize.Value = vbNullString Then
+        lblExample.Font.Size = Int(cboSize.Value)
     End If
     
     Validate
@@ -49,22 +49,22 @@ End Sub
 
 Private Sub chkBold_Click()
 
-    lblExample.Font.Bold = chkBold.value
+    lblExample.Font.Bold = chkBold.Value
 
 End Sub
 
 Private Sub chkItalic_Click()
 
-    lblExample.Font.Italic = chkItalic.value
+    lblExample.Font.Italic = chkItalic.Value
 
 End Sub
 
 Private Sub cmdClear_Click()
 
-    cboFont.value = vbNullString
-    cboSize.value = vbNullString
-    chkBold.value = False
-    chkItalic.value = False
+    cboFont.Value = vbNullString
+    cboSize.Value = vbNullString
+    chkBold.Value = False
+    chkItalic.Value = False
 
 End Sub
 

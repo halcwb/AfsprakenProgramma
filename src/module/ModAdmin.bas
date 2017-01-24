@@ -16,7 +16,6 @@ Private Function CheckPassword() As Boolean
 End Function
 
 
-
 Public Sub ShowColorPicker()
 
     Dim frmPicker As FormColorPicker
@@ -33,7 +32,7 @@ End Sub
 
 ' ToDo add methods to setup data files and refresh patient data admin jobs
 
-Private Sub SetUpDataDir(ByRef arrBeds() As Variant)
+Private Sub SetUpDataDir(ByVal strBedsFilePath, ByRef arrBeds() As Variant)
     
     Dim strPath As String
     Dim blnDeleteAll As Boolean
@@ -41,12 +40,13 @@ Private Sub SetUpDataDir(ByRef arrBeds() As Variant)
     
     strPath = ModSetting.GetPatientDataPath()
     enmRes = ModMessage.ShowMsgBoxYesNo("Alle bestanden in directory " & strPath & " eerst verwijderen?")
+    If enmRes = vbYes Then enmRes = ModMessage.ShowMsgBoxYesNo("Zeker weten?")
     
     Application.DisplayAlerts = False
     ModProgress.StartProgress "Opzetten Data Files"
 
     If enmRes = vbYes Then ModFile.DeleteAllFilesInDir strPath
-    ModWorkBook.CreateDataWorkBooks arrBeds, strPath, True
+    ModWorkBook.CreateDataWorkBooks strBedsFilePath, arrBeds, strPath, True
     
     ModProgress.FinishProgress
     Application.DisplayAlerts = True
@@ -56,13 +56,14 @@ End Sub
 Public Sub SetUpPedDataDir()
     
     Dim arrBeds() As Variant
-    Dim strDir As String
+    Dim strBedsFilePath As String
         
     If Not CheckPassword Then Exit Sub
     
     arrBeds = ModSetting.GetPedBeds()
+    strBedsFilePath = ModSetting.GetPatientDataPath() & ModSetting.CONST_PICU_BEDS
     
-    SetUpDataDir arrBeds
+    SetUpDataDir strBedsFilePath, arrBeds
     
     ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling Pediatrie"
 
@@ -71,11 +72,14 @@ End Sub
 Public Sub SetUpNeoDataDir()
     
     Dim arrBeds() As Variant
-    arrBeds = ModSetting.GetNeoBeds()
+    Dim strBedsFilePath As String
     
     If Not CheckPassword Then Exit Sub
     
-    SetUpDataDir arrBeds
+    arrBeds = ModSetting.GetNeoBeds()
+    strBedsFilePath = ModSetting.GetPatientDataPath() & ModSetting.CONST_NICU_BEDS
+    
+    SetUpDataDir strBedsFilePath, arrBeds
     
     ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling Neonatologie"
 

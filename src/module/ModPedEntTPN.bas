@@ -788,7 +788,7 @@ End Sub
 
 Public Sub PedEntTPN_ChangeEnt()
 
-    If Range("_Ped_Ent_Keuze_1").value = 1 Then
+    If Range("_Ped_Ent_Keuze_1").Value = 1 Then
     
         ModRange.SetRangeValue "_Ped_Ent_Keuze_2", vbNullString
         ModRange.SetRangeValue "_Ped_Ent_Keuze_3", vbNullString

@@ -83,9 +83,21 @@ Public Property Let Generiek(ByVal strGeneriek As String)
 
 End Property
 
+Private Function CreateEtiket() As String
+
+    Dim strEtiket As String
+    
+    strEtiket = Join(Array(m_Generiek, m_Vorm, m_Sterkte, m_SterkteEenheid), " ")
+    CreateEtiket = strEtiket
+
+End Function
+
 Public Property Get Etiket() As String
 
-    Etiket = m_Etiket
+    Dim strEtiket As String
+
+    strEtiket = IIf(m_Etiket = vbNullString, CreateEtiket(), m_Etiket)
+    Etiket = strEtiket
 
 End Property
 

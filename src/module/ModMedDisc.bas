@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
-Private Const constFormularium As String = "Formularium.xlsx"
+Private Const constFormularium As String = "FormulariumDb.xlsx"
 
 ' --- Medicament ---
 Private Const constGPK As String = "_Glob_MedDisc_GPK_"              ' GPK code
@@ -26,6 +26,8 @@ Private Const constSolVol As String = "_Glob_MedDisc_OplVol_"        ' Oplossing
 Private Const constTime As String = "_Glob_MedDisc_Inloop_"          ' Inloop tijd
 Private Const constText As String = "_Glob_MedDisc_Opm_"             ' Opmerking
 
+Private Const constVerw As String = "AL"
+
 Private Sub Clear(ByVal intN As Integer)
 
     Dim strN As String
@@ -39,16 +41,16 @@ Private Sub Clear(ByVal intN As Integer)
     ModRange.SetRangeValue constConc & strN, 0
     ModRange.SetRangeValue constConcUnit & strN, vbNullString
     ModRange.SetRangeValue constLabel & strN, vbNullString
-    ModRange.SetRangeValue constStandDose & strN, vbNullString
+    ModRange.SetRangeValue constStandDose & strN, 0
     ModRange.SetRangeValue constDoseUnit & strN, vbNullString
     ModRange.SetRangeValue constRoute & strN, vbNullString
     ModRange.SetRangeValue constIndic & strN, vbNullString
     
     ModRange.SetRangeValue constPRN & strN, False
     ModRange.SetRangeValue constPRNText & strN, vbNullString
-    ModRange.SetRangeValue constDoseQty & strN, vbNullString
+    ModRange.SetRangeValue constDoseQty & strN, 0
     ModRange.SetRangeValue constFreq & strN, 1
-    ModRange.SetRangeValue constSolNo & strN, 0
+    ModRange.SetRangeValue constSolNo & strN, 1
     ModRange.SetRangeValue constSolVol & strN, 0
     ModRange.SetRangeValue constTime & strN, 0
     ModRange.SetRangeValue constText & strN, vbNullString
@@ -250,7 +252,7 @@ Public Sub GetMedicamenten(ByRef objFormularium As ClassFormularium, ByVal blnSh
     
     On Error GoTo GetMedicamentenError
     
-    strName = "Formularium.xlsx"
+    strName = constFormularium
     strSheet = "Table"
     
     Application.DisplayAlerts = False
@@ -263,7 +265,7 @@ Public Sub GetMedicamenten(ByRef objFormularium As ClassFormularium, ByVal blnSh
     Set objSheet = Workbooks(strName).Worksheets(strSheet)
     Set objFormRange = objSheet.Range("A1").CurrentRegion
         
-    intC = objFormRange.Rows.count
+    intC = objFormRange.Rows.Count
     For intN = 2 To intC
         Set objMed = New ClassMedicatieDisc
         
@@ -307,25 +309,29 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
 
     Dim objMed As ClassMedicatieDisc
     Dim strN As String
+    Dim blnLoad As Boolean
       
     strN = IIf(intN < 10, "0" & intN, intN)
     
-    With FormMedicament
+    With FormMedDisc
     
         .ClearForm True
         
+        blnLoad = False
         If ModRange.GetRangeValue(constGPK & strN, 0) > 0 Then                      ' Drug from formularium
-            .LoadGPK CStr(ModRange.GetRangeValue(constGPK & strN, vbNullString))
-        Else                                                                        ' Manually entered drug
+            blnLoad = .LoadGPK(CStr(ModRange.GetRangeValue(constGPK & strN, vbNullString)))
+        End If
+        
+        If Not blnLoad Then                                                          ' Manually entered drug
             .SetNoFormMed
             .cboGeneriek.Text = ModRange.GetRangeValue(constGeneric & strN, vbNullString)
             .cboVorm.Text = ModRange.GetRangeValue(constVorm & strN, vbNullString)
             .txtSterkte.Text = ModRange.GetRangeValue(constConc & strN, vbNullString)
             .cboSterkteEenheid.Text = ModRange.GetRangeValue(constConcUnit & strN, vbNullString)
+            .cboDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         End If
                                                                                     ' Edited details
         .txtDosis.Text = ModRange.GetRangeValue(constStandDose & strN, vbNullString)
-        .txtDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         .cboRoute.Text = ModRange.GetRangeValue(constRoute & strN, vbNullString)
         .cboIndicatie.Text = ModRange.GetRangeValue(constIndic & strN, vbNullString)
         
@@ -549,7 +555,7 @@ Private Sub OpmMedDisc(ByVal intN As Integer)
     strRange = constText
     strRange = constText & IIf(intN < 10, "0" & intN, intN)
 
-    frmOpmerking.txtOpmerking.Text = Range(strRange).value
+    frmOpmerking.txtOpmerking.Text = Range(strRange).Value
     frmOpmerking.Show
     
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then
@@ -763,6 +769,10 @@ Private Sub OpenPRNForm(ByVal intN As Integer)
 
     Dim frmPrn As FormPRN
     Dim strTitle As String
+    Dim strVerw As String
+    
+    strVerw = shtGlobBerMedDisc.Range(constVerw & intN + 1)
+    If strVerw = vbNullString Then Exit Sub
     
     Set frmPrn = New FormPRN
     strTitle = "PRN voor medicament " & intN & " instellen"

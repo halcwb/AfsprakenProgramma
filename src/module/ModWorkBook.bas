@@ -9,12 +9,11 @@ Private Const constAchterNaam As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{
 Private Const constVoorNaam As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$5)"
 Private Const constGebDat As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$6)"
 
-Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As String, ByVal blnShowProgress As Boolean)
+Public Sub CreateDataWorkBooks(ByVal strBedsFilePath As String, ByRef arrBeds() As Variant, ByVal strPath As String, ByVal blnShowProgress As Boolean)
     
     Dim objWb As Workbook
     
-    Dim strPatsFile As String
-    Dim shtPats As Worksheet
+    Dim shtBeds As Worksheet
     Dim intN As Integer
     Dim intC As Integer
     Dim varBed As Variant
@@ -40,14 +39,14 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As Stri
     
     Set objWb = Workbooks.Add
     
-    Set shtPats = objWb.Sheets(1)
-    shtPats.Name = "Patienten"
+    Set shtBeds = objWb.Sheets(1)
+    shtBeds.Name = ModSetting.CONST_BEDS_SHEET
     
-    shtPats.Range("A1").Value2 = "Bed"
-    shtPats.Range("B1").Value2 = "PatientNummer"
-    shtPats.Range("C1").Value2 = "AchterNaam"
-    shtPats.Range("D1").Value2 = "VoorNaam"
-    shtPats.Range("E1").Value2 = "Geboortedatum"
+    shtBeds.Range("A1").Value2 = "Bed"
+    shtBeds.Range("B1").Value2 = "PatientNummer"
+    shtBeds.Range("C1").Value2 = "AchterNaam"
+    shtBeds.Range("D1").Value2 = "VoorNaam"
+    shtBeds.Range("E1").Value2 = "Geboortedatum"
     
     intN = 2
     intC = UBound(arrBeds)
@@ -82,25 +81,25 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As Stri
         Set objDataWb = Nothing
         Set objTextWb = Nothing
         
-        shtPats.Range("A" & intN).Value2 = varBed
+        shtBeds.Range("A" & intN).Value2 = varBed
         
         strDataFile = Replace(strDataFile, strDataName, "[" & strDataName & "]")
         
         strFormula = Replace(strPatNum, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("B" & intN).Formula = strFormula
+        shtBeds.Range("B" & intN).Formula = strFormula
     
         strFormula = Replace(strAchterNaam, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("C" & intN).Formula = strFormula
+        shtBeds.Range("C" & intN).Formula = strFormula
     
         strFormula = Replace(strVoorNaam, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("D" & intN).Formula = strFormula
+        shtBeds.Range("D" & intN).Formula = strFormula
     
         strFormula = Replace(strGebDat, constFileReplace, strDataFile)
         strFormula = Replace(strFormula, constNumReplace, intN)
-        shtPats.Range("E" & intN).Formula = strFormula
+        shtBeds.Range("E" & intN).Formula = strFormula
         
         If blnShowProgress Then
             DoEvents
@@ -110,11 +109,10 @@ Public Sub CreateDataWorkBooks(ByRef arrBeds() As Variant, ByVal strPath As Stri
     
     Next varBed
     
-    strPatsFile = ModSetting.GetPatientsFilePath
-    SaveWorkBookAsShared objWb, strPatsFile
+    SaveWorkBookAsShared objWb, strBedsFilePath
     objWb.Close
     
-    ModLog.LogInfo "Created: " & strPatsFile
+    ModLog.LogInfo "Created: " & strBedsFilePath
     
     Exit Sub
     
@@ -178,7 +176,7 @@ Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook 
     
 CopyWorkbookRangeToSheetError:
 
-    If Workbooks.count = 2 Then Workbooks.Item(2).Close ' To Do Improve by che
+    If Workbooks.Count = 2 Then Workbooks.Item(2).Close ' To Do Improve by che
 
     ModLog.LogError "CopyWorkbookRangeToSheet " & strFile & ", " & strBook & ", " & strRange & ", " & shtTarget.Name
     

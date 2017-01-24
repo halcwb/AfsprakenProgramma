@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedicament 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   7200
+   ClientHeight    =   7485
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10050
-   OleObjectBlob   =   "FormMedicament.frx":0000
+   OleObjectBlob   =   "FormMedDisc.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "FormMedicament"
+Attribute VB_Name = "FormMedDisc"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -21,28 +21,31 @@ Private m_TherapieGroep As String
 Private m_SubGroep As String
 Private m_Etiket As String
 
-Private blnNoFormMed As Boolean
+Private m_IsGPK As Boolean
 
 Public Sub SetNoFormMed()
 
-    blnNoFormMed = True
+    m_IsGPK = False
 
 End Sub
 
-Private Sub Validate()
+Private Sub Validate(ByVal strValid As String)
 
-    Dim strValid As String
     
-    strValid = IIf(cboIndicatie.value = vbNullString, "Kies een indicatie", vbNullString)
-    strValid = IIf(cboRoute.value = vbNullString, "Kies een route", strValid)
+    If strValid = vbNullString Then
     
-    strValid = IIf(txtDosisEenheid.value = vbNullString, "Voer dosering grootte in", strValid)
-    strValid = IIf(txtDosis.value = vbNullString, "Voer dosering eenheid in", strValid)
-    strValid = IIf(cboSterkteEenheid.value = vbNullString, "Voer sterkte eenheid in", strValid)
-    strValid = IIf(txtSterkte.value = vbNullString, "Voer sterkte in", strValid)
+        strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", vbNullString)
+        strValid = IIf(cboRoute.Value = vbNullString, "Kies een route", strValid)
+        
+        strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering grootte in", strValid)
+        strValid = IIf(txtDosis.Value = vbNullString, "Voer dosering eenheid in", strValid)
+        strValid = IIf(cboSterkteEenheid.Value = vbNullString, "Voer sterkte eenheid in", strValid)
+        strValid = IIf(txtSterkte.Value = vbNullString, "Voer sterkte in", strValid)
+        
+        strValid = IIf(cboVorm.Value = vbNullString, "Voer een vorm in", strValid)
+        strValid = IIf(cboGeneriek.Value = vbNullString, "Kies een generiek", strValid)
     
-    strValid = IIf(cboVorm.value = vbNullString, "Voer een vorm in", strValid)
-    strValid = IIf(cboGeneriek.value = vbNullString, "Kies een generiek", strValid)
+    End If
     
     lblValid.Caption = strValid
     cmdOK.Enabled = strValid = vbNullString
@@ -51,13 +54,13 @@ End Sub
 
 Public Function GetSelectedRoute() As String
 
-    GetSelectedRoute = cboRoute.value
+    GetSelectedRoute = cboRoute.Value
 
 End Function
 
 Public Function GetSelectedIndication() As String
 
-    GetSelectedIndication = cboIndicatie.value
+    GetSelectedIndication = cboIndicatie.Value
 
 End Function
 
@@ -83,23 +86,40 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
 
     Dim varItem As Variant
     
+    m_IsGPK = blnIsGPK
+    
     Me.txtSterkte.Enabled = Not blnIsGPK
     Me.cboSterkteEenheid.Enabled = Not blnIsGPK
-    Me.txtDosisEenheid.Enabled = Not blnIsGPK
+    Me.cboDosisEenheid.Enabled = Not blnIsGPK
     Me.cboVorm.Enabled = Not blnIsGPK
+    
+    cmdFormularium.Enabled = blnIsGPK
     
     If Not blnIsGPK Then
         lblGPK.Caption = vbNullString
-    
+        lblATC.Caption = vbNullString
+        
+        cboVorm.Clear
+        For Each varItem In m_Formularium.GetVormen
+            cboVorm.AddItem varItem
+        Next
+        
         cboSterkteEenheid.Clear
         For Each varItem In m_Formularium.GetSterkteEenheden()
             cboSterkteEenheid.AddItem varItem
         Next
     
-        cboVorm.Clear
-        For Each varItem In m_Formularium.GetVormen
-            cboVorm.AddItem varItem
+        cboDosisEenheid.Clear
+        For Each varItem In m_Formularium.GetDosisEenheden
+            cboDosisEenheid.AddItem varItem
         Next
+        
+        cboRoute.Clear
+        For Each varItem In m_Formularium.GetRoutes
+            cboRoute.AddItem varItem
+        Next
+        
+        cboIndicatie.Clear
     End If
 
 End Sub
@@ -107,19 +127,15 @@ End Sub
 Private Sub cboGeneriek_Change()
 
     If cboGeneriek.ListIndex > -1 Then
-        blnNoFormMed = False
+        SetToGPKMode True
         Set m_Medicament = m_Formularium.Item(cboGeneriek.ListIndex + 1)
         LoadMedicament
-        SetToGPKMode True
     Else
         SetToGPKMode False
-        If Not blnNoFormMed Then ' Only clear form once when no form med is discovered
-            blnNoFormMed = True
-            ClearForm False
-        End If
+        ClearForm False
     End If
     
-    Validate
+    Validate vbNullString
 
 End Sub
 
@@ -133,32 +149,49 @@ Public Function GetGPK() As String
 
 End Function
 
-Public Sub LoadGPK(ByVal strGPK As String)
+Public Function LoadGPK(ByVal strGPK As String) As Boolean
+    
+    Dim blnLoad As Boolean
 
+    blnLoad = True
+    
     Set m_Medicament = m_Formularium.GPK(strGPK)
-    LoadMedicament
-    cboGeneriek.value = m_Medicament.Generiek
+    
+    If m_Medicament Is Nothing Then
+        SetToGPKMode False
+        blnLoad = False
+    Else
+        SetToGPKMode True
+        LoadMedicament
+        cboGeneriek.Value = m_Medicament.Generiek
+    End If
+    
+    LoadGPK = blnLoad
 
-End Sub
+End Function
 
 Private Sub LoadMedicament()
 
     With m_Medicament
+    
         lblTherapieGroep.Caption = .TherapieGroep
         lblSubGroep.Caption = .TherapieSubgroep
         lblEtiket.Caption = .Etiket
         
         lblGPK.Caption = .GPK
-        cboVorm.value = .Vorm
+        lblATC.Caption = .ATC
+        
+        cboVorm.Value = .Vorm
         
         txtSterkte.Text = .Sterkte
         cboSterkteEenheid.Text = .SterkteEenheid
         
         txtDosis.Text = .Dosis
-        txtDosisEenheid.Text = .DosisEenheid
+        cboDosisEenheid.Text = .DosisEenheid
         
         FillCombo cboRoute, .GetRoutes()
         FillCombo cboIndicatie, .GetIndicaties()
+        
     End With
 
 End Sub
@@ -177,25 +210,25 @@ Private Sub FillCombo(ByRef objCombo As ComboBox, ByRef arrItems() As String)
     
 End Sub
 
-Public Sub ClearForm(ByVal blnGeneric As Boolean)
+Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
 
     lblTherapieGroep.Caption = m_TherapieGroep
     lblSubGroep.Caption = m_SubGroep
     lblEtiket.Caption = m_Etiket
     
-    If blnGeneric Then cboGeneriek.value = vbNullString
-    cboVorm.value = vbNullString
+    If blnClearGeneric Then cboGeneriek.Value = vbNullString
+    cboVorm.Value = vbNullString
     
-    txtDosis.value = vbNullString
-    txtDosisEenheid.value = vbNullString
+    txtDosis.Value = vbNullString
+    cboDosisEenheid.Value = vbNullString
     
     txtSterkte.Text = vbNullString
     cboSterkteEenheid.Text = vbNullString
     
     cboRoute.Clear
-    cboRoute.value = vbNullString
+    cboRoute.Value = vbNullString
     cboIndicatie.Clear
-    cboIndicatie.value = vbNullString
+    cboIndicatie.Value = vbNullString
     
     cboGeneriek.SetFocus
     
@@ -203,15 +236,35 @@ Public Sub ClearForm(ByVal blnGeneric As Boolean)
 
 End Sub
 
+Private Function ValidateCombo(ByRef objCombo As MSForms.ComboBox) As String
+
+    Dim strValid As String
+    
+    strValid = vbNullString
+    If objCombo.ListCount > 0 And Not objCombo.MatchFound Then
+        objCombo.Value = vbNullString
+        strValid = "Kies een item uit de lijst"
+    End If
+    
+    ValidateCombo = strValid
+
+End Function
+
 Private Sub cboIndicatie_Change()
 
-    Validate
+    Dim strValid As String
+    
+    strValid = ValidateCombo(cboIndicatie)
+    Validate strValid
 
 End Sub
 
 Private Sub cboRoute_Change()
 
-    Validate
+    Dim strValid As String
+    
+    strValid = ValidateCombo(cboRoute)
+    Validate strValid
 
 End Sub
 
@@ -226,7 +279,6 @@ End Sub
 Private Sub CloseForm(ByVal strAction As String)
 
     lblButton.Caption = strAction
-    blnNoFormMed = False
     Me.Hide
 
 End Sub
@@ -246,18 +298,25 @@ End Sub
 
 Private Sub cmdOK_Click()
 
-    If blnNoFormMed Then
+    If Not m_IsGPK Then
+    
         Set m_Medicament = New ClassMedicatieDisc
         
-        m_Medicament.Dosis = val(txtDosis.value)
-        m_Medicament.DosisEenheid = txtDosisEenheid.value
-        m_Medicament.Generiek = cboGeneriek.value
-        m_Medicament.Indicaties = cboIndicatie.value
-        m_Medicament.Routes = cboRoute.value
-        m_Medicament.Sterkte = val(txtSterkte.value)
-        m_Medicament.SterkteEenheid = cboSterkteEenheid.value
-        m_Medicament.Vorm = cboVorm.value
+        m_Medicament.Dosis = val(txtDosis.Value)
+        m_Medicament.DosisEenheid = cboDosisEenheid.Value
+        m_Medicament.Generiek = cboGeneriek.Value
+        m_Medicament.Indicaties = cboIndicatie.Value
+        m_Medicament.Routes = cboRoute.Value
+        m_Medicament.Sterkte = val(txtSterkte.Value)
+        m_Medicament.SterkteEenheid = cboSterkteEenheid.Value
+        m_Medicament.Vorm = cboVorm.Value
         
+    Else
+        
+        m_Medicament.Dosis = val(txtDosis.Value)
+        m_Medicament.Routes = cboRoute.Value
+        m_Medicament.Indicaties = cboIndicatie.Value
+    
     End If
 
     CloseForm "OK"
@@ -282,19 +341,22 @@ End Sub
 
 Private Sub txtDosis_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
-    Validate
+    Validate vbNullString
 
 End Sub
 
 Private Sub cboVorm_Change()
 
-    Validate
+    Dim strValid As String
+    
+    strValid = ValidateCombo(cboVorm)
+    Validate strValid
 
 End Sub
 
 Private Sub txtSterkte_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
-    Validate
+    Validate vbNullString
 
 End Sub
 
@@ -315,13 +377,17 @@ End Sub
 
 Private Sub cboSterkteEenheid_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
-    Validate
+    Dim strValid As String
+    
+    strValid = ValidateCombo(cboSterkteEenheid)
+    Validate strValid
 
 End Sub
 
 Private Sub UserForm_Activate()
 
-    Validate
+    Validate vbNullString
+    cmdFormularium.Enabled = False
 
 End Sub
 
@@ -355,7 +421,7 @@ Private Sub UserForm_Initialize()
     txtSterkte.TabIndex = 2
     cboSterkteEenheid.TabIndex = 3
     txtDosis.TabIndex = 4
-    txtDosisEenheid.TabIndex = 5
+    cboDosisEenheid.TabIndex = 5
     cboRoute.TabIndex = 6
     cboIndicatie.TabIndex = 7
     
@@ -363,7 +429,7 @@ Private Sub UserForm_Initialize()
     cmdOK.TabIndex = 9
     cmdClear.TabIndex = 10
     cmdCancel.TabIndex = 11
-    
+       
     ModProgress.FinishProgress
 
 End Sub

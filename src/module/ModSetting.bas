@@ -4,7 +4,12 @@ Option Explicit
 Public Const CONST_DATA_SHEET As String = "Data"
 Public Const CONST_PATIENTS_SHEET As String = "Patienten"
 
+Public Const CONST_PICU_BEDS As String = "PICU.xlsx"
+Public Const CONST_NICU_BEDS As String = "NICU.xlsx"
+Public Const CONST_BEDS_SHEET As String = "Beds"
+
 Private Const constPatientsFile As String = "Patienten.xlsx"
+
 Private Const constExt As String = ".xlsx"
 Private Const constDevMode As String = "SettingDevMode"
 Private Const constLogging As String = "SettingLogging"
@@ -251,7 +256,7 @@ Private Function GetBeds(ByVal strRange As String) As Variant()
     
     Set objBeds = shtGlobSettings.Range(strRange)
     arrBeds = Array() ' Assign but keep empty
-    intC = objBeds.Rows.count
+    intC = objBeds.Rows.Count
     For intN = 1 To intC
         ModArray.AddItemToVariantArray arrBeds, objBeds.Cells(intN, 1).Value2
     Next intN
@@ -273,19 +278,23 @@ Public Function GetNeoBeds() As Variant()
 End Function
 
 Public Function GetPatientsFileName() As String
-
-    GetPatientsFileName = constPatientsFile
+    
+    Dim blnNeo As Boolean
+    
+    blnNeo = False
+    If IsDevelopmentDir() Then blnNeo = ModMessage.ShowMsgBoxYesNo("Ja(Yes) voor Neo anders Pediatrie") = vbYes
+    GetPatientsFileName = IIf(IsNeoDir() Or blnNeo, CONST_NICU_BEDS, CONST_PICU_BEDS)
 
 End Function
 
-Public Function GetPatientsFilePath() As String
+Public Function GetPatientsFilePath(ByVal strFileName) As String
 
-    GetPatientsFilePath = GetPatientDataPath() & "\" & constPatientsFile
+    GetPatientsFilePath = GetPatientDataPath() & strFileName
 
 End Function
 
 Private Sub test()
 
-    MsgBox GetPatientsFilePath
+    MsgBox GetPatientsFilePath("Test")
     
 End Sub

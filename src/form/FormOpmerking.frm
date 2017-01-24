@@ -30,7 +30,7 @@ End Sub
 
 Private Sub cmdClear_Click()
 
-    txtOpmerking.value = vbNullString
+    txtOpmerking.Value = vbNullString
 
 End Sub
 

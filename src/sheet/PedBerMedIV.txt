@@ -499,4 +499,5 @@ $Q$26: 	=SUM(Q5:Q25)+SUM(P5:P25)
 $R$26: 	=SUM(R5:R25)
 $S$26: 	=SUM(S5:S25)
 $T$26: 	=SUM(T5:T25)
+$Z$28: 	=IF(_Ped_MedIV_Opm="""","""",""verw"")
 "

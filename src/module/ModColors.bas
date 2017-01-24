@@ -10,6 +10,22 @@ End Enum
 Private Const constColorSettings As String = "G2"
 Private Const constSheetRangeTable As String = "K2"
 
+Private Sub ClearSheetTableBorders(objSheet As Worksheet)
+    
+    With objSheet.Cells
+        .Borders(xlDiagonalDown).LineStyle = xlNone
+        .Borders(xlDiagonalUp).LineStyle = xlNone
+        .Borders(xlEdgeLeft).LineStyle = xlNone
+        .Borders(xlEdgeTop).LineStyle = xlNone
+        .Borders(xlEdgeBottom).LineStyle = xlNone
+        .Borders(xlEdgeRight).LineStyle = xlNone
+        .Borders(xlInsideVertical).LineStyle = xlNone
+        .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End With
+    
+End Sub
+
+
 Private Function IsNeoSheet(ByVal strSheet As String) As Boolean
 
     IsNeoSheet = ModString.StartsWith(strSheet, "NeoGui")
@@ -43,7 +59,7 @@ Private Sub SetRangeColor(ByRef objTarget As Range, ByRef objSetting As Range, B
 
     objTarget.Interior.Color = objSetting.Interior.Color
     
-    If Not IsMissing(varGridColor) Then
+    If Not IsMissing(varGridColor) And objTarget.Rows.Count > 1 Then
         lngGridColor = Conversion.CLng(varGridColor)
                     
         For Each objCell In objTarget.Cells
@@ -53,6 +69,12 @@ Private Sub SetRangeColor(ByRef objTarget As Range, ByRef objSetting As Range, B
         Next
         
     End If
+
+End Sub
+
+Private Sub TestRowsCount()
+
+    MsgBox shtPedGuiEntTPN.Range("D14:E16").Rows.Count
 
 End Sub
 
@@ -73,7 +95,9 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
     Dim strSheet As String
     Dim strTarget As String
     Dim strRange As String
-    Dim objTarget As Range
+    Dim varRangeItem As Variant
+    Dim objTargetSheet As Worksheet
+    Dim objTargetRange As Range
     
     Dim lngBackGround As Long
     Dim blnProtected As Boolean
@@ -83,7 +107,7 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
     
     ModProgress.StartProgress "Kleuren Instellen"
     
-    intC = objSettings.Rows.count
+    intC = objSettings.Rows.Count
     For intN = 2 To intC
         strSetting = objSettings.Cells(intN, 1).Value2
         blnSheet = False
@@ -95,7 +119,7 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
             blnSheet = True
         End If
         
-        intTargetC = objSheetRanges.Rows.count
+        intTargetC = objSheetRanges.Rows.Count
         For intTargetN = 2 To intTargetC
             
             strSheet = objSheetRanges.Cells(intTargetN, 1).Value2
@@ -114,24 +138,35 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
             
             blnProtected = False
             If strTarget = strSetting And Not strRange = vbNullString And Not intSetting = -1 Then
+                ModLog.LogInfo "Coloring: " & Join(Array(strSheet, strSetting, strRange), " ")
+                
                 Set objSetting = objSettings.Cells(intN, intSetting)
-                Set objTarget = WbkAfspraken.Sheets(strSheet).Range(strRange)
+                Set objTargetSheet = WbkAfspraken.Sheets(strSheet)
                 
-                If objTarget.Worksheet.ProtectContents Then
+                If objTargetSheet.ProtectContents Then
                     blnProtected = True
-                    objTarget.Worksheet.Unprotect ModConst.CONST_PASSWORD
+                    objTargetSheet.Unprotect ModConst.CONST_PASSWORD
                 End If
                 
-                If strSetting = "Fields" Then
-                    SetRangeColor objTarget, objSetting, blnSheet, lngBackGround
-                Else
-                    SetRangeColor objTarget, objSetting, blnSheet
-                End If
+                If strSetting = "Backgrounds" Then ClearSheetTableBorders objTargetSheet
                 
-                If blnProtected Then objTarget.Worksheet.Protect ModConst.CONST_PASSWORD
+                For Each varRangeItem In Split(strRange, ",")
+                
+                    Set objTargetRange = objTargetSheet.Range(CStr(varRangeItem))
+                    
+                    If strSetting = "Fields" Then
+                        SetRangeColor objTargetRange, objSetting, blnSheet, lngBackGround
+                    Else
+                        SetRangeColor objTargetRange, objSetting, blnSheet
+                    End If
+                
+                Next varRangeItem
+                
+                If blnProtected Then objTargetSheet.Protect ModConst.CONST_PASSWORD
                 
                 Set objSetting = Nothing
-                Set objTarget = Nothing
+                Set objTargetSheet = Nothing
+                Set objTargetRange = Nothing
             End If
             
             ModProgress.SetJobPercentage strSheet & ": " & strTarget, intTargetC, intTargetN

@@ -23,8 +23,8 @@ Private Sub Validate()
 
     Dim strValid As String
     
-    txtPRN.Visible = chkPRN.value
-    strValid = IIf(txtPRN.Visible And txtPRN.value = vbNullString, "Vul tekst in", vbNullString)
+    txtPRN.Visible = chkPRN.Value
+    strValid = IIf(txtPRN.Visible And txtPRN.Value = vbNullString, "Vul tekst in", vbNullString)
     
     lblValid.Caption = strValid
     cmdOK.Enabled = strValid = vbNullString
@@ -65,7 +65,7 @@ End Sub
 
 Private Sub cmdOK_Click()
 
-    ModRange.SetRangeValue RangeName(constPRNCheck), chkPRN.value
+    ModRange.SetRangeValue RangeName(constPRNCheck), chkPRN.Value
     ModRange.SetRangeValue RangeName(constPRNText), IIf(txtPRN.Visible, txtPRN.Text, vbNullString)
     Me.Hide
 
@@ -82,7 +82,7 @@ Private Sub UserForm_Activate()
     Dim blnPrn As Boolean
     
     blnPrn = ModRange.GetRangeValue(RangeName(constPRNCheck), False)
-    chkPRN.value = blnPrn
+    chkPRN.Value = blnPrn
     txtPRN.Text = ModRange.GetRangeValue(RangeName(constPRNText), vbNullString)
 
 End Sub

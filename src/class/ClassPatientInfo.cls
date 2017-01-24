@@ -90,7 +90,7 @@ Public Function toString() As String
         strString = Strings.Trim(strString) & Me.AchterNaam() & Me.VoorNaam()
     End If
     
-    strString = Strings.Trim(strString) & " " & Me.BirthDate()
+    strString = IIf(Me.AchterNaam = vbNullString, strString, Strings.Trim(strString) & " " & Me.BirthDate())
 
     toString = strString
 

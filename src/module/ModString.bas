@@ -1,18 +1,31 @@
 Attribute VB_Name = "ModString"
 Option Explicit
 
-'Public Function StartsWith(ByVal strString, ByVal strValue As String) As Boolean
-'
-'    If Len(strString) >= Len(strValue) Then
-'        If Mid(strString, 0, Len(strValue)) = strValue Then
-'            StartsWith = True
-'            Exit Function
-'        End If
-'    End If
-'
-'    StartsWith = False
-'
-'End Function
+Public Function FirstPositionInstr(ByVal strString1, ByVal strString2) As Integer
+
+    FirstPositionInstr = InStr(1, strString1, strString2, vbTextCompare)
+
+End Function
+
+Public Function CountFirstInStr(ByVal strString, strFirst) As Integer
+
+    Dim intN As Integer
+    
+    intN = 1
+    
+    Do While intN <= Len(strString) And Mid(strString, intN, 1) = strFirst
+        intN = intN + 1
+    Loop
+    
+    CountFirstInStr = intN - 1
+
+End Function
+
+Private Sub TestCountFirstInStr()
+
+    MsgBox CountFirstInStr("000000012345", "0")
+
+End Sub
 
 ' Checks whether strString contains strValue case insensitive, ignores spaces
 Public Function ContainsCaseInsensitive(ByVal strString As String, ByVal strValue As String) As Boolean
@@ -92,6 +105,88 @@ Private Sub TestStringToDate()
 
 End Sub
 
+Public Function SplitDouble(ByVal dblNum As Double) As String()
 
+    Dim strNum As String
+    Dim strDel As String
+    Dim arrNum() As String
+    
+    strNum = CStr(CDec(dblNum))
+    strDel = IIf(ContainsCaseInsensitive(strNum, "."), ".", ",")
+        
+    arrNum = Split(strNum, strDel)
+
+    If UBound(arrNum) = 0 Then ModArray.AddItemToStringArray arrNum, vbNullString
+    ModArray.AddItemToStringArray arrNum, strDel
+    
+    SplitDouble = arrNum
+
+End Function
+
+Public Function DoubleToFractionString(ByVal dblNum As Double) As String
+
+    Dim strNum As String
+    Dim intDec As Integer
+    Dim strDel As String
+    Dim strDec As String
+    
+    strNum = CStr(dblNum)
+    strDel = SplitDouble(dblNum)(2)
+    intDec = Len(SplitDouble(dblNum)(1))
+        
+    DoubleToFractionString = Strings.Replace(strNum, strDel, "") & "/" & Application.WorksheetFunction.Power(10, intDec)
+
+End Function
+
+Private Sub TestDoubleToFractionString()
+
+    MsgBox DoubleToFractionString(12)
+    
+End Sub
+
+Private Function GetPrecision(ByVal intN As Integer, ByVal dblNum As Double) As Integer
+
+    Dim intD As Integer
+    Dim strN As String
+    Dim strD As String
+    
+    strN = SplitDouble(dblNum)(0)
+    strD = SplitDouble(dblNum)(1)
+    
+    intD = intN - IIf(strN = "0", 0, Len(strN))
+    intD = IIf(intD < 0, 0, intD)
+    intD = IIf(strD = vbNullString, intD, CountFirstInStr(strD, "0") + intD)
+    
+    GetPrecision = intD
+
+End Function
+
+Private Sub TestGetPrecision()
+
+    MsgBox GetPrecision(1, 1.002343)
+
+End Sub
+
+Public Function FixPrecision(ByVal dblNum As Double, intN As Integer) As String
+
+    Dim dblFix As Double
+    Dim intD As Integer
+    
+    intD = GetPrecision(intN, dblNum)
+    
+    With Application.WorksheetFunction
+        dblFix = .Round(dblNum * .Power(10, intD), 0)
+        dblFix = dblFix / .Power(10, intD)
+    End With
+    
+    FixPrecision = dblFix
+
+End Function
+
+Private Sub TestFixPrecision()
+
+    MsgBox FixPrecision(1 / 3, 1)
+
+End Sub
 
 

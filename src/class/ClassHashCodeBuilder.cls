@@ -17,7 +17,7 @@ Public Sub InitializeVariables(Optional lngInitialNonZeroOddNumber As Long, Opti
     If (lngInitialNonZeroOddNumber = 0) Then
         lngConstant_ = 37
     ElseIf (lngInitialNonZeroOddNumber Mod 2 = 0) Then
-        err.Raise Number:=5, source:="Factory.createHashCodeBuilder", Description:="ClassHashCodeBuilder requires an odd initial value"
+        err.Raise Number:=5, Source:="Factory.createHashCodeBuilder", Description:="ClassHashCodeBuilder requires an odd initial value"
     Else
         lngConstant_ = lngMultiplierNonZeroOddNumber
     End If
@@ -26,7 +26,7 @@ Public Sub InitializeVariables(Optional lngInitialNonZeroOddNumber As Long, Opti
         'variable was not supplied
         lngTotal_ = 17
     ElseIf (lngMultiplierNonZeroOddNumber Mod 2 = 0) Then
-        err.Raise Number:=5, source:="Factory.createHashCodeBuilder", Description:="ClassHashCodeBuilder requires an odd multiplier"
+        err.Raise Number:=5, Source:="Factory.createHashCodeBuilder", Description:="ClassHashCodeBuilder requires an odd multiplier"
     Else
         lngTotal_ = lngMultiplierNonZeroOddNumber
     End If

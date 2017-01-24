@@ -54,14 +54,14 @@ Private Sub cmdOK_Click()
     If strName = vbNullString Or strGroup = vbNullString Then Exit Sub
     
     With Selection
-        intRows = .Rows.count
+        intRows = .Rows.Count
         If intRows = 1 Then
-            strRes = IIf(chkIsData.value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
+            strRes = IIf(chkIsData.Value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
             ModRange.SetNameToRange strRes, .Cells(1, 1)
         Else
             intMax = intStart + intRows - 1
             For intN = 1 To intRows
-                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.value)
+                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.Value)
                 ModRange.SetNameToRange strRes, .Cells(intN, 1)
             Next intN
         End If

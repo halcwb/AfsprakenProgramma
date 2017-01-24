@@ -18,7 +18,7 @@ Public Sub PedLijnPM_ShowPickList()
     Dim intKeuze As Integer
     
     Set colLijnen = New Collection
-    intC = Range(constTblLijn).Rows.count
+    intC = Range(constTblLijn).Rows.Count
     For intN = 2 To intC
         colLijnen.Add Range(constTblLijn).Cells(intN, 1)
     Next intN

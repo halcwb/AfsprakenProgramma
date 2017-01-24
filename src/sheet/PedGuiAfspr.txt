@@ -1,26 +1,26 @@
-"$C$2: 	=Var_AfspraakDatum
-$E$2: 	=PatDetails!B15
-$F$2: 	=PatDetails!B23
-$I$2: 	=__1_Bed
-$C$3: 	=PatDetails!B21
-$E$3: 	=PatDetails!B16
-$F$3: 	=PatDetails!B24
-$C$4: 	=PatDetails!B17
-$E$4: 	=PatDetails!B20
-$F$4: 	=PatDetails!B25
-$C$8: 	=IF(PedBerAfspr!C7=0,"""",PedBerAfspr!C7)
-$C$9: 	=IF(PedBerAfspr!C8=0,"""",PedBerAfspr!C8)
-$G$9: 	=CONCATENATE(""à "",PedBerAfspr!G16,"" uur"")
-$C$10: 	=IF(PedBerAfspr!C9=0,"""",PedBerAfspr!C9)
-$G$10: 	=CONCATENATE(""à "",PedBerAfspr!G18,"" uur"")
-$I$10: 	=IF(_Ped_AfsprD_Verliezen=0,"""",_Ped_AfsprD_Verliezen)
-$C$11: 	=CONCATENATE(PedBerAfspr!$B$12,"" dd"")
-$C$18: 	=CONCATENATE(PedBerAfspr!$C$42,"" dd"")
-$F$18: 	=IF(_Ped_AfsprOverig=0,"""",_Ped_AfsprOverig)
-$C$19: 	=CONCATENATE(PedBerAfspr!$C$43,"" dd"")
-$D$35: 	=PedBerAfspr!D40
-$C$38: 	=IFERROR(LEFT(Var_Ped_AfsprControles,LEN(Var_Ped_AfsprControles)-3),"""")
-$C$39: 	=IFERROR(LEFT(Var_Ped_AfsprOnderzoeken,LEN(Var_Ped_AfsprOnderzoeken)-3),"""")
-$C$40: 	=IFERROR(LEFT(Var_Ped_AfsprInstellingen,LEN(Var_Ped_AfsprInstellingen)-3),"""")
-$C$41: 	=IFERROR(LEFT(Var_Ped_AfsprOverig,LEN(Var_Ped_AfsprOverig)-3),"""")
+"$D$2: 	=Txt_Pat_AfspraakDat
+$H$2: 	=Txt_Pat_OpnameDat
+$I$2: 	=Txt_Pat_Gewicht
+$J$2: 	=Txt_Pat_Bed
+$D$3: 	=Txt_Pat_FullName
+$H$3: 	=Txt_Pat_GeboorteDat
+$I$3: 	=Txt_Pat_Lengte
+$D$4: 	=Txt_Pat_PatNo
+$H$4: 	=Txt_Pat_Leeftijd
+$I$4: 	=Txt_Pat_Oppervlak
+$D$8: 	=IF(PedBerAfspr!C7=0,"""",PedBerAfspr!C7)
+$D$9: 	=IF(PedBerAfspr!C8=0,"""",PedBerAfspr!C8)
+$H$9: 	=CONCATENATE(""à "",PedBerAfspr!G16,"" uur"")
+$D$10: 	=IF(PedBerAfspr!C9=0,"""",PedBerAfspr!C9)
+$H$10: 	=CONCATENATE(""à "",PedBerAfspr!G18,"" uur"")
+$J$10: 	=IF(_Ped_AfsprD_Verliezen=0,"""",_Ped_AfsprD_Verliezen)
+$D$11: 	=CONCATENATE(PedBerAfspr!$B$12,"" dd"")
+$D$18: 	=CONCATENATE(PedBerAfspr!$C$42,"" dd"")
+$G$18: 	=IF(_Ped_AfsprOverig=0,"""",_Ped_AfsprOverig)
+$D$19: 	=CONCATENATE(PedBerAfspr!$C$43,"" dd"")
+$E$35: 	=PedBerAfspr!D40
+$D$38: 	=IFERROR(LEFT(Var_Ped_AfsprControles,LEN(Var_Ped_AfsprControles)-3),"""")
+$D$39: 	=IFERROR(LEFT(Var_Ped_AfsprOnderzoeken,LEN(Var_Ped_AfsprOnderzoeken)-3),"""")
+$D$40: 	=IFERROR(LEFT(Var_Ped_AfsprInstellingen,LEN(Var_Ped_AfsprInstellingen)-3),"""")
+$D$41: 	=IFERROR(LEFT(Var_Ped_AfsprOverig,LEN(Var_Ped_AfsprOverig)-3),"""")
 "

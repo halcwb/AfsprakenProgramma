@@ -337,7 +337,7 @@ Public Function ArrayAddAllFromCol(ByRef colSrc As Collection, ByRef varDest() A
     
     lngCount = VariantArrayLength(varDest)
     lngN = 1
-    ReDim Preserve varDest(lngCount + colSrc.count)
+    ReDim Preserve varDest(lngCount + colSrc.Count)
     
     For Each varElement In colSrc
         Set varDest(lngCount + lngN) = varElement
@@ -355,14 +355,14 @@ Public Function AddAllFromArray(ByRef varSrc() As Variant, ByRef colDest As Coll
     Dim lngN As Long
     Dim varElement As Variant
     
-    lngCount = colDest.count
+    lngCount = colDest.Count
     lngN = 1
     
     For Each varElement In varSrc
         Set colDest(lngCount + lngN) = varElement
     Next varElement
     
-    AddAllFromArray = (colDest.count = lngCount)
+    AddAllFromArray = (colDest.Count = lngCount)
     
 End Function
 

@@ -1,28 +1,28 @@
-"$C$2: 	=Var_AfspraakDatum
-$F$2: 	=_Pat_OpnDatum
-$G$2: 	=""ICU-dag: ""&Var_AfspraakDatum-_Pat_OpnDatum+1
-$J$2: 	=__1_Bed
-$C$3: 	=__2_AchterNaam&"", ""&__3_VoorNaam
-$F$3: 	=__4_GebDatum
-$G$3: 	=""Gewicht: ""&_Pat_Gewicht/10&"" kg""
-$I$3: 	=""Lengte: ""&_Pat_Lengte&"" cm""
-$C$4: 	=__0_PatNum
-$F$4: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)""
-$I$4: 	=""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2""
-$C$8: 	=IF(_Neo_AfsprD_GewichtFrequentie=0,"""",_Neo_AfsprD_GewichtFrequentie)
-$J$8: 	=IF(_Neo_AfsprD_AantalLampen=0,""0 lamp(en)"",CONCATENATE(_Neo_AfsprD_AantalLampen, "" lamp(en)""))
-$C$9: 	=IF(_Neo_AfsprD_LengteFrequentie=0,"""",_Neo_AfsprD_LengteFrequentie)
-$C$10: 	=IF(_Neo_AfsprD_SchedelFrequentie=0,"""",_Neo_AfsprD_SchedelFrequentie)
-$C$12: 	=CONCATENATE(NeoBerAfspr!$B$12,"" dd"")
-$J$17: 	=CONCATENATE(NeoBerAfspr!$K$17,"" dd"")
-$K$17: 	=CONCATENATE(NeoBerAfspr!$L$17,"" ml"")
-$J$19: 	=CONCATENATE(""à "",_Neo_AfsprD_VerliezenFrequentie,"" uur"")
-$D$27: 	=CONCATENATE(NeoBerAfspr!C27,"" uur"")
-$G$31: 	=IF(_Neo_AfsprB_WondkweekTekst=0,"""",_Neo_AfsprB_WondkweekTekst)
-$D$41: 	=NeoBerAfspr!D47
-$C$45: 	=IFERROR(LEFT(Var_Neo_AfsprControles,LEN(Var_Neo_AfsprControles)-3),"""")
-$C$46: 	=IFERROR(LEFT(Var_Neo_AfsprOnderzoek,LEN(Var_Neo_AfsprOnderzoek)-3),"""")
-$C$47: 	=IFERROR(LEFT(Var_Neo_AfsprInstellingen,LEN(Var_Neo_AfsprInstellingen)-3),"""")
-$C$48: 	=IFERROR(LEFT(Var_Neo_AfsprKweken,LEN(Var_Neo_AfsprKweken)-3),"""")
-$C$49: 	=IFERROR(LEFT(Var_Neo_AfsprOverig,LEN(Var_Neo_AfsprOverig)-3),"""")
+"$D$2: 	=Txt_Pat_AfspraakDat
+$H$2: 	=Txt_Pat_OpnameDat
+$J$2: 	=Txt_Pat_Gewicht
+$K$2: 	=Txt_Pat_Bed
+$D$3: 	=Txt_Pat_FullName
+$H$3: 	=Txt_Pat_GeboorteDat
+$J$3: 	=Txt_Pat_Lengte
+$D$4: 	=Txt_Pat_PatNo
+$H$4: 	=Txt_Pat_Leeftijd
+$J$4: 	=IF(Txt_Pat_GebGew="""","""",""Geb Gew: ""&Txt_Pat_GebGew)
+$K$4: 	=IF(Txt_Pat_GestAge="""","""",""Zw. Duur: ""&Txt_Pat_GestAge)
+$D$8: 	=IF(_Neo_AfsprD_GewichtFrequentie=0,"""",_Neo_AfsprD_GewichtFrequentie)
+$K$8: 	=IF(_Neo_AfsprD_AantalLampen=0,""0 lamp(en)"",CONCATENATE(_Neo_AfsprD_AantalLampen, "" lamp(en)""))
+$D$9: 	=IF(_Neo_AfsprD_LengteFrequentie=0,"""",_Neo_AfsprD_LengteFrequentie)
+$D$10: 	=IF(_Neo_AfsprD_SchedelFrequentie=0,"""",_Neo_AfsprD_SchedelFrequentie)
+$D$12: 	=CONCATENATE(NeoBerAfspr!$B$12,"" dd"")
+$K$17: 	=CONCATENATE(NeoBerAfspr!$K$17,"" dd"")
+$L$17: 	=CONCATENATE(NeoBerAfspr!$L$17,"" ml"")
+$K$19: 	=CONCATENATE(""à "",_Neo_AfsprD_VerliezenFrequentie,"" uur"")
+$E$27: 	=CONCATENATE(NeoBerAfspr!C27,"" uur"")
+$H$31: 	=IF(_Neo_AfsprB_WondkweekTekst=0,"""",_Neo_AfsprB_WondkweekTekst)
+$E$41: 	=NeoBerAfspr!D47
+$D$45: 	=IFERROR(LEFT(Var_Neo_AfsprControles,LEN(Var_Neo_AfsprControles)-3),"""")
+$D$46: 	=IFERROR(LEFT(Var_Neo_AfsprOnderzoek,LEN(Var_Neo_AfsprOnderzoek)-3),"""")
+$D$47: 	=IFERROR(LEFT(Var_Neo_AfsprInstellingen,LEN(Var_Neo_AfsprInstellingen)-3),"""")
+$D$48: 	=IFERROR(LEFT(Var_Neo_AfsprKweken,LEN(Var_Neo_AfsprKweken)-3),"""")
+$D$49: 	=IFERROR(LEFT(Var_Neo_AfsprOverig,LEN(Var_Neo_AfsprOverig)-3),"""")
 "

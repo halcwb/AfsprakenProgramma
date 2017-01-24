@@ -60,7 +60,7 @@ Public Sub ExportFormulas(ByVal blnShowProgress As Boolean)
     strPath = WbkAfspraken.Path & "\src\sheet\"
     
     intN = 1
-    intC = WbkAfspraken.Sheets.count
+    intC = WbkAfspraken.Sheets.Count
     For Each shtSheet In WbkAfspraken.Sheets
     
         blnProtected = False
@@ -103,7 +103,7 @@ Public Sub ExportNames(ByVal blnShowProgress As Boolean)
     strPath = WbkAfspraken.Path & "\src\name\names.txt"
     
     intN = 1
-    intC = WbkAfspraken.Names.count
+    intC = WbkAfspraken.Names.Count
     For Each objName In WbkAfspraken.Names
         strText = strText & objName.NameLocal & ":" & vbTab & objName.RefersTo & vbNewLine
         
@@ -129,7 +129,7 @@ Public Sub ExportVbaCode(ByVal blnShowProgress As Boolean)
     strPath = WbkAfspraken.Path
     
     intN = 1
-    intC = WbkAfspraken.VBProject.VBComponents.count
+    intC = WbkAfspraken.VBProject.VBComponents.Count
     For Each vbcItem In WbkAfspraken.VBProject.VBComponents
         strFile = GetComponentFileName(vbcItem)
         vbcItem.Export (strPath & "\src\" & strFile)

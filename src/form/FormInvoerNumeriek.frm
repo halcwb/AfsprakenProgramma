@@ -23,9 +23,9 @@ Private Function Validate() As Boolean
     
     Select Case m_Validate
         Case "Gewicht"
-            strMsg = IIf(Not ModPatient.ValidWeightKg(val(txtWaarde.value)), "Geen geldig gewicht", vbNullString)
+            strMsg = IIf(Not ModPatient.ValidWeightKg(val(txtWaarde.Value)), "Geen geldig gewicht", vbNullString)
         Case "Lengte"
-            strMsg = IIf(Not ModPatient.ValidLengthCm(val(txtWaarde.value)), "Geen geldige lengte", vbNullString)
+            strMsg = IIf(Not ModPatient.ValidLengthCm(val(txtWaarde.Value)), "Geen geldige lengte", vbNullString)
         Case Else
             strMsg = vbNullString
     End Select
@@ -44,13 +44,13 @@ End Sub
 
 Private Sub cmdClear_Click()
 
-    txtWaarde.value = vbNullString
+    txtWaarde.Value = vbNullString
 
 End Sub
 
 Private Sub cmdOK_Click()
     
-    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, val(txtWaarde.value)
+    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, val(txtWaarde.Value)
     Me.Hide
 
 End Sub
@@ -72,7 +72,7 @@ Private Sub UserForm_Activate()
     Me.Caption = ModConst.CONST_APPLICATION_NAME
     Me.txtWaarde.SetFocus
     Me.txtWaarde.SelStart = 0
-    Me.txtWaarde.SelLength = Len(Me.txtWaarde.value)
+    Me.txtWaarde.SelLength = Len(Me.txtWaarde.Value)
 
 End Sub
 
@@ -87,7 +87,7 @@ Public Sub SetValue(ByVal strRange As String, ByVal strItem As String, ByVal var
     m_Validate = strValidate
     
     lblParameter.Caption = strItem
-    txtWaarde.value = val(varValue)
+    txtWaarde.Value = val(varValue)
     lblEenheid.Caption = strUnit
     
     Exit Sub

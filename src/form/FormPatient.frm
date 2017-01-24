@@ -25,19 +25,19 @@ Private Sub Validate(ByVal strText As String)
     
     If BirthDateComplete() Then
         If DateTime.DateDiff("d", GetBirthDate(), DateTime.Date) <= 28 Then
-            strValid = IIf(txtGestWeek.value = vbNullString, "Voer zwangerschaps duur in", strValid)
-            strValid = IIf(txtBirthWeight.value = vbNullString, "Voer geboortegewicht in", strValid)
+            strValid = IIf(txtGestWeek.Value = vbNullString, "Voer zwangerschaps duur in", strValid)
+            strValid = IIf(txtBirthWeight.Value = vbNullString, "Voer geboortegewicht in", strValid)
         End If
     End If
     
-    strValid = IIf(txtLength.value = vbNullString, "Voer lengte in", strValid)
-    strValid = IIf(txtWeight.value = vbNullString, "Voer gewicht in", strValid)
+    strValid = IIf(txtLength.Value = vbNullString, "Voer lengte in", strValid)
+    strValid = IIf(txtWeight.Value = vbNullString, "Voer gewicht in", strValid)
     strValid = IIf(Not BirthDateComplete, "Voer geboorte datum in", strValid)
     strValid = IIf(Not AdmDateComplete, "Voer opname datum in", strValid)
     
-    strValid = IIf(txtFirstName.value = vbNullString, "Vul voor naam  in", strValid)
-    strValid = IIf(txtLastName.value = vbNullString, "Vul achter naam  in", strValid)
-    strValid = IIf(txtPatNum.value = vbNullString, "Vul patient nummer in", strValid)
+    strValid = IIf(txtFirstName.Value = vbNullString, "Vul voor naam  in", strValid)
+    strValid = IIf(txtLastName.Value = vbNullString, "Vul achter naam  in", strValid)
+    strValid = IIf(txtPatNum.Value = vbNullString, "Vul patient nummer in", strValid)
     
     strValid = IIf(strText = vbNullString, strValid, strText)
     lblValid.Caption = strValid
@@ -50,9 +50,9 @@ Private Sub btnNow_Click()
     Dim dtmNow As Date
     
     dtmNow = DateTime.Date
-    txtAdmDay.value = DateTime.Day(dtmNow)
-    txtAdmMonth.value = DateTime.Month(dtmNow)
-    txtAdmYear.value = DateTime.Year(dtmNow)
+    txtAdmDay.Value = DateTime.Day(dtmNow)
+    txtAdmMonth.Value = DateTime.Month(dtmNow)
+    txtAdmYear.Value = DateTime.Year(dtmNow)
 
 End Sub
 
@@ -64,22 +64,22 @@ End Sub
 
 Private Sub ClearBirthDate()
 
-    txtBirthYear.value = vbNullString
-    txtBirthMonth.value = vbNullString
-    txtBirthDay.value = vbNullString
+    txtBirthYear.Value = vbNullString
+    txtBirthMonth.Value = vbNullString
+    txtBirthDay.Value = vbNullString
 
 End Sub
 
 Private Function BirthDateComplete() As Boolean
 
-    BirthDateComplete = txtBirthDay.value <> vbNullString And txtBirthMonth.value <> vbNullString And txtBirthYear.value <> vbNullString
+    BirthDateComplete = txtBirthDay.Value <> vbNullString And txtBirthMonth.Value <> vbNullString And txtBirthYear.Value <> vbNullString
 
 End Function
 
 Private Function GetBirthDate() As Date
 
     If BirthDateComplete() Then
-        GetBirthDate = DateSerial(Int(txtBirthYear.value), Int(txtBirthMonth.value), Int(txtBirthDay.value))
+        GetBirthDate = DateSerial(Int(txtBirthYear.Value), Int(txtBirthMonth.Value), Int(txtBirthDay.Value))
     Else
         GetBirthDate = ModDate.EmptyDate
     End If
@@ -88,30 +88,30 @@ End Function
 
 Private Sub SetBirthDate(ByVal dtmDate As Date)
 
-    txtBirthYear.value = Year(dtmDate)
-    txtBirthMonth.value = Month(dtmDate)
-    txtBirthDay.value = Day(dtmDate)
+    txtBirthYear.Value = Year(dtmDate)
+    txtBirthMonth.Value = Month(dtmDate)
+    txtBirthDay.Value = Day(dtmDate)
 
 End Sub
 
 Private Sub ClearAdmDate()
 
-    txtAdmYear.value = vbNullString
-    txtAdmMonth.value = vbNullString
-    txtAdmDay.value = vbNullString
+    txtAdmYear.Value = vbNullString
+    txtAdmMonth.Value = vbNullString
+    txtAdmDay.Value = vbNullString
 
 End Sub
 
 Private Function AdmDateComplete() As Boolean
 
-    AdmDateComplete = txtAdmDay.value <> vbNullString And txtAdmMonth.value <> vbNullString And txtAdmYear.value <> vbNullString
+    AdmDateComplete = txtAdmDay.Value <> vbNullString And txtAdmMonth.Value <> vbNullString And txtAdmYear.Value <> vbNullString
 
 End Function
 
 Private Function GetAdmDate() As Date
 
     If AdmDateComplete() Then
-        GetAdmDate = DateSerial(Int(txtAdmYear.value), Int(txtAdmMonth.value), Int(txtAdmDay.value))
+        GetAdmDate = DateSerial(Int(txtAdmYear.Value), Int(txtAdmMonth.Value), Int(txtAdmDay.Value))
     Else
         GetAdmDate = ModDate.EmptyDate
     End If
@@ -120,32 +120,32 @@ End Function
 
 Private Sub SetAdmDate(ByVal dtmDate As Date)
 
-    txtAdmYear.value = Year(dtmDate)
-    txtAdmMonth.value = Month(dtmDate)
-    txtAdmDay.value = Day(dtmDate)
+    txtAdmYear.Value = Year(dtmDate)
+    txtAdmMonth.Value = Month(dtmDate)
+    txtAdmDay.Value = Day(dtmDate)
 
 End Sub
 
 Private Sub cmdClear_Click()
 
-    txtAdmDay.value = vbNullString
-    txtAdmMonth.value = vbNullString
-    txtAdmYear.value = vbNullString
+    txtAdmDay.Value = vbNullString
+    txtAdmMonth.Value = vbNullString
+    txtAdmYear.Value = vbNullString
     
-    txtPatNum.value = vbNullString
-    txtLastName.value = vbNullString
-    txtFirstName.value = vbNullString
+    txtPatNum.Value = vbNullString
+    txtLastName.Value = vbNullString
+    txtFirstName.Value = vbNullString
     
-    txtBirthDay.value = vbNullString
-    txtBirthMonth.value = vbNullString
-    txtBirthYear.value = vbNullString
+    txtBirthDay.Value = vbNullString
+    txtBirthMonth.Value = vbNullString
+    txtBirthYear.Value = vbNullString
     
-    txtWeight.value = vbNullString
-    txtLength.value = vbNullString
+    txtWeight.Value = vbNullString
+    txtLength.Value = vbNullString
     
-    txtBirthWeight.value = vbNullString
-    txtGestWeek.value = vbNullString
-    txtGestDay.value = vbNullString
+    txtBirthWeight.Value = vbNullString
+    txtGestWeek.Value = vbNullString
+    txtGestDay.Value = vbNullString
 
 End Sub
 
@@ -160,14 +160,14 @@ Private Sub cmdOK_Click()
         m_Pat.SetAdmissionAndBirthDate dtmAdm, dtmBd
     End If
     
-    m_Pat.PatientID = txtPatNum.value
-    m_Pat.AchterNaam = txtLastName.value
+    m_Pat.PatientID = txtPatNum.Value
+    m_Pat.AchterNaam = txtLastName.Value
     m_Pat.VoorNaam = txtFirstName.Text
-    m_Pat.Gewicht = val(txtWeight.value)
-    m_Pat.Lengte = val(txtLength.value)
-    m_Pat.GeboorteGewicht = val(txtBirthWeight.value)
-    m_Pat.Weeks = val(txtGestWeek.value)
-    m_Pat.Days = val(txtGestDay.value)
+    m_Pat.Gewicht = val(txtWeight.Value)
+    m_Pat.Lengte = val(txtLength.Value)
+    m_Pat.GeboorteGewicht = val(txtBirthWeight.Value)
+    m_Pat.Weeks = val(txtGestWeek.Value)
+    m_Pat.Days = val(txtGestDay.Value)
 
     Me.Hide
 
@@ -219,10 +219,10 @@ Private Sub txtGestDay_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     Dim strValid As String
 
-    If txtGestDay.value = vbNullString Then Exit Sub
+    If txtGestDay.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidDagen(val(txtGestDay.value)) Then
-        txtGestDay.value = vbNullString
+    If Not ModPatient.ValidDagen(val(txtGestDay.Value)) Then
+        txtGestDay.Value = vbNullString
         blnCancel = True
     End If
     
@@ -277,13 +277,13 @@ Public Sub SetPatient(ByRef objPat As ClassPatientDetails)
     If Not ModDate.IsEmptyDate(m_Pat.GeboorteDatum) Then SetBirthDate m_Pat.GeboorteDatum
     
     txtPatNum.Text = m_Pat.PatientID
-    txtLastName.value = m_Pat.AchterNaam
-    txtFirstName.value = m_Pat.VoorNaam
-    txtWeight.value = IIf(m_Pat.Gewicht = 0, vbNullString, m_Pat.Gewicht)
-    txtLength.value = IIf(m_Pat.Lengte = 0, vbNullString, m_Pat.Lengte)
-    txtBirthWeight.value = IIf(m_Pat.GeboorteGewicht = 0, vbNullString, m_Pat.GeboorteGewicht)
-    txtGestWeek.value = IIf(m_Pat.Weeks = 0, vbNullString, m_Pat.Weeks)
-    txtGestDay.value = IIf(m_Pat.Days = 0, vbNullString, m_Pat.Days)
+    txtLastName.Value = m_Pat.AchterNaam
+    txtFirstName.Value = m_Pat.VoorNaam
+    txtWeight.Value = IIf(m_Pat.Gewicht = 0, vbNullString, m_Pat.Gewicht)
+    txtLength.Value = IIf(m_Pat.Lengte = 0, vbNullString, m_Pat.Lengte)
+    txtBirthWeight.Value = IIf(m_Pat.GeboorteGewicht = 0, vbNullString, m_Pat.GeboorteGewicht)
+    txtGestWeek.Value = IIf(m_Pat.Weeks = 0, vbNullString, m_Pat.Weeks)
+    txtGestDay.Value = IIf(m_Pat.Days = 0, vbNullString, m_Pat.Days)
 
 End Sub
 
@@ -291,13 +291,13 @@ Private Sub txtBirthWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean
 
     Dim strValid As String
     
-    If txtBirthWeight.value = vbNullString Then Exit Sub
+    If txtBirthWeight.Value = vbNullString Then Exit Sub
     
-    If Not ModPatient.ValidBirthWeight(val(txtBirthWeight.value)) Then
+    If Not ModPatient.ValidBirthWeight(val(txtBirthWeight.Value)) Then
         strValid = "Geen geldig geboortegewicht"
         Validate strValid
         
-        txtBirthWeight.value = vbNullString
+        txtBirthWeight.Value = vbNullString
         blnCancel = True
     Else
         Validate vbNullString
@@ -322,13 +322,13 @@ Private Sub txtLength_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     Dim strValid As String
     
-    If txtLength.value = vbNullString Then Exit Sub
+    If txtLength.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidLengthCm(txtLength.value) Then
+    If Not ModPatient.ValidLengthCm(txtLength.Value) Then
         strValid = "Geen geldige lengte"
         Validate strValid
         
-        txtLength.value = vbNullString
+        txtLength.Value = vbNullString
         blnCancel = True
     Else
         Validate vbNullString
@@ -347,13 +347,13 @@ Private Sub txtWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     Dim strValid As String
 
-    If txtWeight.value = vbNullString Then Exit Sub
+    If txtWeight.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidWeightKg(txtWeight.value) Then
+    If Not ModPatient.ValidWeightKg(txtWeight.Value) Then
         strValid = "Geen geldige gewicht"
         Validate strValid
         
-        txtWeight.value = vbNullString
+        txtWeight.Value = vbNullString
         blnCancel = True
     Else
         Validate vbNullString
@@ -416,13 +416,13 @@ Private Sub txtGestWeek_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     Dim strValid As String
 
-    If txtGestWeek.value = vbNullString Then Exit Sub
+    If txtGestWeek.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidWeken(val(txtGestWeek.value)) Then
+    If Not ModPatient.ValidWeken(val(txtGestWeek.Value)) Then
         strValid = "Geen zwangerschapsduur"
         Validate strValid
         
-        txtGestWeek.value = vbNullString
+        txtGestWeek.Value = vbNullString
         blnCancel = True
     Else
         Validate vbNullString

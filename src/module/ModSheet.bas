@@ -61,7 +61,7 @@ Public Sub UnhideNonUserInterfaceSheets(ByVal blnShowProgress As Boolean)
     
     Set colShts = GetNonInterfaceSheets()
     intN = 1
-    intC = colShts.count
+    intC = colShts.Count
     
     For Each shtSheet In colShts
     
@@ -85,7 +85,7 @@ Public Sub HideAndUnProtectNonUserInterfaceSheets(ByVal blnShowProgress As Boole
     
     Set colShts = GetNonInterfaceSheets()
     intN = 1
-    intC = colShts.count
+    intC = colShts.Count
     
     For Each shtSheet In colShts
     
@@ -112,7 +112,7 @@ Public Sub UnprotectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
     
     Set colShts = GetUserInterfaceSheets()
     intN = 1
-    intC = colShts.count
+    intC = colShts.Count
     For Each objItem In colShts
     
         With objItem
@@ -139,7 +139,7 @@ Public Sub ProtectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
     
     Set colShts = GetUserInterfaceSheets()
     intN = 1
-    intC = colShts.count
+    intC = colShts.Count
     For Each objItem In colShts
     
         With objItem
@@ -186,7 +186,7 @@ Public Function GetNonInterfaceSheetCount() As Integer
 
     Dim intN As Integer
     
-    intN = ActiveWorkbook.Sheets.count
+    intN = ActiveWorkbook.Sheets.Count
     GetNonInterfaceSheetCount = intN - GetInterfaceSheetCount()
 
 End Function

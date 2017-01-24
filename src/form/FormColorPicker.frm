@@ -33,12 +33,27 @@ End Enum
 
 Private m_SelectedLabel As MSForms.Label
 
+Private Sub EnableColorCommands()
+
+    Dim strEnable As String
+    
+    strEnable = IIf(cboItem.Value = vbNullString, "Maak een item keuze", vbNullString)
+    
+    cmdBackGround.Enabled = strEnable = vbNullString
+    cmdForeGround.Enabled = strEnable = vbNullString
+    cmdFont.Enabled = strEnable = vbNullString
+    
+    lblValid.Caption = strEnable
+
+End Sub
+
 Private Sub Validate()
 
     Dim strValid As String
     
-    strValid = IIf(cboItem.value = vbNullString, "Maak een veld selectie", vbNullString)
-    strValid = IIf(optNeo.value = 0 And optPed.value = 0, "Maak een afdeling selectie", strValid)
+    strValid = vbNullString
+    If Not cmdBackGround.Enabled Then strValid = lblValid.Caption
+    strValid = IIf(optNeo.Value = 0 And optPed.Value = 0, "Maak een afdeling selectie", strValid)
     
     cmdOK.Enabled = strValid = vbNullString
     lblValid.Caption = strValid
@@ -47,12 +62,12 @@ End Sub
 
 Private Sub ColorRanges()
 
-    If optPed.value Then
+    If optPed.Value Then
         WriteGroup constPed
         ModColors.ColorPedNeoRanges False
     End If
     
-    If optNeo.value Then
+    If optNeo.Value Then
         WriteGroup constNeo
         ModColors.ColorPedNeoRanges True
     End If
@@ -210,10 +225,11 @@ Private Sub cboItem_Change()
 
     Dim objLabel As MSForms.Label
     
-    Set objLabel = frmLabels.Controls("lbl" & cboItem.value)
+    Set objLabel = frmLabels.Controls("lbl" & cboItem.Value)
     
     SelectLabel objLabel
     
+    If Not cmdBackGround.Enabled Then EnableColorCommands
     Validate
 
 End Sub
@@ -230,6 +246,8 @@ Private Sub cmdBackGround_Click()
 
     Dim lngColor As Long
     Dim lngSelected As Long
+    
+    EnableColorCommands
     
     If Not m_SelectedLabel Is Nothing Then
             lngSelected = m_SelectedLabel.BackColor
@@ -251,24 +269,26 @@ Private Sub cmdFont_Click()
 
     Dim enmItem As Items
     
+    EnableColorCommands
+    
     If Not m_SelectedLabel Is Nothing Then
-        enmItem = GetItem(cboItem.value)
+        enmItem = GetItem(cboItem.Value)
                 
-        If optPed.value Or optNeo.value Then
+        If optPed.Value Or optNeo.Value Then
             
             FormFontPicker.lblValid.Caption = vbNullString
-            FormFontPicker.cboFont.value = m_SelectedLabel.Font.Name
-            FormFontPicker.cboSize.value = m_SelectedLabel.Font.Size
-            FormFontPicker.chkBold.value = m_SelectedLabel.Font.Bold
-            FormFontPicker.chkItalic.value = m_SelectedLabel.Font.Italic
+            FormFontPicker.cboFont.Value = m_SelectedLabel.Font.Name
+            FormFontPicker.cboSize.Value = m_SelectedLabel.Font.Size
+            FormFontPicker.chkBold.Value = m_SelectedLabel.Font.Bold
+            FormFontPicker.chkItalic.Value = m_SelectedLabel.Font.Italic
             
             FormFontPicker.Show
             
             If FormFontPicker.lblValid.Caption = vbNullString Then
-                m_SelectedLabel.Font.Name = FormFontPicker.cboFont.value
-                m_SelectedLabel.Font.Size = FormFontPicker.cboSize.value
-                SetLabelBold FormFontPicker.chkBold.value
-                SetLabelItalic FormFontPicker.chkItalic.value
+                m_SelectedLabel.Font.Name = FormFontPicker.cboFont.Value
+                m_SelectedLabel.Font.Size = FormFontPicker.cboSize.Value
+                SetLabelBold FormFontPicker.chkBold.Value
+                SetLabelItalic FormFontPicker.chkItalic.Value
             End If
             
         End If
@@ -281,6 +301,8 @@ Private Sub cmdForeGround_Click()
 
     Dim lngColor As Long
     Dim lngSelected As Long
+    
+    EnableColorCommands
     
     If Not m_SelectedLabel Is Nothing Then
             lngSelected = m_SelectedLabel.ForeColor

@@ -34,17 +34,17 @@ Private Sub cmdOK_Click()
     
     Application.Dialogs(xlDialogPrinterSetup).Show
     
-    If chkAcuteOpvang.value Then
+    If chkAcuteOpvang.Value Then
         shtPedGuiAcuut.Select
         shtPedGuiAcuut.PageSetup.CenterHeader = "Bed " & strBed
         shtPedGuiAcuut.PrintOut preview:=False
     End If
-    If chkMedicatie.value Then
+    If chkMedicatie.Value Then
         shtPedPrtMedDisc.Select
         shtPedPrtMedDisc.PageSetup.LeftHeader = "Bed " & strBed
         shtPedPrtMedDisc.PrintOut preview:=False
     End If
-    If chkTPNBlad.value Then
+    If chkTPNBlad.Value Then
         If val(Range("Gewicht").Text) / 10 < 7 Then
             shtPedPrtTPN2tot6.Select
             shtPedPrtTPN2tot6.PageSetup.CenterHeader = "Bed " & strBed

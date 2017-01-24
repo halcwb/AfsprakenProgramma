@@ -19,7 +19,7 @@ Private Sub Validate()
 
     Dim strValidate As String
     
-    strValidate = IIf(txtPassword.value = vbNullString, "Voer paswoord in", vbNullString)
+    strValidate = IIf(txtPassword.Value = vbNullString, "Voer paswoord in", vbNullString)
     
     cmdOK.Enabled = strValidate = vbNullString
     lblValid.Caption = strValidate
