@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModNeoInfB"
 Option Explicit
 
-Private Const constTblMedIV As String = "tbl_Neo_MedIV"
+Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
 Private Const constMedIVMax As Integer = 10
 
 Private Const constActInfB As String = "Actuele Afspraken"
@@ -19,16 +19,16 @@ Private Const constTPN As String = "_TPN_"
 Private Const constIntakePerKg As String = "Var_Neo_InfB_TPN_IntakePerKg"
 Private Const constTPNParEnt As String = "Var_Neo_InfB_TPN_Parenteraal"
 
-Private Const constLipidKeuze As String = "Var_NeoInfB_TPN_IntralipidSmof"
+Private Const constLipidKeuze As String = "Var_Neo_InfB_TPN_IntralipidSmof"
 Private Const constLipidStand As String = "Var_Neo_InfB_TPN_IntraLipid"
 Private Const constLipidAdvies As String = "Var_Neo_LipidAdv"
 
-Private Const constNaCl As String = "Var_Neo_TPN_NaCl"
-Private Const constKAct As String = "Var_Neo_TPN_KCl"
-Private Const constCaCl As String = "Var_Neo_TPN_CaCl2"
-Private Const constMgCl As String = "Var_Neo_TPN_MgCl2"
-Private Const constSolu As String = "Var_Neo_TPN_Soluvit"
-Private Const constPrim As String = "Var_Neo_TPN_Primene"
+Private Const constNaCl As String = "Var_Neo_InfB_TPN_NaCl"
+Private Const constKAct As String = "Var_Neo_InfB_TPN_KCl"
+Private Const constCaCl As String = "Var_Neo_InfB_TPN_CaCl2"
+Private Const constMgCl As String = "Var_Neo_InfB_TPN_MgCl2"
+Private Const constSolu As String = "Var_Neo_InfB_TPN_Soluvit"
+Private Const constPrim As String = "Var_Neo_InfB_TPN_Primene"
 
 Private Const constNICUMixStand As String = "Var_Neo_InfB_TPN_NICUMix"
 Private Const constNICUMixAdv As String = "Var_Neo_NICUMixAdv"
@@ -188,7 +188,6 @@ Private Function GetItems(ByVal strGrp As String) As String()
     Dim strStartsWith As String
     
     strStartsWith = constInfBDataAct & strGrp
-    arrItems = Array()
     
     For Each objName In WbkAfspraken.Names
         If ModString.StartsWith(objName.Name, strStartsWith) Then ModArray.AddItemToStringArray arrItems, objName.Name
@@ -342,6 +341,8 @@ Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolea
     Dim strExtra As String
     Dim strRegel As String
     
+    Dim blnLido As Boolean
+    
     Dim objTblMed As Range
     
     Set objTblMed = Range(constTblMedIV)
@@ -356,11 +357,13 @@ Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolea
     strExtra = constExtra & IIf(intRegel + 1 < 10, "0" & (intRegel + 1), intRegel + 1)
 
     varMedicament = IIf(blnRemove, 1, ModRange.GetRangeValue(strMedicament, vbNullString))
+    blnLido = Application.VLookup(objTblMed.Cells(varMedicament, 1), objTblMed, 1, False) = "lidocaine"
     
     If blnRemove Then ModRange.SetRangeValue strMedicament, 1
+    
     ModRange.SetRangeValue strMedSterkte, 0
-    ModRange.SetRangeValue strOplHoev, IIf(blnRemove, 0, 12)
-    ModRange.SetRangeValue strStand, IIf(blnRemove, 0, 5)
+    ModRange.SetRangeValue strOplHoev, IIf(blnRemove, 0, IIf(blnLido, 48, 12))
+    ModRange.SetRangeValue strStand, IIf(blnRemove, 0, IIf(blnLido, 20, 5))
     ModRange.SetRangeValue strExtra, False
     
     ModRange.SetRangeValue strOplossing, Application.VLookup(objTblMed.Cells(varMedicament, 1), objTblMed, constAdvOplIndex, False)
@@ -858,10 +861,29 @@ End Sub
 Public Sub NeoInfB_RemoveTPN()
 
     Dim lngNullVal As Long
-    
-    lngNullVal = CalcAdviceNullValue(constLipidAdvies)
-    ModRange.SetRangeValue constLipidStand, lngNullVal
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constNaCl, lngNullVal
+    ModRange.SetRangeValue constKAct, lngNullVal
+    ModRange.SetRangeValue constCaCl, lngNullVal
+    ModRange.SetRangeValue constMgCl, lngNullVal
+    ModRange.SetRangeValue constSolu, lngNullVal
+    ModRange.SetRangeValue constPrim, lngNullVal
+    ModRange.SetRangeValue constNICUMixStand, CalcAdviceNullValue(constNICUMixAdv)
+    ModRange.SetRangeValue constSSTBStand, CalcAdviceNullValue(constSSTBAdv)
 
+End Sub
+
+' ToDo Implement and assign
+Public Sub NeoInfB_StandardTPN()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constNaCl, lngNullVal
+    ModRange.SetRangeValue constKAct, lngNullVal
+    ModRange.SetRangeValue constNICUMixStand, lngNullVal
+    ModRange.SetRangeValue constSSTBStand, lngNullVal
 
 End Sub
 

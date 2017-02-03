@@ -15,6 +15,7 @@ Private Const constToevoegingCount As Integer = 3
 
 Private Const constSode As String = "_Ped_Ent_Sonde"
 Private Const constVoeding As String = "_Ped_Ent_Keuze_"
+
 Private Const constEntText As String = "_Ped_Ent_Opm"
 Private Const constTpnText As String = "_Ped_TPN_Opm"
 
@@ -25,6 +26,7 @@ Private Const constSST2Keuze As String = "_Ped_TPN_SST2Keuze"
 
 Private Const constTPN As String = "_Ped_TPN_Keuze"
 Private Const constTPNVol As String = "_Ped_TPN_Vol"
+Private Const constTPNDag As String = "_Ped_TPN_DagKeuze"
 
 Private Const constNaCl1 As String = "_Ped_TPN_NaCl1"
 Private Const constNaCl1Vol As String = "_Ped_TPN_NaClVol1"
@@ -52,8 +54,7 @@ Private Const constSoluvitVol As String = "_Ped_TPN_SoluvitVol"
 Private Const constVitIntra As String = "_Ped_TPN_VitIntra"
 Private Const constVitIntraVol As String = "_Ped_TPN_VitIntraVol"
 
-
-Public Sub PedEntTPN_ClearSSt()
+Public Sub PedEntTPN_ClearSST1()
 
     ModRange.SetRangeValue constTPN, 1
     ModRange.SetRangeValue constTPNVol, 0
@@ -84,7 +85,62 @@ Public Sub PedEntTPN_ClearSSt()
     
 End Sub
 
-Public Sub PedEntTPN_clearPeditrace()
+Public Sub PedEntTPN_ClearSST2()
+
+    ModRange.SetRangeValue constSST2Stand, 0
+    ModRange.SetRangeValue constSST2Keuze, 1
+    
+    ModRange.SetRangeValue constNaCl2, False
+    ModRange.SetRangeValue constNaCl2Vol, 0
+    
+    ModRange.SetRangeValue constKCl2, False
+    ModRange.SetRangeValue constKCl2Vol, 0
+    
+End Sub
+
+Public Sub PedEntTPN_ClearKCl1()
+
+    ModRange.SetRangeValue constKCl1, False
+    ModRange.SetRangeValue constKCl1Vol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearNaCl1()
+
+    ModRange.SetRangeValue constNaCl1, False
+    ModRange.SetRangeValue constNaCl1Vol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearKCl2()
+
+    ModRange.SetRangeValue constKCl2, False
+    ModRange.SetRangeValue constKCl2Vol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearNaCl2()
+
+    ModRange.SetRangeValue constNaCl2, False
+    ModRange.SetRangeValue constNaCl2Vol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearVitIntra()
+
+    ModRange.SetRangeValue constVitIntra, False
+    ModRange.SetRangeValue constVitIntraVol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearSoluvit()
+
+    ModRange.SetRangeValue constSoluvit, False
+    ModRange.SetRangeValue constSoluvitVol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearPeditrace()
 
     ModRange.SetRangeValue constPediTrace, 0
 
@@ -111,6 +167,12 @@ Public Sub PedEntTPN_ClearLipid()
     ModRange.SetRangeValue constSoluvitVol, 0
     ModRange.SetRangeValue constVitIntra, False
     ModRange.SetRangeValue constVitIntraVol, 0
+
+End Sub
+
+Public Sub PedEntTPN_ClearTPN()
+
+    ModRange.SetRangeValue constTPN, 1
 
 End Sub
 
@@ -248,7 +310,6 @@ Public Sub PedEntTPN_ClearOpm()
 
 End Sub
 
-
 Public Sub PedEntTPN_SelectTPNPrint()
 
     Dim dblGew As Double
@@ -277,48 +338,31 @@ Public Sub PedEntTPN_SelectTPNPrint()
 
 End Sub
 
-Public Sub PedEntTPN_SelectTPN()
+Public Function GetPedTPNIndexForWeight() As Integer
 
-    Dim dblGewicht As Double
-    Dim strTPNB As String
-    Dim strTPNC As String
-    Dim strTPND As String
-    Dim strTPNE As String
-    Dim strTPNnutri As String
-    Dim strSelected As String
+    Dim dblWeight As Double
+    Dim intTPN As Integer
     
-    strTPNB = "tbl_Ped_tpnB"
-    strTPNC = "tbl_Ped_tpnC"
-    strTPND = "tbl_Ped_tpnD"
-    strTPNE = "tbl_Ped_tpnE"
-    strTPNnutri = "tbl_Ped_tpnNutriflex"
-    strSelected = "tbl_Ped_tpnSelected"
-
-    dblGewicht = ModPatient.GetGewichtFromRange()
-
-    With shtPedBerTPN
-        If dblGewicht >= 2 And dblGewicht < 7 Then
-            .Range(strTPNB).copy
-        ElseIf dblGewicht >= 7 And dblGewicht < 15 Then
-            .Range(strTPNC).copy
-        ElseIf dblGewicht >= 15 And dblGewicht < 30 Then
-            .Range(strTPND).copy
-        ElseIf dblGewicht >= 30 And dblGewicht <= 50 Then
-            .Range(strTPNE).copy
-        ElseIf dblGewicht > 50 Then
-            .Range(strTPNnutri).copy
-        Else          ' Not a valid weight
-            Exit Sub  ' So exit sub
-        End If
-        
-        .Range(strSelected).PasteSpecial xlPasteValues
-    End With
+    dblWeight = ModPatient.GetGewichtFromRange()
     
-    Application.Calculate
+    intTPN = 1
+    intTPN = IIf(dblWeight >= CONST_TPN_1, 2, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_2, 3, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_3, 4, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_4, 5, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_5, 6, intTPN)
+    
+    GetPedTPNIndexForWeight = intTPN
+
+End Function
+
+Public Sub PedEntTPN_SelectStandardTPN()
+
+    If ModRange.GetRangeValue(constTPN, 1) > 1 Then ModRange.SetRangeValue constTPN, GetPedTPNIndexForWeight()
     
 End Sub
 
-Private Sub TPNAdvies(ByVal intDag As Integer)
+Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
 
     Dim dblVol As Double
     Dim dblNaCl As Double
@@ -329,303 +373,317 @@ Private Sub TPNAdvies(ByVal intDag As Integer)
     Dim dblGewicht As Double
     
     dblGewicht = ModPatient.GetGewichtFromRange()
+        
+    If intDag = 0 Then
+            PedEntTPN_ClearTPN
+            PedEntTPN_ClearLipid
+        Exit Sub
+    End If
 
+    If dblGewicht < 2 Then Exit Sub
+    
     Select Case dblGewicht
         Case 2 To 6
-            ModRange.SetRangeValue "TPN", 2
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 2, CInt(varTPN))
             
-            ModRange.SetRangeValue "NaCl", True
+            ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
-            ModRange.SetRangeValue "NaClVol", dblNaCl
+            ModRange.SetRangeValue constNaCl1Vol, dblNaCl
             
-            ModRange.SetRangeValue "KCl", True
+            ModRange.SetRangeValue constKCl1, True
             dblKCl = 1 * dblGewicht
-            ModRange.SetRangeValue "KClVol", dblKCl
+            ModRange.SetRangeValue constKCl1Vol, dblKCl
             
             dblVitIntra = dblGewicht
-            ModRange.SetRangeValue "VitIntra", True
-            ModRange.SetRangeValue "ModSetting", IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
+            ModRange.SetRangeValue constVitIntra, True
+            ModRange.SetRangeValue constVitIntraVol, IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
             
             Select Case intDag
                 Case 1
-                    ModRange.SetRangeValue "SSTglucose", 2
+                    ModRange.SetRangeValue constSST1Keuze, 2
                 
                     dblKCl = 1.5 * dblGewicht
-                    ModRange.SetRangeValue "KClVol", dblKCl
-                    ModRange.SetRangeValue "TPNVol", 15 * dblGewicht
+                    ModRange.SetRangeValue constKCl1Vol, dblKCl
+                    ModRange.SetRangeValue constTPNVol, 15 * dblGewicht
                 
                     dblLipid = 6 * dblGewicht / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 2
-                    ModRange.SetRangeValue "SSTglucose", 3
+                    ModRange.SetRangeValue constSST1Keuze, 3
                 
-                    ModRange.SetRangeValue "TPNVol", 25 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 25 * dblGewicht
                 
                     dblLipid = 11 * dblGewicht / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 3
-                    ModRange.SetRangeValue "SSTglucose", 5
+                    ModRange.SetRangeValue constSST1Keuze, 5
                 
-                    ModRange.SetRangeValue "TPNVol", 35 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 35 * dblGewicht
             
                     dblLipid = 16 * dblGewicht / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
             
             End Select
             
-            dblVol = (150 * dblGewicht - ModRange.GetRangeValue("TPNVol", 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
+            dblVol = (150 * dblGewicht - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
             
             If dblVol < 5 Then
-                ModRange.SetRangeValue "SSTstand", dblVol * 10
+                ModRange.SetRangeValue constSST1Stand, dblVol * 10
             ElseIf dblVol < 146 Then
-                ModRange.SetRangeValue "SSTstand", dblVol + 45
+                ModRange.SetRangeValue constSST1Stand, dblVol + 45
             Else
-                ModRange.SetRangeValue "SSTstand", (dblVol + 125) / 5
+                ModRange.SetRangeValue constSST1Stand, (dblVol + 125) / 5
             End If
             
         Case 7 To 15
-            ModRange.SetRangeValue "TPN", 2
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 3, CInt(varTPN))
             
-            ModRange.SetRangeValue "NaCl", True
+            ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
-            ModRange.SetRangeValue "NaClVol", dblNaCl
+            ModRange.SetRangeValue constNaCl1Vol, dblNaCl
             
-            ModRange.SetRangeValue "KCl", True
+            ModRange.SetRangeValue constKCl1, True
             dblKCl = 1.5 * dblGewicht
-            ModRange.SetRangeValue "KClVol", dblKCl
+            ModRange.SetRangeValue constKCl1Vol, dblKCl
             
             dblVitIntra = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "VitIntra", True
-            ModRange.SetRangeValue "VitIntraVol", IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
+            ModRange.SetRangeValue constVitIntra, True
+            ModRange.SetRangeValue constVitIntraVol, IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
             
             dblSolu = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "SoluVit", True
-            ModRange.SetRangeValue "SoluVitVol", IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
+            ModRange.SetRangeValue constSoluvit, True
+            ModRange.SetRangeValue constSoluvitVol, IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
             
             Select Case intDag
                 Case 1
-                    ModRange.SetRangeValue "SSTglucose", 2
+                    ModRange.SetRangeValue constSST1Keuze, 2
                 
                     dblKCl = 2 * dblGewicht
-                    ModRange.SetRangeValue "KClVol", dblKCl
-                    ModRange.SetRangeValue "TPNVol", 10 * dblGewicht
+                    ModRange.SetRangeValue constKCl1Vol, dblKCl
+                    ModRange.SetRangeValue constTPNVol, 10 * dblGewicht
                 
                     dblLipid = (5 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 2
-                    ModRange.SetRangeValue "SSTglucose", 6
+                    ModRange.SetRangeValue constSST1Keuze, 6
                 
-                    ModRange.SetRangeValue "TPNVol", 20 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 20 * dblGewicht
                 
                     dblLipid = (10 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 3
-                    ModRange.SetRangeValue "SSTglucose", 8
+                    ModRange.SetRangeValue constSST1Keuze, 8
                 
-                    ModRange.SetRangeValue "TPNVol", 25 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 25 * dblGewicht
             
                     dblLipid = (15 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
             End Select
             
-            dblVol = (90 * dblGewicht + ((15 - dblGewicht) / 8) * 20 * dblGewicht - ModRange.GetRangeValue("TPNVol", 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
+            dblVol = (90 * dblGewicht + ((15 - dblGewicht) / 8) * 20 * dblGewicht - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
             
             If dblVol < 5 Then
-                ModRange.SetRangeValue "SSTstand", dblVol * 10
+                ModRange.SetRangeValue constSST1Stand, dblVol * 10
             ElseIf dblVol < 146 Then
-                ModRange.SetRangeValue "SSTstand", dblVol + 45
+                ModRange.SetRangeValue constSST1Stand, dblVol + 45
             Else
-                ModRange.SetRangeValue "SSTstand", (dblVol + 125) / 5
+                ModRange.SetRangeValue constSST1Stand, (dblVol + 125) / 5
             End If
     
         Case 16 To 30
-            ModRange.SetRangeValue "TPN", 2
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 4, CInt(varTPN))
             
-            ModRange.SetRangeValue "NaCl", True
+            ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
-            ModRange.SetRangeValue "NaClVol", dblNaCl
+            ModRange.SetRangeValue constNaCl1Vol, dblNaCl
             
-            ModRange.SetRangeValue "KCl", True
+            ModRange.SetRangeValue constKCl1, True
             dblKCl = 1.5 * dblGewicht
-            ModRange.SetRangeValue "KClVol", dblKCl
+            ModRange.SetRangeValue constKCl1Vol, dblKCl
             
             dblVitIntra = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "VitIntra", True
-            ModRange.SetRangeValue "VitIntraVol", IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
+            ModRange.SetRangeValue constVitIntra, True
+            ModRange.SetRangeValue constVitIntraVol, IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
             
             dblSolu = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "SoluVit", True
-            ModRange.SetRangeValue "SoluVitVol", IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
+            ModRange.SetRangeValue constSoluvit, True
+            ModRange.SetRangeValue constSoluvitVol, IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
             
-            ModRange.SetRangeValue "Peditrace", 15
+            ModRange.SetRangeValue constPediTrace, 15
             
             Select Case intDag
                 Case 1
-                    ModRange.SetRangeValue "SSTglucose", 2
+                    ModRange.SetRangeValue constSST1Keuze, 2
                 
                     dblKCl = 2 * dblGewicht
-                    ModRange.SetRangeValue "KClVol", dblKCl
-                    ModRange.SetRangeValue "TPNVol", 10 * dblGewicht
+                    ModRange.SetRangeValue constKCl1Vol, dblKCl
+                    ModRange.SetRangeValue constTPNVol, 10 * dblGewicht
                 
                     dblLipid = (5 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 2
-                    ModRange.SetRangeValue "SSTglucose", 6
+                    ModRange.SetRangeValue constSST1Keuze, 6
                 
-                    ModRange.SetRangeValue "TPNVol", 15 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 15 * dblGewicht
                 
                     dblLipid = (10 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 3
-                    ModRange.SetRangeValue "SSTglucose", 8
+                    ModRange.SetRangeValue constSST1Keuze, 8
                 
-                    ModRange.SetRangeValue "TPNVol", 20 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 20 * dblGewicht
             
                     dblLipid = (15 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
             End Select
             
-            dblVol = (70 * dblGewicht + ((30 - dblGewicht) / 14) * 10 * dblGewicht - 15 - ModRange.GetRangeValue("TPNVol", 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
+            dblVol = (70 * dblGewicht + ((30 - dblGewicht) / 14) * 10 * dblGewicht - 15 - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
             
             If dblVol < 5 Then
-                ModRange.SetRangeValue "SSTstand", dblVol * 10
+                ModRange.SetRangeValue constSST1Stand, dblVol * 10
             ElseIf dblVol < 146 Then
-                ModRange.SetRangeValue "SSTstand", dblVol + 45
+                ModRange.SetRangeValue constSST1Stand, dblVol + 45
             Else
-                ModRange.SetRangeValue "SSTstand", (dblVol + 125) / 5
+                ModRange.SetRangeValue constSST1Stand, (dblVol + 125) / 5
             End If
         
         Case 31 To 50
-            ModRange.SetRangeValue "TPN", 2
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 5, CInt(varTPN))
             
-            ModRange.SetRangeValue "NaCl", True
+            ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
-            ModRange.SetRangeValue "NaClVol", dblNaCl
+            ModRange.SetRangeValue constNaCl1Vol, dblNaCl
             
-            ModRange.SetRangeValue "KCl", True
+            ModRange.SetRangeValue constKCl1, True
             dblKCl = 1.5 * dblGewicht
-            ModRange.SetRangeValue "KClVol", dblKCl
+            ModRange.SetRangeValue constKCl1Vol, dblKCl
             
             dblVitIntra = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "VitIntra", True
-            ModRange.SetRangeValue "VitIntraVol", IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
+            ModRange.SetRangeValue constVitIntra, True
+            ModRange.SetRangeValue constVitIntraVol, IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
             
             dblSolu = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "SoluVit", True
-            ModRange.SetRangeValue "SoluVitVol", IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
+            ModRange.SetRangeValue constSoluvit, True
+            ModRange.SetRangeValue constSoluvitVol, IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
             
-            ModRange.SetRangeValue "Peditrace", 15
+            ModRange.SetRangeValue constPediTrace, 15
             
             Select Case intDag
                 Case 1
-                    ModRange.SetRangeValue "SSTglucose", 2
+                    ModRange.SetRangeValue constSST1Keuze, 2
                 
                     dblKCl = 2 * dblGewicht
-                    ModRange.SetRangeValue "KClVol", dblKCl
-                    ModRange.SetRangeValue "TPNVol", 5 * dblGewicht
+                    ModRange.SetRangeValue constKCl1Vol, dblKCl
+                    ModRange.SetRangeValue constTPNVol, 5 * dblGewicht
                 
                     dblLipid = (3 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 2
-                    ModRange.SetRangeValue "SSTglucose", 6
+                    ModRange.SetRangeValue constSST1Keuze, 6
                 
-                    ModRange.SetRangeValue "TPNVol", 8 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 8 * dblGewicht
                 
                     dblLipid = (6 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 3
-                    ModRange.SetRangeValue "SSTglucose", IIf(dblGewicht > 35, 9, 7)
+                    ModRange.SetRangeValue constSST1Keuze, IIf(dblGewicht > 35, 9, 7)
                 
-                    ModRange.SetRangeValue "TPNVol", 12 * dblGewicht
+                    ModRange.SetRangeValue constTPNVol, 12 * dblGewicht
             
                     dblLipid = (10 * dblGewicht + dblVitIntra + dblSolu) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
             End Select
             
-            dblVol = (50 * dblGewicht + ((50 - dblGewicht) / 19) * 20 * dblGewicht - 15 - ModRange.GetRangeValue("TPNVol", 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
+            dblVol = (50 * dblGewicht + ((50 - dblGewicht) / 19) * 20 * dblGewicht - 15 - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
             
             If dblVol < 5 Then
-                ModRange.SetRangeValue "SSTstand", dblVol * 10
+                ModRange.SetRangeValue constSST1Stand, dblVol * 10
             ElseIf dblVol < 146 Then
-                ModRange.SetRangeValue "SSTstand", dblVol + 45
+                ModRange.SetRangeValue constSST1Stand, dblVol + 45
             Else
-                ModRange.SetRangeValue "SSTstand", (dblVol + 125) / 5
+                ModRange.SetRangeValue constSST1Stand, (dblVol + 125) / 5
             End If
         Case Else
-            ModRange.SetRangeValue "TPN", 2
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 6, CInt(varTPN))
             
-            ModRange.SetRangeValue "Nacl", False
-            ModRange.SetRangeValue "KCl", False
+            ModRange.SetRangeValue constNaCl1, False
+            ModRange.SetRangeValue constKCl1, False
             
             dblVitIntra = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "VitIntra", True
-            ModRange.SetRangeValue "VitIntraVol", IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
+            ModRange.SetRangeValue constVitIntra, True
+            ModRange.SetRangeValue constVitIntraVol, IIf(dblVitIntra < 5, dblVitIntra * 10, dblVitIntra + 45)
             
             dblSolu = IIf(dblGewicht > 10, 10, dblGewicht)
-            ModRange.SetRangeValue "SoluVit", True
-            ModRange.SetRangeValue "SoluVitVol", IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
+            ModRange.SetRangeValue constSoluvit, True
+            ModRange.SetRangeValue constSoluvitVol, IIf(dblSolu < 5, dblSolu * 10, dblSolu + 45)
             
-            ModRange.SetRangeValue "Peditrace", 15
+            ModRange.SetRangeValue constPediTrace, 15
             ModRange.SetRangeValue "SSTGlucose", 2
             
             Select Case intDag
                 Case 1
                 
-                    ModRange.SetRangeValue "TPNVol", 700
+                    ModRange.SetRangeValue constTPNVol, 700
                 
                     dblLipid = (150 + 20) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 2
                 
-                    ModRange.SetRangeValue "TPNVol", 1000
+                    ModRange.SetRangeValue constTPNVol, 1000
                 
                     dblLipid = (300 + 20) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                 Case 3
                 
-                    ModRange.SetRangeValue "TPNVol", 1500
+                    ModRange.SetRangeValue constTPNVol, 1500
             
                     dblLipid = (500 + 20) / 24
-                    ModRange.SetRangeValue "LipidenStand", IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
+                    ModRange.SetRangeValue constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
             End Select
             
             dblVol = 0
             
             If dblVol < 5 Then
-                ModRange.SetRangeValue "SSTstand", dblVol * 10
+                ModRange.SetRangeValue constSST1Stand, dblVol * 10
             ElseIf dblVol < 146 Then
-                ModRange.SetRangeValue "SSTstand", dblVol + 45
+                ModRange.SetRangeValue constSST1Stand, dblVol + 45
             Else
-                ModRange.SetRangeValue "SSTstand", (dblVol + 125) / 5
+                ModRange.SetRangeValue constSST1Stand, (dblVol + 125) / 5
             End If
                 
     End Select
     
 End Sub
 
-Public Sub PedEntTPN_TPNAdviceDayOne()
+Public Sub PedEntTPN_TPNAdviceDay_0()
+
+    TPNAdvies 0
+
+End Sub
+
+Public Sub PedEntTPN_TPNAdviceDay_1()
 
     TPNAdvies 1
 
 End Sub
 
-Public Sub PedEntTPN_TPNAdviceDayTwo()
+Public Sub PedEntTPN_TPNAdviceDay_2()
 
     TPNAdvies 2
 
 End Sub
 
-Public Sub PedEntTPN_TPNAdviceDayThree()
+Public Sub PedEntTPN_TPNAdviceDay_3()
 
     TPNAdvies 3
 
@@ -719,6 +777,12 @@ Public Sub PedEntTPN_MgCl()
 
 End Sub
 
+Public Sub PedEntTPN_ChangeTPN()
+
+    TPNAdvies ModRange.GetRangeValue(constTPNDag, 0), ModRange.GetRangeValue(constTPN, 1)
+
+End Sub
+
 Public Sub PedEntTPN_ChangeNaCl1()
 
     ModRange.SetRangeValue constNaCl1, True
@@ -773,7 +837,6 @@ Public Sub PedEntTPN_ChangeSoluvit()
     ModRange.SetRangeValue constSoluvit, True
 
 End Sub
-
 
 Public Sub PedEntTPN_SpecVoed()
     

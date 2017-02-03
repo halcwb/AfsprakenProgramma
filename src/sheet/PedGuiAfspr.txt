@@ -19,8 +19,8 @@ $D$18: 	=CONCATENATE(PedBerAfspr!$C$42,"" dd"")
 $G$18: 	=IF(_Ped_AfsprOverig=0,"""",_Ped_AfsprOverig)
 $D$19: 	=CONCATENATE(PedBerAfspr!$C$43,"" dd"")
 $E$35: 	=PedBerAfspr!D40
-$D$38: 	=IFERROR(LEFT(Var_Ped_AfsprControles,LEN(Var_Ped_AfsprControles)-3),"""")
-$D$39: 	=IFERROR(LEFT(Var_Ped_AfsprOnderzoeken,LEN(Var_Ped_AfsprOnderzoeken)-3),"""")
-$D$40: 	=IFERROR(LEFT(Var_Ped_AfsprInstellingen,LEN(Var_Ped_AfsprInstellingen)-3),"""")
-$D$41: 	=IFERROR(LEFT(Var_Ped_AfsprOverig,LEN(Var_Ped_AfsprOverig)-3),"""")
+$D$38: 	=IFERROR(LEFT(Txt_Ped_Afspr_Controles,LEN(Txt_Ped_Afspr_Controles)-3),"""")
+$D$39: 	=IFERROR(LEFT(Txt_Ped_Afspr_Onderzoeken,LEN(Txt_Ped_Afspr_Onderzoeken)-3),"""")
+$D$40: 	=IFERROR(LEFT(Txt_Ped_Afspr_Instellingen,LEN(Txt_Ped_Afspr_Instellingen)-3),"""")
+$D$41: 	=IFERROR(LEFT(Txt_Ped_Afspr_Overig,LEN(Txt_Ped_Afspr_Overig)-3),"""")
 "

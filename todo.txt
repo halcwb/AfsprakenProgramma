@@ -43,10 +43,10 @@ Documentatie
 	- toevoegen voedingen
 	- toevoegen poeders
 
-- Verw lab voor kolommen
-- Voorkeurs oplossingen en standen voor continue medicatie
 
 Uitgevoerd:
+- Voorkeurs oplossingen en standen voor continue medicatie
+- Verw lab voor kolommen
 - Frequenties aanpassen
 - Empty date in patient lijst niet tonen	
 - Indien voeding verwijderen dan ook toevoegingen

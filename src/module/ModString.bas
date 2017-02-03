@@ -189,4 +189,17 @@ Private Sub TestFixPrecision()
 
 End Sub
 
+Public Function ConcatenateRange(ByRef objRange As Range, ByVal strDel As String) As String
+
+    Dim strString As String
+    Dim objCell As Range
+    
+    For Each objCell In objRange.Cells
+        strString = IIf(strString = vbNullString, objCell.Value2, strString & strDel & objCell.Value2)
+    Next
+
+    ConcatenateRange = strString
+
+End Function
+
 

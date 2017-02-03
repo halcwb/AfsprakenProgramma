@@ -11,6 +11,10 @@ Private Const constMedIVStand As String = "_Ped_MedIV_Stand_"
 Private Const constMedIVCount As Integer = 15
 
 Private Const constStandOplKeuze As Integer = 2
+Private Const constStandHoevIndx As Integer = 16
+Private Const constStandVolIndx As Integer = 17
+Private Const constUnitIndx As Integer = 2
+
 
 ' Copy paste function cannot be reused because of private clear method
 Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
@@ -381,13 +385,13 @@ Private Sub EnterNumeric(ByVal intRegel As Integer, ByVal strRange As String, By
         .lblParameter = "Oplossing"
         .lblEenheid = strUnit
         If ModRange.GetRangeValue(constMedIVOplVol & strRegel, 0) = 0 Then
-            .txtWaarde = Application.WorksheetFunction.index(Range(constTblMed), varKeuze, 12)
+            .txtWaarde = Application.WorksheetFunction.index(Range(constTblMed), varKeuze, intColumn)
         Else
             .txtWaarde = ModRange.GetRangeValue(strRange & strRegel, vbNullString)
         End If
         .Show
         If IsNumeric(.txtWaarde) Then
-            If CDbl(.txtWaarde) = Application.WorksheetFunction.index(Range(constTblMed), varKeuze, 12) Then
+            If CDbl(.txtWaarde) = Application.WorksheetFunction.index(Range(constTblMed), varKeuze, intColumn) Then
                 ModRange.SetRangeValue strRange & strRegel, 0
             Else
                 ModRange.SetRangeValue strRange & strRegel, .txtWaarde
@@ -414,8 +418,8 @@ Private Sub SetMedConc(ByVal intRegel As Integer)
     On Error GoTo SetMedConcError
 
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
-    strUnit = Application.WorksheetFunction.index(Range(constTblMed), Range(constMedIVKeuze & strRegel), 4)
-    EnterNumeric intRegel, constMedIVSterkte, strUnit, 11
+    strUnit = Application.WorksheetFunction.index(Range(constTblMed), Range(constMedIVKeuze & strRegel), constUnitIndx)
+    EnterNumeric intRegel, constMedIVSterkte, strUnit, constStandHoevIndx
     
     Exit Sub
     
@@ -517,7 +521,7 @@ End Sub
 
 Private Sub SetSolution(ByVal intRegel As Integer)
 
-    EnterNumeric intRegel, constMedIVOplVol, "mL", 12
+    EnterNumeric intRegel, constMedIVOplVol, "mL", constStandVolIndx
 
 End Sub
 

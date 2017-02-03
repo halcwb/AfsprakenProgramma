@@ -7,6 +7,8 @@ Private blnCloseHaseRun As Boolean
 Private Const constVersie As String = "Var_Glob_Versie"
 Private Const constDate As String = "Var_AfspraakDatum"
 
+Private Const constBarDel As String = " | "
+
 Public Enum EnumAppLanguage
     Dutch = 1043
     English = 0
@@ -191,6 +193,42 @@ InitializeError:
     
 End Sub
 
+Public Sub UpdateStatusBar(ByVal strItem, ByVal strMessage)
+
+    Dim varStatus() As String
+    Dim varItem() As String
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim blnItemSet As Boolean
+    
+    varStatus = Split(Application.StatusBar, constBarDel)
+    intC = UBound(varStatus)
+    blnItemSet = False
+    
+    For intN = 0 To intC
+        varItem = Split(varStatus(intN), ":")
+        If UBound(varItem) > 0 Then
+            If Trim(varItem(0)) = Trim(strItem) Then
+                varStatus(intN) = strItem & ": " & strMessage
+                blnItemSet = True
+                Exit For
+            End If
+        End If
+    Next
+    
+    Application.StatusBar = Join(varStatus, constBarDel)
+    
+    If Not blnItemSet Then Application.StatusBar = Application.StatusBar & " " & constBarDel & " " & strItem & ": " & strMessage
+
+End Sub
+
+Public Sub TestUpdateStatusBar()
+
+    Application.StatusBar = " "
+    UpdateStatusBar "Setting", "Test2"
+    
+End Sub
+
 Public Sub SetDateToDayFormula()
 
     ModRange.SetRangeFormula constDate, GetToDayFormula()
@@ -212,6 +250,9 @@ Private Sub SetCaptionAndHideBars()
         .DisplayScrollBars = True
         .WindowState = xlMaximized
     End With
+    
+    Application.StatusBar = ModConst.CONST_APPLICATION_NAME
+    ModApplication.UpdateStatusBar "Afdeling", IIf(IsPedDir, "Pediatrie", "Neonatologie")
     
 End Sub
 

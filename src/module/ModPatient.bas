@@ -48,7 +48,7 @@ Public Sub Patient_EnterWeight()
         End If
     End With
     
-    ModPedEntTPN.PedEntTPN_SelectTPN
+    ModPedEntTPN.PedEntTPN_SelectStandardTPN
     
     Set frmInvoer = Nothing
 
@@ -149,7 +149,7 @@ Public Function GetPatients() As Collection
     strPatientsFile = ModSetting.GetPatientsFilePath(strPatientsName)
     Set colPatienten = New Collection
 
-    If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "a1", shtGlobTemp, False) Then
+    If ModWorkBook.CopyWorkbookRangeToSheet(strPatientsFile, strPatientsName, "A1", shtGlobTemp, False) Then
         With colPatienten
             For intN = 2 To shtGlobTemp.Range("A1").CurrentRegion.Rows.Count
                 With shtGlobTemp
@@ -313,7 +313,7 @@ End Sub
 
 Public Function ValidWeightKg(ByVal dblWeight As Double) As Boolean
 
-    ValidWeightKg = dblWeight > 0.4 And dblWeight < 200
+    ValidWeightKg = dblWeight >= 0.4 And dblWeight < 200
 
 End Function
 
@@ -350,13 +350,13 @@ End Function
 
 Public Function ValidWeken(ByVal intWeek As Integer) As Boolean
 
-    ValidWeken = intWeek > 24 And intWeek < 50
+    ValidWeken = intWeek >= 21 And intWeek < 50
 
 End Function
 
 Public Function ValidBirthWeight(ByVal intBw As Integer) As Boolean
 
-    ValidBirthWeight = intBw > 400 And intBw < 9999
+    ValidBirthWeight = intBw >= 400 And intBw < 9999
 
 End Function
 

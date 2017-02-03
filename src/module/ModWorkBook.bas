@@ -158,7 +158,7 @@ Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook 
         
         ' Copy the range to the target
         .Workbooks(strBook).Sheets(1).Range(strRange).CurrentRegion.Select
-        Selection.copy
+        Selection.Copy
         shtTarget.Range("A1").PasteSpecial xlPasteValues
         If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 75
         

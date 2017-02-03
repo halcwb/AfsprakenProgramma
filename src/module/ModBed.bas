@@ -128,7 +128,7 @@ Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
         End If
     End If
 
-    If Not blnNeo Then ModPedEntTPN.PedEntTPN_SelectTPN
+    If Not blnNeo Then ModPedEntTPN.PedEntTPN_SelectStandardTPN
     
     ModLog.LogActionEnd strAction
     
@@ -313,7 +313,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     
     With Workbooks(strDataName) ' Save Patient Data
         .Sheets(1).Cells.Clear
-        shtPatData.Range(strDataRange).copy
+        shtPatData.Range(strDataRange).Copy
         .Sheets(1).Range("A1").PasteSpecial xlPasteValues
         .Save
         .Close
@@ -327,7 +327,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     
     With Workbooks(strTextName) ' Save Patient Text
         .Sheets(1).Cells.Clear
-        shtPatText.Range(strTextRange).copy
+        shtPatText.Range(strTextRange).Copy
         .Sheets(1).Range("A1").PasteSpecial xlPasteValues
         .Save
         .Close

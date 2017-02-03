@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPatient
    ClientHeight    =   3360
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   9045
+   ClientWidth     =   9525
    OleObjectBlob   =   "FormPatient.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -45,7 +45,7 @@ Private Sub Validate(ByVal strText As String)
 
 End Sub
 
-Private Sub btnNow_Click()
+Private Sub btnAdmNow_Click()
     
     Dim dtmNow As Date
     
@@ -53,6 +53,17 @@ Private Sub btnNow_Click()
     txtAdmDay.Value = DateTime.Day(dtmNow)
     txtAdmMonth.Value = DateTime.Month(dtmNow)
     txtAdmYear.Value = DateTime.Year(dtmNow)
+
+End Sub
+
+Private Sub btnBdNow_Click()
+
+    Dim dtmNow As Date
+    
+    dtmNow = DateTime.Date
+    txtBirthDay.Value = DateTime.Day(dtmNow)
+    txtBirthMonth.Value = DateTime.Month(dtmNow)
+    txtBirthYear.Value = DateTime.Year(dtmNow)
 
 End Sub
 
@@ -259,6 +270,7 @@ Private Function ValidateBirthDate() As Boolean
         ClearBirthDate
         ValidateBirthDate = False
     Else
+        SetBirthDate GetBirthDate
         Validate vbNullString
         ValidateBirthDate = True
     End If
@@ -400,6 +412,7 @@ Private Function ValidateAdmDate() As Boolean
                 ClearAdmDate
                 ValidateAdmDate = False
             Else
+                SetAdmDate GetAdmDate
                 Validate vbNullString
                 ValidateAdmDate = True
             End If
@@ -477,4 +490,33 @@ Private Sub UserForm_Activate()
 
     Validate vbNullString
     
+End Sub
+
+Private Sub UserForm_Initialize()
+
+    Me.txtAdmDay.TabIndex = 1
+    Me.txtAdmMonth.TabIndex = 2
+    Me.txtAdmYear.TabIndex = 3
+    
+    Me.txtPatNum.TabIndex = 4
+    
+    Me.txtLastName.TabIndex = 5
+    Me.txtFirstName.TabIndex = 6
+    
+    Me.txtBirthDay.TabIndex = 7
+    Me.txtBirthMonth.TabIndex = 8
+    Me.txtBirthYear.TabIndex = 9
+    
+    Me.txtWeight.TabIndex = 10
+    Me.txtLength.TabIndex = 11
+    
+    Me.txtGestWeek.TabIndex = 12
+    Me.txtGestDay.TabIndex = 13
+    
+    Me.txtBirthWeight.TabIndex = 14
+    
+    Me.cmdOK.TabIndex = 15
+    Me.cmdClear.TabIndex = 16
+    Me.cmdCancel.TabIndex = 17
+
 End Sub

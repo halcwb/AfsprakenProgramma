@@ -10,7 +10,7 @@ $AO$7: 	=IF(AND(_Pat_Gewicht>0,Y54>0),CONCATENATE(""Vochtintake: "",Y54/(_Pat_Ge
 $L$9: 	=IF($B9>1,(C9/10)&"" ml"","""")
 $M$9: 	=IF($B9>1,INDEX(Tbl_Neo_Voed,$B9,1),"""")
 $W$9: 	=IF(Var_Neo_InfB_Ent_Voeding=1,"""",""verw"")
-$Y$9: 	=IF(AND(Var_Neo_InfB_Cont_VochtExtra_01=2,Var_Neo_InfB_Ent_Voeding>1),(F9*C9+F10*C10)/10,0)
+$Y$9: 	=IF(AND(Var_Neo_InfB_Ent_Extra=2,Var_Neo_InfB_Ent_Voeding>1),(F9*C9+F10*C10)/10,0)
 $Z$9: 	=INDEX(Tbl_Neo_Voed,$B9,Z$1)*$Y9
 $AA$9: 	=INDEX(Tbl_Neo_Voed,$B9,AA$1)*$Y9
 $AB$9: 	=INDEX(Tbl_Neo_Voed,$B9,AB$1)*$Y9
@@ -26,7 +26,7 @@ $AK$9: 	=INDEX(Tbl_Neo_Voed,$B9,AK$1)*$Y9
 $AO$9: 	=IF(M9="""","""",CONCATENATE(M9,"" "",IF(F9>0,F9&"" x ""&L9,""""), IF(F10>0,"" en ""&F10&"" x ""&L10,""""),"" "",""(= "",Y9,"" ml)""))
 $L$10: 	=IF($B9>1,(C10/10)&"" ml"","""")
 $G$11: 	=(H11/100)*$Y$9
-$H$11: 	=INDEX(tbl_Neo_NutrBMFWaard,F11)
+$H$11: 	=INDEX(Tbl_Neo_NutrBMFWaard,F11)
 $K$11: 	=IF(H11>0,H11&"" %"","""")
 $L$11: 	=IF($B11>1,ROUND(G11,2)&"" gram"","""")
 $M$11: 	=IF(B11>1,INDEX(Tbl_Neo_PoedMM,$B11,1),"""")
@@ -44,7 +44,7 @@ $AJ$11: 	=INDEX(Tbl_Neo_PoedMM,$B11,AJ$1)*$G11
 $AK$11: 	=INDEX(Tbl_Neo_PoedMM,$B11,AK$1)*$G11
 $AO$11: 	=IF(K11="""","""", CONCATENATE(M11,"" "",K11,"" = ("",L11,"")""))
 $G$12: 	=(H12/100)*$Y$9
-$H$12: 	=INDEX(tbl_Neo_NutrToevWaard,F12)
+$H$12: 	=INDEX(Tbl_Neo_NutrToevWaard,F12)
 $K$12: 	=IF(H12>0,H12&"" %"","""")
 $L$12: 	=IF($B12>1,ROUND(G12,2)&"" gram"","""")
 $M$12: 	=IF(B12>1,INDEX(Tbl_Neo_PoedMM,$B12,1),"""")
@@ -62,7 +62,7 @@ $AJ$12: 	=INDEX(Tbl_Neo_PoedMM,$B12,AJ$1)*$G12
 $AK$12: 	=INDEX(Tbl_Neo_PoedMM,$B12,AK$1)*$G12
 $AO$12: 	=IF(K12="""","""", CONCATENATE(M12,"" "",K12,"" = ("",L12,"")""))
 $G$13: 	=(H13/100)*$Y$9
-$H$13: 	=INDEX(tbl_Neo_NutrToevWaard,F13)
+$H$13: 	=INDEX(Tbl_Neo_NutrToevWaard,F13)
 $K$13: 	=IF(H13>0,H13&"" %"","""")
 $L$13: 	=IF($B13>1,ROUND(G13,2)&"" gram"","""")
 $M$13: 	=IF(B13>1,INDEX(Tbl_Neo_PoedMM,$B13,1),"""")
@@ -80,7 +80,7 @@ $AJ$13: 	=INDEX(Tbl_Neo_PoedMM,$B13,AJ$1)*$G13
 $AK$13: 	=INDEX(Tbl_Neo_PoedMM,$B13,AK$1)*$G13
 $AO$13: 	=IF(K13="""","""", CONCATENATE(M13,"" "",K13,"" = ("",L13,"")""))
 $G$14: 	=(H14/100)*$Y$9
-$H$14: 	=INDEX(tbl_Neo_NutrToevWaard,F14)
+$H$14: 	=INDEX(Tbl_Neo_NutrToevWaard,F14)
 $K$14: 	=IF(H14>0,H14&"" %"","""")
 $L$14: 	=IF($B14>1,ROUND(G14,2)&"" gram"","""")
 $M$14: 	=IF(B14>1,INDEX(Tbl_Neo_PoedMM,$B14,1),"""")
@@ -98,7 +98,7 @@ $AJ$14: 	=INDEX(Tbl_Neo_PoedMM,$B14,AJ$1)*$G14
 $AK$14: 	=INDEX(Tbl_Neo_PoedMM,$B14,AK$1)*$G14
 $AO$14: 	=IF(K14="""","""", CONCATENATE(M14,"" "",K14,"" = ("",L14,"")""))
 $G$15: 	=(H15/100)*$Y$9
-$H$15: 	=INDEX(tbl_Neo_NutrToevWaard,F15)
+$H$15: 	=INDEX(Tbl_Neo_NutrToevWaard,F15)
 $K$15: 	=IF(H15>0,H15&"" %"","""")
 $L$15: 	=IF($B15>1,ROUND(G15,2)&"" gram"","""")
 $M$15: 	=IF(B15>1,INDEX(Tbl_Neo_PoedMM,$B15,1),"""")
@@ -116,7 +116,7 @@ $AJ$15: 	=INDEX(Tbl_Neo_PoedMM,$B15,AJ$1)*$G15
 $AK$15: 	=INDEX(Tbl_Neo_PoedMM,$B15,AK$1)*$G15
 $AO$15: 	=IF(K15="""","""", CONCATENATE(M15,"" "",K15,"" = ("",L15,"")""))
 $G$16: 	=(H16/100)*$Y$9
-$H$16: 	=INDEX(tbl_Neo_NutrToevWaard,F16)
+$H$16: 	=INDEX(Tbl_Neo_NutrToevWaard,F16)
 $K$16: 	=IF(H16>0,H16&"" %"","""")
 $L$16: 	=IF($B16>1,ROUND(G16,2)&"" gram"","""")
 $M$16: 	=IF(B16>1,INDEX(Tbl_Neo_PoedKV,$B16,1),"""")
@@ -134,7 +134,7 @@ $AJ$16: 	=INDEX(Tbl_Neo_PoedMM,$B16,AJ$1)*$G16
 $AK$16: 	=INDEX(Tbl_Neo_PoedMM,$B16,AK$1)*$G16
 $AO$16: 	=IF(K16="""","""", CONCATENATE(M16,"" "",K16,"" = ("",L16,"")""))
 $G$17: 	=(H17/100)*$Y$9
-$H$17: 	=INDEX(tbl_Neo_NutrToevWaard,F17)
+$H$17: 	=INDEX(Tbl_Neo_NutrToevWaard,F17)
 $K$17: 	=IF(H17>0,H17&"" %"","""")
 $L$17: 	=IF($B17>1,ROUND(G17,2)&"" gram"","""")
 $M$17: 	=IF(B17>1,INDEX(Tbl_Neo_PoedKV,$B17,1),"""")
@@ -152,7 +152,7 @@ $AJ$17: 	=INDEX(Tbl_Neo_PoedMM,$B17,AJ$1)*$G17
 $AK$17: 	=INDEX(Tbl_Neo_PoedMM,$B17,AK$1)*$G17
 $AO$17: 	=IF(K17="""","""", CONCATENATE(M17,"" "",K17,"" = ("",L17,"")""))
 $G$18: 	=(H18/100)*$Y$9
-$H$18: 	=INDEX(tbl_Neo_NutrToevWaard,F18)
+$H$18: 	=INDEX(Tbl_Neo_NutrToevWaard,F18)
 $K$18: 	=IF(H18>0,H18&"" %"","""")
 $L$18: 	=IF($B18>1,ROUND(G18,2)&"" gram"","""")
 $M$18: 	=IF(B18>1,INDEX(Tbl_Neo_PoedKV,$B18,1),"""")
@@ -170,7 +170,7 @@ $AJ$18: 	=INDEX(Tbl_Neo_PoedMM,$B18,AJ$1)*$G18
 $AK$18: 	=INDEX(Tbl_Neo_PoedMM,$B18,AK$1)*$G18
 $AO$18: 	=IF(K18="""","""", CONCATENATE(M18,"" "",K18,"" = ("",L18,"")""))
 $G$19: 	=(H19/100)*$Y$9
-$H$19: 	=INDEX(tbl_Neo_NutrToevWaard,F19)
+$H$19: 	=INDEX(Tbl_Neo_NutrToevWaard,F19)
 $K$19: 	=IF(H19>0,H19&"" %"","""")
 $L$19: 	=IF($B19>1,ROUND(G19,2)&"" gram"","""")
 $M$19: 	=IF(B19>1,INDEX(Tbl_Neo_PoedKV,$B19,1),"""")
@@ -595,9 +595,11 @@ $W$36: 	=IF(B36="""","""",""verw"")
 $AO$36: 	=IF(B36="""","""",B36)
 $W$37: 	=IF(B37="""","""",""verw"")
 $AO$37: 	=IF(B37="""","""",B37)
+$W$39: 	=IF(SUM(C42:C49)=0,"""",""verw"")
+$X$39: 	=IF(AND(Var_Neo_InfB_TPN_Parenteraal,OR(AND(Var_Neo_InfB_TPN_DagKeuze=1,Var_Neo_InfB_TPN_NICUMix=5000),AND(Var_Neo_InfB_TPN_DagKeuze=2,Var_Neo_InfB_TPN_SSTB=5000))),"""",""stand"")
 $B$40: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,8,$C$4),0)
 $C$40: 	=ROUND(IF(AND(B21,B40+(D40-5000)>0),B40+(D40-5000),0),0)
-$M$40: 	=INDEX(tbl_Neo_IntralipidSmof,Var_Neo_InfB_TPN_IntralipidSmof)
+$M$40: 	=INDEX(Tbl_Neo_IntralipidSmof,Var_Neo_InfB_TPN_IntralipidSmof)
 $N$40: 	=IF(C40>0,C40/10&"" ml/uur"","""")
 $W$40: 	=IF(AND(Var_Neo_InfB_TPN_Parenteraal,C40>0),""verw"","""")
 $X$40: 	=IF(AND(Var_Neo_InfB_TPN_Parenteraal,Var_Neo_InfB_TPN_IntraLipid=5000),"""",""stand"")
@@ -622,7 +624,7 @@ $B$42: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,2,$C$4),0)
 $C$42: 	=IF(AND($B$21,B42+(D42-5000)/10>0),ROUND(B42+(D42-5000)/10,1),0)
 $L$42: 	=IF(Y42>0,Y42&"" ml"","""")
 $M$42: 	=A42
-$Y$42: 	=IF(OR($D$41=1,$D$41=3),C42,0)
+$Y$42: 	=IF(OR($D$41=2,$D$41=3),C42,0)
 $Z$42: 	=IF($C42>0,VLOOKUP($M42,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y42
 $AA$42: 	=IF($C42>0,VLOOKUP($M42,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y42
 $AB$42: 	=IF($C42>0,VLOOKUP($M42,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y42
@@ -640,7 +642,7 @@ $B$43: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,3,$C$4),0)
 $C$43: 	=IF(AND($B$21,B43+(D43-5000)/10>0),ROUND(B43+(D43-5000)/10,1),0)
 $L$43: 	=IF(Y43>0,Y43&"" ml"","""")
 $M$43: 	=A43
-$Y$43: 	=IF(OR($D$41=1,$D$41=3),C43,0)
+$Y$43: 	=IF(OR($D$41=2,$D$41=3),C43,0)
 $Z$43: 	=IF($C43>0,VLOOKUP($M43,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y43
 $AA$43: 	=IF($C43>0,VLOOKUP($M43,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y43
 $AB$43: 	=IF($C43>0,VLOOKUP($M43,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y43
@@ -658,7 +660,7 @@ $B$44: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,4,$C$4),0)
 $C$44: 	=IF(AND($B$21,B44+(D44-5000)/10>0),ROUND(B44+(D44-5000)/10,1),0)
 $L$44: 	=IF(Y44>0,Y44&"" ml"","""")
 $M$44: 	=A44
-$Y$44: 	=IF($D$41=1,C44,0)
+$Y$44: 	=IF($D$41=3,C44,0)
 $Z$44: 	=IF($C44>0,VLOOKUP($M44,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y44
 $AA$44: 	=IF($C44>0,VLOOKUP($M44,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y44
 $AB$44: 	=IF($C44>0,VLOOKUP($M44,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y44
@@ -676,7 +678,7 @@ $B$45: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,5,$C$4),1)
 $C$45: 	=IF(AND($B$21,B45+(D45-5000)/10>0),ROUND(B45+(D45-5000)/10,1),0)
 $L$45: 	=IF(Y45>0,Y45&"" ml"","""")
 $M$45: 	=A45
-$Y$45: 	=IF($D$41=1,C45,0)
+$Y$45: 	=IF($D$41=3,C45,0)
 $Z$45: 	=IF($C45>0,VLOOKUP($M45,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y45
 $AA$45: 	=IF($C45>0,VLOOKUP($M45,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y45
 $AB$45: 	=IF($C45>0,VLOOKUP($M45,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y45
@@ -694,7 +696,7 @@ $B$46: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,6,$C$4),1)
 $C$46: 	=IF(AND($B$21,B46+(D46-5000)/10>0),ROUND(B46+(D46-5000)/10,1),0)
 $L$46: 	=IF(Y46>0,Y46&"" ml"","""")
 $M$46: 	=A46
-$Y$46: 	=IF($D$41=1,C46,0)
+$Y$46: 	=IF($D$41=3,C46,0)
 $Z$46: 	=IF($C46>0,VLOOKUP($M46,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y46
 $AA$46: 	=IF($C46>0,VLOOKUP($M46,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y46
 $AB$46: 	=IF($C46>0,VLOOKUP($M46,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y46
@@ -712,7 +714,7 @@ $B$47: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,7,$C$4),0)
 $C$47: 	=IF(AND($B$21,B47+(D47-5000)>0),ROUND(B47+(D47-5000),0),0)
 $L$47: 	=IF(Y47>0,Y47&"" ml"","""")
 $M$47: 	=A47
-$Y$47: 	=IF($D$41=1,C47,0)
+$Y$47: 	=IF($D$41=3,C47,0)
 $Z$47: 	=IF($C47>0,VLOOKUP($M47,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y47
 $AA$47: 	=IF($C47>0,VLOOKUP($M47,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y47
 $AB$47: 	=IF($C47>0,VLOOKUP($M47,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y47
@@ -729,7 +731,7 @@ $AO$47: 	=IF(L47="""","""",M47&"" ""&L47)
 $B$48: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,1,$C$4),1)
 $C$48: 	=ROUND(IF(AND($B$21,B48+(D48-5000)>0),B48+(D48-5000),0),0)
 $L$48: 	=IF(Y48>0,Y48&"" ml"","""")
-$Y$48: 	=IF(D41=2,C48,0)
+$Y$48: 	=IF(D41=1,C48,0)
 $Z$48: 	=IF($C48>0,VLOOKUP($M48,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y48
 $AA$48: 	=IF($C48>0,VLOOKUP($M48,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y48
 $AB$48: 	=IF($C48>0,VLOOKUP($M48,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y48
@@ -747,7 +749,7 @@ $B$49: 	=ROUND((_Pat_Gewicht/10)*INDEX(NeoBerAdvies!$B$8:$G$15,1,$C$4),1)
 $C$49: 	=ROUND(IF(AND($B$21,B49+(D49-5000)>0),B49+(D49-5000),0),0)
 $L$49: 	=IF(Y49>0,Y49&"" ml"","""")
 $M$49: 	=A49
-$Y$49: 	=IF(D41=3,C49,0)
+$Y$49: 	=IF(D41=2,C49,0)
 $Z$49: 	=IF($C49>0,VLOOKUP($M49,Tbl_Glob_ParEnt,Z$1,FALSE),0)*$Y49
 $AA$49: 	=IF($C49>0,VLOOKUP($M49,Tbl_Glob_ParEnt,AA$1,FALSE),0)*$Y49
 $AB$49: 	=IF($C49>0,VLOOKUP($M49,Tbl_Glob_ParEnt,AB$1,FALSE),0)*$Y49
@@ -817,4 +819,43 @@ $AH$54: 	=AH52+AH53
 $AI$54: 	=AI52+AI53
 $AJ$54: 	=AJ52+AJ53
 $AK$54: 	=AK52+AK53
+$Y$56: 	=IF(_Pat_Gewicht>0,FixPrecision(Y52/(_Pat_Gewicht/10),1)&"" ""&Y$60,"""")
+$Z$56: 	=IF(_Pat_Gewicht>0,FixPrecision(Z52/(_Pat_Gewicht/10),1)&"" ""&Z$60,"""")
+$AA$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AA52/(_Pat_Gewicht/10),1)&"" ""&AA$60,"""")
+$AB$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AB52/(_Pat_Gewicht/10),1)&"" ""&AB$60,"""")
+$AC$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AC52/(_Pat_Gewicht/10),1)&"" ""&AC$60,"""")
+$AD$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AD52/(_Pat_Gewicht/10),1)&"" ""&AD$60,"""")
+$AE$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AE52/(_Pat_Gewicht/10),1)&"" ""&AE$60,"""")
+$AF$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AF52/(_Pat_Gewicht/10),1)&"" ""&AF$60,"""")
+$AG$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AG52/(_Pat_Gewicht/10),1)&"" ""&AG$60,"""")
+$AH$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AH52/(_Pat_Gewicht/10),1)&"" ""&AH$60,"""")
+$AI$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AI52/(_Pat_Gewicht/10),1)&"" ""&AI$60,"""")
+$AJ$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AJ52/(_Pat_Gewicht/10),1)&"" ""&AJ$60,"""")
+$AK$56: 	=IF(_Pat_Gewicht>0,FixPrecision(AK52/(_Pat_Gewicht/10),1)&"" ""&AK$60,"""")
+$Y$57: 	=IF(_Pat_Gewicht>0,FixPrecision(Y53/(_Pat_Gewicht/10),1)&"" ""&Y$60,"""")
+$Z$57: 	=IF(_Pat_Gewicht>0,FixPrecision(Z53/(_Pat_Gewicht/10),1)&"" ""&Z$60,"""")
+$AA$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AA53/(_Pat_Gewicht/10),1)&"" ""&AA$60,"""")
+$AB$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AB53/(_Pat_Gewicht/10),1)&"" ""&AB$60,"""")
+$AC$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AC53/(_Pat_Gewicht/10),1)&"" ""&AC$60,"""")
+$AD$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AD53/(_Pat_Gewicht/10),1)&"" ""&AD$60,"""")
+$AE$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AE53/(_Pat_Gewicht/10),1)&"" ""&AE$60,"""")
+$AF$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AF53/(_Pat_Gewicht/10),1)&"" ""&AF$60,"""")
+$AG$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AG53/(_Pat_Gewicht/10),1)&"" ""&AG$60,"""")
+$AH$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AH53/(_Pat_Gewicht/10),1)&"" ""&AH$60,"""")
+$AI$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AI53/(_Pat_Gewicht/10),1)&"" ""&AI$60,"""")
+$AJ$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AJ53/(_Pat_Gewicht/10),1)&"" ""&AJ$60,"""")
+$AK$57: 	=IF(_Pat_Gewicht>0,FixPrecision(AK53/(_Pat_Gewicht/10),1)&"" ""&AK$60,"""")
+$Y$58: 	=IF(_Pat_Gewicht>0,FixPrecision(Y54/(_Pat_Gewicht/10),1)&"" ""&Y$60,"""")
+$Z$58: 	=IF(_Pat_Gewicht>0,FixPrecision(Z54/(_Pat_Gewicht/10),1)&"" ""&Z$60,"""")
+$AA$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AA54/(_Pat_Gewicht/10),1)&"" ""&AA$60,"""")
+$AB$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AB54/(_Pat_Gewicht/10),1)&"" ""&AB$60,"""")
+$AC$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AC54/(_Pat_Gewicht/10),1)&"" ""&AC$60,"""")
+$AD$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AD54/(_Pat_Gewicht/10),1)&"" ""&AD$60,"""")
+$AE$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AE54/(_Pat_Gewicht/10),1)&"" ""&AE$60,"""")
+$AF$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AF54/(_Pat_Gewicht/10),1)&"" ""&AF$60,"""")
+$AG$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AG54/(_Pat_Gewicht/10),1)&"" ""&AG$60,"""")
+$AH$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AH54/(_Pat_Gewicht/10),1)&"" ""&AH$60,"""")
+$AI$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AI54/(_Pat_Gewicht/10),1)&"" ""&AI$60,"""")
+$AJ$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AJ54/(_Pat_Gewicht/10),1)&"" ""&AJ$60,"""")
+$AK$58: 	=IF(_Pat_Gewicht>0,FixPrecision(AK54/(_Pat_Gewicht/10),1)&"" ""&AK$60,"""")
 "

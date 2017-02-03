@@ -1,13 +1,13 @@
 Attribute VB_Name = "ModPedLijnPM"
 Option Explicit
 
-Private Const constOpm As String = "_Ped_IVLijn_Opm"
-Private Const constTblLijn As String = "tblInfusen" ' ToDo rename to tbl_Ped_Lijnen
+Private Const constOpm As String = "_Ped_Lijn_Opm"
+Private Const constTblLijn As String = "Tbl_Ped_lijnen"
 Private Const constLijnCount As Integer = 6
-Private Const constLijnKeuze As String = "_Ped_IVLijn_"  'ToDo rename to _Ped_Lijn_
+Private Const constLijnKeuze As String = "_Ped_Lijn_"
 Private Const constPM As String = "_Ped_PM_"
-Private Const constTblPMStand As String = "tbl_Ped_PMStandaard"
-Private Const constTblPMSet As String = "tbl_Ped_PMInstelling"
+Private Const constTblPMStand As String = "Tbl_Ped_PMStandaard"
+Private Const constTblPMSet As String = "Tbl_Ped_PMInstelling"
 
 Public Sub PedLijnPM_ShowPickList()
 
@@ -145,7 +145,7 @@ End Sub
 
 Public Sub PedLijnPM_PaceMaker()
 
-    shtPedBerIVenPM.Range(constTblPMStand).copy
+    shtPedBerIVenPM.Range(constTblPMStand).Copy
     shtPedBerIVenPM.Range(constTblPMSet).PasteSpecial xlPasteValues
 
 End Sub

@@ -24,8 +24,8 @@ Private Const constPreData As String = vbNullString
 Private Const constPostData As String = "_Data"
 Private Const constPreText As String = vbNullString
 Private Const constPostText As String = "_Text"
-Private Const constPedBeds As String = "tbl_Ped_Beds"
-Private Const constNeoBeds As String = "tbl_Neo_Beds"
+Private Const constPedBeds As String = "Tbl_Ped_Beds"
+Private Const constNeoBeds As String = "Tbl_Neo_Beds"
 
 Private Function GetSetting(ByVal strSetting As String) As Variant
 
@@ -82,6 +82,7 @@ End Function
 Public Sub SetDevelopmentMode(ByVal blnMode As Boolean)
 
     SetSetting constDevMode, blnMode
+    ModApplication.UpdateStatusBar "DevelopmentMode", IIf(blnMode, "Aan", "Uit")
 
 End Sub
 
@@ -94,6 +95,7 @@ End Function
 Public Sub SetEnableLogging(ByVal blnMode As Boolean)
 
     SetSetting constLogging, blnMode
+    ModApplication.UpdateStatusBar "Logging", IIf(blnMode, "Aan", "Uit")
 
 End Sub
 
