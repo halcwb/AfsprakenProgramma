@@ -396,3 +396,26 @@ Public Function ArrayToString(ByRef varA() As Variant) As String
     
 End Function
 
+Public Function StringArrayItem(ByRef strArr() As String, ByVal intItem As Integer) As String
+
+    Dim strResult As String
+    
+    If UBound(strArr) < intItem Then
+        strResult = vbNullString
+    Else
+        strResult = strArr(intItem)
+    End If
+    
+    StringArrayItem = strResult
+
+End Function
+
+
+Private Sub TestStringArrayItem()
+
+    Dim strArr() As String
+    
+    strArr = Split("test !", " ")
+    MsgBox StringArrayItem(strArr, 3)
+
+End Sub

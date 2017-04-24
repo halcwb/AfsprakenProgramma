@@ -31,16 +31,21 @@ Private Sub cmdOK_Click()
     Dim strRes As String
     Dim strName As String
     Dim strGroup As String
-    Dim intRows As Integer
+    Dim intCells As Integer
     Dim intMax As Integer
     Dim intN As Integer
     Dim intStart As Integer
+    Dim strSelect As String
+    Dim varCell As Variant
+    Dim objCell As Range
     
     RefNaam.SetFocus
     
     If RefNaam.Text = vbNullString Then Exit Sub
     
-    Range(RefNaam.Text).Select
+    strSelect = RefNaam.Text
+    strSelect = Replace(strSelect, ";", ",")
+    Range(strSelect).Select
     
     strName = txtNaam.Text
     strGroup = txtGroup.Text
@@ -53,19 +58,35 @@ Private Sub cmdOK_Click()
     
     If strName = vbNullString Or strGroup = vbNullString Then Exit Sub
     
-    With Selection
-        intRows = .Rows.Count
-        If intRows = 1 Then
-            strRes = IIf(chkIsData.Value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
-            ModRange.SetNameToRange strRes, .Cells(1, 1)
-        Else
-            intMax = intStart + intRows - 1
-            For intN = 1 To intRows
-                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.Value)
-                ModRange.SetNameToRange strRes, .Cells(intN, 1)
-            Next intN
-        End If
-    End With
+    intCells = Selection.Cells.Count
+    
+    If intCells = 1 Then
+        strRes = IIf(chkIsData.Value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
+        ModRange.SetNameToRange strRes, Selection.Cells(1, 1)
+    Else
+        intMax = intStart + intCells - 1
+        intN = 1
+        For Each varCell In Selection.Cells
+            strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.Value)
+            Set objCell = varCell
+            ModRange.SetNameToRange strRes, objCell
+            intN = intN + 1
+        Next varCell
+    End If
+    
+'    With Selection
+'        intCells = .Cells.Count
+'        If intCells = 1 Then
+'            strRes = IIf(chkIsData.Value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
+'            ModRange.SetNameToRange strRes, .Cells(1, 1)
+'        Else
+'            intMax = intStart + intCells - 1
+'            For intN = 1 To intCells
+'                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.Value)
+'                ModRange.SetNameToRange strRes, .Cells(intN, 1)
+'            Next intN
+'        End If
+'    End With
     
     txtNaam.Text = vbNullString
     txtStart.Text = vbNullString

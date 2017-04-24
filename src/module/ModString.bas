@@ -144,39 +144,39 @@ Private Sub TestDoubleToFractionString()
     
 End Sub
 
-Private Function GetPrecision(ByVal intN As Integer, ByVal dblNum As Double) As Integer
+Private Function GetPower(ByVal intN As Integer, ByVal dblNum As Double) As Integer
 
-    Dim intD As Integer
+    Dim intP As Integer
     Dim strN As String
     Dim strD As String
     
     strN = SplitDouble(dblNum)(0)
     strD = SplitDouble(dblNum)(1)
     
-    intD = intN - IIf(strN = "0", 0, Len(strN))
-    intD = IIf(intD < 0, 0, intD)
-    intD = IIf(strD = vbNullString, intD, CountFirstInStr(strD, "0") + intD)
+    intP = intN - IIf(strN = "0", 0, Len(strN))
+    intP = IIf(intP < 0, 0, intP)
+    intP = IIf(strD = vbNullString Or dblNum >= 1, intP, CountFirstInStr(strD, "0") + intP)
     
-    GetPrecision = intD
+    GetPower = intP
 
 End Function
 
 Private Sub TestGetPrecision()
 
-    MsgBox GetPrecision(1, 1.002343)
+    MsgBox GetPower(2, 1.002343)
 
 End Sub
 
 Public Function FixPrecision(ByVal dblNum As Double, intN As Integer) As String
 
     Dim dblFix As Double
-    Dim intD As Integer
+    Dim intP As Integer
     
-    intD = GetPrecision(intN, dblNum)
+    intP = GetPower(intN, dblNum)
     
     With Application.WorksheetFunction
-        dblFix = .Round(dblNum * .Power(10, intD), 0)
-        dblFix = dblFix / .Power(10, intD)
+        dblFix = .Round(dblNum * .Power(10, intP), 0)
+        dblFix = dblFix / .Power(10, intP)
     End With
     
     FixPrecision = dblFix
@@ -185,7 +185,7 @@ End Function
 
 Private Sub TestFixPrecision()
 
-    MsgBox FixPrecision(1 / 3, 1)
+    MsgBox FixPrecision(0.001443213, 2)
 
 End Sub
 

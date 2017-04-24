@@ -11,8 +11,8 @@ Private Const constMedIVStand As String = "_Ped_MedIV_Stand_"
 Private Const constMedIVCount As Integer = 15
 
 Private Const constStandOplKeuze As Integer = 2
-Private Const constStandHoevIndx As Integer = 16
-Private Const constStandVolIndx As Integer = 17
+Private Const constStandHoevIndx As Integer = 18
+Private Const constStandVolIndx As Integer = 19
 Private Const constUnitIndx As Integer = 2
 
 
@@ -231,6 +231,7 @@ Public Sub PedContIV_Clear_20()
 
 End Sub
 
+' ToDo calculate drip
 Private Sub SetToStandard(ByVal intN As Integer)
 
     Dim strMedicament As String
@@ -245,7 +246,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
     
     On Error GoTo SetToStandardError
 
-    intOplKeuze = 13
+    intOplKeuze = 15
     
     strN = IIf(intN < 10, "0" & intN, intN)
     strMedicament = constMedIVKeuze & strN
@@ -265,7 +266,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
         Clear intN
     Else                                         ' Else find the right standard solution
         varOplossing = Application.VLookup(Range(constTblMed).Cells(intKeuze, 1), Range(constTblMed), intOplKeuze, False)
-        varOplossing = IIf(varOplossing = 1, constStandOplKeuze, varOplossing) ' Use NaCl 0.9% as stand solution if not specified otherwise
+        varOplossing = IIf(varOplossing = 0, constStandOplKeuze, varOplossing) ' Use NaCl 0.9% as stand solution if not specified otherwise
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
     
@@ -619,15 +620,29 @@ Private Sub EnterMed(ByVal intN As Integer)
 
     Dim strMed As String
     Dim strSterkte As String
+    Dim arrSterkte() As String
     Dim frmMedIV As FormMedIV
     
     Set frmMedIV = New FormMedIV
+    
+    strMed = ModRange.GetRangeValue(constMedIVKeuze & intN, vbNullString)
+    strSterkte = ModRange.GetRangeValue(constMedIVSterkte & intN, vbNullString)
+    arrSterkte = Split(strSterkte, " ")
+    
+    frmMedIV.txtMedicament.Text = strMed
+    frmMedIV.txtSterkte.Text = ModArray.StringArrayItem(arrSterkte, 0)
+    frmMedIV.txtEenheid.Text = ModArray.StringArrayItem(arrSterkte, 1)
+    
     frmMedIV.Show
     
-    strMed = frmMedIV.txtMedicament.Text
-    strSterkte = frmMedIV.txtSterkte.Text
-    ModRange.SetRangeValue constMedIVKeuze & intN, strMed
-    ModRange.SetRangeValue constMedIVSterkte & intN, strSterkte
+    If frmMedIV.lblValid.Caption = vbNullString Then
+    
+        strMed = frmMedIV.txtMedicament.Text
+        strSterkte = frmMedIV.txtSterkte.Text & " " & Trim(frmMedIV.txtEenheid)
+        ModRange.SetRangeValue constMedIVKeuze & intN, strMed
+        ModRange.SetRangeValue constMedIVSterkte & intN, strSterkte
+    
+    End If
     
     Set frmMedIV = Nothing
         
@@ -660,6 +675,12 @@ End Sub
 Public Sub PedContIV_EnterMed_20()
     
     EnterMed 20
+
+End Sub
+
+Public Sub PedContIV_TextClear()
+
+    ModRange.SetRangeValue constMedIVOpm, vbNullString
 
 End Sub
 

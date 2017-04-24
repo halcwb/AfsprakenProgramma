@@ -94,6 +94,7 @@ Public Sub CloseAfspraken()
     blnCloseHaseRun = True
             
     If Not blnDontClose Then
+        Application.StatusBar = vbNullString
         Application.DisplayAlerts = False
         Application.Quit
     End If
@@ -252,7 +253,7 @@ Private Sub SetCaptionAndHideBars()
     End With
     
     Application.StatusBar = ModConst.CONST_APPLICATION_NAME
-    ModApplication.UpdateStatusBar "Afdeling", IIf(IsPedDir, "Pediatrie", "Neonatologie")
+    UpdateStatusBar "Afdeling", IIf(IsPedDir, "Pediatrie", "Neonatologie")
     
 End Sub
 

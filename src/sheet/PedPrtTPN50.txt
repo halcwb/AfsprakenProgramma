@@ -1,32 +1,30 @@
 "$B$3: 	=TODAY()
-$F$3: 	=__0_PatNum
+$F$3: 	=Txt_Pat_PatNo
 $B$4: 	=__1_Bed
-$F$4: 	=__2_AchterNaam&"",  ""&__3_VoorNaam
-$F$5: 	=__4_GebDatum
-$G$6: 	=_Pat_Gewicht/10&"" kg""
+$F$4: 	=Txt_Pat_FullName
+$F$5: 	=Txt_Pat_GeboorteDat
+$F$6: 	=Txt_Pat_Gewicht
 $A$9: 	=IF(_Pat_Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
 $C$9: 	=PedBerTPN!G26
-$A$13: 	=IF(G15<>0,ROUND(G15/24,1)&"" ml/u"","""")
-$G$13: 	=IF(_Ped_TPN_Keuze<>1,PedBerTPN!G5,"""")
-$G$15: 	=SUM(G13:G14)
-$A$17: 	=IF(G19<>0,ROUND(G19/24,1)&"" ml/u"","""")
-$G$17: 	=IF(AND(OR(_Ped_TPN_SST1Keuze<11,_Pat_Gewicht/10>50),_Ped_TPN_Keuze<>1),ROUND(PedBerTPN!G6,0),0)
-$G$18: 	=IF(G17>0,100,0)
-$G$19: 	=SUM(G17:G18)
-$A$21: 	=IF(G24<>0,ROUND(G24/24,1)&"" ml/u"","""")
-$G$21: 	=ROUND(PedBerTPN!G15,0)
-$G$22: 	=ROUND(PedBerTPN!#REF!,0)
-$G$23: 	=ROUND(PedBerTPN!#REF!,0)
-$G$24: 	=SUM(G21:G23)
-$A$27: 	=IF(G35<>0,ROUND(G35/24,1)&"" ml/u"","""")
-$G$27: 	=IF(AND(OR(_Ped_TPN_Keuze=1,_Pat_Gewicht/10>50,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10))),ROUND(PedBerTPN!G9,0),"""")
-$G$28: 	=IF(AND(OR(_Ped_TPN_Keuze=1,_Pat_Gewicht/10>50,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10))),ROUND(PedBerTPN!G10,0),"""")
-$G$29: 	=PedBerTPN!G11
-$G$30: 	=PedBerTPN!G12
-$G$31: 	=IF(_Pat_Gewicht/10<=50,PedBerTPN!G19,0)+IF(OR(AND(_Ped_TPN_SST1Keuze=2,_Ped_TPN_Keuze=1),AND(_Ped_TPN_SST1Keuze=2,_Pat_Gewicht/10>50)),ROUND(PedBerTPN!G8,0),0)
-$B$32: 	=IF(AND(OR(_Ped_TPN_Keuze=1,AND(_Ped_TPN_Keuze=2,_Ped_TPN_SST1Keuze>10)),_Ped_TPN_SST1Keuze<>2,_Ped_TPN_SST1Keuze<>12,_Ped_TPN_SST1Keuze<>13),INDEX(tblSSTGlucose,_Ped_TPN_SST1Keuze,1),""Glucose       %"")
-$G$32: 	=IF(AND(_Ped_TPN_SST1Keuze<>2,_Ped_TPN_SST1Keuze<>12,_Ped_TPN_SST1Keuze<>13),PedBerTPN!G8,"""")
-$G$33: 	=IF(AND(_Ped_TPN_SST1Keuze=12),ROUND(PedBerTPN!G8,0),"""")
-$G$34: 	=IF(AND(_Ped_TPN_SST1Keuze=13),ROUND(PedBerTPN!G8,0),"""")
-$G$35: 	=SUM(G27:G34)
+$A$13: 	=PedBerTPN!V5
+$G$13: 	=PedBerTPN!W5
+$G$15: 	=G13
+$A$17: 	=PedBerTPN!V6
+$G$17: 	=PedBerTPN!W6
+$G$18: 	=PedBerTPN!W7
+$G$19: 	=IF(G17="""","""",SUM(PedBerTPN!G6:G7)&"" ml"")
+$A$21: 	=PedBerTPN!$V$16
+$G$21: 	=PedBerTPN!$W$17
+$G$22: 	=PedBerTPN!$W$18
+$G$23: 	=PedBerTPN!$W$19
+$G$24: 	=PedBerTPN!$W$16
+$A$27: 	=IF(PedBerTPN!$V$11="""",PedBerTPN!$V$3,PedBerTPN!$V$12)
+$G$27: 	=PedBerTPN!$W$9
+$G$28: 	=PedBerTPN!$W$10
+$G$29: 	=PedBerTPN!$W$12
+$G$30: 	=PedBerTPN!$W$13
+$G$31: 	=IF($G$16="""",PedBerTPN!$W$11,"""")
+$B$32: 	=IF(B18="""",PedBerTPN!$H$8,"""")
+$G$32: 	=IF(G31="""",PedBerTPN!$W$8,"""")
+$G$33: 	=PedBerTPN!$W$3
 "

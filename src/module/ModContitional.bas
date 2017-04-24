@@ -54,6 +54,32 @@ Private Sub SetConditionalFormattingWarnErr(ByRef objSheet As Worksheet, ByVal s
 
 End Sub
 
+Private Sub SetConditionalFormattingErr(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
+
+    Dim intN As Integer
+
+    For intN = intStart To intStop
+        ClearContitionalFormatting objSheet, strRange & intN
+        
+        SetContionalFormatting objSheet, strRange & intN, strErr & (intN - intOffSet), ErrSet, True
+    Next
+    
+
+End Sub
+Private Sub SetConditionalFormattingInfoErr(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal strInfo As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
+
+    Dim intN As Integer
+
+    For intN = intStart To intStop
+        ClearContitionalFormatting objSheet, strRange & intN
+        
+        SetContionalFormatting objSheet, strRange & intN, strErr & (intN - intOffSet), ErrSet, True
+        SetContionalFormatting objSheet, strRange & intN, strInfo & (intN - intOffSet), InfoSet, False
+    Next
+    
+
+End Sub
+
 Private Sub SetConditionalFormattingInfo(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strInfo As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
 
     Dim intN As Integer
@@ -73,13 +99,15 @@ Public Sub SetPedMedIVConditionalFormatting()
     Dim strErr As String
     Dim strInfoSterkte As String
     Dim strInfoVol As String
+    Dim strConcErr As String
     
-    strErr = "=PedBerMedIV!U"
-    strWarn = "=PedBerMedIV!V"
-    strInfoSterkte = "=PedBerMedIV!W"
-    strInfoVol = "=PedBerMedIV!X"
+    strErr = "=PedBerMedIV!V"
+    strWarn = "=PedBerMedIV!W"
+    strInfoSterkte = "=PedBerMedIV!X"
+    strInfoVol = "=PedBerMedIV!Y"
+    strConcErr = "=PedBerMedIV!AA"
     
-    SetConditionalFormattingInfo shtPedGuiMedIV, "F", strInfoSterkte, 9, 23, 4
+    SetConditionalFormattingInfoErr shtPedGuiMedIV, "F", strConcErr, strInfoSterkte, 9, 23, 4
     SetConditionalFormattingInfo shtPedGuiMedIV, "G", strInfoVol, 9, 23, 4
     SetConditionalFormattingWarnErr shtPedGuiMedIV, "J", strErr, strWarn, 9, 23, 4
     
@@ -91,18 +119,19 @@ Public Sub SetNeoMedIVConditionalFormatting()
     Dim strErr As String
     Dim strInfoStand As String
     Dim strInfoVol As String
+    Dim strErrConc As String
     
     strErr = "=NeoBerInfB!V"
     strWarn = "=NeoBerInfB!U"
     strInfoStand = "=NeoBerInfB!R"
     strInfoVol = "=NeoBerInfB!S"
+    strErrConc = "=NeoBerInfB!W"
     
     SetConditionalFormattingInfo shtNeoGuiInfB, "K", strInfoStand, 28, 37, 5
     SetConditionalFormattingInfo shtNeoGuiInfB, "H", strInfoVol, 28, 37, 5
     SetConditionalFormattingWarnErr shtNeoGuiInfB, "L", strErr, strWarn, 28, 37, 5
     
-    strErr = "=NeoBerInfB!X"
-    SetConditionalFormattingWarnErr shtNeoGuiInfB, "C", strErr, strErr, 9, 9, 6
+    SetConditionalFormattingErr shtNeoGuiInfB, "G", strErrConc, 28, 37, 5
     
 End Sub
 

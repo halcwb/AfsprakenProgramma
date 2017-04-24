@@ -2,7 +2,7 @@ Attribute VB_Name = "ModNeoInfB"
 Option Explicit
 
 Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
-Private Const constMedIVMax As Integer = 10
+Private Const constMedIVMax As Integer = 12
 
 Private Const constActInfB As String = "Actuele Afspraken"
 Private Const const1700InfB As String = "17:00 uur Afspraken"
@@ -35,7 +35,7 @@ Private Const constNICUMixAdv As String = "Var_Neo_NICUMixAdv"
 Private Const constSSTBStand As String = "Var_Neo_InfB_TPN_SSTB"
 Private Const constSSTBAdv As String = "Var_Neo_SSTBAdv"
 
-Private Const constAdvOplIndex As Integer = 9
+Private Const constAdvOplIndex As Integer = 11
 Private Const constUnitIndex As Integer = 2
 
 Private Const constMedKeuze As String = "Var_Neo_InfB_Cont_MedKeuze_"
@@ -330,6 +330,85 @@ Private Sub test()
 
 End Sub
 
+Private Function GetMimimumAdvice(ByVal intMed As Integer) As Double
+
+    Dim objTblMed As Range
+    
+    Set objTblMed = Range(constTblMedIV)
+
+    GetMimimumAdvice = objTblMed.Cells(intMed, 6)
+    
+    Set objTblMed = Nothing
+
+End Function
+
+Private Sub TestGetMinimumAdvice()
+
+    MsgBox GetMimimumAdvice(2)
+
+End Sub
+
+Private Function GetMedicamentFactor(ByVal intMed As Integer) As Double
+
+    Dim objTblMed As Range
+    
+    Set objTblMed = Range(constTblMedIV)
+
+    GetMedicamentFactor = objTblMed.Cells(intMed, 14)
+    
+    Set objTblMed = Nothing
+
+End Function
+
+Private Sub TestGetMedicamentFactor()
+
+    MsgBox GetMedicamentFactor(2)
+
+End Sub
+
+Private Function GetMedicament(ByVal varMedicament As Integer) As String
+    
+    Dim objTblMed As Range
+    
+    Set objTblMed = Range(constTblMedIV)
+
+    GetMedicament = objTblMed.Cells(varMedicament, 1)
+    
+    Set objTblMed = Nothing
+
+End Function
+
+Private Sub TestGetMedicament()
+
+    MsgBox GetMedicament(2)
+
+End Sub
+
+Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
+
+    Dim dblAdvMin As Double
+    Dim dblFactor As Double
+    Dim dblWeight As Double
+    Dim dblQty As Double
+    
+    dblAdvMin = GetMimimumAdvice(intMed)
+    dblFactor = GetMedicamentFactor(intMed)
+    dblWeight = ModPatient.GetGewichtFromRange()
+    
+    ' dblAdvMin = 0.5 * dblFactor * (dblQty / 12) / dblWeight
+    ' dblQty = dblAdvMin * 12 * dblWeight / (0.5 * dblFactor)
+    dblQty = dblAdvMin * 12 * dblWeight / (0.5 * dblFactor)
+    
+    GetMedicamentMinQty = dblQty
+
+End Function
+
+Private Sub TestGetMedicamentMinQty()
+
+    MsgBox GetMedicamentMinQty(4)
+
+End Sub
+
 Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolean)
 
     Dim strMedicament As String
@@ -357,11 +436,21 @@ Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolea
     strExtra = constExtra & IIf(intRegel + 1 < 10, "0" & (intRegel + 1), intRegel + 1)
 
     varMedicament = IIf(blnRemove, 1, ModRange.GetRangeValue(strMedicament, vbNullString))
-    blnLido = Application.VLookup(objTblMed.Cells(varMedicament, 1), objTblMed, 1, False) = "lidocaine"
+    
+    If Not blnRemove Then
+        blnLido = GetMedicament(varMedicament) = "lidocaine"
+    Else
+        blnLido = False
+    End If
     
     If blnRemove Then ModRange.SetRangeValue strMedicament, 1
     
-    ModRange.SetRangeValue strMedSterkte, 0
+    If blnRemove Then
+        ModRange.SetRangeValue strMedSterkte, 0
+    Else
+        ModRange.SetRangeValue strMedSterkte, IIf(blnLido, 0, GetMedicamentMinQty(varMedicament) * 10)
+    End If
+    
     ModRange.SetRangeValue strOplHoev, IIf(blnRemove, 0, IIf(blnLido, 48, 12))
     ModRange.SetRangeValue strStand, IIf(blnRemove, 0, IIf(blnLido, 20, 5))
     ModRange.SetRangeValue strExtra, False

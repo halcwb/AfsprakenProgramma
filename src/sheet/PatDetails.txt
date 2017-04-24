@@ -4,7 +4,7 @@ $B$17: 	=IF(IsEmptyDate(_Pat_OpnDatum),"""",DateToString(_Pat_OpnDatum)&"" ""&B2
 $B$18: 	=IF(YEAR(NOW())-YEAR(__4_GebDatum)>100,"""",DateToString(__4_GebDatum))
 $B$19: 	=IF(__0_PatNum>0,__0_PatNum,"""")
 $B$20: 	=IF(((Var_AfspraakDatum-__4_GebDatum)/365)>100,"""",TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)&"" jaar en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)&"" maand(-en)"")
-$B$21: 	=IF(((Var_AfspraakDatum-__4_GebDatum)/365)>100,"""",TRUNC((Var_AfspraakDatum-__4_GebDatum)/52,0)&"" weken en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-52*TRUNC((Var_AfspraakDatum-__4_GebDatum)/52,0))/7,0)&"" dag(-en)"")
+$B$21: 	=IF(((Var_AfspraakDatum-__4_GebDatum)/365)>100,"""",TRUNC((Var_AfspraakDatum-__4_GebDatum)/52,0)&"" weken en ""&TRUNC(((Var_AfspraakDatum-__4_GebDatum)-52*TRUNC((Var_AfspraakDatum-__4_GebDatum)/52,0)),0)&"" dag(-en)"")
 $B$22: 	=IF(Var_AfspraakDatum-__4_GebDatum<=28,B21,B20)
 $B$23: 	=IF(__2_AchterNaam="""","""",IF(LEN(C23)>40,LEFT(C23,40)&""…"",C23))
 $C$23: 	=__2_AchterNaam&"", ""&__3_VoorNaam

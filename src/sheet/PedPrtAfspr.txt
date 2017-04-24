@@ -44,99 +44,99 @@ $L$43: 	=IF(C43=0,""D"","""")
 $C$44: 	=Txt_Ped_Lijn_6
 $L$44: 	=IF(C44=0,""D"","""")
 $D$46: 	=_Ped_Lijn_Opm
-$C$51: 	=PedBerMedIV!AC5
-$E$51: 	=IF(C51="""","""",PedBerMedIV!AD5&"" in ""&PedBerMedIV!AE5&"" ""&PedBerMedIV!AF5)
-$G$51: 	=IF(C51="""","""",PedBerMedIV!AG5&"" (""&PedBerMedIV!AH5&"" ""&PedBerMedIV!AI5&"")"")
-$J$51: 	=IF(C51="""","""",PedBerMedIV!AJ5)
+$C$51: 	=PedBerMedIV!AF5
+$E$51: 	=IF(C51="""","""",PedBerMedIV!AG5&"" in ""&PedBerMedIV!AH5&"" ""&PedBerMedIV!AI5)
+$G$51: 	=IF(C51="""","""",PedBerMedIV!AJ5&"" (""&PedBerMedIV!AK5&"" ""&PedBerMedIV!AL5&"")"")
+$J$51: 	=IF(C51="""","""",PedBerMedIV!AM5)
 $L$51: 	=IF(C51=0,""D"","""")
-$C$52: 	=PedBerMedIV!AC6
-$E$52: 	=IF(C52="""","""",PedBerMedIV!AD6&"" in ""&PedBerMedIV!AE6&"" ""&PedBerMedIV!AF6)
-$G$52: 	=IF(C52="""","""",PedBerMedIV!AG6&"" (""&PedBerMedIV!AH6&"" ""&PedBerMedIV!AI6&"")"")
-$J$52: 	=IF(C52="""","""",PedBerMedIV!AJ6)
+$C$52: 	=PedBerMedIV!AF6
+$E$52: 	=IF(C52="""","""",PedBerMedIV!AG6&"" in ""&PedBerMedIV!AH6&"" ""&PedBerMedIV!AI6)
+$G$52: 	=IF(C52="""","""",PedBerMedIV!AJ6&"" (""&PedBerMedIV!AK6&"" ""&PedBerMedIV!AL6&"")"")
+$J$52: 	=IF(C52="""","""",PedBerMedIV!AM6)
 $L$52: 	=IF(C52=0,""D"","""")
-$C$53: 	=PedBerMedIV!AC7
-$E$53: 	=IF(C53="""","""",PedBerMedIV!AD7&"" in ""&PedBerMedIV!AE7&"" ""&PedBerMedIV!AF7)
-$G$53: 	=IF(C53="""","""",PedBerMedIV!AG7&"" (""&PedBerMedIV!AH7&"" ""&PedBerMedIV!AI7&"")"")
-$J$53: 	=IF(C53="""","""",PedBerMedIV!AJ7)
+$C$53: 	=PedBerMedIV!AF7
+$E$53: 	=IF(C53="""","""",PedBerMedIV!AG7&"" in ""&PedBerMedIV!AH7&"" ""&PedBerMedIV!AI7)
+$G$53: 	=IF(C53="""","""",PedBerMedIV!AJ7&"" (""&PedBerMedIV!AK7&"" ""&PedBerMedIV!AL7&"")"")
+$J$53: 	=IF(C53="""","""",PedBerMedIV!AM7)
 $L$53: 	=IF(C53=0,""D"","""")
-$C$54: 	=PedBerMedIV!AC8
-$E$54: 	=IF(C54="""","""",PedBerMedIV!AD8&"" in ""&PedBerMedIV!AE8&"" ""&PedBerMedIV!AF8)
-$G$54: 	=IF(C54="""","""",PedBerMedIV!AG8&"" (""&PedBerMedIV!AH8&"" ""&PedBerMedIV!AI8&"")"")
-$J$54: 	=IF(C54="""","""",PedBerMedIV!AJ8)
+$C$54: 	=PedBerMedIV!AF8
+$E$54: 	=IF(C54="""","""",PedBerMedIV!AG8&"" in ""&PedBerMedIV!AH8&"" ""&PedBerMedIV!AI8)
+$G$54: 	=IF(C54="""","""",PedBerMedIV!AJ8&"" (""&PedBerMedIV!AK8&"" ""&PedBerMedIV!AL8&"")"")
+$J$54: 	=IF(C54="""","""",PedBerMedIV!AM8)
 $L$54: 	=IF(C54=0,""D"","""")
-$C$55: 	=PedBerMedIV!AC9
-$E$55: 	=IF(C55="""","""",PedBerMedIV!AD9&"" in ""&PedBerMedIV!AE9&"" ""&PedBerMedIV!AF9)
-$G$55: 	=IF(C55="""","""",PedBerMedIV!AG9&"" (""&PedBerMedIV!AH9&"" ""&PedBerMedIV!AI9&"")"")
-$J$55: 	=IF(C55="""","""",PedBerMedIV!AJ9)
+$C$55: 	=PedBerMedIV!AF9
+$E$55: 	=IF(C55="""","""",PedBerMedIV!AG9&"" in ""&PedBerMedIV!AH9&"" ""&PedBerMedIV!AI9)
+$G$55: 	=IF(C55="""","""",PedBerMedIV!AJ9&"" (""&PedBerMedIV!AK9&"" ""&PedBerMedIV!AL9&"")"")
+$J$55: 	=IF(C55="""","""",PedBerMedIV!AM9)
 $L$55: 	=IF(C55=0,""D"","""")
-$C$56: 	=PedBerMedIV!AC10
-$E$56: 	=IF(C56="""","""",PedBerMedIV!AD10&"" in ""&PedBerMedIV!AE10&"" ""&PedBerMedIV!AF10)
-$G$56: 	=IF(C56="""","""",PedBerMedIV!AG10&"" (""&PedBerMedIV!AH10&"" ""&PedBerMedIV!AI10&"")"")
-$J$56: 	=IF(C56="""","""",PedBerMedIV!AJ10)
+$C$56: 	=PedBerMedIV!AF10
+$E$56: 	=IF(C56="""","""",PedBerMedIV!AG10&"" in ""&PedBerMedIV!AH10&"" ""&PedBerMedIV!AI10)
+$G$56: 	=IF(C56="""","""",PedBerMedIV!AJ10&"" (""&PedBerMedIV!AK10&"" ""&PedBerMedIV!AL10&"")"")
+$J$56: 	=IF(C56="""","""",PedBerMedIV!AM10)
 $L$56: 	=IF(C56=0,""D"","""")
-$C$57: 	=PedBerMedIV!AC11
-$E$57: 	=IF(C57="""","""",PedBerMedIV!AD11&"" in ""&PedBerMedIV!AE11&"" ""&PedBerMedIV!AF11)
-$G$57: 	=IF(C57="""","""",PedBerMedIV!AG11&"" (""&PedBerMedIV!AH11&"" ""&PedBerMedIV!AI11&"")"")
-$J$57: 	=IF(C57="""","""",PedBerMedIV!AJ11)
+$C$57: 	=PedBerMedIV!AF11
+$E$57: 	=IF(C57="""","""",PedBerMedIV!AG11&"" in ""&PedBerMedIV!AH11&"" ""&PedBerMedIV!AI11)
+$G$57: 	=IF(C57="""","""",PedBerMedIV!AJ11&"" (""&PedBerMedIV!AK11&"" ""&PedBerMedIV!AL11&"")"")
+$J$57: 	=IF(C57="""","""",PedBerMedIV!AM11)
 $L$57: 	=IF(C57=0,""D"","""")
-$C$58: 	=PedBerMedIV!AC12
-$E$58: 	=IF(C58="""","""",PedBerMedIV!AD12&"" in ""&PedBerMedIV!AE12&"" ""&PedBerMedIV!AF12)
-$G$58: 	=IF(C58="""","""",PedBerMedIV!AG12&"" (""&PedBerMedIV!AH12&"" ""&PedBerMedIV!AI12&"")"")
-$J$58: 	=IF(C58="""","""",PedBerMedIV!AJ12)
+$C$58: 	=PedBerMedIV!AF12
+$E$58: 	=IF(C58="""","""",PedBerMedIV!AG12&"" in ""&PedBerMedIV!AH12&"" ""&PedBerMedIV!AI12)
+$G$58: 	=IF(C58="""","""",PedBerMedIV!AJ12&"" (""&PedBerMedIV!AK12&"" ""&PedBerMedIV!AL12&"")"")
+$J$58: 	=IF(C58="""","""",PedBerMedIV!AM12)
 $L$58: 	=IF(C58=0,""D"","""")
-$C$59: 	=PedBerMedIV!AC13
-$E$59: 	=IF(C59="""","""",PedBerMedIV!AD13&"" in ""&PedBerMedIV!AE13&"" ""&PedBerMedIV!AF13)
-$G$59: 	=IF(C59="""","""",PedBerMedIV!AG13&"" (""&PedBerMedIV!AH13&"" ""&PedBerMedIV!AI13&"")"")
-$J$59: 	=IF(C59="""","""",PedBerMedIV!AJ13)
+$C$59: 	=PedBerMedIV!AF13
+$E$59: 	=IF(C59="""","""",PedBerMedIV!AG13&"" in ""&PedBerMedIV!AH13&"" ""&PedBerMedIV!AI13)
+$G$59: 	=IF(C59="""","""",PedBerMedIV!AJ13&"" (""&PedBerMedIV!AK13&"" ""&PedBerMedIV!AL13&"")"")
+$J$59: 	=IF(C59="""","""",PedBerMedIV!AM13)
 $L$59: 	=IF(C59=0,""D"","""")
-$C$60: 	=PedBerMedIV!AC14
-$E$60: 	=IF(C60="""","""",PedBerMedIV!AD14&"" in ""&PedBerMedIV!AE14&"" ""&PedBerMedIV!AF14)
-$G$60: 	=IF(C60="""","""",PedBerMedIV!AG14&"" (""&PedBerMedIV!AH14&"" ""&PedBerMedIV!AI14&"")"")
-$J$60: 	=IF(C60="""","""",PedBerMedIV!AJ14)
-$C$61: 	=PedBerMedIV!AC15
-$E$61: 	=IF(C61="""","""",PedBerMedIV!AD15&"" in ""&PedBerMedIV!AE15&"" ""&PedBerMedIV!AF15)
-$G$61: 	=IF(C61="""","""",PedBerMedIV!AG15&"" (""&PedBerMedIV!AH15&"" ""&PedBerMedIV!AI15&"")"")
-$J$61: 	=IF(C61="""","""",PedBerMedIV!AJ15)
-$C$62: 	=PedBerMedIV!AC16
-$E$62: 	=IF(C62="""","""",PedBerMedIV!AD16&"" in ""&PedBerMedIV!AE16&"" ""&PedBerMedIV!AF16)
-$G$62: 	=IF(C62="""","""",PedBerMedIV!AG16&"" (""&PedBerMedIV!AH16&"" ""&PedBerMedIV!AI16&"")"")
-$J$62: 	=IF(C62="""","""",PedBerMedIV!AJ16)
-$C$63: 	=PedBerMedIV!AC17
-$E$63: 	=IF(C63="""","""",PedBerMedIV!AD17&"" in ""&PedBerMedIV!AE17&"" ""&PedBerMedIV!AF17)
-$G$63: 	=IF(C63="""","""",PedBerMedIV!AG17&"" (""&PedBerMedIV!AH17&"" ""&PedBerMedIV!AI17&"")"")
-$J$63: 	=IF(C63="""","""",PedBerMedIV!AJ17)
-$C$64: 	=PedBerMedIV!AC18
-$E$64: 	=IF(C64="""","""",PedBerMedIV!AD18&"" in ""&PedBerMedIV!AE18&"" ""&PedBerMedIV!AF18)
-$G$64: 	=IF(C64="""","""",PedBerMedIV!AG18&"" (""&PedBerMedIV!AH18&"" ""&PedBerMedIV!AI18&"")"")
-$J$64: 	=IF(C64="""","""",PedBerMedIV!AJ18)
-$C$65: 	=PedBerMedIV!AC19
-$E$65: 	=IF(C65="""","""",PedBerMedIV!AD19&"" in ""&PedBerMedIV!AE19&"" ""&PedBerMedIV!AF19)
-$G$65: 	=IF(C65="""","""",PedBerMedIV!AG19&"" (""&PedBerMedIV!AH19&"" ""&PedBerMedIV!AI19&"")"")
-$J$65: 	=IF(C65="""","""",PedBerMedIV!AJ19)
-$C$66: 	=PedBerMedIV!AC21
-$E$66: 	=IF(C66="""","""",PedBerMedIV!AD21&"" in ""&PedBerMedIV!AE21&"" ""&PedBerMedIV!AF21)
-$G$66: 	=IF(C66="""","""",PedBerMedIV!AG21&"" (""&PedBerMedIV!AH21&"" ""&PedBerMedIV!AI21&"")"")
-$J$66: 	=IF(C66="""","""",PedBerMedIV!AJ21)
+$C$60: 	=PedBerMedIV!AF14
+$E$60: 	=IF(C60="""","""",PedBerMedIV!AG14&"" in ""&PedBerMedIV!AH14&"" ""&PedBerMedIV!AI14)
+$G$60: 	=IF(C60="""","""",PedBerMedIV!AJ14&"" (""&PedBerMedIV!AK14&"" ""&PedBerMedIV!AL14&"")"")
+$J$60: 	=IF(C60="""","""",PedBerMedIV!AM14)
+$C$61: 	=PedBerMedIV!AF15
+$E$61: 	=IF(C61="""","""",PedBerMedIV!AG15&"" in ""&PedBerMedIV!AH15&"" ""&PedBerMedIV!AI15)
+$G$61: 	=IF(C61="""","""",PedBerMedIV!AJ15&"" (""&PedBerMedIV!AK15&"" ""&PedBerMedIV!AL15&"")"")
+$J$61: 	=IF(C61="""","""",PedBerMedIV!AM15)
+$C$62: 	=PedBerMedIV!AF16
+$E$62: 	=IF(C62="""","""",PedBerMedIV!AG16&"" in ""&PedBerMedIV!AH16&"" ""&PedBerMedIV!AI16)
+$G$62: 	=IF(C62="""","""",PedBerMedIV!AJ16&"" (""&PedBerMedIV!AK16&"" ""&PedBerMedIV!AL16&"")"")
+$J$62: 	=IF(C62="""","""",PedBerMedIV!AM16)
+$C$63: 	=PedBerMedIV!AF17
+$E$63: 	=IF(C63="""","""",PedBerMedIV!AG17&"" in ""&PedBerMedIV!AH17&"" ""&PedBerMedIV!AI17)
+$G$63: 	=IF(C63="""","""",PedBerMedIV!AJ17&"" (""&PedBerMedIV!AK17&"" ""&PedBerMedIV!AL17&"")"")
+$J$63: 	=IF(C63="""","""",PedBerMedIV!AM17)
+$C$64: 	=PedBerMedIV!AF18
+$E$64: 	=IF(C64="""","""",PedBerMedIV!AG18&"" in ""&PedBerMedIV!AH18&"" ""&PedBerMedIV!AI18)
+$G$64: 	=IF(C64="""","""",PedBerMedIV!AJ18&"" (""&PedBerMedIV!AK18&"" ""&PedBerMedIV!AL18&"")"")
+$J$64: 	=IF(C64="""","""",PedBerMedIV!AM18)
+$C$65: 	=PedBerMedIV!AF19
+$E$65: 	=IF(C65="""","""",PedBerMedIV!AG19&"" in ""&PedBerMedIV!AH19&"" ""&PedBerMedIV!AI19)
+$G$65: 	=IF(C65="""","""",PedBerMedIV!AJ19&"" (""&PedBerMedIV!AK19&"" ""&PedBerMedIV!AL19&"")"")
+$J$65: 	=IF(C65="""","""",PedBerMedIV!AM19)
+$C$66: 	=PedBerMedIV!AF21
+$E$66: 	=IF(C66="""","""",PedBerMedIV!AG21&"" in ""&PedBerMedIV!AH21&"" ""&PedBerMedIV!AI21)
+$G$66: 	=IF(C66="""","""",PedBerMedIV!AJ21&"" (""&PedBerMedIV!AK21&"" ""&PedBerMedIV!AL21&"")"")
+$J$66: 	=IF(C66="""","""",PedBerMedIV!AM21)
 $L$66: 	=IF(C66=0,""D"","""")
-$C$67: 	=PedBerMedIV!AC22
-$E$67: 	=IF(C67="""","""",PedBerMedIV!AD22&"" in ""&PedBerMedIV!AE22&"" ""&PedBerMedIV!AF22)
-$G$67: 	=IF(C67="""","""",PedBerMedIV!AG22&"" (""&PedBerMedIV!AH22&"" ""&PedBerMedIV!AI22&"")"")
-$J$67: 	=IF(C67="""","""",PedBerMedIV!AJ22)
+$C$67: 	=PedBerMedIV!AF22
+$E$67: 	=IF(C67="""","""",PedBerMedIV!AG22&"" in ""&PedBerMedIV!AH22&"" ""&PedBerMedIV!AI22)
+$G$67: 	=IF(C67="""","""",PedBerMedIV!AJ22&"" (""&PedBerMedIV!AK22&"" ""&PedBerMedIV!AL22&"")"")
+$J$67: 	=IF(C67="""","""",PedBerMedIV!AM22)
 $L$67: 	=IF(C67=0,""D"","""")
-$C$68: 	=PedBerMedIV!AC23
-$E$68: 	=IF(C68="""","""",PedBerMedIV!AD23&"" in ""&PedBerMedIV!AE23&"" ""&PedBerMedIV!AF23)
-$G$68: 	=IF(C68="""","""",PedBerMedIV!AG23&"" (""&PedBerMedIV!AH23&"" ""&PedBerMedIV!AI23&"")"")
-$J$68: 	=IF(C68="""","""",PedBerMedIV!AJ23)
+$C$68: 	=PedBerMedIV!AF23
+$E$68: 	=IF(C68="""","""",PedBerMedIV!AG23&"" in ""&PedBerMedIV!AH23&"" ""&PedBerMedIV!AI23)
+$G$68: 	=IF(C68="""","""",PedBerMedIV!AJ23&"" (""&PedBerMedIV!AK23&"" ""&PedBerMedIV!AL23&"")"")
+$J$68: 	=IF(C68="""","""",PedBerMedIV!AM23)
 $L$68: 	=IF(C68=0,""D"","""")
-$C$69: 	=PedBerMedIV!AC24
-$E$69: 	=IF(C69="""","""",PedBerMedIV!AD24&"" in ""&PedBerMedIV!AE24&"" ""&PedBerMedIV!AF24)
-$G$69: 	=IF(C69="""","""",PedBerMedIV!AG24&"" (""&PedBerMedIV!AH24&"" ""&PedBerMedIV!AI24&"")"")
-$J$69: 	=IF(C69="""","""",PedBerMedIV!AJ24)
+$C$69: 	=PedBerMedIV!AF24
+$E$69: 	=IF(C69="""","""",PedBerMedIV!AG24&"" in ""&PedBerMedIV!AH24&"" ""&PedBerMedIV!AI24)
+$G$69: 	=IF(C69="""","""",PedBerMedIV!AJ24&"" (""&PedBerMedIV!AK24&"" ""&PedBerMedIV!AL24&"")"")
+$J$69: 	=IF(C69="""","""",PedBerMedIV!AM24)
 $L$69: 	=IF(C69=0,""D"","""")
-$C$70: 	=PedBerMedIV!AC25
-$E$70: 	=IF(C70="""","""",PedBerMedIV!AD25&"" in ""&PedBerMedIV!AE25&"" ""&PedBerMedIV!AF25)
-$G$70: 	=IF(C70="""","""",PedBerMedIV!AG25&"" (""&PedBerMedIV!AH25&"" ""&PedBerMedIV!AI25&"")"")
-$J$70: 	=IF(C70="""","""",PedBerMedIV!AJ25)
+$C$70: 	=PedBerMedIV!AF25
+$E$70: 	=IF(C70="""","""",PedBerMedIV!AG25&"" in ""&PedBerMedIV!AH25&"" ""&PedBerMedIV!AI25)
+$G$70: 	=IF(C70="""","""",PedBerMedIV!AJ25&"" (""&PedBerMedIV!AK25&"" ""&PedBerMedIV!AL25&"")"")
+$J$70: 	=IF(C70="""","""",PedBerMedIV!AM25)
 $L$70: 	=IF(C70=0,""D"","""")
 $D$72: 	=_Ped_MedIV_Opm
 $D$75: 	=Txt_Pat_AfspraakDat
@@ -148,71 +148,71 @@ $H$76: 	=Txt_Pat_Lengte
 $D$77: 	=Txt_Pat_Bed
 $H$77: 	=Txt_Pat_Oppervlak
 $D$80: 	=PedBerTPN!H3
-$E$80: 	=PedBerTPN!AJ3
-$F$80: 	=PedBerTPN!AK3
+$E$80: 	=PedBerTPN!V3
+$F$80: 	=PedBerTPN!W3
 $H$80: 	=PedBerTPN!H21
-$I$80: 	=PedBerTPN!AJ21
-$J$80: 	=PedBerTPN!AK21
+$I$80: 	=PedBerTPN!V21
+$J$80: 	=PedBerTPN!W21
 $D$81: 	=PedBerTPN!H5
-$E$81: 	=PedBerTPN!AJ5
-$F$81: 	=PedBerTPN!AK5
+$E$81: 	=PedBerTPN!V5
+$F$81: 	=PedBerTPN!W5
 $H$81: 	=PedBerTPN!H22
-$I$81: 	=PedBerTPN!AJ22
-$J$81: 	=PedBerTPN!AK22
+$I$81: 	=PedBerTPN!V22
+$J$81: 	=PedBerTPN!W22
 $L$81: 	=IF(AND(D81="""",H81=0),""D"","""")
 $D$82: 	=PedBerTPN!H6
-$E$82: 	=PedBerTPN!AJ6
-$F$82: 	=PedBerTPN!AL6
+$E$82: 	=PedBerTPN!V6
+$F$82: 	=PedBerTPN!X6
 $H$82: 	=PedBerTPN!H23
-$I$82: 	=PedBerTPN!AJ23
-$J$82: 	=PedBerTPN!AK23
+$I$82: 	=PedBerTPN!V23
+$J$82: 	=PedBerTPN!W23
 $L$82: 	=IF(AND(D82="""",H82=0),""D"","""")
 $D$83: 	=PedBerTPN!H8
-$E$83: 	=PedBerTPN!AJ8
-$F$83: 	=PedBerTPN!AK8
+$E$83: 	=PedBerTPN!V8
+$F$83: 	=PedBerTPN!W8
 $H$83: 	=PedBerTPN!H24
-$I$83: 	=PedBerTPN!AJ24
-$J$83: 	=PedBerTPN!AK24
+$I$83: 	=PedBerTPN!V24
+$J$83: 	=PedBerTPN!W24
 $L$83: 	=IF(AND(D83="""",H83=0),""D"","""")
 $D$84: 	=PedBerTPN!H9
-$E$84: 	=PedBerTPN!AJ9
-$F$84: 	=PedBerTPN!AK9
+$E$84: 	=PedBerTPN!V9
+$F$84: 	=PedBerTPN!W9
 $L$84: 	=IF(D84=0,""D"","""")
 $D$85: 	=PedBerTPN!H10
-$E$85: 	=PedBerTPN!AJ10
-$F$85: 	=PedBerTPN!AK10
+$E$85: 	=PedBerTPN!V10
+$F$85: 	=PedBerTPN!W10
 $L$85: 	=IF(D85=0,""D"","""")
 $D$87: 	=IF(F87<>"""",""Electrolyt/Glucose mengsel"","""")
-$E$87: 	=IF(PedBerTPN!AJ11="""","""",PedBerTPN!AJ11)
-$F$87: 	=IF(E87="""","""",SUM(PedBerTPN!G11:G12,PedBerTPN!G19)&"" ml"")
-$D$88: 	=PedBerTPN!H11
-$F$88: 	=PedBerTPN!AK11
-$G$88: 	=IF(E87="""","""","" + ""&PedBerTPN!AK19)
+$E$87: 	=IF(PedBerTPN!V12="""","""",PedBerTPN!V12)
+$F$87: 	=IF(E87="""","""",SUM(PedBerTPN!G12:G13,PedBerTPN!G11)&"" ml"")
+$D$88: 	=PedBerTPN!H12
+$F$88: 	=PedBerTPN!W12
+$G$88: 	=IF(E87="""","""","" + ""&PedBerTPN!W11)
 $L$88: 	=IF(D88=0,""D"","""")
-$D$89: 	=PedBerTPN!H12
-$F$89: 	=PedBerTPN!AK12
+$D$89: 	=PedBerTPN!H13
+$F$89: 	=PedBerTPN!W13
 $L$89: 	=IF(D89=0,""D"","""")
-$D$91: 	=PedBerTPN!H13
-$E$91: 	=PedBerTPN!AJ13
-$F$91: 	=IF(E91="""","""",SUM(PedBerTPN!G13,PedBerTPN!G20)&"" ml"")
+$D$91: 	=PedBerTPN!H15
+$E$91: 	=PedBerTPN!V15
+$F$91: 	=IF(E91="""","""",SUM(PedBerTPN!G15,PedBerTPN!G14)&"" ml"")
 $L$91: 	=IF(D91=0,""D"","""")
-$D$92: 	=PedBerTPN!H13
-$F$92: 	=PedBerTPN!AK13
-$G$92: 	=IF(PedBerTPN!AK13="""","""","" + ""&PedBerTPN!AK20)
-$D$94: 	=PedBerTPN!H14
-$E$94: 	=PedBerTPN!AJ14
-$F$94: 	=PedBerTPN!AK14
-$D$95: 	=PedBerTPN!H15
-$E$95: 	=PedBerTPN!AJ15
-$F$95: 	=PedBerTPN!AK15
+$D$92: 	=PedBerTPN!H15
+$F$92: 	=PedBerTPN!W15
+$G$92: 	=IF(PedBerTPN!W15="""","""","" + ""&PedBerTPN!W14)
+$D$94: 	=PedBerTPN!H16
+$E$94: 	=PedBerTPN!V16
+$F$94: 	=PedBerTPN!W16
+$D$95: 	=PedBerTPN!H17
+$E$95: 	=PedBerTPN!V17
+$F$95: 	=PedBerTPN!W17
 $L$95: 	=IF(D95=0,""D"","""")
-$D$96: 	=PedBerTPN!H16
-$E$96: 	=PedBerTPN!AJ16
-$F$96: 	=PedBerTPN!AK16
+$D$96: 	=PedBerTPN!H18
+$E$96: 	=PedBerTPN!V18
+$F$96: 	=PedBerTPN!W18
 $L$96: 	=IF(D96=0,""D"","""")
-$D$97: 	=PedBerTPN!H17
-$E$97: 	=PedBerTPN!AJ17
-$F$97: 	=PedBerTPN!AK17
+$D$97: 	=PedBerTPN!H19
+$E$97: 	=PedBerTPN!V19
+$F$97: 	=PedBerTPN!W19
 $L$97: 	=IF(D97=0,""D"","""")
 $D$99: 	=_Ped_TPN_Opm
 $D$103: 	=VLOOKUP(C103,Tbl_Ped_Totalen,13,FALSE )

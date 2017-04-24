@@ -1,9 +1,9 @@
 "$F$3: 	=IF(C3<50,C3/10,IF(C3<146,C3-45,(C3-125)*5))
-$G$3: 	=F3*24+G9*E9+G10*E10+IF(D5,0,G5)+IF(D11,0,G11*E11+G12*E12)
+$G$3: 	=F3*24+IF(D5,0,G5)+G9*E9+G10*E10+IF(D11,0,G12*E12+G13*E13)
 $H$3: 	=IF(F3=0,"""",A3)
-$AJ$3: 	=IF(G3>0,ROUND(G3/24,1)&"" ml/uur"","""")
-$AK$3: 	=IF(G3=0,"""",G3&"" ml"")
-$AL$3: 	=IF(_Ped_TPN_SST1Stand=0,"""",""verw"")
+$V$3: 	=IF(G3>0,ROUND(G3/24,1)&"" ml/uur"","""")
+$W$3: 	=IF(G3=0,"""",G3&"" ml"")
+$X$3: 	=IF(_Ped_TPN_SST1Stand=0,"""",""verw"")
 $D$5: 	=_Ped_TPN_Keuze=6
 $F$5: 	=IF((_Ped_TPN_Keuze=6),G5/24,0)
 $G$5: 	=IF(AND(OR(_Ped_TPN_SST1Keuze<12,_Ped_TPN_Keuze=6),_Ped_TPN_Keuze>1),_Ped_TPN_Vol,0)
@@ -20,23 +20,10 @@ $Q$5: 	=IF($H5="""",0,VLOOKUP($H5,Tbl_Glob_ParEnt,Q$1,FALSE))*$G5
 $R$5: 	=IF($H5="""",0,VLOOKUP($H5,Tbl_Glob_ParEnt,R$1,FALSE))*$G5
 $S$5: 	=IF($H5="""",0,VLOOKUP($H5,Tbl_Glob_ParEnt,S$1,FALSE))*$G5
 $T$5: 	=IF($H5="""",0,VLOOKUP($H5,Tbl_Glob_ParEnt,T$1,FALSE))*$G5
-$V$5: 	=IF(_Pat_Gewicht>0,G5/(_Pat_Gewicht/10),0)
-$W$5: 	=IF(_Pat_Gewicht>0,I5/(_Pat_Gewicht/10),0)
-$X$5: 	=IF(_Pat_Gewicht>0,J5/(_Pat_Gewicht/10),0)
-$Y$5: 	=IF(_Pat_Gewicht>0,K5/(_Pat_Gewicht/10),0)
-$Z$5: 	=IF(_Pat_Gewicht>0,L5/(_Pat_Gewicht/10),0)
-$AA$5: 	=IF(_Pat_Gewicht>0,M5/(_Pat_Gewicht/10),0)
-$AB$5: 	=IF(_Pat_Gewicht>0,N5/(_Pat_Gewicht/10),0)
-$AC$5: 	=IF(_Pat_Gewicht>0,O5/(_Pat_Gewicht/10),0)
-$AD$5: 	=IF(_Pat_Gewicht>0,P5/(_Pat_Gewicht/10),0)
-$AE$5: 	=IF(_Pat_Gewicht>0,Q5/(_Pat_Gewicht/10),0)
-$AF$5: 	=IF(_Pat_Gewicht>0,R5/(_Pat_Gewicht/10),0)
-$AG$5: 	=IF(_Pat_Gewicht>0,S5/(_Pat_Gewicht/10),0)
-$AH$5: 	=IF(_Pat_Gewicht>0,T5/(_Pat_Gewicht/10),0)
-$AJ$5: 	=IF(F5>0,ROUND(F5,1)&"" ml/uur"","""")
-$AK$5: 	=IF(G5=0,"""",G5&"" ml"")
-$AL$5: 	=IF(_Ped_TPN_Keuze=1,"""",""verw"")
-$AM$5: 	=IF(OR(_Ped_TPN_Keuze=GetPedTPNIndexForWeight(),_Ped_TPN_Keuze=1),"""",""stand"")
+$V$5: 	=IF(F5>0,ROUND(F5,1)&"" ml/uur"","""")
+$W$5: 	=IF(G5=0,"""",G5&"" ml"")
+$X$5: 	=IF(_Ped_TPN_Keuze=1,"""",""verw"")
+$Y$5: 	=IF(OR(_Ped_TPN_Keuze=GetPedTPNIndexForWeight(),_Ped_TPN_Keuze=1),"""",""stand"")
 $D$6: 	=_Ped_TPN_Keuze=6
 $F$6: 	=IF(D6,(G6+G7)/24,0)
 $G$6: 	=IF(AND(_Ped_TPN_Keuze>3),C6,0)
@@ -53,22 +40,9 @@ $Q$6: 	=IF($H6="""",0,VLOOKUP($H6,Tbl_Glob_ParEnt,Q$1,FALSE))*$G6
 $R$6: 	=IF($H6="""",0,VLOOKUP($H6,Tbl_Glob_ParEnt,R$1,FALSE))*$G6
 $S$6: 	=IF($H6="""",0,VLOOKUP($H6,Tbl_Glob_ParEnt,S$1,FALSE))*$G6
 $T$6: 	=IF($H6="""",0,VLOOKUP($H6,Tbl_Glob_ParEnt,T$1,FALSE))*$G6
-$V$6: 	=IF(_Pat_Gewicht>0,G6/(_Pat_Gewicht/10),0)
-$W$6: 	=IF(_Pat_Gewicht>0,I6/(_Pat_Gewicht/10),0)
-$X$6: 	=IF(_Pat_Gewicht>0,J6/(_Pat_Gewicht/10),0)
-$Y$6: 	=IF(_Pat_Gewicht>0,K6/(_Pat_Gewicht/10),0)
-$Z$6: 	=IF(_Pat_Gewicht>0,L6/(_Pat_Gewicht/10),0)
-$AA$6: 	=IF(_Pat_Gewicht>0,M6/(_Pat_Gewicht/10),0)
-$AB$6: 	=IF(_Pat_Gewicht>0,N6/(_Pat_Gewicht/10),0)
-$AC$6: 	=IF(_Pat_Gewicht>0,O6/(_Pat_Gewicht/10),0)
-$AD$6: 	=IF(_Pat_Gewicht>0,P6/(_Pat_Gewicht/10),0)
-$AE$6: 	=IF(_Pat_Gewicht>0,Q6/(_Pat_Gewicht/10),0)
-$AF$6: 	=IF(_Pat_Gewicht>0,R6/(_Pat_Gewicht/10),0)
-$AG$6: 	=IF(_Pat_Gewicht>0,S6/(_Pat_Gewicht/10),0)
-$AH$6: 	=IF(_Pat_Gewicht>0,T6/(_Pat_Gewicht/10),0)
-$AJ$6: 	=IF(F6>0,ROUND(F6,1)&"" ml/uur"","""")
-$AK$6: 	=IF(G6=0,"""",G6&"" ml"")
-$AL$6: 	=IF(G6=0,"""",""verw"")
+$V$6: 	=IF(F6>0,ROUND(F6,1)&"" ml/uur"","""")
+$W$6: 	=IF(G6=0,"""",G6&"" ml"")
+$X$6: 	=IF(G6=0,"""",""verw"")
 $G$7: 	=IF(D6,100,0)
 $H$7: 	=IF(C7=0,"""",A7)
 $I$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,I$1,FALSE))*$G7
@@ -83,23 +57,10 @@ $Q$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,Q$1,FALSE))*$G7
 $R$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,R$1,FALSE))*$G7
 $S$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,S$1,FALSE))*$G7
 $T$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,T$1,FALSE))*$G7
-$V$7: 	=IF(_Pat_Gewicht>0,G7/(_Pat_Gewicht/10),0)
-$W$7: 	=IF(_Pat_Gewicht>0,I7/(_Pat_Gewicht/10),0)
-$X$7: 	=IF(_Pat_Gewicht>0,J7/(_Pat_Gewicht/10),0)
-$Y$7: 	=IF(_Pat_Gewicht>0,K7/(_Pat_Gewicht/10),0)
-$Z$7: 	=IF(_Pat_Gewicht>0,L7/(_Pat_Gewicht/10),0)
-$AA$7: 	=IF(_Pat_Gewicht>0,M7/(_Pat_Gewicht/10),0)
-$AB$7: 	=IF(_Pat_Gewicht>0,N7/(_Pat_Gewicht/10),0)
-$AC$7: 	=IF(_Pat_Gewicht>0,O7/(_Pat_Gewicht/10),0)
-$AD$7: 	=IF(_Pat_Gewicht>0,P7/(_Pat_Gewicht/10),0)
-$AE$7: 	=IF(_Pat_Gewicht>0,Q7/(_Pat_Gewicht/10),0)
-$AF$7: 	=IF(_Pat_Gewicht>0,R7/(_Pat_Gewicht/10),0)
-$AG$7: 	=IF(_Pat_Gewicht>0,S7/(_Pat_Gewicht/10),0)
-$AH$7: 	=IF(_Pat_Gewicht>0,T7/(_Pat_Gewicht/10),0)
-$AJ$7: 	=IF(F7>0,ROUND(F7,1)&"" ml/uur"","""")
-$AK$7: 	=IF(G7=0,"""","" in ""&G7&"" ml gluc 10%"")
-$AL$7: 	=IF(G7=0,"""",""verw"")
-$G$8: 	=G3-(IF(D11,SUM(G9:G10),SUM(G9:G12)))
+$V$7: 	=IF(F7>0,ROUND(F7,1)&"" ml/uur"","""")
+$W$7: 	=IF(G7=0,"""",G7&"" ml"")
+$X$7: 	=IF(G7=0,"""",""verw"")
+$G$8: 	=G3-(IF(D5,0,G5))-G9-G10-(IF(D11,0,G12))-(IF(D11,0,G13))
 $H$8: 	=IF(B8=1,"""",INDEX(Tbl_Ped_SST,B8,1))
 $I$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,I$1,FALSE))*$G8
 $J$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,J$1,FALSE))*$G8
@@ -113,22 +74,9 @@ $Q$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,Q$1,FALSE))*$G8
 $R$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,R$1,FALSE))*$G8
 $S$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,S$1,FALSE))*$G8
 $T$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,T$1,FALSE))*$G8
-$V$8: 	=IF(_Pat_Gewicht>0,G8/(_Pat_Gewicht/10),0)
-$W$8: 	=IF(_Pat_Gewicht>0,I8/(_Pat_Gewicht/10),0)
-$X$8: 	=IF(_Pat_Gewicht>0,J8/(_Pat_Gewicht/10),0)
-$Y$8: 	=IF(_Pat_Gewicht>0,K8/(_Pat_Gewicht/10),0)
-$Z$8: 	=IF(_Pat_Gewicht>0,L8/(_Pat_Gewicht/10),0)
-$AA$8: 	=IF(_Pat_Gewicht>0,M8/(_Pat_Gewicht/10),0)
-$AB$8: 	=IF(_Pat_Gewicht>0,N8/(_Pat_Gewicht/10),0)
-$AC$8: 	=IF(_Pat_Gewicht>0,O8/(_Pat_Gewicht/10),0)
-$AD$8: 	=IF(_Pat_Gewicht>0,P8/(_Pat_Gewicht/10),0)
-$AE$8: 	=IF(_Pat_Gewicht>0,Q8/(_Pat_Gewicht/10),0)
-$AF$8: 	=IF(_Pat_Gewicht>0,R8/(_Pat_Gewicht/10),0)
-$AG$8: 	=IF(_Pat_Gewicht>0,S8/(_Pat_Gewicht/10),0)
-$AH$8: 	=IF(_Pat_Gewicht>0,T8/(_Pat_Gewicht/10),0)
-$AJ$8: 	=IF(F8>0,ROUND(F8,1)&"" ml/uur"","""")
-$AK$8: 	=IF(G8=0,"""",G8&"" ml"")
-$AL$8: 	=IF(G8=0,"""",""verw"")
+$V$8: 	=IF(F8>0,ROUND(F8,1)&"" ml/uur"","""")
+$W$8: 	=IF(G8=0,"""",G8&"" ml"")
+$X$8: 	=IF(G8=0,"""",""verw"")
 $G$9: 	=IF(B9,C9,0)
 $H$9: 	=IF(B9,A9,"""")
 $I$9: 	=IF($H9="""",0,VLOOKUP($H9,Tbl_Glob_ParEnt,I$1,FALSE))*$G9
@@ -143,22 +91,9 @@ $Q$9: 	=IF($H9="""",0,VLOOKUP($H9,Tbl_Glob_ParEnt,Q$1,FALSE))*$G9
 $R$9: 	=IF($H9="""",0,VLOOKUP($H9,Tbl_Glob_ParEnt,R$1,FALSE))*$G9
 $S$9: 	=IF($H9="""",0,VLOOKUP($H9,Tbl_Glob_ParEnt,S$1,FALSE))*$G9
 $T$9: 	=IF($H9="""",0,VLOOKUP($H9,Tbl_Glob_ParEnt,T$1,FALSE))*$G9
-$V$9: 	=IF(_Pat_Gewicht>0,G9/(_Pat_Gewicht/10),0)
-$W$9: 	=IF(_Pat_Gewicht>0,I9/(_Pat_Gewicht/10),0)
-$X$9: 	=IF(_Pat_Gewicht>0,J9/(_Pat_Gewicht/10),0)
-$Y$9: 	=IF(_Pat_Gewicht>0,K9/(_Pat_Gewicht/10),0)
-$Z$9: 	=IF(_Pat_Gewicht>0,L9/(_Pat_Gewicht/10),0)
-$AA$9: 	=IF(_Pat_Gewicht>0,M9/(_Pat_Gewicht/10),0)
-$AB$9: 	=IF(_Pat_Gewicht>0,N9/(_Pat_Gewicht/10),0)
-$AC$9: 	=IF(_Pat_Gewicht>0,O9/(_Pat_Gewicht/10),0)
-$AD$9: 	=IF(_Pat_Gewicht>0,P9/(_Pat_Gewicht/10),0)
-$AE$9: 	=IF(_Pat_Gewicht>0,Q9/(_Pat_Gewicht/10),0)
-$AF$9: 	=IF(_Pat_Gewicht>0,R9/(_Pat_Gewicht/10),0)
-$AG$9: 	=IF(_Pat_Gewicht>0,S9/(_Pat_Gewicht/10),0)
-$AH$9: 	=IF(_Pat_Gewicht>0,T9/(_Pat_Gewicht/10),0)
-$AJ$9: 	=IF(F9>0,ROUND(F9,1)&"" ml/uur"","""")
-$AK$9: 	=IF(G9=0,"""",G9&"" ml"")
-$AL$9: 	=IF(G9=0,"""",""verw"")
+$V$9: 	=IF(F9>0,ROUND(F9,1)&"" ml/uur"","""")
+$W$9: 	=IF(G9=0,"""",G9&"" ml"")
+$X$9: 	=IF(G9=0,"""",""verw"")
 $G$10: 	=IF(B10,C10,0)
 $H$10: 	=IF(B10,A10,"""")
 $I$10: 	=IF($H10="""",0,VLOOKUP($H10,Tbl_Glob_ParEnt,I$1,FALSE))*$G10
@@ -173,26 +108,13 @@ $Q$10: 	=IF($H10="""",0,VLOOKUP($H10,Tbl_Glob_ParEnt,Q$1,FALSE))*$G10
 $R$10: 	=IF($H10="""",0,VLOOKUP($H10,Tbl_Glob_ParEnt,R$1,FALSE))*$G10
 $S$10: 	=IF($H10="""",0,VLOOKUP($H10,Tbl_Glob_ParEnt,S$1,FALSE))*$G10
 $T$10: 	=IF($H10="""",0,VLOOKUP($H10,Tbl_Glob_ParEnt,T$1,FALSE))*$G10
-$V$10: 	=IF(_Pat_Gewicht>0,G10/(_Pat_Gewicht/10),0)
-$W$10: 	=IF(_Pat_Gewicht>0,I10/(_Pat_Gewicht/10),0)
-$X$10: 	=IF(_Pat_Gewicht>0,J10/(_Pat_Gewicht/10),0)
-$Y$10: 	=IF(_Pat_Gewicht>0,K10/(_Pat_Gewicht/10),0)
-$Z$10: 	=IF(_Pat_Gewicht>0,L10/(_Pat_Gewicht/10),0)
-$AA$10: 	=IF(_Pat_Gewicht>0,M10/(_Pat_Gewicht/10),0)
-$AB$10: 	=IF(_Pat_Gewicht>0,N10/(_Pat_Gewicht/10),0)
-$AC$10: 	=IF(_Pat_Gewicht>0,O10/(_Pat_Gewicht/10),0)
-$AD$10: 	=IF(_Pat_Gewicht>0,P10/(_Pat_Gewicht/10),0)
-$AE$10: 	=IF(_Pat_Gewicht>0,Q10/(_Pat_Gewicht/10),0)
-$AF$10: 	=IF(_Pat_Gewicht>0,R10/(_Pat_Gewicht/10),0)
-$AG$10: 	=IF(_Pat_Gewicht>0,S10/(_Pat_Gewicht/10),0)
-$AH$10: 	=IF(_Pat_Gewicht>0,T10/(_Pat_Gewicht/10),0)
-$AJ$10: 	=IF(F10>0,ROUND(F10,1)&"" ml/uur"","""")
-$AK$10: 	=IF(G10=0,"""",G10&"" ml"")
-$AL$10: 	=IF(G10=0,"""",""verw"")
-$D$11: 	=OR(AND(_Ped_TPN_Keuze>1,_Ped_TPN_Keuze<6),_Ped_TPN_SST1Keuze>=12)
-$F$11: 	=IF(D11,SUM(G11,G12,G19)/24,0)
-$G$11: 	=IF(B11,C11,0)
-$H$11: 	=IF(B11,A11,"""")
+$V$10: 	=IF(F10>0,ROUND(F10,1)&"" ml/uur"","""")
+$W$10: 	=IF(G10=0,"""",G10&"" ml"")
+$X$10: 	=IF(G10=0,"""",""verw"")
+$D$11: 	=AND(_Ped_TPN_Keuze>1,_Ped_TPN_Keuze<6,_Ped_TPN_SST1Keuze<=12)
+$F$11: 	=IF(D11,SUM(G12,G13,G11)/24,0)
+$G$11: 	=IF(D11,(G12*E12+G13*E13)-(G12+G13),0)
+$H$11: 	=IF(G11=0,"""",A11)
 $I$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,I$1,FALSE))*$G11
 $J$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,J$1,FALSE))*$G11
 $K$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,K$1,FALSE))*$G11
@@ -205,23 +127,9 @@ $Q$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,Q$1,FALSE))*$G11
 $R$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,R$1,FALSE))*$G11
 $S$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,S$1,FALSE))*$G11
 $T$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,T$1,FALSE))*$G11
-$V$11: 	=IF(_Pat_Gewicht>0,G11/(_Pat_Gewicht/10),0)
-$W$11: 	=IF(_Pat_Gewicht>0,I11/(_Pat_Gewicht/10),0)
-$X$11: 	=IF(_Pat_Gewicht>0,J11/(_Pat_Gewicht/10),0)
-$Y$11: 	=IF(_Pat_Gewicht>0,K11/(_Pat_Gewicht/10),0)
-$Z$11: 	=IF(_Pat_Gewicht>0,L11/(_Pat_Gewicht/10),0)
-$AA$11: 	=IF(_Pat_Gewicht>0,M11/(_Pat_Gewicht/10),0)
-$AB$11: 	=IF(_Pat_Gewicht>0,N11/(_Pat_Gewicht/10),0)
-$AC$11: 	=IF(_Pat_Gewicht>0,O11/(_Pat_Gewicht/10),0)
-$AD$11: 	=IF(_Pat_Gewicht>0,P11/(_Pat_Gewicht/10),0)
-$AE$11: 	=IF(_Pat_Gewicht>0,Q11/(_Pat_Gewicht/10),0)
-$AF$11: 	=IF(_Pat_Gewicht>0,R11/(_Pat_Gewicht/10),0)
-$AG$11: 	=IF(_Pat_Gewicht>0,S11/(_Pat_Gewicht/10),0)
-$AH$11: 	=IF(_Pat_Gewicht>0,T11/(_Pat_Gewicht/10),0)
-$AJ$11: 	=IF(F11>0,ROUND(F11,1)&"" ml/uur"","""")
-$AK$11: 	=IF(G11=0,"""",G11&"" ml"")
-$AL$11: 	=IF(G11=0,"""",""verw"")
-$D$12: 	=OR(AND(_Ped_TPN_Keuze>1,_Ped_TPN_Keuze<6),_Ped_TPN_SST1Keuze>=12)
+$V$11: 	=IF(F11>0,ROUND(F11,1)&"" ml/uur"","""")
+$W$11: 	=IF(G11=0,"""",G11&"" ml"")
+$X$11: 	=IF(G11=0,"""",""verw"")
 $G$12: 	=IF(B12,C12,0)
 $H$12: 	=IF(B12,A12,"""")
 $I$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,I$1,FALSE))*$G12
@@ -236,24 +144,10 @@ $Q$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,Q$1,FALSE))*$G12
 $R$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,R$1,FALSE))*$G12
 $S$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,S$1,FALSE))*$G12
 $T$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,T$1,FALSE))*$G12
-$V$12: 	=IF(_Pat_Gewicht>0,G12/(_Pat_Gewicht/10),0)
-$W$12: 	=IF(_Pat_Gewicht>0,I12/(_Pat_Gewicht/10),0)
-$X$12: 	=IF(_Pat_Gewicht>0,J12/(_Pat_Gewicht/10),0)
-$Y$12: 	=IF(_Pat_Gewicht>0,K12/(_Pat_Gewicht/10),0)
-$Z$12: 	=IF(_Pat_Gewicht>0,L12/(_Pat_Gewicht/10),0)
-$AA$12: 	=IF(_Pat_Gewicht>0,M12/(_Pat_Gewicht/10),0)
-$AB$12: 	=IF(_Pat_Gewicht>0,N12/(_Pat_Gewicht/10),0)
-$AC$12: 	=IF(_Pat_Gewicht>0,O12/(_Pat_Gewicht/10),0)
-$AD$12: 	=IF(_Pat_Gewicht>0,P12/(_Pat_Gewicht/10),0)
-$AE$12: 	=IF(_Pat_Gewicht>0,Q12/(_Pat_Gewicht/10),0)
-$AF$12: 	=IF(_Pat_Gewicht>0,R12/(_Pat_Gewicht/10),0)
-$AG$12: 	=IF(_Pat_Gewicht>0,S12/(_Pat_Gewicht/10),0)
-$AH$12: 	=IF(_Pat_Gewicht>0,T12/(_Pat_Gewicht/10),0)
-$AJ$12: 	=IF(F12>0,ROUND(F12,1)&"" ml/uur"","""")
-$AK$12: 	=IF(G12=0,"""",G12&"" ml"")
-$AL$12: 	=IF(G12=0,"""",""verw"")
-$F$13: 	=G13/24
-$G$13: 	=IF(B13,SUM(IF(C13<50,C13/10,C13-45)),0)
+$V$12: 	=IF(F12>0,ROUND(F12,1)&"" ml/uur"","""")
+$W$12: 	=IF(G12=0,"""",G12&"" ml"")
+$X$12: 	=IF(G12=0,"""",""verw"")
+$G$13: 	=IF(B13,C13,0)
 $H$13: 	=IF(B13,A13,"""")
 $I$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,I$1,FALSE))*$G13
 $J$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,J$1,FALSE))*$G13
@@ -267,30 +161,29 @@ $Q$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,Q$1,FALSE))*$G13
 $R$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,R$1,FALSE))*$G13
 $S$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,S$1,FALSE))*$G13
 $T$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,T$1,FALSE))*$G13
-$V$13: 	=IF(_Pat_Gewicht>0,G13/(_Pat_Gewicht/10),0)
-$W$13: 	=IF(_Pat_Gewicht>0,I13/(_Pat_Gewicht/10),0)
-$X$13: 	=IF(_Pat_Gewicht>0,J13/(_Pat_Gewicht/10),0)
-$Y$13: 	=IF(_Pat_Gewicht>0,K13/(_Pat_Gewicht/10),0)
-$Z$13: 	=IF(_Pat_Gewicht>0,L13/(_Pat_Gewicht/10),0)
-$AA$13: 	=IF(_Pat_Gewicht>0,M13/(_Pat_Gewicht/10),0)
-$AB$13: 	=IF(_Pat_Gewicht>0,N13/(_Pat_Gewicht/10),0)
-$AC$13: 	=IF(_Pat_Gewicht>0,O13/(_Pat_Gewicht/10),0)
-$AD$13: 	=IF(_Pat_Gewicht>0,P13/(_Pat_Gewicht/10),0)
-$AE$13: 	=IF(_Pat_Gewicht>0,Q13/(_Pat_Gewicht/10),0)
-$AF$13: 	=IF(_Pat_Gewicht>0,R13/(_Pat_Gewicht/10),0)
-$AG$13: 	=IF(_Pat_Gewicht>0,S13/(_Pat_Gewicht/10),0)
-$AH$13: 	=IF(_Pat_Gewicht>0,T13/(_Pat_Gewicht/10),0)
-$AJ$13: 	=IF(F13>0,ROUND(F13,1)&"" ml/uur"","""")
-$AK$13: 	=IF(G13=0,"""",SUM(G13)&"" ml"")
-$AL$13: 	=IF(G13=0,"""",""verw"")
-$F$14: 	=IF(C14<50,C14/10,IF(C14<146,C14-45,(C14-125)*5))
-$G$14: 	=F14*24
-$H$14: 	=IF(F14=0,"""",A14)
-$AJ$14: 	=IF(F14>0,ROUND(F14,1)&"" ml/uur"","""")
-$AK$14: 	=IF(G14=0,"""",G14&"" ml"")
-$AL$14: 	=IF(G14=0,"""",""verw"")
-$G$15: 	=G14-G16-G17-G18
-$H$15: 	=IF(G15=0,"""",A15)
+$V$13: 	=IF(F13>0,ROUND(F13,1)&"" ml/uur"","""")
+$W$13: 	=IF(G13=0,"""",G13&"" ml"")
+$X$13: 	=IF(G13=0,"""",""verw"")
+$F$14: 	=SUM(G14:G15)/24
+$G$14: 	=IF(G15>0,G15*E15,0)
+$H$14: 	=IF(G14=0,"""",A14)
+$I$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,I$1,FALSE))*$G14
+$J$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,J$1,FALSE))*$G14
+$K$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,K$1,FALSE))*$G14
+$L$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,L$1,FALSE))*$G14
+$M$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,M$1,FALSE))*$G14
+$N$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,N$1,FALSE))*$G14
+$O$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,O$1,FALSE))*$G14
+$P$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,P$1,FALSE))*$G14
+$Q$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,Q$1,FALSE))*$G14
+$R$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,R$1,FALSE))*$G14
+$S$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,S$1,FALSE))*$G14
+$T$14: 	=IF($H14="""",0,VLOOKUP($H14,Tbl_Glob_ParEnt,T$1,FALSE))*$G14
+$V$14: 	=IF(F14>0,ROUND(F14,1)&"" ml/uur"","""")
+$W$14: 	=IF(G14=0,"""",G14&"" ml"")
+$X$14: 	=IF(G14=0,"""",""verw"")
+$G$15: 	=IF(B15,SUM(IF(C15<50,C15/10,C15-45)),0)
+$H$15: 	=IF(B15,A15,"""")
 $I$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,I$1,FALSE))*$G15
 $J$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,J$1,FALSE))*$G15
 $K$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,K$1,FALSE))*$G15
@@ -303,54 +196,17 @@ $Q$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,Q$1,FALSE))*$G15
 $R$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,R$1,FALSE))*$G15
 $S$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,S$1,FALSE))*$G15
 $T$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,T$1,FALSE))*$G15
-$V$15: 	=IF(_Pat_Gewicht>0,G15/(_Pat_Gewicht/10),0)
-$W$15: 	=IF(_Pat_Gewicht>0,I15/(_Pat_Gewicht/10),0)
-$X$15: 	=IF(_Pat_Gewicht>0,J15/(_Pat_Gewicht/10),0)
-$Y$15: 	=IF(_Pat_Gewicht>0,K15/(_Pat_Gewicht/10),0)
-$Z$15: 	=IF(_Pat_Gewicht>0,L15/(_Pat_Gewicht/10),0)
-$AA$15: 	=IF(_Pat_Gewicht>0,M15/(_Pat_Gewicht/10),0)
-$AB$15: 	=IF(_Pat_Gewicht>0,N15/(_Pat_Gewicht/10),0)
-$AC$15: 	=IF(_Pat_Gewicht>0,O15/(_Pat_Gewicht/10),0)
-$AD$15: 	=IF(_Pat_Gewicht>0,P15/(_Pat_Gewicht/10),0)
-$AE$15: 	=IF(_Pat_Gewicht>0,Q15/(_Pat_Gewicht/10),0)
-$AF$15: 	=IF(_Pat_Gewicht>0,R15/(_Pat_Gewicht/10),0)
-$AG$15: 	=IF(_Pat_Gewicht>0,S15/(_Pat_Gewicht/10),0)
-$AH$15: 	=IF(_Pat_Gewicht>0,T15/(_Pat_Gewicht/10),0)
-$AJ$15: 	=IF(F15>0,ROUND(F15,1)&"" ml/uur"","""")
-$AK$15: 	=IF(G15=0,"""",G15&"" ml"")
-$AL$15: 	=IF(G15=0,"""",""verw"")
-$G$16: 	=IF(AND(B16,C$14>0),IF(C16<50,C16/10,C16-45),0)
-$H$16: 	=IF(B16,A16,"""")
-$I$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,I$1,FALSE))*$G16
-$J$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,J$1,FALSE))*$G16
-$K$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,K$1,FALSE))*$G16
-$L$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,L$1,FALSE))*$G16
-$M$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,M$1,FALSE))*$G16
-$N$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,N$1,FALSE))*$G16
-$O$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,O$1,FALSE))*$G16
-$P$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,P$1,FALSE))*$G16
-$Q$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,Q$1,FALSE))*$G16
-$R$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,R$1,FALSE))*$G16
-$S$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,S$1,FALSE))*$G16
-$T$16: 	=IF($H16="""",0,VLOOKUP($H16,Tbl_Glob_ParEnt,T$1,FALSE))*$G16
-$V$16: 	=IF(_Pat_Gewicht>0,G16/(_Pat_Gewicht/10),0)
-$W$16: 	=IF(_Pat_Gewicht>0,I16/(_Pat_Gewicht/10),0)
-$X$16: 	=IF(_Pat_Gewicht>0,J16/(_Pat_Gewicht/10),0)
-$Y$16: 	=IF(_Pat_Gewicht>0,K16/(_Pat_Gewicht/10),0)
-$Z$16: 	=IF(_Pat_Gewicht>0,L16/(_Pat_Gewicht/10),0)
-$AA$16: 	=IF(_Pat_Gewicht>0,M16/(_Pat_Gewicht/10),0)
-$AB$16: 	=IF(_Pat_Gewicht>0,N16/(_Pat_Gewicht/10),0)
-$AC$16: 	=IF(_Pat_Gewicht>0,O16/(_Pat_Gewicht/10),0)
-$AD$16: 	=IF(_Pat_Gewicht>0,P16/(_Pat_Gewicht/10),0)
-$AE$16: 	=IF(_Pat_Gewicht>0,Q16/(_Pat_Gewicht/10),0)
-$AF$16: 	=IF(_Pat_Gewicht>0,R16/(_Pat_Gewicht/10),0)
-$AG$16: 	=IF(_Pat_Gewicht>0,S16/(_Pat_Gewicht/10),0)
-$AH$16: 	=IF(_Pat_Gewicht>0,T16/(_Pat_Gewicht/10),0)
-$AJ$16: 	=IF(F16>0,ROUND(F16,1)&"" ml/uur"","""")
-$AK$16: 	=IF(G16=0,"""",G16&"" ml"")
-$AL$16: 	=IF(G16=0,"""",""verw"")
-$G$17: 	=IF(AND(B17,C$14>0),IF(C17<50,C17/10,C17-45),0)
-$H$17: 	=IF(B17,A17,"""")
+$V$15: 	=IF(F15>0,ROUND(F15,1)&"" ml/uur"","""")
+$W$15: 	=IF(G15=0,"""",SUM(G15)&"" ml"")
+$X$15: 	=IF(G15=0,"""",""verw"")
+$F$16: 	=IF(C16<50,C16/10,IF(C16<146,C16-45,(C16-125)*5))
+$G$16: 	=F16*24
+$H$16: 	=IF(F16=0,"""",A16)
+$V$16: 	=IF(F16>0,ROUND(F16,1)&"" ml/uur"","""")
+$W$16: 	=IF(G16=0,"""",G16&"" ml"")
+$X$16: 	=IF(G16=0,"""",""verw"")
+$G$17: 	=G16-G18-G19-G20
+$H$17: 	=IF(G17=0,"""",A17)
 $I$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,I$1,FALSE))*$G17
 $J$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,J$1,FALSE))*$G17
 $K$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,K$1,FALSE))*$G17
@@ -363,23 +219,11 @@ $Q$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,Q$1,FALSE))*$G17
 $R$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,R$1,FALSE))*$G17
 $S$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,S$1,FALSE))*$G17
 $T$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,T$1,FALSE))*$G17
-$V$17: 	=IF(_Pat_Gewicht>0,G17/(_Pat_Gewicht/10),0)
-$W$17: 	=IF(_Pat_Gewicht>0,I17/(_Pat_Gewicht/10),0)
-$X$17: 	=IF(_Pat_Gewicht>0,J17/(_Pat_Gewicht/10),0)
-$Y$17: 	=IF(_Pat_Gewicht>0,K17/(_Pat_Gewicht/10),0)
-$Z$17: 	=IF(_Pat_Gewicht>0,L17/(_Pat_Gewicht/10),0)
-$AA$17: 	=IF(_Pat_Gewicht>0,M17/(_Pat_Gewicht/10),0)
-$AB$17: 	=IF(_Pat_Gewicht>0,N17/(_Pat_Gewicht/10),0)
-$AC$17: 	=IF(_Pat_Gewicht>0,O17/(_Pat_Gewicht/10),0)
-$AD$17: 	=IF(_Pat_Gewicht>0,P17/(_Pat_Gewicht/10),0)
-$AE$17: 	=IF(_Pat_Gewicht>0,Q17/(_Pat_Gewicht/10),0)
-$AF$17: 	=IF(_Pat_Gewicht>0,R17/(_Pat_Gewicht/10),0)
-$AG$17: 	=IF(_Pat_Gewicht>0,S17/(_Pat_Gewicht/10),0)
-$AH$17: 	=IF(_Pat_Gewicht>0,T17/(_Pat_Gewicht/10),0)
-$AJ$17: 	=IF(F17>0,ROUND(F17,1)&"" ml/uur"","""")
-$AK$17: 	=IF(G17=0,"""",G17&"" ml"")
-$AL$17: 	=IF(G17=0,"""",""verw"")
-$G$18: 	=IF(C$15>0,IF(C18<50,C18/10,C18-45),0)
+$V$17: 	=IF(F17>0,ROUND(F17,1)&"" ml/uur"","""")
+$W$17: 	=IF(G17=0,"""",G17&"" ml"")
+$X$17: 	=IF(G17=0,"""",""verw"")
+$G$18: 	=IF(AND(B18,C$16>0),IF(C18<50,C18/10,C18-45),0)
+$H$18: 	=IF(B18,A18,"""")
 $I$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,I$1,FALSE))*$G18
 $J$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,J$1,FALSE))*$G18
 $K$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,K$1,FALSE))*$G18
@@ -392,24 +236,11 @@ $Q$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,Q$1,FALSE))*$G18
 $R$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,R$1,FALSE))*$G18
 $S$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,S$1,FALSE))*$G18
 $T$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,T$1,FALSE))*$G18
-$V$18: 	=IF(_Pat_Gewicht>0,G18/(_Pat_Gewicht/10),0)
-$W$18: 	=IF(_Pat_Gewicht>0,I18/(_Pat_Gewicht/10),0)
-$X$18: 	=IF(_Pat_Gewicht>0,J18/(_Pat_Gewicht/10),0)
-$Y$18: 	=IF(_Pat_Gewicht>0,K18/(_Pat_Gewicht/10),0)
-$Z$18: 	=IF(_Pat_Gewicht>0,L18/(_Pat_Gewicht/10),0)
-$AA$18: 	=IF(_Pat_Gewicht>0,M18/(_Pat_Gewicht/10),0)
-$AB$18: 	=IF(_Pat_Gewicht>0,N18/(_Pat_Gewicht/10),0)
-$AC$18: 	=IF(_Pat_Gewicht>0,O18/(_Pat_Gewicht/10),0)
-$AD$18: 	=IF(_Pat_Gewicht>0,P18/(_Pat_Gewicht/10),0)
-$AE$18: 	=IF(_Pat_Gewicht>0,Q18/(_Pat_Gewicht/10),0)
-$AF$18: 	=IF(_Pat_Gewicht>0,R18/(_Pat_Gewicht/10),0)
-$AG$18: 	=IF(_Pat_Gewicht>0,S18/(_Pat_Gewicht/10),0)
-$AH$18: 	=IF(_Pat_Gewicht>0,T18/(_Pat_Gewicht/10),0)
-$AJ$18: 	=IF(F18>0,ROUND(F18,1)&"" ml/uur"","""")
-$AK$18: 	=IF(G18=0,"""",G18&"" ml"")
-$AL$18: 	=IF(G18=0,"""",""verw"")
-$G$19: 	=IF(D11,(G11*E11+G12*E12)-(G11+G12),0)
-$H$19: 	=IF(G19=0,"""",A19)
+$V$18: 	=IF(F18>0,ROUND(F18,1)&"" ml/uur"","""")
+$W$18: 	=IF(G18=0,"""",G18&"" ml"")
+$X$18: 	=IF(G18=0,"""",""verw"")
+$G$19: 	=IF(AND(B19,C$16>0),IF(C19<50,C19/10,C19-45),0)
+$H$19: 	=IF(B19,A19,"""")
 $I$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,I$1,FALSE))*$G19
 $J$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,J$1,FALSE))*$G19
 $K$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,K$1,FALSE))*$G19
@@ -422,24 +253,10 @@ $Q$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,Q$1,FALSE))*$G19
 $R$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,R$1,FALSE))*$G19
 $S$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,S$1,FALSE))*$G19
 $T$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,T$1,FALSE))*$G19
-$V$19: 	=IF(_Pat_Gewicht>0,G19/(_Pat_Gewicht/10),0)
-$W$19: 	=IF(_Pat_Gewicht>0,I19/(_Pat_Gewicht/10),0)
-$X$19: 	=IF(_Pat_Gewicht>0,J19/(_Pat_Gewicht/10),0)
-$Y$19: 	=IF(_Pat_Gewicht>0,K19/(_Pat_Gewicht/10),0)
-$Z$19: 	=IF(_Pat_Gewicht>0,L19/(_Pat_Gewicht/10),0)
-$AA$19: 	=IF(_Pat_Gewicht>0,M19/(_Pat_Gewicht/10),0)
-$AB$19: 	=IF(_Pat_Gewicht>0,N19/(_Pat_Gewicht/10),0)
-$AC$19: 	=IF(_Pat_Gewicht>0,O19/(_Pat_Gewicht/10),0)
-$AD$19: 	=IF(_Pat_Gewicht>0,P19/(_Pat_Gewicht/10),0)
-$AE$19: 	=IF(_Pat_Gewicht>0,Q19/(_Pat_Gewicht/10),0)
-$AF$19: 	=IF(_Pat_Gewicht>0,R19/(_Pat_Gewicht/10),0)
-$AG$19: 	=IF(_Pat_Gewicht>0,S19/(_Pat_Gewicht/10),0)
-$AH$19: 	=IF(_Pat_Gewicht>0,T19/(_Pat_Gewicht/10),0)
-$AJ$19: 	=IF(F19>0,ROUND(F19,1)&"" ml/uur"","""")
-$AK$19: 	=IF(G19=0,"""",G19&"" ml gluc 10%"")
-$AL$19: 	=IF(G19=0,"""",""verw"")
-$G$20: 	=IF(G13>0,G13*E13,0)
-$H$20: 	=IF(G20=0,"""",A20)
+$V$19: 	=IF(F19>0,ROUND(F19,1)&"" ml/uur"","""")
+$W$19: 	=IF(G19=0,"""",G19&"" ml"")
+$X$19: 	=IF(G19=0,"""",""verw"")
+$G$20: 	=IF(C$17>0,IF(C20<50,C20/10,C20-45),0)
 $I$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,I$1,FALSE))*$G20
 $J$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,J$1,FALSE))*$G20
 $K$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,K$1,FALSE))*$G20
@@ -452,28 +269,15 @@ $Q$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,Q$1,FALSE))*$G20
 $R$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,R$1,FALSE))*$G20
 $S$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,S$1,FALSE))*$G20
 $T$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,T$1,FALSE))*$G20
-$V$20: 	=IF(_Pat_Gewicht>0,G20/(_Pat_Gewicht/10),0)
-$W$20: 	=IF(_Pat_Gewicht>0,I20/(_Pat_Gewicht/10),0)
-$X$20: 	=IF(_Pat_Gewicht>0,J20/(_Pat_Gewicht/10),0)
-$Y$20: 	=IF(_Pat_Gewicht>0,K20/(_Pat_Gewicht/10),0)
-$Z$20: 	=IF(_Pat_Gewicht>0,L20/(_Pat_Gewicht/10),0)
-$AA$20: 	=IF(_Pat_Gewicht>0,M20/(_Pat_Gewicht/10),0)
-$AB$20: 	=IF(_Pat_Gewicht>0,N20/(_Pat_Gewicht/10),0)
-$AC$20: 	=IF(_Pat_Gewicht>0,O20/(_Pat_Gewicht/10),0)
-$AD$20: 	=IF(_Pat_Gewicht>0,P20/(_Pat_Gewicht/10),0)
-$AE$20: 	=IF(_Pat_Gewicht>0,Q20/(_Pat_Gewicht/10),0)
-$AF$20: 	=IF(_Pat_Gewicht>0,R20/(_Pat_Gewicht/10),0)
-$AG$20: 	=IF(_Pat_Gewicht>0,S20/(_Pat_Gewicht/10),0)
-$AH$20: 	=IF(_Pat_Gewicht>0,T20/(_Pat_Gewicht/10),0)
-$AJ$20: 	=IF(F20>0,ROUND(F20,1)&"" ml/uur"","""")
-$AK$20: 	=IF(G20=0,"""",G20&"" ml gluc 5%"")
-$AL$20: 	=IF(G20=0,"""",""verw"")
+$V$20: 	=IF(F20>0,ROUND(F20,1)&"" ml/uur"","""")
+$W$20: 	=IF(G20=0,"""",G20&"" ml"")
+$X$20: 	=IF(G20=0,"""",""verw"")
 $F$21: 	=IF(C21<50,C21/10,IF(C21<146,C21-45,(C21-125)*5))
 $G$21: 	=F21*24+G23*E23+G24*E24
 $H$21: 	=IF(F21=0,"""",A21)
-$AJ$21: 	=IF(F21>0,ROUND(F21,1)&"" ml/uur"","""")
-$AK$21: 	=IF(G21=0,"""",G21&"" ml"")
-$AL$21: 	=IF(G21=0,"""",""verw"")
+$V$21: 	=IF(F21>0,ROUND(F21,1)&"" ml/uur"","""")
+$W$21: 	=IF(G21=0,"""",G21&"" ml"")
+$X$21: 	=IF(G21=0,"""",""verw"")
 $G$22: 	=IF(G21-G23-G24<0,0,G21-G23-G24)
 $H$22: 	=IF(B22=1,"""",INDEX(Tbl_Ped_SST,B22,1))
 $I$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,I$1,FALSE))*$G22
@@ -488,22 +292,9 @@ $Q$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,Q$1,FALSE))*$G22
 $R$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,R$1,FALSE))*$G22
 $S$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,S$1,FALSE))*$G22
 $T$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,T$1,FALSE))*$G22
-$V$22: 	=IF(_Pat_Gewicht>0,G22/(_Pat_Gewicht/10),0)
-$W$22: 	=IF(_Pat_Gewicht>0,I22/(_Pat_Gewicht/10),0)
-$X$22: 	=IF(_Pat_Gewicht>0,J22/(_Pat_Gewicht/10),0)
-$Y$22: 	=IF(_Pat_Gewicht>0,K22/(_Pat_Gewicht/10),0)
-$Z$22: 	=IF(_Pat_Gewicht>0,L22/(_Pat_Gewicht/10),0)
-$AA$22: 	=IF(_Pat_Gewicht>0,M22/(_Pat_Gewicht/10),0)
-$AB$22: 	=IF(_Pat_Gewicht>0,N22/(_Pat_Gewicht/10),0)
-$AC$22: 	=IF(_Pat_Gewicht>0,O22/(_Pat_Gewicht/10),0)
-$AD$22: 	=IF(_Pat_Gewicht>0,P22/(_Pat_Gewicht/10),0)
-$AE$22: 	=IF(_Pat_Gewicht>0,Q22/(_Pat_Gewicht/10),0)
-$AF$22: 	=IF(_Pat_Gewicht>0,R22/(_Pat_Gewicht/10),0)
-$AG$22: 	=IF(_Pat_Gewicht>0,S22/(_Pat_Gewicht/10),0)
-$AH$22: 	=IF(_Pat_Gewicht>0,T22/(_Pat_Gewicht/10),0)
-$AJ$22: 	=IF(F22>0,ROUND(F22,1)&"" ml/uur"","""")
-$AK$22: 	=IF(G22=0,"""",G22&"" ml"")
-$AL$22: 	=IF(G22=0,"""",""verw"")
+$V$22: 	=IF(F22>0,ROUND(F22,1)&"" ml/uur"","""")
+$W$22: 	=IF(G22=0,"""",G22&"" ml"")
+$X$22: 	=IF(G22=0,"""",""verw"")
 $G$23: 	=IF(B23,IF(C23<50,C23/10,C23-45),0)
 $H$23: 	=IF(B23,A23,"""")
 $I$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,I$1,FALSE))*$G23
@@ -518,22 +309,9 @@ $Q$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,Q$1,FALSE))*$G23
 $R$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,R$1,FALSE))*$G23
 $S$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,S$1,FALSE))*$G23
 $T$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,T$1,FALSE))*$G23
-$V$23: 	=IF(_Pat_Gewicht>0,G23/(_Pat_Gewicht/10),0)
-$W$23: 	=IF(_Pat_Gewicht>0,I23/(_Pat_Gewicht/10),0)
-$X$23: 	=IF(_Pat_Gewicht>0,J23/(_Pat_Gewicht/10),0)
-$Y$23: 	=IF(_Pat_Gewicht>0,K23/(_Pat_Gewicht/10),0)
-$Z$23: 	=IF(_Pat_Gewicht>0,L23/(_Pat_Gewicht/10),0)
-$AA$23: 	=IF(_Pat_Gewicht>0,M23/(_Pat_Gewicht/10),0)
-$AB$23: 	=IF(_Pat_Gewicht>0,N23/(_Pat_Gewicht/10),0)
-$AC$23: 	=IF(_Pat_Gewicht>0,O23/(_Pat_Gewicht/10),0)
-$AD$23: 	=IF(_Pat_Gewicht>0,P23/(_Pat_Gewicht/10),0)
-$AE$23: 	=IF(_Pat_Gewicht>0,Q23/(_Pat_Gewicht/10),0)
-$AF$23: 	=IF(_Pat_Gewicht>0,R23/(_Pat_Gewicht/10),0)
-$AG$23: 	=IF(_Pat_Gewicht>0,S23/(_Pat_Gewicht/10),0)
-$AH$23: 	=IF(_Pat_Gewicht>0,T23/(_Pat_Gewicht/10),0)
-$AJ$23: 	=IF(F23>0,ROUND(F23,1)&"" ml/uur"","""")
-$AK$23: 	=IF(G23=0,"""",G23&"" ml"")
-$AL$23: 	=IF(G23=0,"""",""verw"")
+$V$23: 	=IF(F23>0,ROUND(F23,1)&"" ml/uur"","""")
+$W$23: 	=IF(G23=0,"""",G23&"" ml"")
+$X$23: 	=IF(G23=0,"""",""verw"")
 $G$24: 	=IF(B24,IF(C24<50,C24/10,C24-45),0)
 $H$24: 	=IF(B24,A24,"""")
 $I$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,I$1,FALSE))*$G24
@@ -548,47 +326,21 @@ $Q$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,Q$1,FALSE))*$G24
 $R$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,R$1,FALSE))*$G24
 $S$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,S$1,FALSE))*$G24
 $T$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,T$1,FALSE))*$G24
-$V$24: 	=IF(_Pat_Gewicht>0,G24/(_Pat_Gewicht/10),0)
-$W$24: 	=IF(_Pat_Gewicht>0,I24/(_Pat_Gewicht/10),0)
-$X$24: 	=IF(_Pat_Gewicht>0,J24/(_Pat_Gewicht/10),0)
-$Y$24: 	=IF(_Pat_Gewicht>0,K24/(_Pat_Gewicht/10),0)
-$Z$24: 	=IF(_Pat_Gewicht>0,L24/(_Pat_Gewicht/10),0)
-$AA$24: 	=IF(_Pat_Gewicht>0,M24/(_Pat_Gewicht/10),0)
-$AB$24: 	=IF(_Pat_Gewicht>0,N24/(_Pat_Gewicht/10),0)
-$AC$24: 	=IF(_Pat_Gewicht>0,O24/(_Pat_Gewicht/10),0)
-$AD$24: 	=IF(_Pat_Gewicht>0,P24/(_Pat_Gewicht/10),0)
-$AE$24: 	=IF(_Pat_Gewicht>0,Q24/(_Pat_Gewicht/10),0)
-$AF$24: 	=IF(_Pat_Gewicht>0,R24/(_Pat_Gewicht/10),0)
-$AG$24: 	=IF(_Pat_Gewicht>0,S24/(_Pat_Gewicht/10),0)
-$AH$24: 	=IF(_Pat_Gewicht>0,T24/(_Pat_Gewicht/10),0)
-$AJ$24: 	=IF(F24>0,ROUND(F24,1)&"" ml/uur"","""")
-$AK$24: 	=IF(G24=0,"""",G24&"" ml"")
-$AL$24: 	=IF(G24=0,"""",""verw"")
-$G$26: 	=IF(_Pat_Gewicht/10>50,SUM(G3+G5+G14+G20+G19+G21),IF(_Ped_TPN_Keuze=1,SUM(G3+G14+G19+G20+G21),SUM(G3+G11+G12+G14+G19+G20+G21)))
-$I$26: 	=SUM(J3:J24)
-$J$26: 	=SUM(K3:K24)
-$K$26: 	=SUM(L3:L24)
-$L$26: 	=SUM(M3:M24)
-$M$26: 	=SUM(N3:N24)
-$N$26: 	=SUM(O3:O24)
-$O$26: 	=SUM(P3:P24)
-$P$26: 	=SUM(Q3:Q24)
-$Q$26: 	=SUM(R3:R24)
-$R$26: 	=SUM(S3:S24)
-$S$26: 	=SUM(T3:T24)
-$T$26: 	=SUM(U3:U24)
+$V$24: 	=IF(F24>0,ROUND(F24,1)&"" ml/uur"","""")
+$W$24: 	=IF(G24=0,"""",G24&"" ml"")
+$X$24: 	=IF(G24=0,"""",""verw"")
+$G$26: 	=SUM(G5:G24)-G16
+$I$26: 	=SUM(I3:I24)
+$J$26: 	=SUM(J3:J24)
+$K$26: 	=SUM(K3:K24)
+$L$26: 	=SUM(L3:L24)
+$M$26: 	=SUM(M3:M24)
+$N$26: 	=SUM(N3:N24)
+$O$26: 	=SUM(O3:O24)
+$P$26: 	=SUM(P3:P24)
+$Q$26: 	=SUM(Q3:Q24)
+$R$26: 	=SUM(R3:R24)
+$S$26: 	=SUM(S3:S24)
+$T$26: 	=SUM(T3:T24)
 $U$26: 	=G26
-$V$26: 	=SUM(W3:W24)
-$W$26: 	=SUM(X3:X24)
-$X$26: 	=SUM(Y3:Y24)
-$Y$26: 	=SUM(Z3:Z24)
-$Z$26: 	=SUM(AA3:AA24)
-$AA$26: 	=SUM(AB3:AB24)
-$AB$26: 	=SUM(AC3:AC24)
-$AC$26: 	=SUM(AD3:AD24)
-$AD$26: 	=SUM(AE3:AE24)
-$AE$26: 	=SUM(AF3:AF24)
-$AF$26: 	=SUM(AG3:AG24)
-$AG$26: 	=SUM(AH3:AH24)
-$AH$26: 	=SUM(AK3:AK24)
 "
