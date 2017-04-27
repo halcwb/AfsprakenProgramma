@@ -40,6 +40,7 @@ Public Sub Patient_EnterWeight()
     
     With frmInvoer
         .SetValue vbNullString, "Gewicht:", dblWeight, "kg", "Gewicht"
+        
         .Show
         
         If Not .txtWaarde.Value = vbNullString Then

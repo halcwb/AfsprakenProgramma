@@ -77,9 +77,19 @@ Private Sub txtPRN_Change()
 
 End Sub
 
+Private Sub CenterForm()
+
+    StartUpPosition = 0
+    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
+    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+
+End Sub
+
 Private Sub UserForm_Activate()
 
     Dim blnPrn As Boolean
+    
+    CenterForm
     
     blnPrn = ModRange.GetRangeValue(RangeName(constPRNCheck), False)
     chkPRN.Value = blnPrn

@@ -73,21 +73,7 @@ Private Sub cmdOK_Click()
             intN = intN + 1
         Next varCell
     End If
-    
-'    With Selection
-'        intCells = .Cells.Count
-'        If intCells = 1 Then
-'            strRes = IIf(chkIsData.Value, "_" & strGroup & "_" & strName, strGroup & "_" & strName)
-'            ModRange.SetNameToRange strRes, .Cells(1, 1)
-'        Else
-'            intMax = intStart + intCells - 1
-'            For intN = 1 To intCells
-'                strRes = ModRange.CreateName(strName, strGroup, intN + intStart - 1, intMax, chkIsData.Value)
-'                ModRange.SetNameToRange strRes, .Cells(intN, 1)
-'            Next intN
-'        End If
-'    End With
-    
+        
     txtNaam.Text = vbNullString
     txtStart.Text = vbNullString
     RefNaam.Text = vbNullString
@@ -96,7 +82,17 @@ Private Sub cmdOK_Click()
     
 End Sub
 
+Private Sub CenterForm()
+
+    StartUpPosition = 0
+    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
+    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+
+End Sub
+
 Private Sub UserForm_Activate()
+    
+    CenterForm
     
     txtNaam.Text = vbNullString
     txtStart.Text = vbNullString

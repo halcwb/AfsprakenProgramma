@@ -118,12 +118,10 @@ Public Sub ButtonOnAction(ByRef ctrlMenuItem As IRibbonControl)
         
         Case "btnNeoPrintMedDisc"                           ' -> Medicatie Discontinu
             ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
-        
-        Case "btnNTPN"
-            ModNeoInfB.NeoInfB_TPNAdvice
-        
+              
         Case "btnNeoPrintApoth"                             ' -> Apotheek
-            ModSheet.GoToSheet shtNeoPrtApoth, "A1"
+            ' ModSheet.GoToSheet shtNeoPrtApoth, "A1"
+            ModNeoPrint.PrintApotheekWerkBrief
         
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
             ' ModSheet.GoToSheet shtNeoPrtWerkbr, "A1"

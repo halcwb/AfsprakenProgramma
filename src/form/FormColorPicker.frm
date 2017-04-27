@@ -335,9 +335,20 @@ Private Sub optNeo_Click()
 
 End Sub
 
+Private Sub CenterForm()
+
+    StartUpPosition = 0
+    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
+    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+
+End Sub
+
+
 Private Sub UserForm_Activate()
 
     Dim objRange As Range
+    
+    CenterForm
 
     cboItem.AddItem shtGlobSettings.Range(constItem & Items.Backgrounds).Value2
     cboItem.AddItem shtGlobSettings.Range(constItem & Items.Fields).Value2

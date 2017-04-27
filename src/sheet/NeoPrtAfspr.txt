@@ -10,85 +10,85 @@ $I$9: 	=Txt_Pat_Gewicht
 $D$10: 	=Txt_Pat_Bed
 $I$10: 	=Txt_Pat_Leeftijd
 $B$13: 	=NeoGuiInfB!D15
-$F$13: 	=NeoBerInfB!AE58
-$J$13: 	=""= ""&NeoBerInfB!AE54&"" ml""
+$F$13: 	=NeoBerInfB!AK58
+$J$13: 	=""= ""&NeoBerInfB!AK54&"" ml""
 $B$16: 	=NeoGuiInfB!C17
 $E$16: 	=NeoBerInfB!P9
 $I$16: 	=IF(OR(J16<>0,J17<>0,J18<>0,J19<>0,J20<>0),""met"","""")
-$J$16: 	=NeoBerInfB!AU11
+$J$16: 	=NeoBerInfB!BA11
 $B$17: 	=NeoGuiInfB!G17
 $E$17: 	=NeoGuiInfB!$H$17
 $F$17: 	=NeoGuiInfB!I17
 $G$17: 	=NeoGuiInfB!J17
-$J$17: 	=NeoBerInfB!AU12
+$J$17: 	=NeoBerInfB!BA12
 $C$18: 	=IF(E18="""","""",""en"")
 $E$18: 	=IF(NeoGuiInfB!J18<>""0 ml"",NeoGuiInfB!$H$18,"""")
 $F$18: 	=IF(NeoGuiInfB!J18<>""0 ml"",NeoGuiInfB!I18,"""")
 $G$18: 	=IF(NeoGuiInfB!J18<>""0 ml"",NeoGuiInfB!J18,"""")
-$J$18: 	=NeoBerInfB!AU13
-$J$19: 	=NeoBerInfB!AU14
-$J$20: 	=NeoBerInfB!AU15
+$J$18: 	=NeoBerInfB!BA13
+$J$19: 	=NeoBerInfB!BA14
+$J$20: 	=NeoBerInfB!BA15
 $I$23: 	=IF(OR(J23<>0,J24<>0,J25<>0,J26<>0),""met"","""")
-$J$23: 	=NeoBerInfB!AU16
-$J$24: 	=NeoBerInfB!AU17
-$J$25: 	=NeoBerInfB!AU18
-$J$26: 	=NeoBerInfB!AU19
+$J$23: 	=NeoBerInfB!BA16
+$J$24: 	=NeoBerInfB!BA17
+$J$25: 	=NeoBerInfB!BA18
+$J$26: 	=NeoBerInfB!BA19
 $B$28: 	=IF(NeoGuiInfB!L13=1,""De voeding is extra"","""")
-$G$30: 	=IF(NeoBerInfB!B21,NeoBerInfB!C21,NeoBerInfB!AQ53)
-$B$32: 	=NeoBerInfB!AU22
+$G$30: 	=IF(NeoBerInfB!B21,NeoBerInfB!C21,NeoBerInfB!AW53)
+$B$32: 	=NeoBerInfB!BA22
 $R$32: 	=IF(B32="""","""",IF(NeoBerInfB!I22,""ja"",""nee""))
-$B$33: 	=NeoBerInfB!AU23
+$B$33: 	=NeoBerInfB!BA23
 $R$33: 	=IF(B33="""","""",IF(NeoBerInfB!I23,""ja"",""nee""))
-$B$34: 	=NeoBerInfB!AU24
+$B$34: 	=NeoBerInfB!BA24
 $R$34: 	=IF(B34="""","""",IF(NeoBerInfB!I24,""ja"",""nee""))
-$B$35: 	=NeoBerInfB!AU25
+$B$35: 	=NeoBerInfB!BA25
 $R$35: 	=IF(B35="""","""",IF(NeoBerInfB!I25,""ja"",""nee""))
-$B$36: 	=NeoBerInfB!AU26
+$B$36: 	=NeoBerInfB!BA26
 $R$36: 	=IF(B36="""","""",IF(NeoBerInfB!I26,""ja"",""nee""))
-$B$37: 	=NeoBerInfB!AU27
+$B$37: 	=NeoBerInfB!BA27
 $R$37: 	=IF(B37="""","""",IF(NeoBerInfB!I27,""ja"",""nee""))
-$B$38: 	=NeoBerInfB!AU28
+$B$38: 	=NeoBerInfB!BA28
 $R$38: 	=IF(B38="""","""",IF(NeoBerInfB!I28,""ja"",""nee""))
-$B$39: 	=NeoBerInfB!AU29
+$B$39: 	=NeoBerInfB!BA29
 $R$39: 	=IF(B39="""","""",IF(NeoBerInfB!I29,""ja"",""nee""))
-$B$40: 	=NeoBerInfB!AU30
+$B$40: 	=NeoBerInfB!BA30
 $R$40: 	=IF(B40="""","""",IF(NeoBerInfB!I30,""ja"",""nee""))
-$B$41: 	=NeoBerInfB!AU31
+$B$41: 	=NeoBerInfB!BA31
 $R$41: 	=IF(B41="""","""",IF(NeoBerInfB!I31,""ja"",""nee""))
-$B$42: 	=NeoBerInfB!AU32
+$B$42: 	=NeoBerInfB!BA32
 $R$42: 	=IF(B42="""","""",IF(NeoBerInfB!I32,""ja"",""nee""))
-$B$43: 	=NeoBerInfB!AU33
+$B$43: 	=NeoBerInfB!BA33
 $R$43: 	=IF(B43="""","""",IF(NeoBerInfB!I33,""ja"",""nee""))
-$B$44: 	=NeoBerInfB!AU34
+$B$44: 	=NeoBerInfB!BA34
 $R$44: 	=IF(B44="""","""",IF(NeoBerInfB!I34,""ja"",""nee""))
-$B$45: 	=NeoBerInfB!AU35
+$B$45: 	=NeoBerInfB!BA35
 $R$45: 	=IF(B45="""","""",IF(NeoBerInfB!I35,""ja"",""nee""))
-$B$46: 	=NeoBerInfB!AU36
+$B$46: 	=NeoBerInfB!BA36
 $R$46: 	=IF(B46="""","""",IF(NeoBerInfB!I36,""ja"",""nee""))
-$B$47: 	=NeoBerInfB!AU37
+$B$47: 	=NeoBerInfB!BA37
 $R$47: 	=IF(B47="""","""",IF(NeoBerInfB!I37,""ja"",""nee""))
 $B$51: 	=NeoGuiInfB!D51
-$I$51: 	=IF(AND(NeoBerInfB!AE42>0,Var_Neo_InfB_TPN_DagKeuze=2),NeoBerInfB!AE42&"" ml"","""")
-$L$51: 	=IF(AND(NeoBerInfB!AE42>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AE42&"" ml"","""")
+$I$51: 	=IF(AND(NeoBerInfB!AK42>0,Var_Neo_InfB_TPN_DagKeuze=2),NeoBerInfB!AK42&"" ml"","""")
+$L$51: 	=IF(AND(NeoBerInfB!AK42>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AK42&"" ml"","""")
 $B$52: 	=NeoGuiInfB!D52
-$I$52: 	=IF(AND(NeoBerInfB!AE43>0,Var_Neo_InfB_TPN_DagKeuze=2),NeoBerInfB!AE43&"" ml"","""")
-$L$52: 	=IF(AND(NeoBerInfB!AE43>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AE43&"" ml"","""")
+$I$52: 	=IF(AND(NeoBerInfB!AK43>0,Var_Neo_InfB_TPN_DagKeuze=2),NeoBerInfB!AK43&"" ml"","""")
+$L$52: 	=IF(AND(NeoBerInfB!AK43>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AK43&"" ml"","""")
 $B$53: 	=NeoGuiInfB!D53
-$L$53: 	=IF(AND(NeoBerInfB!AE44>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AE44&"" ml"","""")
+$L$53: 	=IF(AND(NeoBerInfB!AK44>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AK44&"" ml"","""")
 $B$54: 	=NeoGuiInfB!D54
-$L$54: 	=IF(AND(NeoBerInfB!AE45>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AE45&"" ml"","""")
+$L$54: 	=IF(AND(NeoBerInfB!AK45>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AK45&"" ml"","""")
 $B$55: 	=NeoGuiInfB!D55
-$L$55: 	=IF(AND(NeoBerInfB!AE46>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AE46&"" ml"","""")
+$L$55: 	=IF(AND(NeoBerInfB!AK46>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AK46&"" ml"","""")
 $B$56: 	=NeoGuiInfB!D56
-$L$56: 	=IF(AND(NeoBerInfB!AE47>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AE47&"" ml"","""")
+$L$56: 	=IF(AND(NeoBerInfB!AK47>0,Var_Neo_InfB_TPN_DagKeuze=3),NeoBerInfB!AK47&"" ml"","""")
 $B$57: 	=NeoGuiInfB!D57
-$F$57: 	=IF(NeoBerInfB!AE48>0,NeoBerInfB!AE48&"" ml"","""")
+$F$57: 	=IF(NeoBerInfB!AK48>0,NeoBerInfB!AK48&"" ml"","""")
 $B$58: 	=NeoGuiInfB!D58
-$I$58: 	=IF(NeoBerInfB!AE49>0,NeoBerInfB!AE49&"" ml"","""")
+$I$58: 	=IF(NeoBerInfB!AK49>0,NeoBerInfB!AK49&"" ml"","""")
 $B$59: 	=NeoBerInfB!P50
-$F$59: 	=IF(Var_Neo_InfB_TPN_DagKeuze=1,NeoBerInfB!$AE50&"" ml"","""")
-$I$59: 	=IF(Var_Neo_InfB_TPN_DagKeuze=2,NeoBerInfB!$AE50&"" ml"","""")
-$L$59: 	=IF(Var_Neo_InfB_TPN_DagKeuze=3,NeoBerInfB!$AE50&"" ml"","""")
+$F$59: 	=IF(Var_Neo_InfB_TPN_DagKeuze=1,NeoBerInfB!$AK50&"" ml"","""")
+$I$59: 	=IF(Var_Neo_InfB_TPN_DagKeuze=2,NeoBerInfB!$AK50&"" ml"","""")
+$L$59: 	=IF(Var_Neo_InfB_TPN_DagKeuze=3,NeoBerInfB!$AK50&"" ml"","""")
 $B$60: 	=NeoGuiInfB!I15
 $E$60: 	=IF(NeoGuiInfB!I12=1,""ja"",""nee"")
 $B$62: 	=NeoGuiInfB!D2

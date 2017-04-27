@@ -1,6 +1,8 @@
 Attribute VB_Name = "ModFile"
 Option Explicit
 
+Private blnShowOnce As Boolean
+
 ' Write strText to a file
 ' Creates the file if it doesn't exist
 ' Appends the text to the file if it does exist
@@ -17,10 +19,14 @@ Public Sub AppendToFile(ByVal strFile As String, ByVal strText As String)
     Exit Sub
     
 AppenToFileError:
-
-    strError = "AppenToFileError" & vbNewLine
-    strError = strError & "Kan '" & strText & "' niet wegschrijven naar '" & strFile & "'"
-    ModMessage.ShowMsgBoxError strError
+    
+    If Not blnShowOnce Then
+        strError = "AppenToFileError" & vbNewLine
+        strError = strError & "Kan '" & strText & "' niet wegschrijven naar '" & strFile & "'"
+        ModMessage.ShowMsgBoxError strError
+        
+        blnShowOnce = True
+    End If
 
 End Sub
 

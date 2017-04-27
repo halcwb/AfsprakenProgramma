@@ -1,6 +1,6 @@
-"$H$5: 	=IF(C5>1,IF(D5>0,D5,INDEX(Tbl_Ped_MedContIV,C5,H$2)),"""")
+"$H$5: 	=IF(C5>1,IF(D5>0,D5,IF(StartsWith(AF5,""Epi ""),_Pat_Gewicht/10,INDEX(Tbl_Ped_MedContIV,C5,H$2))),"""")
 $I$5: 	=IF(C5>1,IF(E5>0,E5,INDEX(Tbl_Ped_MedContIV,C5,I$2)),"""")
-$J$5: 	=IF(AND(C5>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C5,1),""EPI""),1,FixPrecision(INDEX(Tbl_Ped_MedContIV,C5,J$2)*(G5/10)*(H5/I5)/(_Pat_Gewicht/10),3)),"""")
+$J$5: 	=IF(AND(C5>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C5,1),""EPI ""),G5/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C5,J$2)*(G5/10)*(H5/I5)/(_Pat_Gewicht/10),3)),"""")
 $M$5: 	=IF(PedGuiMedIV!E9<>0,24*G5/10,0)
 $N$5: 	=IF($F5=3,M5*0.05,0)
 $O$5: 	=IF($F5=4,M5*0.1,0)

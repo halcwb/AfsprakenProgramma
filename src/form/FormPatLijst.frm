@@ -49,6 +49,20 @@ Public Sub SetSelectedBed()
 
 End Sub
 
+Private Sub CenterForm()
+
+    StartUpPosition = 0
+    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
+    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+
+End Sub
+
+Private Sub UserForm_Activate()
+
+    CenterForm
+
+End Sub
+
 Private Sub UserForm_Terminate()
     
     Me.SetSelectedBed

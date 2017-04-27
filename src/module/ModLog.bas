@@ -95,7 +95,7 @@ End Sub
 Public Sub LogToFile(ByVal strFile As String, ByVal enmLevel As LogLevel, ByVal strMsg As String)
     
     If Not ModSetting.GetEnableLogging() Then Exit Sub
-
+    
     strMsg = Replace(strMsg, vbNewLine, ". ")
     AppendToFile strFile, Strings.Format(DateTime.Now, vbNullString) + ": " + LogLevelToString(enmLevel) + ": " + strMsg
     
