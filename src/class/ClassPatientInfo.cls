@@ -23,9 +23,9 @@ Public Property Get Id() As String
 
 End Property
 
-Public Property Let Id(ByVal strID As String)
+Public Property Let Id(ByVal strId As String)
 
-    If Not strID = constNull Then m_ID = strID Else m_ID = vbNullString
+    If Not strId = constNull Then m_ID = strId Else m_ID = vbNullString
 
 End Property
 

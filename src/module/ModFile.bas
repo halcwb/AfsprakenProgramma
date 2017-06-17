@@ -66,6 +66,36 @@ Public Function FileExists(ByVal strFile As String) As Boolean
 
 End Function
 
+Public Function ReadFile(ByVal strFile As String) As String
+
+    Dim objFs As FileSystemObject
+    Dim objFile As File
+    Dim objStream As TextStream
+    Dim strLines As String
+    
+    Set objFs = New FileSystemObject
+    
+    If FileExists(strFile) Then
+        Set objFile = objFs.GetFile(strFile)
+        Set objStream = objFile.OpenAsTextStream(ForReading)
+        strLines = objStream.ReadAll
+    End If
+    
+    ReadFile = strLines
+    
+    Set objFs = Nothing
+    Set objFile = Nothing
+    Set objStream = Nothing
+
+End Function
+
+Private Sub Test_ReadFile()
+
+    MsgBox ReadFile(WbkAfspraken.Path & "\" & "secret")
+
+End Sub
+
+
 Public Sub FileDelete(ByVal strFile As String)
     
     Dim objFs As FileSystemObject

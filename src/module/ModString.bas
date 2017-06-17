@@ -202,4 +202,16 @@ Public Function ConcatenateRange(ByRef objRange As Range, ByVal strDel As String
 
 End Function
 
+Public Function StringToDouble(ByVal strDbl As String) As Double
+
+    StringToDouble = Val(Replace(strDbl, ",", "."))
+
+End Function
+
+Private Sub Test_StringToDouble()
+
+    MsgBox StringToDouble("1.5")
+    MsgBox StringToDouble("1,5")
+
+End Sub
 

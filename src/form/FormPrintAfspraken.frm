@@ -45,23 +45,23 @@ Private Sub cmdOK_Click()
         shtPedPrtMedDisc.PrintOut preview:=False
     End If
     If chkTPNBlad.Value Then
-        If val(Range("Gewicht").Text) / 10 < 7 Then
+        If Val(Range("Gewicht").Text) / 10 < 7 Then
             shtPedPrtTPN2tot6.Select
             shtPedPrtTPN2tot6.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN2tot6.PrintOut preview:=False
-        ElseIf val(Range("Gewicht").Text) / 10 < 16 Then
+        ElseIf Val(Range("Gewicht").Text) / 10 < 16 Then
             shtPedPrtTPN7tot15.Select
             shtPedPrtTPN7tot15.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN7tot15.PrintOut preview:=False
-        ElseIf val(Range("Gewicht").Text) / 10 < 31 Then
+        ElseIf Val(Range("Gewicht").Text) / 10 < 31 Then
             shtPedPrtTPN16tot30.Select
             shtPedPrtTPN16tot30.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN16tot30.PrintOut preview:=False
-        ElseIf val(Range("Gewicht").Text) / 10 <= 50 Then
+        ElseIf Val(Range("Gewicht").Text) / 10 <= 50 Then
             shtPedPrtTPN31tot50.Select
             shtPedPrtTPN31tot50.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN31tot50.PrintOut preview:=False
-        ElseIf val(Range("Gewicht").Text) / 10 > 50 Then
+        ElseIf Val(Range("Gewicht").Text) / 10 > 50 Then
             shtPedPrtTPN50.Select
             shtPedPrtTPN50.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN50.PrintOut preview:=False

@@ -58,7 +58,7 @@ Private Function IsValidBed(ByVal strBed As String) As Boolean
 
 End Function
 
-Private Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
+Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     
     On Error GoTo ErrorOpenBed
 

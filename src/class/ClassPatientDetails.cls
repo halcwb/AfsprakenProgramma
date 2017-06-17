@@ -116,15 +116,15 @@ Public Property Let Days(ByVal intDays As Integer)
 
 End Property
 
-Public Property Get PatientID() As String
+Public Property Get PatientId() As String
 
-    PatientID = m_ID
+    PatientId = m_ID
 
 End Property
 
-Public Property Let PatientID(ByVal strID As String)
+Public Property Let PatientId(ByVal strId As String)
 
-    m_ID = strID
+    m_ID = strId
 
 End Property
 

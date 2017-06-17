@@ -67,6 +67,36 @@ Private Sub btnBdNow_Click()
 
 End Sub
 
+Private Sub btnRefresh_Click()
+
+    Dim strId As String
+    Dim strDep As String
+    
+    Dim objPat As ClassPatientDetails
+    
+    strId = IIf(txtPatNum.Text = vbNullString, MetaVision_GetCurrentPatientID(), vbNullString)
+    If Not (strId = vbNullString And txtPatNum.Text = vbNullString) Then
+        Set objPat = MetaVision_GetPatientDetails(strId, txtPatNum.Text)
+        Me.txtAdmDay = DateTime.Day(objPat.OpnameDatum)
+        Me.txtAdmMonth = DateTime.Month(objPat.OpnameDatum)
+        Me.txtAdmYear = DateTime.Year(objPat.OpnameDatum)
+        Me.txtPatNum = objPat.PatientId
+        Me.txtLastName = objPat.AchterNaam
+        Me.txtFirstName = objPat.VoorNaam
+        Me.txtBirthDay = DateTime.Day(objPat.GeboorteDatum)
+        Me.txtBirthMonth = DateTime.Month(objPat.GeboorteDatum)
+        Me.txtBirthYear = DateTime.Year(objPat.GeboorteDatum)
+        Me.txtWeight = objPat.Gewicht
+        Me.txtLength = objPat.Lengte
+        Me.txtBirthWeight = objPat.GeboorteGewicht
+        Me.txtGestDay = objPat.Days
+        Me.txtGestWeek = objPat.Weeks
+        
+        Validate vbNullString
+    End If
+
+End Sub
+
 Private Sub cmdCancel_Click()
 
     Me.Hide
@@ -171,14 +201,14 @@ Private Sub cmdOK_Click()
         m_Pat.SetAdmissionAndBirthDate dtmAdm, dtmBd
     End If
     
-    m_Pat.PatientID = txtPatNum.Value
+    m_Pat.PatientId = txtPatNum.Value
     m_Pat.AchterNaam = txtLastName.Value
     m_Pat.VoorNaam = txtFirstName.Text
-    m_Pat.Gewicht = val(txtWeight.Value)
-    m_Pat.Lengte = val(txtLength.Value)
-    m_Pat.GeboorteGewicht = val(txtBirthWeight.Value)
-    m_Pat.Weeks = val(txtGestWeek.Value)
-    m_Pat.Days = val(txtGestDay.Value)
+    m_Pat.Gewicht = ModString.StringToDouble(txtWeight.Value)
+    m_Pat.Lengte = ModString.StringToDouble(txtLength.Value)
+    m_Pat.GeboorteGewicht = Val(txtBirthWeight.Value)
+    m_Pat.Weeks = Val(txtGestWeek.Value)
+    m_Pat.Days = Val(txtGestDay.Value)
 
     Me.Hide
 
@@ -232,7 +262,7 @@ Private Sub txtGestDay_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     If txtGestDay.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidDagen(val(txtGestDay.Value)) Then
+    If Not ModPatient.ValidDagen(Val(txtGestDay.Value)) Then
         txtGestDay.Value = vbNullString
         blnCancel = True
     End If
@@ -288,7 +318,7 @@ Public Sub SetPatient(ByRef objPat As ClassPatientDetails)
     End If
     If Not ModDate.IsEmptyDate(m_Pat.GeboorteDatum) Then SetBirthDate m_Pat.GeboorteDatum
     
-    txtPatNum.Text = m_Pat.PatientID
+    txtPatNum.Text = m_Pat.PatientId
     txtLastName.Value = m_Pat.AchterNaam
     txtFirstName.Value = m_Pat.VoorNaam
     txtWeight.Value = IIf(m_Pat.Gewicht = 0, vbNullString, m_Pat.Gewicht)
@@ -305,7 +335,7 @@ Private Sub txtBirthWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean
     
     If txtBirthWeight.Value = vbNullString Then Exit Sub
     
-    If Not ModPatient.ValidBirthWeight(val(txtBirthWeight.Value)) Then
+    If Not ModPatient.ValidBirthWeight(Val(txtBirthWeight.Value)) Then
         strValid = "Geen geldig geboortegewicht"
         Validate strValid
         
@@ -431,7 +461,7 @@ Private Sub txtGestWeek_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     If txtGestWeek.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidWeken(val(txtGestWeek.Value)) Then
+    If Not ModPatient.ValidWeken(Val(txtGestWeek.Value)) Then
         strValid = "Geen zwangerschapsduur"
         Validate strValid
         

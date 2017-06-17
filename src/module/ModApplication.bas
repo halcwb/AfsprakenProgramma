@@ -140,6 +140,7 @@ Public Sub InitializeAfspraken()
 
     Dim strError As String
     Dim strAction As String
+    Dim strBed As String
     Dim strParams() As Variant
     Dim objWind As Window
     
@@ -177,6 +178,12 @@ Public Sub InitializeAfspraken()
     ModProgress.FinishProgress
     
     ModSheet.SelectPedOrNeoStartSheet  ' Select the first GUI sheet
+    
+    strBed = ModMetaVision.MetaVision_GetCurrentBedName()
+    If strBed <> vbNullString Then
+        ModBed.SetBed strBed
+        ModBed.OpenBedAsk False, True
+    End If
     
     ModLog.LogActionEnd strAction
         

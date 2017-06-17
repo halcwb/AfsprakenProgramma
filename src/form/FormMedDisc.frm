@@ -302,18 +302,18 @@ Private Sub cmdOK_Click()
     
         Set m_Medicament = New ClassMedicatieDisc
         
-        m_Medicament.Dosis = val(txtDosis.Value)
+        m_Medicament.Dosis = Val(txtDosis.Value)
         m_Medicament.DosisEenheid = cboDosisEenheid.Value
         m_Medicament.Generiek = cboGeneriek.Value
         m_Medicament.Indicaties = cboIndicatie.Value
         m_Medicament.Routes = cboRoute.Value
-        m_Medicament.Sterkte = val(txtSterkte.Value)
+        m_Medicament.Sterkte = Val(txtSterkte.Value)
         m_Medicament.SterkteEenheid = cboSterkteEenheid.Value
         m_Medicament.Vorm = cboVorm.Value
         
     Else
         
-        m_Medicament.Dosis = val(txtDosis.Value)
+        m_Medicament.Dosis = Val(txtDosis.Value)
         m_Medicament.Routes = cboRoute.Value
         m_Medicament.Indicaties = cboIndicatie.Value
     

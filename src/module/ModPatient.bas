@@ -44,7 +44,7 @@ Public Sub Patient_EnterWeight()
         .Show
         
         If Not .txtWaarde.Value = vbNullString Then
-            dblWeight = val(.txtWaarde.Value) * 10
+            dblWeight = Val(.txtWaarde.Value) * 10
             ModRange.SetRangeValue constGewicht, dblWeight
         End If
     End With
@@ -75,7 +75,7 @@ End Sub
 
 Public Function GetGewichtFromRange() As Double
 
-    GetGewichtFromRange = val(ModRange.GetRangeValue(constGewicht, 0)) / 10
+    GetGewichtFromRange = Val(ModRange.GetRangeValue(constGewicht, 0)) / 10
 
 End Function
 
@@ -119,12 +119,12 @@ OpenPatientListError:
     
 End Sub
 
-Public Function CreatePatientInfo(ByVal strID As String, ByVal strBed As String, ByVal strAN As String, ByVal strVN As String, ByVal strBD As String) As ClassPatientInfo
+Public Function CreatePatientInfo(ByVal strId As String, ByVal strBed As String, ByVal strAN As String, ByVal strVN As String, ByVal strBD As String) As ClassPatientInfo
 
     Dim objInfo As ClassPatientInfo
     
     Set objInfo = New ClassPatientInfo
-    objInfo.Id = strID
+    objInfo.Id = strId
     objInfo.Bed = strBed
     objInfo.AchterNaam = strAN
     objInfo.VoorNaam = strVN
@@ -176,7 +176,7 @@ Public Function GetPatientDetails() As ClassPatientDetails
     Dim dtmAdm As Date
     
     Set objPat = New ClassPatientDetails
-    objPat.PatientID = ModRange.GetRangeValue(constPatNum, vbNullString)
+    objPat.PatientId = ModRange.GetRangeValue(constPatNum, vbNullString)
     objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
     objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
     objPat.Gewicht = ModRange.GetRangeValue(constGewicht, 0) / 10
@@ -195,7 +195,7 @@ End Function
 
 Public Sub WritePatientDetails(ByRef objPat As ClassPatientDetails)
 
-    ModRange.SetRangeValue constPatNum, objPat.PatientID
+    ModRange.SetRangeValue constPatNum, objPat.PatientId
     ModRange.SetRangeValue constAN, objPat.AchterNaam
     ModRange.SetRangeValue constVN, objPat.VoorNaam
         
