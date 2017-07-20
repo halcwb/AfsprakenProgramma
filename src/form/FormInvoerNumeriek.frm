@@ -23,9 +23,9 @@ Private Function Validate() As Boolean
     
     Select Case m_Validate
         Case "Gewicht"
-            strMsg = IIf(Not ModPatient.ValidWeightKg(Val(txtWaarde.Value)), "Geen geldig gewicht", vbNullString)
+            strMsg = IIf(Not ModPatient.ValidWeightKg(StringToDouble(txtWaarde.Value)), "Geen geldig gewicht", vbNullString)
         Case "Lengte"
-            strMsg = IIf(Not ModPatient.ValidLengthCm(Val(txtWaarde.Value)), "Geen geldige lengte", vbNullString)
+            strMsg = IIf(Not ModPatient.ValidLengthCm(StringToDouble(txtWaarde.Value)), "Geen geldige lengte", vbNullString)
         Case Else
             strMsg = vbNullString
     End Select
@@ -50,7 +50,7 @@ End Sub
 
 Private Sub cmdOK_Click()
     
-    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, Val(txtWaarde.Value)
+    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, StringToDouble(txtWaarde.Value)
     Me.Hide
 
 End Sub
@@ -97,7 +97,7 @@ Public Sub SetValue(ByVal strRange As String, ByVal strItem As String, ByVal var
     m_Validate = strValidate
     
     lblParameter.Caption = strItem
-    txtWaarde.Value = Val(varValue)
+    txtWaarde.Value = StringToDouble(varValue)
     lblEenheid.Caption = strUnit
     
     Exit Sub

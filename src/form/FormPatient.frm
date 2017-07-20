@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPatient
    ClientHeight    =   3360
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   9525.001
+   ClientWidth     =   9525
    OleObjectBlob   =   "FormPatient.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -206,9 +206,9 @@ Private Sub cmdOK_Click()
     m_Pat.VoorNaam = txtFirstName.Text
     m_Pat.Gewicht = ModString.StringToDouble(txtWeight.Value)
     m_Pat.Lengte = ModString.StringToDouble(txtLength.Value)
-    m_Pat.GeboorteGewicht = Val(txtBirthWeight.Value)
-    m_Pat.Weeks = Val(txtGestWeek.Value)
-    m_Pat.Days = Val(txtGestDay.Value)
+    m_Pat.GeboorteGewicht = StringToDouble(txtBirthWeight.Value)
+    m_Pat.Weeks = StringToDouble(txtGestWeek.Value)
+    m_Pat.Days = StringToDouble(txtGestDay.Value)
 
     Me.Hide
 
@@ -262,7 +262,7 @@ Private Sub txtGestDay_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     If txtGestDay.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidDagen(Val(txtGestDay.Value)) Then
+    If Not ModPatient.ValidDagen(StringToDouble(txtGestDay.Value)) Then
         txtGestDay.Value = vbNullString
         blnCancel = True
     End If
@@ -335,7 +335,7 @@ Private Sub txtBirthWeight_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean
     
     If txtBirthWeight.Value = vbNullString Then Exit Sub
     
-    If Not ModPatient.ValidBirthWeight(Val(txtBirthWeight.Value)) Then
+    If Not ModPatient.ValidBirthWeight(StringToDouble(txtBirthWeight.Value)) Then
         strValid = "Geen geldig geboortegewicht"
         Validate strValid
         
@@ -461,7 +461,7 @@ Private Sub txtGestWeek_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
     If txtGestWeek.Value = vbNullString Then Exit Sub
 
-    If Not ModPatient.ValidWeken(Val(txtGestWeek.Value)) Then
+    If Not ModPatient.ValidWeken(StringToDouble(txtGestWeek.Value)) Then
         strValid = "Geen zwangerschapsduur"
         Validate strValid
         

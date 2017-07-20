@@ -75,9 +75,17 @@ Public Sub LogActionStart(ByVal strAction As String, ByRef strParams() As Varian
 
     strMsg = "Begin " + strAction + ": " + Join(strParams, ", ")
 
-    strFile = WbkAfspraken.Path + ModSetting.GetLogDir()
+    strFile = ModSetting.GetLogPath()
     LogToFile strFile, Info, strMsg
     
+End Sub
+
+Private Sub Test_LogActionStart()
+
+    Dim strParams() As Variant
+
+    LogActionStart "Test LogActionStart", strParams
+
 End Sub
 
 Public Sub LogActionEnd(ByVal strAction As String)
@@ -87,7 +95,7 @@ Public Sub LogActionEnd(ByVal strAction As String)
 
     strMsg = "End " + strAction
 
-    strFile = WbkAfspraken.Path + ModSetting.GetLogDir()
+    strFile = ModSetting.GetLogPath()
     LogToFile strFile, Info, strMsg
     
 End Sub
@@ -99,6 +107,24 @@ Public Sub LogToFile(ByVal strFile As String, ByVal enmLevel As LogLevel, ByVal 
     strMsg = Replace(strMsg, vbNewLine, ". ")
     AppendToFile strFile, Strings.Format(DateTime.Now, vbNullString) + ": " + LogLevelToString(enmLevel) + ": " + strMsg
     
+End Sub
+
+
+Public Sub ModLog_ViewLog()
+Attribute ModLog_ViewLog.VB_Description = "Open log file"
+Attribute ModLog_ViewLog.VB_ProcData.VB_Invoke_Func = "l\n14"
+
+    Dim strPath As String
+    Dim objShell As Object
+    
+    On Error Resume Next
+    
+    strPath = GetLogPath()
+    Set objShell = CreateObject("WScript.Shell")
+    objShell.Run "notepad " & strPath
+    
+    Set objShell = Nothing
+
 End Sub
 
 

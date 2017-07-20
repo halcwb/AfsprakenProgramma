@@ -8,7 +8,7 @@ $AI$7: 	=IF(AND(D7=5000,B12),"""",""verw"")
 $O$9: 	=IF($B9>1,(C9/10)&"" ml"","""")
 $P$9: 	=IF($B9>1,INDEX(Tbl_Neo_Voed,$B9,1),"""")
 $AI$9: 	=IF(Var_Neo_InfB_Ent_Voeding=1,"""",""verw"")
-$AK$9: 	=IF(AND(Var_Neo_InfB_Ent_Extra=2,Var_Neo_InfB_Ent_Voeding>1),(F9*C9+F10*C10)/10,0)
+$AK$9: 	=IF(AND(Var_Neo_InfB_Ent_Extra=2,Var_Neo_InfB_Ent_Voeding>1),(F9*G9+F10*G10)/10,0)
 $AL$9: 	=INDEX(Tbl_Neo_Voed,$B9,AL$1)*$AK9
 $AM$9: 	=INDEX(Tbl_Neo_Voed,$B9,AM$1)*$AK9
 $AN$9: 	=INDEX(Tbl_Neo_Voed,$B9,AN$1)*$AK9

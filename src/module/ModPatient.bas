@@ -44,7 +44,7 @@ Public Sub Patient_EnterWeight()
         .Show
         
         If Not .txtWaarde.Value = vbNullString Then
-            dblWeight = Val(.txtWaarde.Value) * 10
+            dblWeight = StringToDouble(.txtWaarde.Value) * 10
             ModRange.SetRangeValue constGewicht, dblWeight
         End If
     End With
@@ -75,7 +75,7 @@ End Sub
 
 Public Function GetGewichtFromRange() As Double
 
-    GetGewichtFromRange = Val(ModRange.GetRangeValue(constGewicht, 0)) / 10
+    GetGewichtFromRange = StringToDouble(ModRange.GetRangeValue(constGewicht, 0)) / 10
 
 End Function
 

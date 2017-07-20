@@ -349,7 +349,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
                 ModRange.SetRangeValue constConc & strN, Conversion.CDbl(Strings.Replace(objMed.Sterkte, ",", "."))
                 ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
                 ModRange.SetRangeValue constLabel & strN, objMed.Etiket
-                ModRange.SetRangeValue constStandDose & strN, Val(Strings.Replace(objMed.Dosis, ",", "."))
+                ModRange.SetRangeValue constStandDose & strN, StringToDouble(Strings.Replace(objMed.Dosis, ",", "."))
                 ModRange.SetRangeValue constDoseUnit & strN, objMed.DosisEenheid
                 ModRange.SetRangeValue constRoute & strN, .GetSelectedRoute()
                 ModRange.SetRangeValue constIndic & strN, .GetSelectedIndication()

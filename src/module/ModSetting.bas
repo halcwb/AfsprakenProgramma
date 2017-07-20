@@ -27,6 +27,8 @@ Private Const constPostText As String = "_Text"
 Private Const constPedBeds As String = "Tbl_Ped_Beds"
 Private Const constNeoBeds As String = "Tbl_Neo_Beds"
 
+Private Const constUMCU_LogPath As String = "\\ds.umcutrecht.nl\Algemeen\Apps\Metavision-Appsdata\MetavisionLOG"
+
 Private Function GetSetting(ByVal strSetting As String) As Variant
 
     Dim strMsg As String
@@ -182,9 +184,30 @@ End Sub
 
 Public Function GetLogPath() As String
 
-    GetLogPath = WbkAfspraken.Path & "\" & GetLogDir()
+    Dim strPath As String
+    Dim strDom As String
+    Dim strUser As String
+    Dim strCmpN As String
+    
+    strCmpN = Environ$("COMPUTERNAME")
+    strUser = Environ$("USERNAME")
+    strDom = Environ$("USERDOMAIN")
+    
+    If strDom = "DS" Then
+        strPath = constUMCU_LogPath & "\" & strUser & "_" & strCmpN & "_" & "Afspraken2017.log"
+    Else
+        strPath = WbkAfspraken.Path & "\" & GetLogDir()
+    End If
+    
+    GetLogPath = strPath
 
 End Function
+
+Private Sub Test_GetLogPath()
+
+    MsgBox GetLogPath()
+
+End Sub
 
 Public Function GetDataDir() As String
 

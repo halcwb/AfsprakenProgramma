@@ -176,6 +176,7 @@ Public Sub InitializeAfspraken()
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
     
     ModProgress.FinishProgress
+    Application.Visible = True
     
     ModSheet.SelectPedOrNeoStartSheet  ' Select the first GUI sheet
     
@@ -186,12 +187,13 @@ Public Sub InitializeAfspraken()
     End If
     
     ModLog.LogActionEnd strAction
-        
+            
     Exit Sub
     
 InitializeError:
     
     ModProgress.FinishProgress
+    Application.Visible = True
 
     strError = "Kan de applicatie niet opstarten"
     ModMessage.ShowMsgBoxError strError

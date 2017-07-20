@@ -54,9 +54,9 @@ $F$15: 	=NeoBerInfB!Q7
 $M$15: 	=ROUND(NeoBerInfB!B7,0)&"" ml/ kg/ 24 uur""
 $A$17: 	=NeoBerInfB!AI9
 $H$17: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!F9,"""")
-$J$17: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!C10/10&"" ml"","""")
+$J$17: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!G9/10&"" ml"","""")
 $H$18: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!F10,"""")
-$J$18: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!C9/10&"" ml"","""")
+$J$18: 	=IF(Var_Neo_InfB_Ent_Voeding>1,NeoBerInfB!G10/10&"" ml"","""")
 $N$18: 	=NeoBerInfB!M11
 $N$19: 	=NeoBerInfB!M12
 $R$19: 	=NeoBerInfB!M16
@@ -199,7 +199,7 @@ $M$57: 	=IF(NeoBerInfB!B48>0,NeoBerInfB!B48&"" ml"","""")
 $I$58: 	=IF(NeoBerInfB!$D$41=2,NeoBerInfB!C49&"" ml"","""")
 $J$58: 	=IF(I58<>"""",""(""&ROUND(NeoBerInfB!C49/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
 $M$58: 	=IF(NeoBerInfB!B49>0,NeoBerInfB!B49&"" ml"","""")
-$G$59: 	=IF(NeoBerInfB!D41=2,NeoBerInfB!AK50,"""")
+$G$59: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!AK50,"""")
 $H$59: 	=IF(G59<>"""",""ml"","""")
 $I$59: 	=IF(NeoBerInfB!D41=2,NeoBerInfB!AK50,"""")
 $J$59: 	=IF(I59<>"""",""ml"","""")
