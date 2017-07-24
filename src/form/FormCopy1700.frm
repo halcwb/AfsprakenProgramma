@@ -145,11 +145,11 @@ Private Sub UserForm_Initialize()
     ModProgress.StartProgress "Afspraken laden"
     
     ' First get the actual items
-    ModNeoInfB.NeoInfB_SelectInfB False
+    ModNeoInfB.NeoInfB_SelectInfB False, False
     AddItems False
     
     ' Then get the 1700 items
-    ModNeoInfB.NeoInfB_SelectInfB True
+    ModNeoInfB.NeoInfB_SelectInfB True, False
     AddItems True
     
     RemoveDoubles "lstActVoed"

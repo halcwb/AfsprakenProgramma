@@ -94,6 +94,8 @@ Private Sub btnRefresh_Click()
         
         Validate vbNullString
     End If
+    
+    ModMetaVision.MetaVision_SyncLab
 
 End Sub
 

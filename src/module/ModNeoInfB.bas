@@ -134,7 +134,7 @@ Private Sub TestCopyVarData()
 
 End Sub
 
-Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean)
+Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean, blnStartProgress As Boolean)
 
     If bln1700 And Is1700() Then                 ' InfB is same as 1700
         ModSheet.GoToSheet shtNeoGuiInfB, "A9"
@@ -143,24 +143,24 @@ Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean)
         ModSheet.GoToSheet shtNeoGuiInfB, "A9"
         
     ElseIf bln1700 And Not Is1700() Then         ' Infb is currently act
-        ModProgress.StartProgress "Infuus brief klaar maken"
+        If blnStartProgress Then ModProgress.StartProgress "Infuus brief klaar maken"
         
         CopyVarData False, False, True   ' First copy var data to act data
         CopyVarData True, True, True     ' Then copy 1700 data to var data
         shtNeoBerInfB.Range(constInfbVersie).Value2 = const1700InfB
         
-        ModProgress.FinishProgress
+        If blnStartProgress Then ModProgress.FinishProgress
         
         ModSheet.GoToSheet shtNeoGuiInfB, "A9"
     
     ElseIf Not bln1700 And Is1700() Then         ' Infb is currently 1700
-        ModProgress.StartProgress "Infuus brief klaar maken"
+        If blnStartProgress Then ModProgress.StartProgress "Infuus brief klaar maken"
         
         CopyVarData True, False, True   ' First copy var data to act data
         CopyVarData False, True, True   ' Then copy act data to var data
         shtNeoBerInfB.Range(constInfbVersie).Value2 = constActInfB
         
-        ModProgress.FinishProgress
+        If blnStartProgress Then ModProgress.FinishProgress
         
         ModSheet.GoToSheet shtNeoGuiInfB, "A9"
     
@@ -317,7 +317,7 @@ Public Sub NeoInfB_ShowFormCopy1700ToAct()
 
     Set frmCopy1700 = Nothing
     
-    NeoInfB_SelectInfB bln1700
+    NeoInfB_SelectInfB bln1700, True
     
 End Sub
 

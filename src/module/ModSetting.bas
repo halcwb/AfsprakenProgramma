@@ -81,6 +81,12 @@ Public Function IsDevelopmentDir() As Boolean
 
 End Function
 
+Private Sub Test_IsDevelopmentDir()
+
+    MsgBox IsDevelopmentDir()
+
+End Sub
+
 Public Sub SetDevelopmentMode(ByVal blnMode As Boolean)
 
     SetSetting constDevMode, blnMode
@@ -116,7 +122,7 @@ Public Sub ToggleLogging()
 
 End Sub
 
-Public Function GetNeoDir() As String
+Private Function GetNeoDir() As String
 
     GetNeoDir = CStr(GetSetting(constNeoDir))
 
@@ -128,7 +134,7 @@ Public Sub SetNeoDir(ByVal strDir As String)
 
 End Sub
 
-Public Function GetPedDir() As String
+Private Function GetPedDir() As String
 
     GetPedDir = CStr(GetSetting(constPedDir))
 
@@ -227,6 +233,12 @@ Public Function GetFormDbDir() As String
 
 End Function
 
+Private Sub Test_GetFormDbDir()
+
+    MsgBox GetFormDbDir()
+
+End Sub
+
 Public Sub SetFormDbDir(ByVal strDir As String)
 
     SetSetting constDbDir, strDir
@@ -308,9 +320,16 @@ Public Function GetPatientsFileName() As String
     
     blnNeo = False
     If IsDevelopmentDir() Then blnNeo = ModMessage.ShowMsgBoxYesNo("Ja(Yes) voor Neo anders Pediatrie") = vbYes
-    GetPatientsFileName = IIf(IsNeoDir() Or blnNeo, CONST_NICU_BEDS, CONST_PICU_BEDS)
+    
+    GetPatientsFileName = IIf(IsNeoDir() Or IsNeo() Or blnNeo, CONST_NICU_BEDS, CONST_PICU_BEDS)
 
 End Function
+
+Private Sub Test_GetPatientFileName()
+
+    MsgBox GetPatientsFileName()
+
+End Sub
 
 Public Function GetPatientsFilePath(ByVal strFileName) As String
 
@@ -323,3 +342,52 @@ Private Sub test()
     MsgBox GetPatientsFilePath("Test")
     
 End Sub
+
+Public Function IsNeo() As Boolean
+
+    Dim strPath As String
+    Dim strDir As String
+    Dim blnIsDevelop As Boolean
+    Dim blnIsNeo As Boolean
+
+    blnIsDevelop = ModSetting.IsDevelopmentDir()
+    strPath = Application.ActiveWorkbook.Path
+    strDir = ModSetting.GetNeoDir()
+    
+    blnIsNeo = ModString.ContainsCaseInsensitive(strPath, strDir)
+    blnIsNeo = IIf(ModMetaVision.MetaVision_GetDepartment = vbNullString, blnIsNeo, ModMetaVision.MetaVision_GetDepartment = "Neonatologie")
+    
+    IsNeo = blnIsNeo
+
+End Function
+
+Private Sub Test_IsNeo()
+
+    MsgBox IsNeo()
+
+End Sub
+
+Public Function IsPed() As Boolean
+
+    Dim strPath As String
+    Dim strDir As String
+    Dim blnIsDevelop As Boolean
+    Dim blnIsPed As Boolean
+
+    blnIsDevelop = ModSetting.IsDevelopmentDir()
+    strPath = Application.ActiveWorkbook.Path
+    strDir = ModSetting.GetNeoDir()
+    
+    blnIsPed = ModString.ContainsCaseInsensitive(strPath, strDir)
+    blnIsPed = IIf(ModMetaVision.MetaVision_GetDepartment = vbNullString, blnIsPed, ModMetaVision.MetaVision_GetDepartment = "Pediatrie")
+    
+    IsPed = blnIsPed
+
+End Function
+
+Private Sub Test_IsPed()
+
+    MsgBox IsPed()
+
+End Sub
+

@@ -21,17 +21,17 @@ Public Sub ButtonOnAction(ByRef ctrlMenuItem As IRibbonControl)
             ModProgress.StartProgress "Patient Data Verwijderen"
             ModPatient.PatientClearAll True, True
             ModProgress.FinishProgress
-            ModSheet.SelectPedOrNeoStartSheet
+            ModSheet.SelectPedOrNeoStartSheet True
         
         'grpBedden                                          ' -- BEDDEN --
         
         Case "btnOpenBed"                                   ' -> Bed Openen
             ModBed.OpenBed
-            ModSheet.SelectPedOrNeoStartSheet
+            ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnSaveBed"                                   ' -> Bed Opslaan
             ModBed.CloseBed (True)
-            ModSheet.SelectPedOrNeoStartSheet
+            ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnEnterPatient"                              ' -> Patient Gegevens
             ModPatient.EnterPatientDetails
@@ -59,7 +59,7 @@ Public Sub ButtonOnAction(ByRef ctrlMenuItem As IRibbonControl)
         'grpNeonatologie                                    ' -- NEONATOLOGIE --
         
         Case "btnNeoMedIV"                                  ' -> Infuusbrief
-            ModNeoInfB.NeoInfB_SelectInfB False
+            ModNeoInfB.NeoInfB_SelectInfB False, True
         
         Case "btnNeoMedDisc"                                ' -> Discontinue Medicatie
             ModSheet.GoToSheet shtGlobGuiMedDisc, "A6"
@@ -74,10 +74,14 @@ Public Sub ButtonOnAction(ByRef ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoGuiLab, "A1"
         
         Case "btnNeo1700"                                   ' -> Infuusbrief 17:00
-            ModNeoInfB.NeoInfB_SelectInfB True
+            ModNeoInfB.NeoInfB_SelectInfB True, True
         
         'grpRemoveData                                      ' -- ACTIES --
                 
+        Case "btnRemoveAll"                                 ' Alle Afspraken Verwijderen
+            ClearAll
+            ModSheet.SelectPedOrNeoAfsprSheet
+            
         Case "btnRemoveLab"                                 ' Lab Verwijderen
             ClearLab
             ModSheet.SelectPedOrNeoLabSheet
@@ -181,15 +185,13 @@ End Sub
 
 Public Sub GetVisiblePed(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
-    Dim strPath As String
-    Dim strPedDir As String
     Dim blnIsDevelop As Boolean
-
-    blnIsDevelop = ModSetting.IsDevelopmentDir()
-    strPath = Application.ActiveWorkbook.Path
-    strPedDir = ModSetting.GetPedDir()
+    Dim blnIsPed As Boolean
     
-    If ModString.ContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
+    blnIsDevelop = ModSetting.IsDevelopmentDir()
+    blnIsPed = ModSetting.IsPed()
+    
+    If blnIsPed Or blnIsDevelop Then
         blnVisible = True
     Else
         blnVisible = False
@@ -199,15 +201,13 @@ End Sub
 
 Public Sub GetVisibleNeo(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
     
-    Dim strPath As String
-    Dim strPedDir As String
     Dim blnIsDevelop As Boolean
+    Dim blnIsNeo As Boolean
 
     blnIsDevelop = ModSetting.IsDevelopmentDir()
-    strPath = Application.ActiveWorkbook.Path
-    strPedDir = ModSetting.GetNeoDir()
+    blnIsNeo = ModSetting.IsNeo()
     
-    If ModString.ContainsCaseInsensitive(strPath, strPedDir) Or blnIsDevelop Then
+    If blnIsNeo Or blnIsDevelop Then
         blnVisible = True
     Else
         blnVisible = False
@@ -224,6 +224,18 @@ End Sub
 Public Sub GetVisibleAdmin(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
     blnVisible = True ' ModSetting.IsDevelopmentMode()
+    
+End Sub
+
+Private Sub ClearAll()
+
+    If ModSetting.IsDevelopmentDir Then
+        ModPatient.PatientClearNeo
+        ModPatient.PatientClearPed
+    Else
+        If ModApplication.IsNeoDir Then ModPatient.PatientClearNeo
+        If ModApplication.IsPedDir Then ModPatient.PatientClearPed
+    End If
     
 End Sub
 

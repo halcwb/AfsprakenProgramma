@@ -129,6 +129,8 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     End If
 
     If Not blnNeo Then ModPedEntTPN.PedEntTPN_SelectStandardTPN
+    ModMetaVision.MetaVision_SyncLab
+    ModSheet.SelectPedOrNeoStartSheet (Not blnShowProgress)
     
     ModLog.LogActionEnd strAction
     

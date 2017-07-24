@@ -194,39 +194,42 @@ End Function
 ' Determine the sheet to open with
 ' If peli or developper then ped sheet
 ' Else neo sheet
-Public Sub SelectNeoOrPedSheet(ByRef shtPed As Worksheet, ByRef shtNeo As Worksheet)
+Public Sub SelectNeoOrPedSheet(ByRef shtPed As Worksheet, ByRef shtNeo As Worksheet, ByVal blnStartProgress As Boolean)
 
-    Dim strPath As String
-    Dim strPeli As String
     Dim blnIsDevelop As Boolean
-    
-    strPath = WbkAfspraken.Path
-    strPeli = ModSetting.GetPedDir()
+        
     blnIsDevelop = ModSetting.IsDevelopmentDir()
     
-    If ModString.ContainsCaseInsensitive(strPath, strPeli) Or blnIsDevelop Then
+    If ModSetting.IsPed() Or blnIsDevelop Then
         GoToSheet shtPed, "A1"
     Else
-        ModNeoInfB.NeoInfB_SelectInfB False
+        ModNeoInfB.NeoInfB_SelectInfB False, blnStartProgress
     End If
     
 End Sub
 
-Public Sub SelectPedOrNeoStartSheet()
+Public Sub SelectPedOrNeoStartSheet(ByVal blnStartProgress As Boolean)
 
-    SelectNeoOrPedSheet shtPedGuiMedIV, shtNeoGuiInfB
+    SelectNeoOrPedSheet shtPedGuiMedIV, shtNeoGuiInfB, blnStartProgress
     
 End Sub
 
+Private Sub Test_SelectPedOrNeoStartSheet()
+
+    SelectPedOrNeoStartSheet True
+
+End Sub
+
+
 Public Sub SelectPedOrNeoLabSheet()
     
-    SelectNeoOrPedSheet shtPedGuiLab, shtNeoGuiLab
+    SelectNeoOrPedSheet shtPedGuiLab, shtNeoGuiLab, False
         
 End Sub
 
 Public Sub SelectPedOrNeoAfsprSheet()
     
-    SelectNeoOrPedSheet shtPedGuiAfspr, shtNeoGuiAfspr
+    SelectNeoOrPedSheet shtPedGuiAfspr, shtNeoGuiAfspr, False
         
 End Sub
 

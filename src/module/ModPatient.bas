@@ -18,6 +18,12 @@ Private Const constDateReplace As String = "{DATEFORMAT}"
 Private Const constDateFormula As String = vbNullString
 Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
 
+Public Function PatientHospNum() As String
+
+    PatientHospNum = ModRange.GetRangeValue(constPatNum, vbNullString)
+
+End Function
+
 Public Function PatientAchterNaam() As String
 
     PatientAchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
@@ -243,7 +249,7 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             
     Dim blnInfB As Boolean
     
-    blnInfB = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()
+    blnInfB = (ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()) And Not (strStartWith = "_Ped" Or strStartWith = "_Glob")
             
     If blnShowWarn Then
         If blnShowProgress Then
@@ -295,6 +301,41 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
     
 End Sub
 
+Public Sub PatientClearPed()
+
+    ModProgress.StartProgress "Verwijder Pediatrie Data"
+    ClearPatientData "_Ped", False, True
+    ClearPatientData "_Glob", False, True
+    ModProgress.FinishProgress
+    
+    ModApplication.SetDateToDayFormula
+    ModApplication.SetApplicationTitle
+
+End Sub
+
+Private Sub Test_PatientClearPed()
+
+    PatientClearPed
+
+End Sub
+
+Public Sub PatientClearNeo()
+
+    ModProgress.StartProgress "Verwijder Neo Data"
+    ClearPatientData "_Neo", False, True
+    ClearPatientData "_Glob", False, True
+    ModProgress.FinishProgress
+    
+    ModApplication.SetDateToDayFormula
+    ModApplication.SetApplicationTitle
+
+End Sub
+
+Private Sub Test_PatientClearNeo()
+
+    PatientClearNeo
+
+End Sub
 Public Sub PatientClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
     
     ClearPatientData vbNullString, blnShowWarn, blnShowProgress

@@ -418,3 +418,132 @@ Private Sub Test_MetaVision_GetDepartment()
     MsgBox MetaVision_GetDepartment()
 
 End Sub
+
+Private Sub GetLab(ByVal strHospNum As String)
+
+    Dim objRs As Recordset
+    Dim objRange As Range
+    Dim objRow As Range
+    Dim strRow As String
+    Dim strSql As String
+    Dim strServer As String
+    Dim strDatabase As String
+
+    strSql = strSql & "DECLARE @HospNum AS NVARCHAR(40)" & vbNewLine
+    strSql = strSql & "SET @HospNum = '" & strHospNum & "'" & vbNewLine
+    strSql = strSql & "SELECT" & vbNewLine
+    strSql = strSql & "p.Abbreviation, s.[Time], s.Value / u.Multiplier AS Value, u.UnitName" & vbNewLine
+    strSql = strSql & "FROM Signals s" & vbNewLine
+    strSql = strSql & "INNER JOIN Parameters p ON p.ParameterID = s.ParameterID" & vbNewLine
+    strSql = strSql & "INNER JOIN Units u ON u.UnitID = p.UnitID" & vbNewLine
+    strSql = strSql & "INNER JOIN Patients pat ON pat.PatientID = s.PatientID" & vbNewLine
+    strSql = strSql & "WHERE pat.HospitalNumber = @HospNum" & vbNewLine
+    strSql = strSql & "AND s.Error = 0" & vbNewLine
+    strSql = strSql & "AND Datediff(day, s.[Time], GetDate()) <= 1" & vbNewLine
+    strSql = strSql & "AND p.ParameterID IN (4199, 4148, 4217, 4136, 4137, 4138, 4142, 4143, 4144, 4263)" & vbNewLine
+    strSql = strSql & "ORDER BY p.Abbreviation, s.[Time] DESC" & vbNewLine
+
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    Set objRs = objConn.Execute(strSql)
+    Set objRange = Range("Tbl_Glob_Lab")
+    
+    If Not (objRs.BOF And objRs.EOF) Then
+        For Each objRow In objRange.Rows
+            objRs.MoveFirst
+            strRow = objRow.Cells(1, 1).Value2
+            Do While Not objRs.EOF
+                If strRow = objRs.Fields("Abbreviation").Value Then
+                    objRow.Cells(1, 2).Value2 = objRs.Fields("Value").Value & " " & objRs.Fields("UnitName").Value
+                    Exit Do
+                End If
+                objRs.MoveNext
+            Loop
+        Next
+    End If
+    
+    objConn.Close
+
+
+End Sub
+
+Private Sub Test_GetLab()
+
+    GetLab "8280506"
+
+End Sub
+
+Public Sub GetLeverNierFunctie(ByVal strHospNum As String)
+
+    Dim objRs As Recordset
+    Dim objRange As Range
+    Dim objRow As Range
+    Dim strRow As String
+    Dim strSql As String
+    Dim strServer As String
+    Dim strDatabase As String
+
+    strSql = strSql & "DECLARE @HospNum AS NVARCHAR(40)" & vbNewLine
+    strSql = strSql & "SET @HospNum = '" & strHospNum & "'" & vbNewLine
+    strSql = strSql & "SELECT" & vbNewLine
+    strSql = strSql & "p.Abbreviation, s.[Time], s.Value / u.Multiplier AS Value, u.UnitName" & vbNewLine
+    strSql = strSql & "FROM Signals s" & vbNewLine
+    strSql = strSql & "INNER JOIN Parameters p ON p.ParameterID = s.ParameterID" & vbNewLine
+    strSql = strSql & "INNER JOIN Units u ON u.UnitID = p.UnitID" & vbNewLine
+    strSql = strSql & "INNER JOIN Patients pat ON pat.PatientID = s.PatientID" & vbNewLine
+    strSql = strSql & "WHERE pat.HospitalNumber = @HospNum" & vbNewLine
+    strSql = strSql & "AND s.Error = 0" & vbNewLine
+    strSql = strSql & "AND Datediff(month, s.[Time], GetDate()) <= 1" & vbNewLine
+    strSql = strSql & "AND p.ParameterID IN (4181, 4182, 4183, 4156)" & vbNewLine
+    strSql = strSql & "ORDER BY p.Abbreviation, s.[Time] DESC" & vbNewLine
+
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    Set objRs = objConn.Execute(strSql)
+    Set objRange = Range("Tbl_Glob_Lab")
+    
+    If Not (objRs.BOF And objRs.EOF) Then
+        For Each objRow In objRange.Rows
+            objRs.MoveFirst
+            strRow = objRow.Cells(1, 1).Value2
+            Do While Not objRs.EOF
+                If strRow = objRs.Fields("Abbreviation").Value Then
+                    objRow.Cells(1, 2).Value2 = objRs.Fields("Value").Value & " " & objRs.Fields("UnitName").Value
+                    Exit Do
+                End If
+                objRs.MoveNext
+            Loop
+        Next
+    End If
+    
+    objConn.Close
+    
+End Sub
+
+Public Sub MetaVision_SyncLab()
+
+    Dim strHospNum As String
+    Dim objRange As Range
+    Dim objRow As Range
+    
+    Set objRange = Range("Tbl_Glob_Lab")
+    
+    For Each objRow In objRange
+        objRow.Cells(1, 2).Value2 = vbNullString
+    Next
+    
+    strHospNum = ModPatient.PatientHospNum()
+    GetLab strHospNum
+    GetLeverNierFunctie strHospNum
+    
+End Sub

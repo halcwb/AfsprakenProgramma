@@ -159,7 +159,8 @@ Public Sub InitializeAfspraken()
     Next
     
     DoEvents                           ' Make sure sheet is shown before proceding
-        
+    
+    Application.Visible = True
     ModProgress.StartProgress "Start Afspraken Programma"
             
     Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
@@ -172,20 +173,19 @@ Public Sub InitializeAfspraken()
     
     ' Clean everything
     ModRange.SetRangeValue constVersie, vbNullString
-    ModPatient.PatientClearAll False, True ' Default start with no patient
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
-    
-    ModProgress.FinishProgress
-    Application.Visible = True
-    
-    ModSheet.SelectPedOrNeoStartSheet  ' Select the first GUI sheet
+        
+    ModSheet.SelectPedOrNeoStartSheet False  ' Select the first GUI sheet
     
     strBed = ModMetaVision.MetaVision_GetCurrentBedName()
     If strBed <> vbNullString Then
         ModBed.SetBed strBed
         ModBed.OpenBedAsk False, True
+    Else
+        ModPatient.PatientClearAll False, True ' Default start with no patient
     End If
     
+    ModProgress.FinishProgress
     ModLog.LogActionEnd strAction
             
     Exit Sub
@@ -331,13 +331,13 @@ End Function
 
 Public Function IsPedDir() As Boolean
 
-    IsPedDir = HasInPath(ModSetting.GetPedDir())
+    IsPedDir = ModSetting.IsPed()
     
 End Function
 
 Public Function IsNeoDir() As Boolean
 
-    IsNeoDir = HasInPath(ModSetting.GetNeoDir())
+    IsNeoDir = ModSetting.IsNeo()
 
 End Function
 

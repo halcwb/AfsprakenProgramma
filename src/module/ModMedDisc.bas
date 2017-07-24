@@ -746,24 +746,17 @@ Public Sub MedDisc_EnterText_30()
 
 End Sub
 
-' Make sure that the active workbook is Afspraken2015.xlsm
-' and return the path of the Formularium workbook
 Public Function GetFormulariumDatabasePath() As String
-    Dim strPath As String
-    Dim arrPath() As String
-    Dim intCounter As Integer
-
-    strPath = vbNullString
-    arrPath = Split(WbkAfspraken.Path, "\")
     
-    ' create the path 2 dirs down workbook path
-    For intCounter = 0 To (UBound(arrPath) - 2)
-        strPath = strPath & arrPath(intCounter) & "\"
-    Next
-    
-    GetFormulariumDatabasePath = strPath & "db\"
+    GetFormulariumDatabasePath = WbkAfspraken.Path & ModSetting.GetFormDbDir()
 
 End Function
+
+Private Sub Test_GetFormulariumDatabasePath()
+
+    MsgBox GetFormulariumDatabasePath()
+
+End Sub
 
 Private Sub OpenPRNForm(ByVal intN As Integer)
 
