@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModSheet"
 Option Explicit
 
-Public Function IsUserInterface(ByRef shtSheet As Worksheet) As Boolean
+Public Function IsUserInterface(shtSheet As Worksheet) As Boolean
 
     Dim blnGui As Boolean
     
@@ -157,7 +157,7 @@ Public Sub ProtectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
 
 End Sub
 
-Public Sub GoToSheet(ByRef shtSheet As Worksheet, ByVal strRange As String)
+Public Sub GoToSheet(shtSheet As Worksheet, ByVal strRange As String)
 
     shtSheet.Select
     shtSheet.Range(strRange).Select
@@ -191,19 +191,16 @@ Public Function GetNonInterfaceSheetCount() As Integer
 
 End Function
 
-' Determine the sheet to open with
-' If peli or developper then ped sheet
-' Else neo sheet
-Public Sub SelectNeoOrPedSheet(ByRef shtPed As Worksheet, ByRef shtNeo As Worksheet, ByVal blnStartProgress As Boolean)
+Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet, ByVal blnStartProgress As Boolean)
 
-    Dim blnIsDevelop As Boolean
-        
-    blnIsDevelop = ModSetting.IsDevelopmentDir()
-    
-    If ModSetting.IsPed() Or blnIsDevelop Then
+    If ModSetting.IsPed() Then
         GoToSheet shtPed, "A1"
     Else
-        ModNeoInfB.NeoInfB_SelectInfB False, blnStartProgress
+        If shtNeo = shtNeoGuiInfB Then
+            ModNeoInfB.NeoInfB_SelectInfB False, blnStartProgress
+        Else
+            GoToSheet shtNeo, "A1"
+        End If
     End If
     
 End Sub

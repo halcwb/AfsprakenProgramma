@@ -9,7 +9,7 @@ Private Const constAchterNaam As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{
 Private Const constVoorNaam As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$5)"
 Private Const constGebDat As String = "=IF(ISBLANK(B{NUM}),$F${NUM},'{FILE}{SHEET}'!$B$6)"
 
-Public Sub CreateDataWorkBooks(ByVal strBedsFilePath As String, ByRef arrBeds() As Variant, ByVal strPath As String, ByVal blnShowProgress As Boolean)
+Public Sub CreateDataWorkBooks(ByVal strBedsFilePath As String, arrBeds() As Variant, ByVal blnShowProgress As Boolean)
     
     Dim objWb As Workbook
     
@@ -123,7 +123,7 @@ CreatePatientsWorkBookError:
 
 End Sub
 
-Public Sub SaveWorkBookAsShared(ByRef objWorkbook As Workbook, ByVal strFile As String)
+Public Sub SaveWorkBookAsShared(objWorkbook As Workbook, ByVal strFile As String)
     
     If Not objWorkbook.MultiUserEditing Then
         objWorkbook.SaveAs strFile, AccessMode:=xlShared
@@ -131,7 +131,7 @@ Public Sub SaveWorkBookAsShared(ByRef objWorkbook As Workbook, ByVal strFile As 
      
 End Sub
 
-Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook As String, ByVal strRange As String, ByRef shtTarget As Worksheet, ByVal blnShowProgress As Boolean) As Boolean
+Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook As String, ByVal strRange As String, shtTarget As Worksheet, ByVal blnShowProgress As Boolean) As Boolean
     
     Dim strJob As String
     

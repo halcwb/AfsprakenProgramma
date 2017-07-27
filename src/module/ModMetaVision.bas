@@ -2,7 +2,6 @@ Attribute VB_Name = "ModMetaVision"
 Option Explicit
 
 Private objConn As ADODB.Connection
-Private strMetaVisionDb As String
 
 Private Const constSecret As String = "secret"
 
@@ -55,7 +54,7 @@ Private Enum TableRows
     Medicatie = 8
 End Enum
 
-Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum) As String
+Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As String) As String
 
     Dim strServer As String
     Dim strDb As String
@@ -221,9 +220,9 @@ Private Sub Test_MetaVision_GetPatientDetails()
     
     Dim objPat As ClassPatientDetails
     Dim strId As String
-    Dim strDep As String
 
     ' strId = MetaVision_GetCurrentPatientID()
+    strId = vbNullString
     Set objPat = MetaVision_GetPatientDetails(strId, "1234567")
 
     MsgBox objPat.PatientId & ": " & objPat.AchterNaam
@@ -309,7 +308,7 @@ Private Function GetBasePath() As String
 
     Dim strBasePath As String
     
-    strBasePath = IIf(RegistryKeyExists(constBasePath1, ""), constBasePath1, constBasePath2)
+    strBasePath = IIf(RegistryKeyExists(constBasePath1, vbNullString), constBasePath1, constBasePath2)
     
     If strBasePath = vbNullString Then
         ModLog.LogError "No Valid Registry BasePath"
@@ -380,7 +379,7 @@ Private Function GetEmpiDb() As String
 
 End Function
 
-Public Function MetaVision_GetServer()
+Public Function MetaVision_GetServer() As String
 
     Dim strKeyPath As String
     Dim strValue As String
@@ -400,7 +399,7 @@ Private Sub Test_MetaVision_GetServer()
 
 End Sub
 
-Public Function MetaVision_GetDepartment()
+Public Function MetaVision_GetDepartment() As String
 
     Dim strKeyPath As String
     Dim strValue As String

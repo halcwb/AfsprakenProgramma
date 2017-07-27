@@ -196,7 +196,7 @@ Private Sub LoadMedicament()
 
 End Sub
 
-Private Sub FillCombo(ByRef objCombo As ComboBox, ByRef arrItems() As String)
+Private Sub FillCombo(objCombo As ComboBox, arrItems() As String)
 
     Dim varItem As Variant
 
@@ -236,7 +236,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
 
 End Sub
 
-Private Function ValidateCombo(ByRef objCombo As MSForms.ComboBox) As String
+Private Function ValidateCombo(objCombo As MSForms.ComboBox) As String
 
     Dim strValid As String
     
@@ -386,9 +386,9 @@ End Sub
 
 Private Sub CenterForm()
 
-    StartUpPosition = 0
-    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
-    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+    Me.StartUpPosition = 0
+    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
 
 End Sub
 

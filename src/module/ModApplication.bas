@@ -107,7 +107,7 @@ Private Sub TestCloseAfspraken()
     MsgBox Application.DisplayAlerts
 End Sub
 
-Private Sub SetWindow(ByRef objWindow As Window, ByRef blnDisplay As Boolean)
+Private Sub SetWindow(objWindow As Window, ByVal blnDisplay As Boolean)
 
     With objWindow
         .DisplayWorkbookTabs = blnDisplay
@@ -124,13 +124,13 @@ Private Sub SetWindow(ByRef objWindow As Window, ByRef blnDisplay As Boolean)
     
 End Sub
 
-Public Sub SetWindowToCloseApp(ByRef objWindow As Window)
+Public Sub SetWindowToCloseApp(objWindow As Window)
     
     SetWindow objWindow, True
 
 End Sub
 
-Public Sub SetWindowToOpenApp(ByRef objWindow As Window)
+Public Sub SetWindowToOpenApp(objWindow As Window)
     
     SetWindow objWindow, False
 
@@ -203,7 +203,7 @@ InitializeError:
     
 End Sub
 
-Public Sub UpdateStatusBar(ByVal strItem, ByVal strMessage)
+Public Sub UpdateStatusBar(ByVal strItem As String, ByVal strMessage As String)
 
     Dim varStatus() As String
     Dim varItem() As String

@@ -5,12 +5,10 @@ Option Base 0
 'Returns True if the Collection has the key, varKey. Otherwise, returns False
 Public Function CollectionHasKey(varKey As Variant, objCol As Collection) As Boolean
     
-    Dim varObj As Variant
-    
     On Error GoTo ColHasKeyErr
     
+    objCol varKey
     CollectionHasKey = True
-    varObj = objCol(varKey)
     
     Exit Function
 
@@ -49,10 +47,9 @@ End Function
 'Sorts the given collection using the Arrays.MergeSort algorithm.
 ' O(n log(n)) time
 ' O(n) space
-Public Sub CollectionSort(objCol As Collection, Optional ByRef objC As IVariantComparator)
+Public Sub CollectionSort(objCol As Collection, Optional objC As IVariantComparator)
 
     Dim varA() As Variant
-    Dim varB() As Variant
     
     If objCol.Count = 0 Then Exit Sub
     
@@ -98,7 +95,7 @@ End Function
 
 'Adds all elements from the source collection, colSrc, to the destination collection, colDest.
 'Returns true if the destination collection changed as a result of this operation; false otherwise.
-Public Function CollectionAddAllFromCol(ByRef colSrc As Collection, ByRef colDest As Collection) As Boolean
+Public Function CollectionAddAllFromCol(colSrc As Collection, colDest As Collection) As Boolean
 
     Dim lngCount As Long
     Dim varElement As Variant
@@ -115,7 +112,7 @@ End Function
 
 'Adds all elements from the source array, varSrc, to the destination collection, colDest
 'Returns true if the destination collection changed as a result of this operation; false otherwise.
-Public Function CollectionAddAllFromArray(ByRef varSrc() As Variant, ByRef colDest As Collection) As Boolean
+Public Function CollectionAddAllFromArray(varSrc() As Variant, colDest As Collection) As Boolean
     
     Dim lngCount As Long
     Dim varElement As Variant

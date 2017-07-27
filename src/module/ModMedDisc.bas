@@ -237,7 +237,7 @@ Public Sub MedDisc_Clear_30()
 
 End Sub
 
-Public Sub GetMedicamenten(ByRef objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
+Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer
     Dim intC As Integer
@@ -555,7 +555,7 @@ Private Sub OpmMedDisc(ByVal intN As Integer)
     strRange = constText
     strRange = constText & IIf(intN < 10, "0" & intN, intN)
 
-    frmOpmerking.txtOpmerking.Text = Range(strRange).Value
+    frmOpmerking.txtOpmerking.Text = ModRange.GetRangeValue(strRange, vbNullString)
     frmOpmerking.Show
     
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then

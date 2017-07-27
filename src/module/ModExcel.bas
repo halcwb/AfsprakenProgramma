@@ -1,4 +1,6 @@
 Attribute VB_Name = "ModExcel"
+Option Explicit
+
 Public Function Excel_VLookup(ByVal varValue As Variant, ByVal strTable As String, ByVal intColumn As Integer) As Variant
 
     Excel_VLookup = Application.VLookup(varValue, Range(strTable), intColumn, False)

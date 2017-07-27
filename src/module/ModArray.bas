@@ -4,7 +4,7 @@ Option Explicit
 
 Private Const INSERTIONSORT_THRESHOLD As Long = 7
 
-Public Sub AddItemToVariantArray(ByRef arrItems() As Variant, ByVal varItem As Variant)
+Public Sub AddItemToVariantArray(arrItems() As Variant, ByVal varItem As Variant)
 
     Dim intU As Integer
     
@@ -19,7 +19,7 @@ Public Sub AddItemToVariantArray(ByRef arrItems() As Variant, ByVal varItem As V
 
 End Sub
 
-Public Sub AddItemToStringArray(ByRef arrItems() As String, ByVal strItem As String)
+Public Sub AddItemToStringArray(arrItems() As String, ByVal strItem As String)
 
     Dim intU As Integer
     
@@ -36,7 +36,7 @@ End Sub
 
 'Sorts the array using the MergeSort algorithm (follows the Java legacyMergesort algorithm
 'O(n*log(n)) time; O(n) space
-Public Sub ArraySort(ByRef varA() As Variant, Optional ByRef objC As IVariantComparator)
+Public Sub ArraySort(varA() As Variant, Optional objC As IVariantComparator)
 
     If objC Is Nothing Then
         MergeSort CreateCopyOfVariantArray(varA), varA, 0, VariantArrayLength(varA), 0, objC ' ToDo Factory.newNumericComparator
@@ -46,7 +46,7 @@ Public Sub ArraySort(ByRef varA() As Variant, Optional ByRef objC As IVariantCom
     
 End Sub
 
-Private Sub MergeSort(ByRef varSrc() As Variant, ByRef varDest() As Variant, lngLow As Long, lngHigh As Long, lngOff As Long, ByRef objC As IVariantComparator)
+Private Sub MergeSort(varSrc() As Variant, varDest() As Variant, lngLow As Long, lngHigh As Long, lngOff As Long, objC As IVariantComparator)
 
     Dim lngLength As Long
     Dim lngDestLow As Long
@@ -123,7 +123,7 @@ End Sub
 
 'Sorts the array using the MergeSort algorithm (follows the Java legacyMergesort algorithm
 'O(n*log(n)) time; O(n) space
-Public Sub SortObjects(ByRef varA() As Object, ByRef objC As IObjectComparator)
+Public Sub SortObjects(varA() As Object, objC As IObjectComparator)
 
     If objC Is Nothing Then
         err.Raise 3, "Arrays.sortObjects", "No IObjectComparator Provided to the sortObjects method."
@@ -133,7 +133,7 @@ Public Sub SortObjects(ByRef varA() As Object, ByRef objC As IObjectComparator)
     
 End Sub
 
-Private Sub MergeSortObjects(ByRef objSrc() As Object, ByRef objDest() As Object, lngLow As Long, lngHigh As Long, lngOff As Long, ByRef objC As IObjectComparator)
+Private Sub MergeSortObjects(objSrc() As Object, objDest() As Object, lngLow As Long, lngHigh As Long, lngOff As Long, objC As IObjectComparator)
 
     Dim lngLenght As Long
     Dim lngDestLow As Long
@@ -208,7 +208,7 @@ Private Sub MergeSortObjects(ByRef objSrc() As Object, ByRef objDest() As Object
     
 End Sub
 
-Private Sub Swap(varArr() As Variant, lngA As Long, lngB As Long)
+Private Sub Swap(varArr() As Variant, ByVal lngA As Long, ByVal lngB As Long)
     
     Dim varT As Variant
     
@@ -218,7 +218,7 @@ Private Sub Swap(varArr() As Variant, lngA As Long, lngB As Long)
 
 End Sub
 
-Private Sub SwapObjects(objArr() As Object, lngA As Long, lngB As Long)
+Private Sub SwapObjects(objArr() As Object, ByVal lngA As Long, ByVal lngB As Long)
     
     Dim objT As Object
     
@@ -228,7 +228,7 @@ Private Sub SwapObjects(objArr() As Object, lngA As Long, lngB As Long)
 
 End Sub
 
-Public Function CreateCopyOfVariantArray(ByRef varOriginal() As Variant) As Variant()
+Public Function CreateCopyOfVariantArray(varOriginal() As Variant) As Variant()
     
     Dim varDest() As Variant
     
@@ -240,7 +240,7 @@ Public Function CreateCopyOfVariantArray(ByRef varOriginal() As Variant) As Vari
 
 End Function
 
-Private Sub CopyRangeVariants(varSource() As Variant, lngBegin As Long, lngEnd As Long, varDest() As Variant)
+Private Sub CopyRangeVariants(varSource() As Variant, ByVal lngBegin As Long, ByVal lngEnd As Long, varDest() As Variant)
     
     Dim lngK As Long
     
@@ -250,7 +250,7 @@ Private Sub CopyRangeVariants(varSource() As Variant, lngBegin As Long, lngEnd A
 
 End Sub
 
-Private Sub CopyRangeObjects(objSource() As Object, lngBegin As Long, lngEnd As Long, objDest() As Object)
+Private Sub CopyRangeObjects(objSource() As Object, ByVal lngBegin As Long, ByVal lngEnd As Long, objDest() As Object)
     
     Dim lngK As Long
     
@@ -260,7 +260,7 @@ Private Sub CopyRangeObjects(objSource() As Object, lngBegin As Long, lngEnd As 
 
 End Sub
 
-Public Function CreateCopyOfObjecttArray(ByRef objOriginal() As Object) As Object()
+Public Function CreateCopyOfObjecttArray(objOriginal() As Object) As Object()
 
     Dim objDest() As Object
     
@@ -273,7 +273,7 @@ Public Function CreateCopyOfObjecttArray(ByRef objOriginal() As Object) As Objec
 End Function
 
 'Copies an array from the specified source array, beginning at the specified position, to the specified position in the destination array
-Public Sub ArrayCopyVariants(ByRef varSrc() As Variant, lngSrcPos As Long, ByRef varDst() As Variant, lngDstPos As Long, lngLength As Long)
+Public Sub ArrayCopyVariants(varSrc() As Variant, ByVal lngSrcPos As Long, varDst() As Variant, ByVal lngDstPos As Long, ByVal lngLength As Long)
     
     Dim intN As Long
     
@@ -300,7 +300,7 @@ Public Sub ArrayCopyVariants(ByRef varSrc() As Variant, lngSrcPos As Long, ByRef
 End Sub
 
 'Copies an array from the specified source array, beginning at the specified position, to the specified position in the destination array
-Public Sub ArrayCopyObjects(ByRef objSrc() As Object, lngSrcPos As Long, ByRef objDst() As Object, lngDstPos As Long, lngLength As Long)
+Public Sub ArrayCopyObjects(objSrc() As Object, ByVal lngSrcPos As Long, objDst() As Object, ByVal lngDstPos As Long, ByVal lngLength As Long)
     
     Dim intN As Long
     
@@ -329,7 +329,7 @@ End Sub
 
 'Adds all elements from the source collection, colSrc, to the destination collection, varDest.
 'Returns true if the destination collection changed as a result of this operation; false otherwise.
-Public Function ArrayAddAllFromCol(ByRef colSrc As Collection, ByRef varDest() As Variant) As Boolean
+Public Function ArrayAddAllFromCol(colSrc As Collection, varDest() As Variant) As Boolean
 
     Dim lngCount As Long
     Dim lngN As Long
@@ -349,7 +349,7 @@ End Function
 
 'Adds all elements from the source array, varSrc, to the destination collection, colDest
 'Returns true if the destination collection changed as a result of this operation; false otherwise.
-Public Function AddAllFromArray(ByRef varSrc() As Variant, ByRef colDest As Collection) As Boolean
+Public Function AddAllFromArray(varSrc() As Variant, colDest As Collection) As Boolean
 
     Dim lngCount As Long
     Dim lngN As Long
@@ -366,19 +366,19 @@ Public Function AddAllFromArray(ByRef varSrc() As Variant, ByRef colDest As Coll
     
 End Function
 
-Public Function VariantArrayLength(ByRef varA() As Variant) As Long
+Public Function VariantArrayLength(varA() As Variant) As Long
 
     VariantArrayLength = UBound(varA) - LBound(varA) + 1
     
 End Function
 
-Public Function ObjectArrayLength(ByRef objA() As Object) As Long
+Public Function ObjectArrayLength(objA() As Object) As Long
 
     ObjectArrayLength = UBound(objA) - LBound(objA) + 1
     
 End Function
 
-Public Function ArrayToString(ByRef varA() As Variant) As String
+Public Function ArrayToString(varA() As Variant) As String
 
     Dim varElement As Variant
     
@@ -396,7 +396,7 @@ Public Function ArrayToString(ByRef varA() As Variant) As String
     
 End Function
 
-Public Function StringArrayItem(ByRef strArr() As String, ByVal intItem As Integer) As String
+Public Function StringArrayItem(strArr() As String, ByVal intItem As Integer) As String
 
     Dim strResult As String
     

@@ -32,7 +32,7 @@ Private Function IsNeoSheet(ByVal strSheet As String) As Boolean
 
 End Function
 
-Private Sub NoFill(ByRef objTarget As Range)
+Private Sub NoFill(objTarget As Range)
 
     With objTarget.Interior
         .Pattern = xlNone
@@ -43,7 +43,7 @@ Private Sub NoFill(ByRef objTarget As Range)
 End Sub
 
 ' ToDo Grid lines thick is somehow not working for Neo
-Private Sub SetRangeColor(ByRef objTarget As Range, ByRef objSetting As Range, ByVal blnSheet As Boolean, Optional ByVal varGridColor As Variant)
+Private Sub SetRangeColor(objTarget As Range, objSetting As Range, ByVal blnSheet As Boolean, Optional ByVal varGridColor As Variant)
 
     Dim lngGridColor As Long
     Dim objCell As Range
@@ -217,7 +217,7 @@ Public Function ShowColorDialog(ByVal lngC As Long) As Long
 
 End Function
 
-Public Function ShowFontDialog(ByRef objRange As Range) As Boolean
+Public Function ShowFontDialog(objRange As Range) As Boolean
 
     objRange.Select
         

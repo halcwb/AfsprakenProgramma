@@ -134,7 +134,7 @@ Private Sub TestCopyVarData()
 
 End Sub
 
-Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean, blnStartProgress As Boolean)
+Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean, ByVal blnStartProgress As Boolean)
 
     If bln1700 And Is1700() Then                 ' InfB is same as 1700
         ModSheet.GoToSheet shtNeoGuiInfB, "A9"
@@ -193,6 +193,7 @@ Private Function GetItems(ByVal strGrp As String) As String()
     Dim strStartsWith As String
     
     strStartsWith = constInfBDataAct & strGrp
+    arrItems = Array()
     
     For Each objName In WbkAfspraken.Names
         If ModString.StartsWith(objName.Name, strStartsWith) Then ModArray.AddItemToStringArray arrItems, objName.Name
@@ -230,7 +231,7 @@ Public Function NeoInfB_GetTPNItems() As String()
     
 End Function
 
-Private Function ChangeTo1700(ByRef arrItems() As String) As String()
+Private Function ChangeTo1700(arrItems() As String) As String()
     
     Dim arr1700Items() As String
     Dim varItem As Variant
@@ -335,7 +336,7 @@ Private Sub test()
 
 End Sub
 
-Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIndex) As Double
+Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIndex As Integer) As Double
 
     Dim objTblMed As Range
     
@@ -909,8 +910,6 @@ End Function
 
 Public Sub NeoInfB_StandardLipid()
 
-    Dim lngNullVal As Long
-    
     ModRange.SetRangeValue constLipidStand, 5000
 
 End Sub
@@ -961,7 +960,6 @@ Private Sub ShowMedIVPickList(ByVal strTbl As String, ByVal strRange As String, 
     Dim colTbl As Collection
     Dim intN As Integer
     Dim strN As String
-    Dim intC As Integer
     Dim intKeuze As Integer
     
     Set colTbl = ModRange.CollectionFromRange(strTbl, intStart)
@@ -1023,7 +1021,6 @@ Public Sub NeoInfB_ShowVoedingPickList()
     Dim colToevoegMM As Collection
     Dim colToevoegKV As Collection
     Dim intN As Integer
-    Dim intC As Integer
     Dim intVoeding As Integer
     Dim intToevoegMM As Integer
     Dim intToevoegKV As Integer
@@ -1149,3 +1146,4 @@ NeoInfB_ShowVoedingPickListError:
     Set frmPickList = Nothing
     
 End Sub
+

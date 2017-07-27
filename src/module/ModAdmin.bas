@@ -32,10 +32,9 @@ End Sub
 
 ' ToDo add methods to setup data files and refresh patient data admin jobs
 
-Private Sub SetUpDataDir(ByVal strBedsFilePath, ByRef arrBeds() As Variant)
+Private Sub SetUpDataDir(ByVal strBedsFilePath As String, arrBeds() As Variant)
     
     Dim strPath As String
-    Dim blnDeleteAll As Boolean
     Dim enmRes As VbMsgBoxResult
     
     strPath = ModSetting.GetPatientDataPath()
@@ -46,7 +45,7 @@ Private Sub SetUpDataDir(ByVal strBedsFilePath, ByRef arrBeds() As Variant)
     ModProgress.StartProgress "Opzetten Data Files"
 
     If enmRes = vbYes Then ModFile.DeleteAllFilesInDir strPath
-    ModWorkBook.CreateDataWorkBooks strBedsFilePath, arrBeds, strPath, True
+    ModWorkBook.CreateDataWorkBooks strBedsFilePath, arrBeds, True
     
     ModProgress.FinishProgress
     Application.DisplayAlerts = True

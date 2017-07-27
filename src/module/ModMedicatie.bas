@@ -1,19 +1,19 @@
 Attribute VB_Name = "ModMedicatie"
 Option Explicit
 
-Public Function Medicatie_CalcEpiQty(ByVal dblWght As Double)
+Public Function Medicatie_CalcEpiQty(ByVal dblWght As Double) As Double
 
     Medicatie_CalcEpiQty = dblWght
 
 End Function
 
-Public Function Medicatie_CalcEpiVol(ByVal dblWght As Double)
+Public Function Medicatie_CalcEpiVol(ByVal dblWght As Double) As Double
 
     Medicatie_CalcEpiVol = IIf(dblWght < 6, 24, 48)
 
 End Function
 
-Public Function Medicatie_CalcEpiStand(ByVal dblWght As Double)
+Public Function Medicatie_CalcEpiStand(ByVal dblWght As Double) As Double
 
     Medicatie_CalcEpiStand = IIf(dblWght < 6, 1, 2)
 
@@ -25,7 +25,7 @@ Private Function GetMedContIVName(ByVal intMed As Integer, ByVal strTbl As Strin
 
 End Function
 
-Public Function GetNeoMedContIVName(ByVal intMed As Integer)
+Public Function GetNeoMedContIVName(ByVal intMed As Integer) As String
 
     GetNeoMedContIVName = GetMedContIVName(intMed, "Tbl_Neo_MedIV")
 

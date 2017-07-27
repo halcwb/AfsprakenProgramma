@@ -11,7 +11,7 @@ Option Explicit
 
 Implements IVariantComparator
 
-Public Function IVariantComparator_Compare(ByRef varA As Variant, ByRef varB As Variant) As Long
+Public Function IVariantComparator_Compare(varA As Variant, varB As Variant) As Long
 
     IVariantComparator_Compare = StrComp(varA, varB, vbTextCompare)
 

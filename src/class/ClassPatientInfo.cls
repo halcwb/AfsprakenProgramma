@@ -59,7 +59,7 @@ Public Property Get VoorNaam() As String
 
 End Property
 
-Public Property Let VoorNaam(ByRef strVN As String)
+Public Property Let VoorNaam(strVN As String)
 
     If Not strVN = constNull Then m_VN = strVN Else strVN = vbNullString
 

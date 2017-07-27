@@ -4,7 +4,7 @@ Option Explicit
 Private Const constDrugNo As String = "Var_Neo_PrintApothNo"
 Private Const constMedKeuze As String = "Var_Neo_InfB_Cont_MedKeuze_"
 
-Private Sub PrintSheet(ByRef shtSheet As Worksheet)
+Private Sub PrintSheet(shtSheet As Worksheet)
 
     shtSheet.Unprotect ModConst.CONST_PASSWORD
     shtSheet.PrintPreview

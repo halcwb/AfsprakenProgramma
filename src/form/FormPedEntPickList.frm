@@ -42,13 +42,13 @@ Public Function GetSelectedVoedingCount() As Integer
 
 End Function
 
-Public Sub LoadToevoegingen(ByRef colToevoeging As Collection)
+Public Sub LoadToevoegingen(colToevoeging As Collection)
 
     ModList.LoadListItems lstToeVoeging, colToevoeging
 
 End Sub
 
-Public Sub LoadVoedingen(ByRef colVoeding As Collection)
+Public Sub LoadVoedingen(colVoeding As Collection)
 
     ModList.LoadListItems lstVoeding, colVoeding
 
@@ -181,9 +181,9 @@ End Sub
 
 Private Sub CenterForm()
 
-    StartUpPosition = 0
-    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
-    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+    Me.StartUpPosition = 0
+    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
 
 End Sub
 

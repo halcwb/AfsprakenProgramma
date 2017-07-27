@@ -23,12 +23,14 @@ End Sub
 
 Private Sub cmdOK_Click()
 
+    Dim strBed As String
+    Dim dblGewicht As Double
+    
     On Error Resume Next
 
     Application.DisplayAlerts = False
-    Dim strBed As String
 
-    strBed = Range("Bednummer").Formula
+    strBed = ModRange.GetRangeValue("Bednummer", vbNullString)
 
     Me.Hide
     
@@ -45,23 +47,24 @@ Private Sub cmdOK_Click()
         shtPedPrtMedDisc.PrintOut preview:=False
     End If
     If chkTPNBlad.Value Then
-        If StringToDouble(Range("Gewicht").Text) / 10 < 7 Then
+        dblGewicht = ModRange.GetRangeValue("Gewicht", 0)
+        If StringToDouble(dblGewicht) / 10 < 7 Then
             shtPedPrtTPN2tot6.Select
             shtPedPrtTPN2tot6.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN2tot6.PrintOut preview:=False
-        ElseIf StringToDouble(Range("Gewicht").Text) / 10 < 16 Then
+        ElseIf StringToDouble(dblGewicht) / 10 < 16 Then
             shtPedPrtTPN7tot15.Select
             shtPedPrtTPN7tot15.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN7tot15.PrintOut preview:=False
-        ElseIf StringToDouble(Range("Gewicht").Text) / 10 < 31 Then
+        ElseIf StringToDouble(dblGewicht) / 10 < 31 Then
             shtPedPrtTPN16tot30.Select
             shtPedPrtTPN16tot30.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN16tot30.PrintOut preview:=False
-        ElseIf StringToDouble(Range("Gewicht").Text) / 10 <= 50 Then
+        ElseIf StringToDouble(dblGewicht) / 10 <= 50 Then
             shtPedPrtTPN31tot50.Select
             shtPedPrtTPN31tot50.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN31tot50.PrintOut preview:=False
-        ElseIf StringToDouble(Range("Gewicht").Text) / 10 > 50 Then
+        ElseIf StringToDouble(dblGewicht) / 10 > 50 Then
             shtPedPrtTPN50.Select
             shtPedPrtTPN50.PageSetup.CenterHeader = "Bed " & strBed
             shtPedPrtTPN50.PrintOut preview:=False
@@ -75,9 +78,9 @@ End Sub
 
 Private Sub CenterForm()
 
-    StartUpPosition = 0
-    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
-    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+    Me.StartUpPosition = 0
+    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
 
 End Sub
 

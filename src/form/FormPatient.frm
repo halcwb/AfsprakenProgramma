@@ -70,8 +70,6 @@ End Sub
 Private Sub btnRefresh_Click()
 
     Dim strId As String
-    Dim strDep As String
-    
     Dim objPat As ClassPatientDetails
     
     strId = IIf(txtPatNum.Text = vbNullString, MetaVision_GetCurrentPatientID(), vbNullString)
@@ -260,8 +258,6 @@ End Sub
 
 Private Sub txtGestDay_BeforeUpdate(ByVal blnCancel As MSForms.ReturnBoolean)
 
-    Dim strValid As String
-
     If txtGestDay.Value = vbNullString Then Exit Sub
 
     If Not ModPatient.ValidDagen(StringToDouble(txtGestDay.Value)) Then
@@ -309,7 +305,7 @@ Private Function ValidateBirthDate() As Boolean
     
 End Function
 
-Public Sub SetPatient(ByRef objPat As ClassPatientDetails)
+Public Sub SetPatient(objPat As ClassPatientDetails)
 
     Set m_Pat = objPat
     
@@ -520,9 +516,9 @@ End Sub
 
 Private Sub CenterForm()
 
-    StartUpPosition = 0
-    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
-    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+    Me.StartUpPosition = 0
+    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
 
 End Sub
 

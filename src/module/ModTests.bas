@@ -205,7 +205,7 @@ Private Sub CheckCursor(ByVal strMsg As String)
     ' Last action is set the cursor back to default
     ' So, if cursor is not default, something went wrong
     If objCursor <> xlDefault Then
-        AssertTrue False, "Clear patient did not work correctly: " + ErrorToString(), Not blnDontDisplay
+        AssertTrue False, strMsg + ErrorToString(), Not blnDontDisplay
     End If
     
     Application.Cursor = xlDefault
@@ -255,9 +255,8 @@ Private Sub UnlockAllA1Cells()
 End Sub
 
 Private Sub GetAllNamedRangesOnCurrentWorksheet()
-    Dim curSheet As Worksheet
+    
     Dim X As Name
-    Set curSheet = ActiveSheet
     
     For Each X In ActiveWorkbook.Names
         If Strings.InStr(1, X.Name, "Werkbrief") > 0 Then

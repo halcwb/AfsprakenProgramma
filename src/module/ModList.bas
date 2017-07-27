@@ -4,7 +4,7 @@ Option Explicit
 ' === Region with common Pick List code
 
 
-Public Function GetSelectedListCount(ByRef lstList As MSForms.ListBox) As Integer
+Public Function GetSelectedListCount(lstList As MSForms.ListBox) As Integer
 
     Dim intN As Integer
     Dim intC As Integer
@@ -18,7 +18,7 @@ Public Function GetSelectedListCount(ByRef lstList As MSForms.ListBox) As Intege
 
 End Function
 
-Public Sub LoadListItems(ByRef lstList As MSForms.ListBox, ByRef colItems As Collection)
+Public Sub LoadListItems(lstList As MSForms.ListBox, colItems As Collection)
 
     Dim varItem As Variant
     
@@ -28,31 +28,31 @@ Public Sub LoadListItems(ByRef lstList As MSForms.ListBox, ByRef colItems As Col
 
 End Sub
 
-Public Sub SelectListItem(ByRef lstList As MSForms.ListBox, ByVal intN As Integer)
+Public Sub SelectListItem(lstList As MSForms.ListBox, ByVal intN As Integer)
 
     lstList.Selected(intN - 2) = True
 
 End Sub
 
-Public Function IsListItemSelected(ByRef lstList As MSForms.ListBox, ByVal intN As Integer) As Boolean
+Public Function IsListItemSelected(lstList As MSForms.ListBox, ByVal intN As Integer) As Boolean
 
     IsListItemSelected = lstList.Selected(intN - 2)
 
 End Function
 
-Public Sub UnselectListItem(ByRef lstList As MSForms.ListBox, ByVal intN As Integer)
+Public Sub UnselectListItem(lstList As MSForms.ListBox, ByVal intN As Integer)
 
     lstList.Selected(intN - 2) = False
 
 End Sub
 
-Public Function HasSelectedListItems(ByRef lstList As MSForms.ListBox) As Boolean
+Public Function HasSelectedListItems(lstList As MSForms.ListBox) As Boolean
     
     HasSelectedListItems = Not GetFirstSelectedListItem(lstList, False) = 1
 
 End Function
 
-Public Function GetFirstSelectedListItem(ByRef lstList As MSForms.ListBox, ByVal blnUnSelect As Boolean) As Integer
+Public Function GetFirstSelectedListItem(lstList As MSForms.ListBox, ByVal blnUnSelect As Boolean) As Integer
 
     Dim intN As Integer
     Dim intC As Integer

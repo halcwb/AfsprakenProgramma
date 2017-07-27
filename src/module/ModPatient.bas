@@ -199,7 +199,7 @@ Public Function GetPatientDetails() As ClassPatientDetails
 
 End Function
 
-Public Sub WritePatientDetails(ByRef objPat As ClassPatientDetails)
+Public Sub WritePatientDetails(objPat As ClassPatientDetails)
 
     ModRange.SetRangeValue constPatNum, objPat.PatientId
     ModRange.SetRangeValue constAN, objPat.AchterNaam

@@ -20,6 +20,7 @@ should exhibit several necessary behaviors: _
   2.) compare(x,y)>= 0 for all x,y _
   3.) compare(x,y)>=0 and compare(y,z)>=0 implies compare(x,z)>0 for all x,y,z
 
-Public Function Compare(ByRef varV1 As Variant, ByRef varV2 As Variant) As Long
+Public Function Compare(varV1 As Variant, varV2 As Variant) As Long
 End Function
+
 

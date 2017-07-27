@@ -9,6 +9,6 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Public Function Compare(ByRef objA As Object, ByRef objB As Object) As Long
+Public Function Compare(objA As Object, objB As Object) As Long
 End Function
 

@@ -331,7 +331,7 @@ Private Sub Test_GetPatientFileName()
 
 End Sub
 
-Public Function GetPatientsFilePath(ByVal strFileName) As String
+Public Function GetPatientsFilePath(ByVal strFileName As String) As String
 
     GetPatientsFilePath = GetPatientDataPath() & strFileName
 
@@ -347,10 +347,8 @@ Public Function IsNeo() As Boolean
 
     Dim strPath As String
     Dim strDir As String
-    Dim blnIsDevelop As Boolean
     Dim blnIsNeo As Boolean
 
-    blnIsDevelop = ModSetting.IsDevelopmentDir()
     strPath = Application.ActiveWorkbook.Path
     strDir = ModSetting.GetNeoDir()
     
@@ -371,10 +369,8 @@ Public Function IsPed() As Boolean
 
     Dim strPath As String
     Dim strDir As String
-    Dim blnIsDevelop As Boolean
     Dim blnIsPed As Boolean
 
-    blnIsDevelop = ModSetting.IsDevelopmentDir()
     strPath = Application.ActiveWorkbook.Path
     strDir = ModSetting.GetNeoDir()
     

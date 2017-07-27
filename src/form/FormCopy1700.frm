@@ -51,7 +51,7 @@ Private Sub optPerBlok_Click()
 
 End Sub
 
-Private Sub RemoveDoubles(ByVal strList)
+Private Sub RemoveDoubles(ByVal strList As String)
 
     Dim intActN As Integer
     Dim intActC As Integer
@@ -96,7 +96,7 @@ Private Sub AddItemToList(ByVal strList As String, ByVal strItem As String, ByVa
     
 End Sub
 
-Private Sub AddItems(ByVal bln1700)
+Private Sub AddItems(ByVal bln1700 As Boolean)
 
     Dim intN As Integer
     Dim strList As String
@@ -124,9 +124,9 @@ End Sub
 
 Private Sub CenterForm()
 
-    StartUpPosition = 0
-    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
-    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+    Me.StartUpPosition = 0
+    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
 
 End Sub
 
@@ -138,10 +138,6 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
-    Dim intN As Integer
-    Dim strList As String
-    Dim strItem As String
-    
     ModProgress.StartProgress "Afspraken laden"
     
     ' First get the actual items

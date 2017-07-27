@@ -1,13 +1,13 @@
 Attribute VB_Name = "ModString"
 Option Explicit
 
-Public Function FirstPositionInstr(ByVal strString1, ByVal strString2) As Integer
+Public Function FirstPositionInstr(ByVal strString1 As String, ByVal strString2 As String) As Integer
 
     FirstPositionInstr = InStr(1, strString1, strString2, vbTextCompare)
 
 End Function
 
-Public Function CountFirstInStr(ByVal strString, strFirst) As Integer
+Public Function CountFirstInStr(ByVal strString As String, ByVal strFirst As String) As Integer
 
     Dim intN As Integer
     
@@ -128,13 +128,12 @@ Public Function DoubleToFractionString(ByVal dblNum As Double) As String
     Dim strNum As String
     Dim intDec As Integer
     Dim strDel As String
-    Dim strDec As String
     
     strNum = CStr(dblNum)
     strDel = SplitDouble(dblNum)(2)
     intDec = Len(SplitDouble(dblNum)(1))
         
-    DoubleToFractionString = Strings.Replace(strNum, strDel, "") & "/" & Application.WorksheetFunction.Power(10, intDec)
+    DoubleToFractionString = Strings.Replace(strNum, strDel, vbNullString) & "/" & Application.WorksheetFunction.Power(10, intDec)
 
 End Function
 
@@ -167,7 +166,7 @@ Private Sub TestGetPrecision()
 
 End Sub
 
-Public Function FixPrecision(ByVal dblNum As Double, intN As Integer) As String
+Public Function FixPrecision(ByVal dblNum As Double, ByVal intN As Integer) As String
 
     Dim dblFix As Double
     Dim intP As Integer
@@ -189,7 +188,7 @@ Private Sub TestFixPrecision()
 
 End Sub
 
-Public Function ConcatenateRange(ByRef objRange As Range, ByVal strDel As String) As String
+Public Function ConcatenateRange(objRange As Range, ByVal strDel As String) As String
 
     Dim strString As String
     Dim objCell As Range

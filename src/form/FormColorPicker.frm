@@ -122,7 +122,7 @@ Private Function GetItem(ByVal strItem As String) As Items
 
 End Function
 
-Private Sub SelectLabel(ByRef objLabel As MSForms.Label)
+Private Sub SelectLabel(objLabel As MSForms.Label)
 
     If Not m_SelectedLabel Is Nothing Then
         m_SelectedLabel.BorderStyle = fmBorderStyleNone
@@ -138,7 +138,7 @@ Private Sub SelectLabel(ByRef objLabel As MSForms.Label)
 
 End Sub
 
-Private Sub SetLabelColors(ByRef objLabel As MSForms.Label, ByRef objRange As Range)
+Private Sub SetLabelColors(objLabel As MSForms.Label, objRange As Range)
 
     objLabel.BackColor = objRange.Interior.Color
     objLabel.ForeColor = objRange.Font.Color
@@ -149,7 +149,7 @@ Private Sub SetLabelColors(ByRef objLabel As MSForms.Label, ByRef objRange As Ra
 
 End Sub
 
-Private Sub SetRangeColors(ByRef objRange As Range, ByRef objLabel As MSForms.Label)
+Private Sub SetRangeColors(objRange As Range, objLabel As MSForms.Label)
 
     objRange.Interior.Color = objLabel.BackColor
     objRange.Font.Color = objLabel.ForeColor
@@ -267,12 +267,9 @@ End Sub
 
 Private Sub cmdFont_Click()
 
-    Dim enmItem As Items
-    
     EnableColorCommands
     
     If Not m_SelectedLabel Is Nothing Then
-        enmItem = GetItem(cboItem.Value)
                 
         If optPed.Value Or optNeo.Value Then
             
@@ -337,17 +334,15 @@ End Sub
 
 Private Sub CenterForm()
 
-    StartUpPosition = 0
-    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
-    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+    Me.StartUpPosition = 0
+    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
 
 End Sub
 
 
 Private Sub UserForm_Activate()
 
-    Dim objRange As Range
-    
     CenterForm
 
     cboItem.AddItem shtGlobSettings.Range(constItem & Items.Backgrounds).Value2

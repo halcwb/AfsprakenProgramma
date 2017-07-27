@@ -150,7 +150,7 @@ ExportVbaCodeError:
     ModMessage.ShowMsgBoxError strError
 End Sub
 
-Public Function GetComponentFileName(ByRef vbcComp As VBComponent) As String
+Public Function GetComponentFileName(vbcComp As VBComponent) As String
 
         Dim strExt As String
         Dim strPath As String
@@ -177,7 +177,7 @@ Public Function GetComponentFileName(ByRef vbcComp As VBComponent) As String
 
 End Function
 
-Public Sub RunShell(ByVal strCmd As String, ByRef strArgs() As String)
+Public Sub RunShell(ByVal strCmd As String, strArgs() As String)
 
     Dim strPath As String
     Dim dblExit As Double

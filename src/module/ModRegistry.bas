@@ -13,7 +13,6 @@ End Function
 Public Function ReadRegistryKey(ByVal strKeyPath As String, ByVal strValueName As String) As String
 
     Dim objShell As Object
-    Dim strValue As String
     
     Set objShell = CreateObject("WScript.Shell")
     
@@ -52,12 +51,11 @@ Private Sub Test_Read_UMCU_Registry()
 
     Dim objShell As Object
     Dim strKeyPath As String
-    Dim strValueName As String
     
     Set objShell = CreateObject("WScript.Shell")
     
     strKeyPath = "HKCU\SOFTWARE\UMCU\MV\Afdeling"
-    MsgBox CreateKey(strKeyPath, "")
+    MsgBox CreateKey(strKeyPath, vbNullString)
     MsgBox objShell.RegRead(strKeyPath)
     
     Set objShell = Nothing

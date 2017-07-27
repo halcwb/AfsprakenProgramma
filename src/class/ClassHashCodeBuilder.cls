@@ -12,7 +12,7 @@ Option Explicit
 Private lngConstant_ As Long
 Private lngTotal_ As Long
 
-Public Sub InitializeVariables(Optional lngInitialNonZeroOddNumber As Long, Optional lngMultiplierNonZeroOddNumber As Long)
+Public Sub InitializeVariables(Optional ByVal lngInitialNonZeroOddNumber As Long, Optional ByVal lngMultiplierNonZeroOddNumber As Long)
 
     If (lngInitialNonZeroOddNumber = 0) Then
         lngConstant_ = 37
@@ -37,42 +37,42 @@ End Sub
 '' ****** PRIMITIVE TYPES ******
 '' *****************************
 
-Public Function AppendLong(lngValue As Long) As ClassHashCodeBuilder
+Public Function AppendLong(ByVal lngValue As Long) As ClassHashCodeBuilder
 
     lngTotal_ = lngTotal_ * lngConstant_ + lngValue
     Set AppendLong = Me
 
 End Function
 
-Public Function AppendInteger(intValue As Integer) As ClassHashCodeBuilder
+Public Function AppendInteger(ByVal intValue As Integer) As ClassHashCodeBuilder
 
     lngTotal_ = lngTotal_ * lngConstant_ + intValue
     Set AppendInteger = Me
 
 End Function
 
-Public Function AppendByte(bytValue As Byte) As ClassHashCodeBuilder
+Public Function AppendByte(ByVal bytValue As Byte) As ClassHashCodeBuilder
     
     lngTotal_ = lngTotal_ * lngConstant_ + bytValue
     Set AppendByte = Me
 
 End Function
 
-Public Function AppendSingle(sngValue As Single) As ClassHashCodeBuilder
+Public Function AppendSingle(ByVal sngValue As Single) As ClassHashCodeBuilder
     
     lngTotal_ = lngTotal_ * lngConstant_ + sngValue
     Set AppendSingle = Me
 
 End Function
 
-Public Function AppendDouble(dblValue As Double) As ClassHashCodeBuilder
+Public Function AppendDouble(ByVal dblValue As Double) As ClassHashCodeBuilder
     
     lngTotal_ = lngTotal_ * lngConstant_ + dblValue
     Set AppendDouble = Me
 
 End Function
 
-Public Function AppendBoolean(blnValue As Boolean) As ClassHashCodeBuilder
+Public Function AppendBoolean(ByVal blnValue As Boolean) As ClassHashCodeBuilder
     
     If blnValue = True Then
         lngTotal_ = lngTotal_ * lngConstant_ + blnValue
@@ -88,7 +88,6 @@ End Function
 
 Public Function AppendLongArray(lngArr() As Long) As ClassHashCodeBuilder
 
-    Dim lngVal As Long
     Dim varVal As Variant
     
     If UBound(lngArr, 1) - LBound(lngArr, 1) + 1 = 0 Then

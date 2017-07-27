@@ -188,7 +188,6 @@ Public Sub PedEntTPN_ShowVoedingPickList()
     Dim colVoeding As Collection
     Dim colToevoeging As Collection
     Dim intN As Integer
-    Dim intC As Integer
     Dim intVoeding As Integer
     Dim intToevoeging As Integer
     
@@ -334,7 +333,7 @@ Public Sub PedEntTPN_SelectTPNPrint()
         End If
     End If
         
-    Range("A1").Select
+    ActiveSheet.Range("A1").Select
 
 End Sub
 
@@ -851,7 +850,7 @@ End Sub
 
 Public Sub PedEntTPN_ChangeEnt()
 
-    If Range("_Ped_Ent_Keuze_1").Value = 1 Then
+    If ModRange.GetRangeValue("_Ped_Ent_Keuze_1", 0) = 1 Then
     
         ModRange.SetRangeValue "_Ped_Ent_Keuze_2", vbNullString
         ModRange.SetRangeValue "_Ped_Ent_Keuze_3", vbNullString

@@ -20,7 +20,7 @@ Private Function GetRow(ByVal sheetName As String, ByVal searchString As String)
     
 End Function
 
-Public Sub CopyRangeNamesToRangeNames(ByRef arrFrom() As String, ByRef arrTo() As String)
+Public Sub CopyRangeNamesToRangeNames(arrFrom() As String, arrTo() As String)
     
     Dim intN As Integer
     
@@ -54,7 +54,7 @@ Public Function CopyTempSheetToNamedRanges(ByVal blnShowProgress As Boolean) As 
 
 End Function
 
-Public Sub SetNameToRange(ByVal strName As String, ByRef objRange As Range)
+Public Sub SetNameToRange(ByVal strName As String, objRange As Range)
 
     ModAssert.AssertTrue objRange.Rows.Count = 1 And objRange.Columns.Count = 1, "Name cannot be set to multi cell", True
     
@@ -68,7 +68,7 @@ Public Sub SetNameToRange(ByVal strName As String, ByRef objRange As Range)
 
 End Sub
 
-Public Function RangeHasName(ByRef objRange As Range) As Boolean
+Public Function RangeHasName(objRange As Range) As Boolean
     
     On Error GoTo NoName
 
@@ -187,7 +187,7 @@ Public Function GetRangeValue(ByVal strRange As String, ByVal varDefault As Vari
 
 End Function
 
-Public Function GetCellAddress(ByRef objRange As Range) As String
+Public Function GetCellAddress(objRange As Range) As String
 
     Dim strAddress As String
     strAddress = "=" & "'" & objRange.Parent.Name & "'!" & objRange.Address(External:=False)
@@ -230,7 +230,7 @@ Public Function IsNeoDataName(ByVal strName As String) As Boolean
 
 End Function
 
-Public Sub WriteNamesToSheet(ByRef shtSheet As Worksheet, ByVal blnShowProgress As Boolean)
+Public Sub WriteNamesToSheet(shtSheet As Worksheet, ByVal blnShowProgress As Boolean)
 
     Dim objName As Name
     Dim intN As Integer

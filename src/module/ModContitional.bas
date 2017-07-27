@@ -7,7 +7,7 @@ Public Enum FormattingSetting
     ErrSet = 3
 End Enum
 
-Private Const constPedFormSetting = "H"
+Private Const constPedFormSetting As String = "H"
 
 Private Function GetFormattingSettingRange(ByVal intSet As FormattingSetting) As String
 
@@ -15,13 +15,13 @@ Private Function GetFormattingSettingRange(ByVal intSet As FormattingSetting) As
 
 End Function
 
-Public Sub ClearContitionalFormatting(ByRef objSheet As Worksheet, ByVal strRange As String)
+Public Sub ClearContitionalFormatting(objSheet As Worksheet, ByVal strRange As String)
 
     objSheet.Range(strRange).FormatConditions.Delete
 
 End Sub
 
-Public Sub SetContionalFormatting(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strFormula, ByVal enmSet As FormattingSetting, ByVal blnStop)
+Public Sub SetContionalFormatting(objSheet As Worksheet, ByVal strRange As String, ByVal strFormula As String, ByVal enmSet As FormattingSetting, ByVal blnStop As Boolean)
     
     Dim objForm As FormatCondition
     Dim strSet As String
@@ -40,7 +40,7 @@ Public Sub SetContionalFormatting(ByRef objSheet As Worksheet, ByVal strRange As
 
 End Sub
 
-Private Sub SetConditionalFormattingWarnErr(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal strWarn As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
+Private Sub SetConditionalFormattingWarnErr(objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal strWarn As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
 
     Dim intN As Integer
 
@@ -54,7 +54,7 @@ Private Sub SetConditionalFormattingWarnErr(ByRef objSheet As Worksheet, ByVal s
 
 End Sub
 
-Private Sub SetConditionalFormattingErr(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
+Private Sub SetConditionalFormattingErr(objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
 
     Dim intN As Integer
 
@@ -66,7 +66,7 @@ Private Sub SetConditionalFormattingErr(ByRef objSheet As Worksheet, ByVal strRa
     
 
 End Sub
-Private Sub SetConditionalFormattingInfoErr(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal strInfo As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
+Private Sub SetConditionalFormattingInfoErr(objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal strInfo As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
 
     Dim intN As Integer
 
@@ -80,7 +80,7 @@ Private Sub SetConditionalFormattingInfoErr(ByRef objSheet As Worksheet, ByVal s
 
 End Sub
 
-Private Sub SetConditionalFormattingInfo(ByRef objSheet As Worksheet, ByVal strRange As String, ByVal strInfo As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
+Private Sub SetConditionalFormattingInfo(objSheet As Worksheet, ByVal strRange As String, ByVal strInfo As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
 
     Dim intN As Integer
 

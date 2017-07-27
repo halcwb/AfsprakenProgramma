@@ -35,7 +35,7 @@ Public Function GetSelectedMedicatieCount() As Integer
 
 End Function
 
-Public Sub LoadMedicamenten(ByRef colMeds As Collection)
+Public Sub LoadMedicamenten(colMeds As Collection)
 
     ModList.LoadListItems lstMedicamenten, colMeds
 
@@ -122,9 +122,9 @@ End Sub
 
 Private Sub CenterForm()
 
-    StartUpPosition = 0
-    Left = Application.Left + (0.5 * Application.Width) - (0.5 * Width)
-    Top = Application.Top + (0.5 * Application.Height) - (0.5 * Height)
+    Me.StartUpPosition = 0
+    Me.Left = Application.Left + (0.5 * Application.Width) - (0.5 * Me.Width)
+    Me.Top = Application.Top + (0.5 * Application.Height) - (0.5 * Me.Height)
 
 End Sub
 

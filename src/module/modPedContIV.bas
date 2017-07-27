@@ -23,7 +23,6 @@ Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal
     Dim colTbl As Collection
     Dim intN As Integer
     Dim strN As String
-    Dim intC As Integer
     Dim intKeuze As Integer
     
     Set colTbl = ModRange.CollectionFromRange(strTbl, intStart)
@@ -265,7 +264,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
     If intKeuze = 1 Then                         ' No medicament was selected so clear the line
         Clear intN
     Else                                         ' Else find the right standard solution
-        varOplossing = Application.VLookup(Range(constTblMed).Cells(intKeuze, 1), Range(constTblMed), intOplKeuze, False)
+        varOplossing = ModExcel.Excel_VLookup(Range(constTblMed).Cells(intKeuze, 1), constTblMed, intOplKeuze)
         varOplossing = IIf(varOplossing = 0, constStandOplKeuze, varOplossing) ' Use NaCl 0.9% as stand solution if not specified otherwise
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
@@ -386,13 +385,14 @@ Private Sub EnterNumeric(ByVal intRegel As Integer, ByVal strRange As String, By
         .lblParameter = "Oplossing"
         .lblEenheid = strUnit
         If ModRange.GetRangeValue(constMedIVOplVol & strRegel, 0) = 0 Then
-            .txtWaarde = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, intColumn)
+            '.txtWaarde = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, intColumn)
+            .txtWaarde = ModExcel.Excel_Index(constTblMed, varKeuze, intColumn)
         Else
             .txtWaarde = ModRange.GetRangeValue(strRange & strRegel, vbNullString)
         End If
         .Show
         If IsNumeric(.txtWaarde) Then
-            If CDbl(.txtWaarde) = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, intColumn) Then
+            If CDbl(.txtWaarde) = ModExcel.Excel_Index(constTblMed, varKeuze, intColumn) Then 'Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, intColumn) Then
                 ModRange.SetRangeValue strRange & strRegel, 0
             Else
                 ModRange.SetRangeValue strRange & strRegel, .txtWaarde

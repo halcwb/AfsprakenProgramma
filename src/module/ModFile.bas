@@ -128,7 +128,7 @@ Public Function GetFiles(ByVal strDir As String) As String()
 
 End Function
 
-Public Function StringArrayNotEmpty(ByRef arrArray() As String) As Boolean
+Public Function StringArrayNotEmpty(arrArray() As String) As Boolean
 
     StringArrayNotEmpty = Len(Join(arrArray)) > 0
 

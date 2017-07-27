@@ -4,7 +4,7 @@ Option Explicit
 ' Module to handle ribbon events
 ' Note: blnVisible in GetVisible functions is not a boolean!! Using blnVisible As Boolean will result in a type mismatch!
 
-Public Sub ButtonOnAction(ByRef ctrlMenuItem As IRibbonControl)
+Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
 '
 ' Code for onAction callback. Ribbon control button
 '

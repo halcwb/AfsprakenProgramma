@@ -68,7 +68,7 @@ Public Sub LogTest(ByVal enmLevel As LogLevel, ByVal strMsg As String)
     
 End Sub
 
-Public Sub LogActionStart(ByVal strAction As String, ByRef strParams() As Variant)
+Public Sub LogActionStart(ByVal strAction As String, strParams() As Variant)
 
     Dim strFile As String
     Dim strMsg As String
@@ -84,6 +84,7 @@ Private Sub Test_LogActionStart()
 
     Dim strParams() As Variant
 
+    strParams = Array()
     LogActionStart "Test LogActionStart", strParams
 
 End Sub
@@ -111,7 +112,6 @@ End Sub
 
 
 Public Sub ModLog_ViewLog()
-Attribute ModLog_ViewLog.VB_Description = "Open log file"
 Attribute ModLog_ViewLog.VB_ProcData.VB_Invoke_Func = "l\n14"
 
     Dim strPath As String
