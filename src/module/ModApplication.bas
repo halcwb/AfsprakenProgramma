@@ -64,7 +64,6 @@ Public Sub CloseAfspraken()
     End If
     
     strAction = "ModApplication.CloseAfspraken"
-    strParams = Array()
     
     ModLog.LogActionStart strAction, strParams
     
@@ -147,7 +146,6 @@ Public Sub InitializeAfspraken()
     On Error GoTo InitializeError
     
     strAction = "ModApplication.InitializeAfspraken"
-    strParams = Array()
     
     ModLog.LogActionStart strAction, strParams
     
@@ -255,16 +253,32 @@ Private Sub SetCaptionAndHideBars()
     
     With Application
         .DisplayFormulaBar = blnIsDevelop
-        .DisplayStatusBar = blnIsDevelop
+        .DisplayStatusBar = True
         .DisplayFullScreen = False
         .DisplayScrollBars = True
         .WindowState = xlMaximized
     End With
     
     Application.StatusBar = ModConst.CONST_APPLICATION_NAME
+    UpdateStatusBar "Versie", ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
+    UpdateStatusBar "Omgeving", GetEnvironment()
     UpdateStatusBar "Afdeling", IIf(IsPedDir, "Pediatrie", "Neonatologie")
     
 End Sub
+
+Private Function GetEnvironment() As String
+
+    Dim strEnv As String
+    Dim strPath As String
+    
+    strPath = WbkAfspraken.Path
+    strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Test"), "Test", "")
+    strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Training"), "Training", strEnv)
+    strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Productie"), "Productie", strEnv)
+    
+    GetEnvironment = strEnv
+
+End Function
 
 Public Sub SetApplicationTitle()
 

@@ -110,6 +110,8 @@ Private Sub TestNameExists()
 
     MsgBox NameExists("__0_PatNum")
     MsgBox NameExists("foo")
+    
+    MsgBox WbkAfspraken.Names("__0_PatNum").RefersToRange.Value2
 
 End Sub
 
@@ -138,10 +140,11 @@ Public Function SetRangeValue(ByVal strRange As String, ByVal varValue As Varian
     Dim blnLog As Boolean
     Dim blnSet As Boolean
     
+    On Error GoTo SetRangeValueError
 
     If NameExists(strRange) Then
         blnSet = True
-        Range(strRange).Value2 = varValue
+        WbkAfspraken.Names(strRange).RefersToRange.Value2 = varValue
     Else
         blnLog = ModSetting.GetEnableLogging()
         blnSet = False
@@ -151,6 +154,11 @@ Public Function SetRangeValue(ByVal strRange As String, ByVal varValue As Varian
     End If
     
     SetRangeValue = blnSet
+    Exit Function
+    
+SetRangeValueError:
+
+    ModLog.LogError "Could not set " & varValue & " to range " & strRange & " Err: " & Err.Number
 
 End Function
 
@@ -161,7 +169,7 @@ Public Sub SetRangeFormula(ByVal strRange As String, ByVal strFormula As String)
     blnLog = ModSetting.GetEnableLogging()
 
     If NameExists(strRange) Then
-        Range(strRange).Formula = strFormula
+        WbkAfspraken.Names(strRange).RefersToRange.Formula = strFormula
     Else
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogPath(), Error, "Could not set " & strFormula & " to range: " & strRange
@@ -170,12 +178,29 @@ Public Sub SetRangeFormula(ByVal strRange As String, ByVal strFormula As String)
 
 End Sub
 
+Public Function GetRange(ByVal strRange As String) As Range
+
+    Dim blnLog As Boolean
+    
+    If NameExists(strRange) Then
+        Set GetRange = WbkAfspraken.Names(strRange).RefersToRange
+    Else
+        blnLog = ModSetting.GetEnableLogging()
+        ModLog.EnableLogging
+        ModLog.LogToFile ModSetting.GetLogPath(), Error, "Could not get range value from: " & strRange
+        If Not blnLog Then ModLog.DisableLogging
+        
+        Set GetRange = Nothing
+    End If
+
+End Function
+
 Public Function GetRangeValue(ByVal strRange As String, ByVal varDefault As Variant) As Variant
 
     Dim blnLog As Boolean
     
     If NameExists(strRange) Then
-        GetRangeValue = Range(strRange).Value2
+        GetRangeValue = WbkAfspraken.Names(strRange).RefersToRange.Value2
     Else
         blnLog = ModSetting.GetEnableLogging()
         ModLog.EnableLogging

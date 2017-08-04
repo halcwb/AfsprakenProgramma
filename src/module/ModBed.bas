@@ -139,7 +139,7 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
 ErrorOpenBed:
 
     ModMessage.ShowMsgBoxError "Kan bed " & strBed & " niet openenen"
-    ModLog.LogError err.Description
+    ModLog.LogError Err.Description
     
 End Sub
 

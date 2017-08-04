@@ -4,7 +4,7 @@ Option Explicit
 Public Enum RGBColors
     R = 1
     G = 2
-    b = 3
+    B = 3
 End Enum
 
 Private Const constColorSettings As String = "G2"
@@ -205,7 +205,7 @@ Public Function ShowColorDialog(ByVal lngC As Long) As Long
 
     lngR = ConvertLongToRGB(lngC, R)
     lngG = ConvertLongToRGB(lngC, G)
-    lngB = ConvertLongToRGB(lngC, b)
+    lngB = ConvertLongToRGB(lngC, B)
 
     If Application.Dialogs(xlDialogEditColor).Show(10, lngR, lngG, lngB) = True Then
       'user pressed OK
@@ -238,7 +238,6 @@ Public Function GetFontNames() As Variant()
     Dim varIds() As Variant
 
     Set objWd = CreateObject("Word.Application")
-    varIds = Array()
     
     For Each varID In objWd.FontNames
         ModArray.AddItemToVariantArray varIds, varID

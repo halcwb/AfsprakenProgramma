@@ -4,19 +4,12 @@ Option Explicit
 Private Const constDrugNo As String = "Var_Neo_PrintApothNo"
 Private Const constMedKeuze As String = "Var_Neo_InfB_Cont_MedKeuze_"
 
-Private Sub PrintSheet(shtSheet As Worksheet)
-
-    shtSheet.Unprotect ModConst.CONST_PASSWORD
-    shtSheet.PrintPreview
-    If Not ModSetting.GetDevelopmentMode Then shtSheet.Protect ModConst.CONST_PASSWORD
-    
-End Sub
-
 Private Sub PrintBriefNo(ByVal intNo As Integer)
 
+    shtNeoPrtApoth.Unprotect ModConst.CONST_PASSWORD
     ModRange.SetRangeValue constDrugNo, intNo
     
-    PrintSheet shtNeoPrtApoth
+    PrintSheet shtNeoPrtApoth, 2
     
 End Sub
 

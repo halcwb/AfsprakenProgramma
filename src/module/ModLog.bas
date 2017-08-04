@@ -45,7 +45,7 @@ Public Sub LogError(ByVal strError As String)
 
     Dim blnLog As Boolean
     
-    strError = " Number: " & err.Number & " Source: " & err.Source & " Description: " & strError
+    strError = " Number: " & Err.Number & " Source: " & Err.Source & " Description: " & strError
     blnLog = ModSetting.GetEnableLogging()
 
     EnableLogging
@@ -84,7 +84,6 @@ Private Sub Test_LogActionStart()
 
     Dim strParams() As Variant
 
-    strParams = Array()
     LogActionStart "Test LogActionStart", strParams
 
 End Sub

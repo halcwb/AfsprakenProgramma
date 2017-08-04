@@ -147,7 +147,7 @@ Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As 
     strSql = strSql & "pl.LocationFromTime" & vbNewLine
     strSql = strSql & "FROM PatientLogs pl" & vbNewLine
     strSql = strSql & "LEFT JOIN LogicalUnits lu ON lu.LogicalUnitID = pl.LogicalUnitID" & vbNewLine
-    strSql = strSql & "LEFT JOIN Beds b ON b.BedID = pl.BedID" & vbNewLine
+    strSql = strSql & "INNER JOIN Beds b ON b.BedID = pl.BedID" & vbNewLine
     strSql = strSql & "LEFT JOIN DateTimeSignals dts ON dts.PatientID = pl.PatientID" & vbNewLine
     strSql = strSql & "WHERE " & vbNewLine
     strSql = strSql & "dts.ParameterID = @bd" & vbNewLine
@@ -158,6 +158,12 @@ Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As 
     GetPatientListSQL = strSql
 
 End Function
+
+Private Sub Test_GetPatientSQL()
+
+    ModUtils.CopyToClipboard GetPatientListSQL("", "0891344")
+
+End Sub
 
 Public Function MetaVision_GetPatientDetails(ByVal strPatId As String, ByVal strPatNum As String) As ClassPatientDetails
 

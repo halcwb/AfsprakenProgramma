@@ -32,6 +32,26 @@ ExportForSourceControlError:
 
 End Sub
 
+Public Sub CopyToClipboard(ByVal strText As String)
+
+    Dim objClip As MSForms.DataObject
+    
+    Set objClip = New MSForms.DataObject
+    objClip.SetText strText
+    objClip.PutInClipboard
+
+End Sub
+
+Public Function GetField(objRs As Recordset, ByVal strField As String) As Variant
+
+    If Not IsNull(objRs.Fields(strField)) Then
+        GetField = objRs.Fields(strField)
+    Else
+        GetField = vbNullString
+    End If
+
+End Function
+
 Public Sub DeleteSourceFiles()
 
     Dim strPath As String
@@ -170,7 +190,7 @@ Public Function GetComponentFileName(vbcComp As VBComponent) As String
             strPath = "module"
             strExt = ".bas"
         Case Else
-            err.Raise 17, "GetComponentFileName", "ComponentType not supported: " & vbext_ComponentType.vbext_ct_ActiveXDesigner
+            Err.Raise 17, "GetComponentFileName", "ComponentType not supported: " & vbext_ComponentType.vbext_ct_ActiveXDesigner
         End Select
         
         GetComponentFileName = strPath & "\" & vbcComp.Name & strExt

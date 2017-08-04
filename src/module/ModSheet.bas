@@ -196,7 +196,7 @@ Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet, ByVal b
     If ModSetting.IsPed() Then
         GoToSheet shtPed, "A1"
     Else
-        If shtNeo = shtNeoGuiInfB Then
+        If shtNeo.Name = shtNeoGuiInfB.Name Then
             ModNeoInfB.NeoInfB_SelectInfB False, blnStartProgress
         Else
             GoToSheet shtNeo, "A1"
@@ -230,6 +230,17 @@ Public Sub SelectPedOrNeoAfsprSheet()
         
 End Sub
 
+Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer)
+
+    shtSheet.Unprotect ModConst.CONST_PASSWORD
+    If ModMessage.ShowMsgBoxYesNo("Eerst preview zien?") = vbYes Then
+        shtSheet.PrintPreview False
+    Else
+        shtSheet.PrintOut Copies:=intNum
+    End If
+    If Not ModSetting.GetDevelopmentMode Then shtSheet.Protect ModConst.CONST_PASSWORD
+    
+End Sub
 
 
 

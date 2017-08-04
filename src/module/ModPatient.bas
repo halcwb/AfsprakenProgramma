@@ -121,7 +121,7 @@ Public Sub OpenPatientLijst(ByVal strCaption As String)
 OpenPatientListError:
 
     ModMessage.ShowMsgBoxError "Kan patient lijst niet openen"
-    ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & err.Number
+    ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & Err.Number
     
 End Sub
 

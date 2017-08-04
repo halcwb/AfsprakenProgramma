@@ -69,6 +69,11 @@ Private Const constToevoegMMCount As Integer = 4
 Private Const constTblToevoegKV As String = "Tbl_Neo_PoedKV"
 Private Const constToevoegKVCount As Integer = 4
 
+Public Function IsEpiduraal(ByVal strText As String) As Boolean
+
+    IsEpiduraal = ModString.ContainsCaseInsensitive(strText, "epiduraal")
+
+End Function
 
 Private Function Is1700() As Boolean
 
@@ -193,7 +198,6 @@ Private Function GetItems(ByVal strGrp As String) As String()
     Dim strStartsWith As String
     
     strStartsWith = constInfBDataAct & strGrp
-    arrItems = Array()
     
     For Each objName In WbkAfspraken.Names
         If ModString.StartsWith(objName.Name, strStartsWith) Then ModArray.AddItemToStringArray arrItems, objName.Name
@@ -340,7 +344,7 @@ Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIn
 
     Dim objTblMed As Range
     
-    Set objTblMed = Range(constTblMedIV)
+    Set objTblMed = ModRange.GetRange(constTblMedIV)
 
     GetMedicamentItemWithIndex = objTblMed.Cells(intMed, intIndex)
     
@@ -372,7 +376,11 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
     
     ' dblAdvMin = 0.5 * dblFactor * (dblQty / 12) / dblWeight
     ' dblQty = dblAdvMin * 12 * dblWeight / (0.5 * dblFactor)
-    dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
+    If dblStand * dblFactor > 0 Then
+        dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
+    Else
+        dblQty = 0
+    End If
     
     GetMedicamentMinQty = dblQty
 
@@ -401,7 +409,7 @@ Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolea
     
     Dim objTblMed As Range
     
-    Set objTblMed = Range(constTblMedIV)
+    Set objTblMed = ModRange.GetRange(constTblMedIV)
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
     
     strMedVar = constMedKeuze & strRegel
@@ -420,7 +428,7 @@ Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolea
         ModRange.SetRangeValue strMedSterkte, 0
     Else
         strMedName = ModMedicatie.GetNeoMedContIVName(varMedIndex)
-        If ModString.StartsWith(strMedName, "Epi ") Then
+        If IsEpiduraal(strMedName) Then
             ModRange.SetRangeValue strMedSterkte, ModMedicatie.Medicatie_CalcEpiQty(ModPatient.GetGewichtFromRange()) * 10
         Else
             ModRange.SetRangeValue strMedSterkte, GetMedicamentMinQty(varMedIndex) * 10

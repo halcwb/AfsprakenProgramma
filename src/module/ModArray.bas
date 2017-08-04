@@ -126,7 +126,7 @@ End Sub
 Public Sub SortObjects(varA() As Object, objC As IObjectComparator)
 
     If objC Is Nothing Then
-        err.Raise 3, "Arrays.sortObjects", "No IObjectComparator Provided to the sortObjects method."
+        Err.Raise 3, "Arrays.sortObjects", "No IObjectComparator Provided to the sortObjects method."
     End If
     
     MergeSortObjects CreateCopyOfObjecttArray(varA), varA, 0, ObjectArrayLength(varA), 0, objC
@@ -232,7 +232,6 @@ Public Function CreateCopyOfVariantArray(varOriginal() As Variant) As Variant()
     
     Dim varDest() As Variant
     
-    varDest = Array()
     ReDim varDest(LBound(varOriginal) To UBound(varOriginal))
     CopyRangeVariants varOriginal, LBound(varOriginal), UBound(varOriginal), varDest
     
@@ -264,7 +263,6 @@ Public Function CreateCopyOfObjecttArray(objOriginal() As Object) As Object()
 
     Dim objDest() As Object
     
-    objDest = Array()
     ReDim objDest(LBound(objOriginal) To UBound(objOriginal))
     CopyRangeObjects objOriginal, LBound(objOriginal), UBound(objOriginal), objDest
     
@@ -279,15 +277,15 @@ Public Sub ArrayCopyVariants(varSrc() As Variant, ByVal lngSrcPos As Long, varDs
     
     'Check if all offsets and lengths are non negative
     If lngSrcPos < 0 Or lngDstPos < 0 Or lngLength < 0 Then
-        err.Raise 9, , "negative value supplied"
+        Err.Raise 9, , "negative value supplied"
     End If
      
     'Check if ranges are valid
     If lngLength + lngSrcPos > UBound(varSrc) Then
-        err.Raise 9, , "Not enough elements to ArrayCopyVariants, src+length: " & lngSrcPos + lngLength & ", UBound(varSrc): " & UBound(varSrc)
+        Err.Raise 9, , "Not enough elements to ArrayCopyVariants, src+length: " & lngSrcPos + lngLength & ", UBound(varSrc): " & UBound(varSrc)
     End If
     If lngLength + lngDstPos > UBound(varDst) Then
-        err.Raise 9, , "Not enough room in destination array. dstPos+length: " & lngDstPos + lngLength & ", UBound(varDst): " & UBound(varDst)
+        Err.Raise 9, , "Not enough room in destination array. dstPos+length: " & lngDstPos + lngLength & ", UBound(varDst): " & UBound(varDst)
     End If
     
     intN = 0
@@ -306,15 +304,15 @@ Public Sub ArrayCopyObjects(objSrc() As Object, ByVal lngSrcPos As Long, objDst(
     
     'Check if all offsets and lengths are non negative
     If lngSrcPos < 0 Or lngDstPos < 0 Or lngLength < 0 Then
-        err.Raise 9, , "negative value supplied"
+        Err.Raise 9, , "negative value supplied"
     End If
      
     'Check if ranges are valid
     If lngLength + lngSrcPos > UBound(objSrc) Then
-        err.Raise 9, , "Not enough elements to ArrayCopyVariants, src+length: " & lngSrcPos + lngLength & ", UBound(objSrc): " & UBound(objSrc)
+        Err.Raise 9, , "Not enough elements to ArrayCopyVariants, src+length: " & lngSrcPos + lngLength & ", UBound(objSrc): " & UBound(objSrc)
     End If
     If lngLength + lngDstPos > UBound(objDst) Then
-        err.Raise 9, , "Not enough room in destination array. dstPos+length: " & lngDstPos + lngLength & ", UBound(objDst): " & UBound(objDst)
+        Err.Raise 9, , "Not enough room in destination array. dstPos+length: " & lngDstPos + lngLength & ", UBound(objDst): " & UBound(objDst)
     End If
     
     intN = 0

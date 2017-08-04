@@ -5,7 +5,7 @@ Option Explicit
 Public Const CONST_LANGUAGE_DUTCH As Integer = 1043
 
 ' Application Name
-Public Const CONST_APPLICATION_NAME As String = "Informedica Afspraken Programma 2017"
+Public Const CONST_APPLICATION_NAME As String = "Informedica AfsprakenProgramma"
 ' Password to protect code and sheets
 Public Const CONST_PASSWORD As String = "hla"
 
