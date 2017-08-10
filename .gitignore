@@ -44,3 +44,7 @@
 !/docs/
 !/docs/img/
 !/docs/img/*.png
+
+# Add tests
+!/tests/
+!/tests/*.xlsx
