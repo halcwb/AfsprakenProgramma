@@ -4,7 +4,7 @@ Option Explicit
 Public Const CONST_TEST_ERROR As Long = vbObjectError + 1
 
 Private Const constTestStart As Integer = 3
-Private Const constTestCount As Integer = 16
+Private Const constTestCount As Integer = 461
 Private Const constTestNum As String = "A"
 Private Const constSetupGewicht As String = "B"
 Private Const constSetupMedicament As String = "C"
@@ -35,13 +35,13 @@ Private Const constInfuusStand As String = "Var_Neo_InfB_Cont_Stand_"
 
 Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
 Private Const constTblOpl As String = "Tbl_Neo_OplVlst"
-Private Const constTblVerwacht As String = "T3:AE102"
-Private Const constTblTekst As String = "AS3:AT102"
+Private Const constTblVerwacht As String = "T3:AE"
+Private Const constTblTekst As String = "AS3:AT"
 
 Private Const constAfsprTekst As String = "AS"
 Private Const constEtiketTekst As String = "AT"
 
-Private Const constTestResult As String = "AF103"
+Private Const constTestResult As String = "AF"
 
 Public Sub Test_NeoInfB_ContMed()
 
@@ -69,18 +69,18 @@ Public Sub Test_NeoInfB_ContMed()
     
     ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
     
-    'ModPatient.PatientClearAll False, True
+    ModPatient.PatientClearAll False, True
     
     Set wbkTests = Workbooks.Open(WbkAfspraken.Path & "/tests/Tests.xlsx")
     Set shtTests = wbkTests.Sheets("NICU_ContMed")
     
-    shtTests.Range(constTblVerwacht).ClearContents
-    shtTests.Range(constTblTekst).ClearContents
+    shtTests.Range(constTblVerwacht & constTestCount + 2).ClearContents
+    shtTests.Range(constTblTekst & constTestCount + 2).ClearContents
 
     blnPass = True
-    For intN = constTestStart To constTestCount
+    For intN = constTestStart To constTestCount + 2
         strNo = shtTests.Range(constTestNum & intN).Value2
-        ModProgress.SetJobPercentage "Testing", constTestCount, intN
+        ModProgress.SetJobPercentage "Testing", constTestCount, (intN - 2)
         
         ' Gewicht
         dblGew = ModString.StringToDouble(shtTests.Range(constSetupGewicht & intN).Value2)
@@ -356,6 +356,7 @@ Public Sub Test_NeoInfB_ContMed()
         For intM = 0 To 9
             If IsNumeric(shtNeoPrtApoth.Range("A17").Value2) Then
                 intSpuitN = shtNeoPrtApoth.Range("A17").Value2
+                intSpuitN = IIf(intSpuitN >= 6, 5, intSpuitN)
                 strTekst = GetEtiketTekst(1)
                 For intI = 1 To intSpuitN + 1
                     blnPass = blnPass And Equals(strTekst, GetEtiketTekst(intI))
@@ -376,7 +377,7 @@ Public Sub Test_NeoInfB_ContMed()
 
     ModProgress.FinishProgress
     
-    blnPass = blnPass And shtTests.Range(constTestResult).Value
+    blnPass = blnPass And shtTests.Range(constTestResult & constTestCount + 2).Value
 
     If blnPass Then
         ModMessage.ShowMsgBoxInfo "Alle testen geslaagt"
@@ -406,6 +407,7 @@ Private Function Equals(ByVal strVal1 As Variant, ByVal strVal2 As Variant)
 
     Dim strVal_1 As String
     Dim strVal_2 As String
+    Dim blnEqs As Boolean
     
     strVal_1 = Trim(strVal1)
     strVal_2 = Trim(strVal2)
@@ -413,9 +415,15 @@ Private Function Equals(ByVal strVal1 As Variant, ByVal strVal2 As Variant)
     strVal_1 = IIf(strVal_1 = "0", vbNullString, strVal_1)
     strVal_2 = IIf(strVal_2 = "0", vbNullString, strVal_2)
     
-    If Not (strVal_1 = strVal_2) Then MsgBox "Not Equal: " & strVal_1 & ", " & strVal_2
+    If IsNumeric(strVal_1) And IsNumeric(strVal_2) Then
+        blnEqs = (ModString.StringToDouble(strVal_1) - ModString.StringToDouble(strVal_2)) < 0.01
+    Else
+        blnEqs = strVal_1 = strVal_2
+    End If
     
-    Equals = strVal_1 = strVal_2
+    If Not blnEqs Then MsgBox "Not Equal: " & strVal_1 & ", " & strVal_2
+    
+    Equals = blnEqs
 
 End Function
 

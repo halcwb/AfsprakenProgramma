@@ -340,13 +340,13 @@ Private Sub test()
 
 End Sub
 
-Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIndex As Integer) As Double
+Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIndex As Integer) As Variant
 
     Dim objTblMed As Range
     
     Set objTblMed = ModRange.GetRange(constTblMedIV)
 
-    GetMedicamentItemWithIndex = objTblMed.Cells(intMed, intIndex)
+    GetMedicamentItemWithIndex = objTblMed.Cells(intMed, intIndex).Value2
     
     Set objTblMed = Nothing
 
@@ -354,7 +354,7 @@ End Function
 
 Private Sub TestGetMinimumAdvice()
 
-    MsgBox GetMedicamentItemWithIndex(1, constAdvMinIndex)
+    MsgBox GetMedicamentItemWithIndex(2, constAdvMinIndex)
 
 End Sub
 
@@ -367,28 +367,37 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
     Dim dblOplQty As Double
     Dim dblStand As Double
     Dim dblQty As Double
+    Dim dblMaxConc As Double
+    Dim strMed As String
     
     dblAdvMin = GetMedicamentItemWithIndex(intMed, constAdvMinIndex)
     dblFactor = GetMedicamentItemWithIndex(intMed, constFactorIndex)
     dblOplQty = GetMedicamentItemWithIndex(intMed, constDefHoevIndex)
     dblStand = GetMedicamentItemWithIndex(intMed, constDefStandIndex)
     dblWeight = ModPatient.GetGewichtFromRange()
+    dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
+    strMed = GetMedicamentItemWithIndex(intMed, 1)
     
-    ' dblAdvMin = 0.5 * dblFactor * (dblQty / 12) / dblWeight
-    ' dblQty = dblAdvMin * 12 * dblWeight / (0.5 * dblFactor)
-    If dblStand * dblFactor > 0 Then
+    ' Medicatie doxapram puur geen oplosvolume
+    If ModString.ContainsCaseInsensitive(strMed, "doxapram") Then
+        dblQty = dblMaxConc * dblOplQty
+        
+    ' dblAdvMin = dblStand * dblFactor * (dblQty / dblOplQty) / dblWeight
+    ' dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
+    ElseIf dblStand * dblFactor > 0 Then
         dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
+        dblQty = IIf(dblQty / dblOplQty > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
     Else
         dblQty = 0
     End If
     
-    GetMedicamentMinQty = dblQty
+    GetMedicamentMinQty = ModString.FixPrecision(dblQty, 1)
 
 End Function
 
 Private Sub TestGetMedicamentMinQty()
 
-    MsgBox GetMedicamentMinQty(4)
+    MsgBox GetMedicamentMinQty(9)
 
 End Sub
 
