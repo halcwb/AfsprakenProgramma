@@ -1,6 +1,8 @@
 Attribute VB_Name = "ModNeoInfB"
 Option Explicit
 
+Private Const constIntakeAdvice As String = "B7"
+
 Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
 Private Const constMedIVMax As Integer = 12
 
@@ -582,6 +584,31 @@ Public Sub NeoInfB_RemvoveArtLijn()
 
     ModRange.SetRangeValue constArtLijn, 0
     ModRange.SetRangeValue constExtra + "01", False
+
+End Sub
+
+Public Sub NeoInfB_IntakeAdvies()
+
+    ModRange.SetRangeValue constIntakePerKg, shtNeoBerInfB.Range(constIntakeAdvice).Value2
+
+End Sub
+
+Public Sub NeoInfB_IntakePerKg()
+
+    Dim frmInvoer As FormInvoerNumeriek
+    
+    Set frmInvoer = New FormInvoerNumeriek
+    
+    With frmInvoer
+        .Caption = "Vocht per Kg/dag"
+        .lblParameter = "Vocht"
+        .lblEenheid = "ml/kg/dag"
+        .txtWaarde = ModRange.GetRangeValue(constIntakePerKg, 0)
+        .Show
+        If IsNumeric(.txtWaarde) Then
+            ModRange.SetRangeValue constIntakePerKg, .txtWaarde
+        End If
+    End With
 
 End Sub
 

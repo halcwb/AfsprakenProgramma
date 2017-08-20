@@ -2,7 +2,7 @@
 $B$4: 	=TODAY()-__4_GebDatum+1
 $C$4: 	=IF(B4<7,B4,6)
 $B$7: 	=IF(AND(_Pat_GestWeken<37,(_Pat_Gewicht/10)>=1),INDEX(NeoBerAdvies!B3:G3,1,C4),IF((_Pat_Gewicht/10)<1,INDEX(NeoBerAdvies!B4:G4,1,C4),INDEX(NeoBerAdvies!B5:G5,1,C4)))+IF(B6=1,20,0)
-$C$7: 	=ROUND(B7/5,0)*5+(D7-5000)
+$C$7: 	=D7
 $Q$7: 	=IF(_Pat_Gewicht>0,IF(B21,C7,ROUND(AL54/(_Pat_Gewicht/10),1)),"""")
 $AI$7: 	=IF(AND(D7=5000,B12),"""",""verw"")
 $O$9: 	=IF($B9>1,(C9/10)&"" ml"","""")
