@@ -22,6 +22,7 @@ Private m_SubGroep As String
 Private m_Etiket As String
 
 Private m_IsGPK As Boolean
+Private m_LoadGPK As Boolean
 
 Public Sub SetNoFormMed()
 
@@ -125,6 +126,8 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
 End Sub
 
 Private Sub cboGeneriek_Change()
+    
+    If m_LoadGPK Then Exit Sub
 
     If cboGeneriek.ListIndex > -1 Then
         SetToGPKMode True
@@ -163,7 +166,9 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
     Else
         SetToGPKMode True
         LoadMedicament
-        cboGeneriek.Value = m_Medicament.Generiek
+        m_LoadGPK = True
+        cboGeneriek.Text = m_Medicament.Generiek
+        m_LoadGPK = False
     End If
     
     LoadGPK = blnLoad
@@ -254,8 +259,8 @@ Private Sub cboIndicatie_Change()
 
     Dim strValid As String
     
-    strValid = ValidateCombo(cboIndicatie)
-    Validate strValid
+    ' strValid = ValidateCombo(cboIndicatie, False)
+    Validate vbNullString
 
 End Sub
 
@@ -410,6 +415,8 @@ Private Sub UserForm_Initialize()
     strTitle = "Formularium wordt geladen, een ogenblik geduld a.u.b. ..."
     
     ModProgress.StartProgress strTitle
+    
+    m_LoadGPK = False
     
     m_TherapieGroep = lblTherapieGroep.Caption
     m_SubGroep = lblSubGroep.Caption
