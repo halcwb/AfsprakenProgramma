@@ -66,7 +66,7 @@ End Function
 
 Public Function GetFirstSelectedLijn(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedLijn = ModList.GetFirstSelectedListItem(lstLijnen, blnUnSelect)
+    GetFirstSelectedLijn = ModList.GetFirstSelectedListIndex(lstLijnen, blnUnSelect)
 
 End Function
 

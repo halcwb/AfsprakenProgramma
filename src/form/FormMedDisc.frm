@@ -53,6 +53,12 @@ Private Sub Validate(ByVal strValid As String)
 
 End Sub
 
+Public Function GetSelectedDosisEenheid() As String
+
+    GetSelectedDosisEenheid = cboDosisEenheid.Value
+
+End Function
+
 Public Function GetSelectedRoute() As String
 
     GetSelectedRoute = cboRoute.Value
@@ -91,7 +97,6 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
     
     Me.txtSterkte.Enabled = Not blnIsGPK
     Me.cboSterkteEenheid.Enabled = Not blnIsGPK
-    Me.cboDosisEenheid.Enabled = Not blnIsGPK
     Me.cboVorm.Enabled = Not blnIsGPK
     
     cmdFormularium.Enabled = blnIsGPK
@@ -192,6 +197,8 @@ Private Sub LoadMedicament()
         cboSterkteEenheid.Text = .SterkteEenheid
         
         txtDosis.Text = .Dosis
+        
+        FillCombo cboDosisEenheid, GetDosisEenheden()
         cboDosisEenheid.Text = .DosisEenheid
         
         FillCombo cboRoute, .GetRoutes()
@@ -200,6 +207,16 @@ Private Sub LoadMedicament()
     End With
 
 End Sub
+
+Private Function GetDosisEenheden() As String()
+
+    Dim arrEenheden() As String
+    
+    ModArray.StringArrayAddAllFromCol m_Formularium.GetDosisEenheden, arrEenheden
+        
+    GetDosisEenheden = arrEenheden
+
+End Function
 
 Private Sub FillCombo(objCombo As ComboBox, arrItems() As String)
 
@@ -225,6 +242,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     cboVorm.Value = vbNullString
     
     txtDosis.Value = vbNullString
+    cboDosisEenheid.Clear
     cboDosisEenheid.Value = vbNullString
     
     txtSterkte.Text = vbNullString
@@ -402,7 +420,6 @@ Private Sub UserForm_Activate()
     CenterForm
     
     Validate vbNullString
-    cmdFormularium.Enabled = False
 
 End Sub
 
@@ -424,7 +441,6 @@ Private Sub UserForm_Initialize()
     
     Set m_Formularium = New ClassFormularium
     m_Formularium.GetMedicamenten (True)
-    
     
     intC = m_Formularium.MedicamentCount
     For intN = 1 To intC

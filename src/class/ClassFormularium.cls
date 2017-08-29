@@ -11,6 +11,7 @@ Option Explicit
 
 Private m_lngCount As Integer
 Private m_colMedicamenten As Collection
+Private m_colGeneriek As Collection
 Private m_colVorm As Collection
 Private m_colSterkteEenheden As Collection
 Private m_colDosisEenheden As Collection
@@ -142,6 +143,7 @@ Public Sub AddMedicament(ByVal objMed As ClassMedicatieDisc)
     
     m_colMedicamenten.Add objMed
     
+    AddGeneriek objMed.Generiek
     AddVorm objMed.Vorm
     AddSterkteEenheid objMed.SterkteEenheid
     AddDosisEenheid objMed.DosisEenheid
@@ -179,14 +181,17 @@ End Function
 Private Sub Class_Initialize()
 
     Set m_colMedicamenten = New Collection
+    Set m_colGeneriek = New Collection
     Set m_colVorm = New Collection
     Set m_colSterkteEenheden = New Collection
     Set m_colDosisEenheden = New Collection
     Set m_colRoutes = New Collection
+    
+    m_colDosisEenheden.Add "mmol"
 
 End Sub
 
-Public Sub GetMedicamenten(ByVal blnShowProgress As Boolean)
+Public Function GetMedicamenten(ByVal blnShowProgress As Boolean) As Collection
 
     Dim objC As ClassStringComparer
 
@@ -195,11 +200,44 @@ Public Sub GetMedicamenten(ByVal blnShowProgress As Boolean)
     Set objC = New ClassStringComparer
     ModCollection.CollectionSort m_colVorm, objC
     ModCollection.CollectionSort m_colSterkteEenheden, objC
+    
+    Set GetMedicamenten = m_colMedicamenten
 
-End Sub
+End Function
 
 Public Property Get MedicamentCount() As Variant
 
     MedicamentCount = m_lngCount - 1
 
 End Property
+
+Private Sub AddGeneriek(ByVal strGeneriek As String)
+
+    If Not HasGeneriek(strGeneriek) Then
+        m_colGeneriek.Add strGeneriek
+    End If
+
+End Sub
+
+Public Function HasGeneriek(ByVal strGeneriek As String) As Boolean
+
+    Dim varItem As Variant
+    Dim blnExists As Boolean
+    
+    blnExists = False
+    For Each varItem In m_colGeneriek
+        If varItem = strGeneriek Then
+            blnExists = True
+            Exit For
+        End If
+    Next
+    
+    HasGeneriek = blnExists
+
+End Function
+
+Public Function GetGenerieken() As Collection
+
+    Set GetGenerieken = m_colGeneriek
+
+End Function

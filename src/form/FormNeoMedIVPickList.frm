@@ -67,7 +67,7 @@ End Function
 
 Public Function GetFirstSelectedMedicament(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedMedicament = ModList.GetFirstSelectedListItem(lstMedicamenten, blnUnSelect)
+    GetFirstSelectedMedicament = ModList.GetFirstSelectedListIndex(lstMedicamenten, blnUnSelect)
 
 End Function
 

@@ -150,12 +150,12 @@ Public Sub InitializeAfspraken()
     ModLog.LogActionStart strAction, strParams
     
     SetCaptionAndHideBars              ' Setup Excel Application
-    shtGlobGuiFront.Select
     
     For Each objWind In WbkAfspraken.Windows
         SetWindowToOpenApp objWind
     Next
     
+    shtGlobGuiFront.Select
     DoEvents                           ' Make sure sheet is shown before proceding
     
     Application.Visible = True

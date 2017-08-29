@@ -27,6 +27,76 @@ Private Const constTime As String = "_Glob_MedDisc_Inloop_"          ' Inloop ti
 Private Const constText As String = "_Glob_MedDisc_Opm_"             ' Opmerking
 
 Private Const constVerw As String = "AL"
+Private Const constMedCount As Integer = 30
+
+
+' Copy paste function cannot be reused because of private clear method
+Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
+
+    Dim frmPickList As FormPedMedDiscPickList
+    Dim intN As Integer
+    Dim strN As String
+    Dim strKeuze As String
+    
+    Set frmPickList = New FormPedMedDiscPickList
+    frmPickList.LoadMedicamenten colTbl
+    
+    For intN = 1 To intMax
+        strN = IIf(intMax > 9, IIf(intN < 10, "0" & intN, intN), intN)
+        strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
+        If Not strKeuze = vbNullString Then frmPickList.SelectMedicament strKeuze
+    Next intN
+    
+    frmPickList.Show
+    
+    If frmPickList.GetAction = vbNullString Then
+    
+        For intN = 1 To intMax                 ' First remove nonselected items
+            strN = IIf(intN < 10, "0" & intN, intN)
+            strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
+            If Not strKeuze = vbNullString Then
+                If frmPickList.IsMedicamentSelected(strKeuze) Then
+                    frmPickList.UnselectMedicament (strKeuze)
+                Else
+                    Clear intN ' Remove is specific to PedContIV replace with appropriate sub when copy paste
+                End If
+            End If
+        Next intN
+        
+        Do While frmPickList.HasSelectedMedicamenten()  ' Then add selected items
+            For intN = 1 To intMax
+                strN = IIf(intN < 10, "0" & intN, intN)
+                strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
+                If strKeuze = vbNullString Then
+                    strKeuze = frmPickList.GetFirstSelectedMedicament(True)
+                    ModRange.SetRangeValue strRange & strN, strKeuze
+                    Exit For
+                End If
+            Next intN
+        Loop
+    
+    End If
+    
+    Set frmPickList = Nothing
+
+
+End Sub
+
+Public Sub MedDisc_ShowPickList()
+
+    Dim objForm As ClassFormularium
+    
+    ModProgress.StartProgress "Medicatie laden ... "
+    
+    Set objForm = New ClassFormularium
+    objForm.GetMedicamenten True
+       
+    ModProgress.FinishProgress
+
+    ShowPickList objForm.GetGenerieken, constGeneric, 1, constMedCount
+    
+End Sub
+
 
 Private Sub Clear(ByVal intN As Integer)
 
@@ -81,7 +151,7 @@ Public Sub MedDisc_Clear_04()
 
 End Sub
 
-Public Sub MedDisc_Clear_5()
+Public Sub MedDisc_Clear_05()
 
     Clear 5
 
@@ -332,6 +402,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         End If
                                                                                     ' Edited details
         .txtDosis.Text = ModRange.GetRangeValue(constStandDose & strN, vbNullString)
+        .cboDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         .cboRoute.Text = ModRange.GetRangeValue(constRoute & strN, vbNullString)
         .cboIndicatie.Text = ModRange.GetRangeValue(constIndic & strN, vbNullString)
         
@@ -350,7 +421,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
                 ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
                 ModRange.SetRangeValue constLabel & strN, objMed.Etiket
                 ModRange.SetRangeValue constStandDose & strN, StringToDouble(Strings.Replace(objMed.Dosis, ",", "."))
-                ModRange.SetRangeValue constDoseUnit & strN, objMed.DosisEenheid
+                ModRange.SetRangeValue constDoseUnit & strN, .GetSelectedDosisEenheid()
                 ModRange.SetRangeValue constRoute & strN, .GetSelectedRoute()
                 ModRange.SetRangeValue constIndic & strN, .GetSelectedIndication()
                 

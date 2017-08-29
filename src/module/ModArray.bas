@@ -339,9 +339,34 @@ Public Function ArrayAddAllFromCol(colSrc As Collection, varDest() As Variant) A
     
     For Each varElement In colSrc
         Set varDest(lngCount + lngN) = varElement
+        lngN = lngN + 1
     Next varElement
     
     ArrayAddAllFromCol = (VariantArrayLength(varDest) = lngCount)
+    
+End Function
+
+
+'Adds all elements from the source collection, colSrc, to the destination collection, varDest.
+'Returns true if the destination collection changed as a result of this operation; false otherwise.
+Public Function StringArrayAddAllFromCol(colSrc As Collection, strDest() As String) As Boolean
+
+    Dim lngCount As Long
+    Dim lngN As Long
+    Dim varItem As Variant
+    
+    lngCount = StringArrayLength(strDest)
+    lngN = 1
+    
+    For Each varItem In colSrc
+        If Not varItem = vbNullString Then
+            ReDim Preserve strDest(lngCount + lngN)
+            strDest(lngCount + lngN) = varItem
+            lngN = lngN + 1
+        End If
+    Next varItem
+    
+    StringArrayAddAllFromCol = (StringArrayLength(strDest) = lngCount)
     
 End Function
 
@@ -368,6 +393,18 @@ Public Function VariantArrayLength(varA() As Variant) As Long
 
     VariantArrayLength = UBound(varA) - LBound(varA) + 1
     
+End Function
+
+Public Function StringArrayLength(strA() As String) As Long
+
+    On Error GoTo EmptyArray
+    
+    StringArrayLength = UBound(strA) - LBound(strA) + 1
+    Exit Function
+    
+EmptyArray:
+
+    StringArrayLength = 0
 End Function
 
 Public Function ObjectArrayLength(objA() As Object) As Long

@@ -103,13 +103,13 @@ End Function
 
 Public Function GetFirstSelectedToevoeging(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedToevoeging = ModList.GetFirstSelectedListItem(lstToeVoeging, blnUnSelect)
+    GetFirstSelectedToevoeging = ModList.GetFirstSelectedListIndex(lstToeVoeging, blnUnSelect)
 
 End Function
 
 Public Function GetFirstSelectedVoeding(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedVoeding = ModList.GetFirstSelectedListItem(lstVoeding, blnUnSelect)
+    GetFirstSelectedVoeding = ModList.GetFirstSelectedListIndex(lstVoeding, blnUnSelect)
 
 End Function
 

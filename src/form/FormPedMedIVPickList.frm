@@ -66,7 +66,7 @@ End Function
 
 Public Function GetFirstSelectedMedicament(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedMedicament = ModList.GetFirstSelectedListItem(lstMedicamenten, blnUnSelect)
+    GetFirstSelectedMedicament = ModList.GetFirstSelectedListIndex(lstMedicamenten, blnUnSelect)
 
 End Function
 
@@ -145,4 +145,3 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     cmdCancel_Click
 
 End Sub
-

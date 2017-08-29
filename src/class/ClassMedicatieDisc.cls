@@ -187,7 +187,7 @@ End Property
 
 Public Property Let Indicaties(ByVal strIndicaties As String)
 
-    m_Indicaties = strIndicaties
+    m_Indicaties = Strings.LCase(strIndicaties)
 
 End Property
 

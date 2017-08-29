@@ -34,6 +34,22 @@ Public Sub SelectListItem(lstList As MSForms.ListBox, ByVal intN As Integer)
 
 End Sub
 
+Public Function GetItemIndex(lstList As MSForms.ListBox, ByVal strItem As Variant) As Integer
+
+    Dim intN As Integer
+    
+    For intN = 0 To lstList.ListCount
+        If lstList.List(intN) = strItem Then
+            GetItemIndex = intN
+            Exit Function
+        End If
+        
+    Next
+    
+    GetItemIndex = -1
+
+End Function
+
 Public Function IsListItemSelected(lstList As MSForms.ListBox, ByVal intN As Integer) As Boolean
 
     IsListItemSelected = lstList.Selected(intN - 2)
@@ -48,11 +64,11 @@ End Sub
 
 Public Function HasSelectedListItems(lstList As MSForms.ListBox) As Boolean
     
-    HasSelectedListItems = Not GetFirstSelectedListItem(lstList, False) = 1
+    HasSelectedListItems = Not GetFirstSelectedListIndex(lstList, False) = 1
 
 End Function
 
-Public Function GetFirstSelectedListItem(lstList As MSForms.ListBox, ByVal blnUnSelect As Boolean) As Integer
+Public Function GetFirstSelectedListItem(lstList As MSForms.ListBox, ByVal blnUnSelect As Boolean) As String
 
     Dim intN As Integer
     Dim intC As Integer
@@ -61,11 +77,29 @@ Public Function GetFirstSelectedListItem(lstList As MSForms.ListBox, ByVal blnUn
     For intN = 0 To intC
         If lstList.Selected(intN) Then
             If blnUnSelect Then lstList.Selected(intN) = False
-            GetFirstSelectedListItem = intN + 2
+            GetFirstSelectedListItem = lstList.List(intN)
             Exit Function
         End If
     Next intN
     
-    GetFirstSelectedListItem = 1
+    GetFirstSelectedListItem = vbNullString
+
+End Function
+
+Public Function GetFirstSelectedListIndex(lstList As MSForms.ListBox, ByVal blnUnSelect As Boolean) As Integer
+
+    Dim intN As Integer
+    Dim intC As Integer
+    
+    intC = lstList.ListCount - 1
+    For intN = 0 To intC
+        If lstList.Selected(intN) Then
+            If blnUnSelect Then lstList.Selected(intN) = False
+            GetFirstSelectedListIndex = intN + 2
+            Exit Function
+        End If
+    Next intN
+    
+    GetFirstSelectedListIndex = 1
 
 End Function

@@ -142,19 +142,19 @@ End Function
 
 Public Function GetFirstSelectedToevoegMM(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedToevoegMM = ModList.GetFirstSelectedListItem(lstToevoegMM, blnUnSelect)
+    GetFirstSelectedToevoegMM = ModList.GetFirstSelectedListIndex(lstToevoegMM, blnUnSelect)
 
 End Function
 
 Public Function GetFirstSelectedToevoegKV(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedToevoegKV = ModList.GetFirstSelectedListItem(lstToevoegKV, blnUnSelect)
+    GetFirstSelectedToevoegKV = ModList.GetFirstSelectedListIndex(lstToevoegKV, blnUnSelect)
 
 End Function
 
 Public Function GetFirstSelectedVoeding(ByVal blnUnSelect As Boolean) As Integer
 
-    GetFirstSelectedVoeding = ModList.GetFirstSelectedListItem(lstVoeding, blnUnSelect)
+    GetFirstSelectedVoeding = ModList.GetFirstSelectedListIndex(lstVoeding, blnUnSelect)
 
 End Function
 
