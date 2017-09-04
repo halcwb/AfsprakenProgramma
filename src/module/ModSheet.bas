@@ -1,6 +1,8 @@
 Attribute VB_Name = "ModSheet"
 Option Explicit
 
+Private m_blnPrev As Boolean
+
 Public Function IsUserInterface(shtSheet As Worksheet) As Boolean
 
     Dim blnGui As Boolean
@@ -230,10 +232,15 @@ Public Sub SelectPedOrNeoAfsprSheet()
         
 End Sub
 
-Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer)
-
+Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnAsk As Boolean)
+  
     shtSheet.Unprotect ModConst.CONST_PASSWORD
-    If ModMessage.ShowMsgBoxYesNo("Eerst preview zien?") = vbYes Then
+    
+    If blnAsk Then
+        m_blnPrev = ModMessage.ShowMsgBoxYesNo("Eerst preview zien?") = vbYes
+    End If
+    
+    If m_blnPrev Then
         shtSheet.PrintPreview False
     Else
         shtSheet.PrintOut Copies:=intNum

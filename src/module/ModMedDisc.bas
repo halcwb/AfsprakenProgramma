@@ -413,17 +413,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
             
                 Set objMed = .GetSelectedMedicament()
                 ' -- Medicament --
-                ModRange.SetRangeValue constGPK & strN, objMed.GPK
-                ModRange.SetRangeValue constATC & strN, objMed.ATC
-                ModRange.SetRangeValue constGeneric & strN, objMed.Generiek
-                ModRange.SetRangeValue constVorm & strN, objMed.Vorm
-                ModRange.SetRangeValue constConc & strN, Conversion.CDbl(Strings.Replace(objMed.Sterkte, ",", "."))
-                ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
-                ModRange.SetRangeValue constLabel & strN, objMed.Etiket
-                ModRange.SetRangeValue constStandDose & strN, StringToDouble(Strings.Replace(objMed.Dosis, ",", "."))
-                ModRange.SetRangeValue constDoseUnit & strN, .GetSelectedDosisEenheid()
-                ModRange.SetRangeValue constRoute & strN, .GetSelectedRoute()
-                ModRange.SetRangeValue constIndic & strN, .GetSelectedIndication()
+                MedDisc_SetMed objMed, strN, .GetSelectedRoute(), .GetSelectedDosisEenheid(), .GetSelectedIndication()
                 
             End If
 
@@ -433,6 +423,22 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
             End If
         End If
     End With
+
+End Sub
+
+Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute As String, strDosEenh As String, strInd As String)
+    
+    ModRange.SetRangeValue constGPK & strN, objMed.GPK
+    ModRange.SetRangeValue constATC & strN, objMed.ATC
+    ModRange.SetRangeValue constGeneric & strN, objMed.Generiek
+    ModRange.SetRangeValue constVorm & strN, objMed.Vorm
+    ModRange.SetRangeValue constConc & strN, Conversion.CDbl(Strings.Replace(objMed.Sterkte, ",", "."))
+    ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
+    ModRange.SetRangeValue constLabel & strN, objMed.Etiket
+    ModRange.SetRangeValue constStandDose & strN, StringToDouble(Strings.Replace(objMed.Dosis, ",", "."))
+    ModRange.SetRangeValue constDoseUnit & strN, strDosEenh
+    ModRange.SetRangeValue constRoute & strN, strRoute
+    ModRange.SetRangeValue constIndic & strN, strInd
 
 End Sub
 

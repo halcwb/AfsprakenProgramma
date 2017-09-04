@@ -40,6 +40,7 @@ Private Const constTblTekst As String = "AS3:AT"
 
 Private Const constAfsprTekst As String = "AS"
 Private Const constEtiketTekst As String = "AT"
+Private Const constBereidingTekst As String = "AU"
 
 Private Const constTestResult As String = "AF"
 
@@ -367,7 +368,7 @@ Public Sub Test_NeoInfB_ContMed()
             End If
         Next
         shtTests.Range(constEtiketTekst & intN).Value2 = strTekst
-        
+        shtTests.Range(constBereidingTekst & intN).Value2 = shtNeoPrtApoth.Range("B19").Value2
         
         If Not blnPass Then
             Err.Raise CONST_TEST_ERROR, "NeoInfB_Tests", "Test no: " & intN - constTestStart & " did not pass"
@@ -377,7 +378,7 @@ Public Sub Test_NeoInfB_ContMed()
 
     ModProgress.FinishProgress
     
-    blnPass = blnPass And shtTests.Range(constTestResult & constTestCount + 2).Value
+    blnPass = blnPass And shtTests.Range(constTestResult & constTestCount + 3).Value
 
     If blnPass Then
         ModMessage.ShowMsgBoxInfo "Alle testen geslaagt"
