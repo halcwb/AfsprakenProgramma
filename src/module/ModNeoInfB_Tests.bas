@@ -13,18 +13,19 @@ Private Const constSetupOplosmiddel As String = "E"
 Private Const constSetupOploshoeveelheid As String = "F"
 Private Const constSetupInfuusStand As String = "G"
 
-Private Const constActGewicht As String = "T"
-Private Const constActMedicament As String = "U"
-Private Const constActHoeveelheid As String = "V"
-Private Const constActEenheid As String = "W"
-Private Const constActOplosmiddel As String = "X"
-Private Const constActTotaalVolume As String = "Y"
-Private Const constActInfuusStand As String = "Z"
-Private Const constActDosis As String = "AA"
-Private Const constActNormaalWaarde As String = "AB"
-Private Const constActInloopTijd As String = "AC"
-Private Const constActMedVolume As String = "AD"
-Private Const constActOplVolume As String = "AE"
+Private Const constActGewicht As String = "U"
+Private Const constActMedicament As String = "V"
+Private Const constActHoeveelheid As String = "W"
+Private Const constActEenheid As String = "X"
+Private Const constActOplosmiddel As String = "Y"
+Private Const constActTotaalVolume As String = "Z"
+Private Const constActInfuusStand As String = "AA"
+Private Const constActDosis As String = "AB"
+Private Const constACTDosisEenheid As String = "AC"
+Private Const constActNormaalWaarde As String = "AD"
+Private Const constActInloopTijd As String = "AE"
+Private Const constActMedVolume As String = "AF"
+Private Const constActOplVolume As String = "AG"
 
 Private Const constGewicht As String = "_Pat_Gewicht"
 Private Const constMedicament As String = "Var_Neo_InfB_Cont_MedKeuze_"
@@ -38,11 +39,11 @@ Private Const constTblOpl As String = "Tbl_Neo_OplVlst"
 Private Const constTblVerwacht As String = "T3:AE"
 Private Const constTblTekst As String = "AS3:AT"
 
-Private Const constAfsprTekst As String = "AS"
-Private Const constEtiketTekst As String = "AT"
-Private Const constBereidingTekst As String = "AU"
+Private Const constAfsprTekst As String = "AV"
+Private Const constEtiketTekst As String = "AW"
+Private Const constBereidingTekst As String = "AX"
 
-Private Const constTestResult As String = "AF"
+Private Const constTestResult As String = "AH"
 
 Public Sub Test_NeoInfB_ContMed()
 
@@ -70,7 +71,7 @@ Public Sub Test_NeoInfB_ContMed()
     
     ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
     
-    ModPatient.PatientClearAll False, True
+    'ModPatient.PatientClearAll False, True
     
     Set wbkTests = Workbooks.Open(WbkAfspraken.Path & "/tests/Tests.xlsx")
     Set shtTests = wbkTests.Sheets("NICU_ContMed")
@@ -283,8 +284,10 @@ Public Sub Test_NeoInfB_ContMed()
             Next
         End If
         ' Schrijf dosis
-        shtTests.Range(constActDosis & intN).Value2 = varVal
-        
+        If Not varVal = vbNullString Then
+            shtTests.Range(constActDosis & intN).Value2 = ModString.StringToDouble(Split(varVal, " ")(0))
+            shtTests.Range(constACTDosisEenheid & intN).Value2 = Split(varVal, " ")(1)
+        End If
         
         ' ================ Check normaal waarde ================
         varVal = shtNeoGuiInfB.Range("O28").Value2

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPatient 
    Caption         =   "Nieuwe patient"
-   ClientHeight    =   3360
+   ClientHeight    =   3480
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   9525
@@ -29,6 +29,8 @@ Private Sub Validate(ByVal strText As String)
             strValid = IIf(txtBirthWeight.Value = vbNullString, "Voer geboortegewicht in", strValid)
         End If
     End If
+    
+    strValid = IIf(cboGeslacht.Text = vbNullString, "Voer geslacht in", strValid)
     
     strValid = IIf(txtLength.Value = vbNullString, "Voer lengte in", strValid)
     strValid = IIf(txtWeight.Value = vbNullString, "Voer gewicht in", strValid)
@@ -94,6 +96,12 @@ Private Sub btnRefresh_Click()
     End If
     
     ModMetaVision.MetaVision_SyncLab
+
+End Sub
+
+Private Sub cboGeslacht_Change()
+
+    Validate vbNullString
 
 End Sub
 
@@ -206,6 +214,7 @@ Private Sub cmdOK_Click()
     m_Pat.VoorNaam = txtFirstName.Text
     m_Pat.Gewicht = ModString.StringToDouble(txtWeight.Value)
     m_Pat.Lengte = ModString.StringToDouble(txtLength.Value)
+    m_Pat.Geslacht = cboGeslacht.Text
     m_Pat.GeboorteGewicht = StringToDouble(txtBirthWeight.Value)
     m_Pat.Weeks = StringToDouble(txtGestWeek.Value)
     m_Pat.Days = StringToDouble(txtGestDay.Value)
@@ -548,13 +557,19 @@ Private Sub UserForm_Initialize()
     Me.txtWeight.TabIndex = 10
     Me.txtLength.TabIndex = 11
     
-    Me.txtGestWeek.TabIndex = 12
-    Me.txtGestDay.TabIndex = 13
+    Me.cboGeslacht.TabIndex = 12
     
-    Me.txtBirthWeight.TabIndex = 14
+    Me.txtGestWeek.TabIndex = 13
+    Me.txtGestDay.TabIndex = 14
     
-    Me.cmdOK.TabIndex = 15
-    Me.cmdClear.TabIndex = 16
-    Me.cmdCancel.TabIndex = 17
+    Me.txtBirthWeight.TabIndex = 15
+    
+    Me.cmdOK.TabIndex = 16
+    Me.cmdClear.TabIndex = 17
+    Me.cmdCancel.TabIndex = 18
+    
+    cboGeslacht.AddItem "man"
+    cboGeslacht.AddItem "vrouw"
+    cboGeslacht.AddItem "onbepaald"
 
 End Sub

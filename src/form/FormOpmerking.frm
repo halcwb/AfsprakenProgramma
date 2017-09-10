@@ -58,7 +58,7 @@ End Sub
 
 Public Sub SetText(ByVal strText As String)
 
-    txtOpmerking.Text = IIf(strText = "0", vbNullString, strText)
+    txtOpmerking.Text = IIf(Trim(strText) = "0", vbNullString, strText)
 
 End Sub
 

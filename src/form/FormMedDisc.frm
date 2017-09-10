@@ -293,7 +293,13 @@ End Sub
 
 Private Sub cmdFormularium_Click()
     Dim strUrl As String
-    strUrl = "https://www.kinderformularium.nl/geneesmiddelen?name=" + cboGeneriek.Text
+    
+    strUrl = "https://www.kinderformularium.nl/"
+    If Not m_Medicament.ATC = vbNullString Then
+        strUrl = strUrl & "geneesmiddelen?atc_code=" + m_Medicament.ATC
+    Else
+        strUrl = strUrl & "geneesmiddelen?name=" + cboGeneriek.Text
+    End If
 
     ActiveWorkbook.FollowHyperlink strUrl
 

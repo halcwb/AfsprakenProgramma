@@ -41,12 +41,20 @@ $T$11: 	=IF(_Pat_Gewicht/10<6,F11,IF(_Pat_Gewicht/10<11,H11,J11))
 $U$11: 	=ContainsCaseInsensitive(D11,""kg"")
 $V$11: 	=HLOOKUP(C11,Tbl_Glob_Conv_EenhCont,VLOOKUP(D11,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
 $A$12: 	=A11+1
+$E$12: 	=_Pat_Gewicht/10
+$G$12: 	=_Pat_Gewicht/10
+$I$12: 	=_Pat_Gewicht/10
+$L$12: 	=IF(T12=24,4,8)
 $R$12: 	=IF(ISBLANK(Q12),CONCATENATE(K12,""-"",L12,"" "",D12),Q12)
 $S$12: 	=IF(_Pat_Gewicht/10<6,E12,IF(_Pat_Gewicht/10<11,G12,I12))
 $T$12: 	=IF(_Pat_Gewicht/10<6,F12,IF(_Pat_Gewicht/10<11,H12,J12))
 $U$12: 	=ContainsCaseInsensitive(D12,""kg"")
 $V$12: 	=HLOOKUP(C12,Tbl_Glob_Conv_EenhCont,VLOOKUP(D12,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
 $A$13: 	=A12+1
+$E$13: 	=_Pat_Gewicht/10
+$G$13: 	=_Pat_Gewicht/10
+$I$13: 	=_Pat_Gewicht/10
+$L$13: 	=IF(T13=24,4,8)
 $R$13: 	=IF(ISBLANK(Q13),CONCATENATE(K13,""-"",L13,"" "",D13),Q13)
 $S$13: 	=IF(_Pat_Gewicht/10<6,E13,IF(_Pat_Gewicht/10<11,G13,I13))
 $T$13: 	=IF(_Pat_Gewicht/10<6,F13,IF(_Pat_Gewicht/10<11,H13,J13))

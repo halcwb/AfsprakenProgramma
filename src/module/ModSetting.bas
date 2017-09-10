@@ -370,11 +370,7 @@ Public Function IsPed() As Boolean
     Dim strDir As String
     Dim blnIsPed As Boolean
 
-    strPath = Application.ActiveWorkbook.Path
-    strDir = ModSetting.GetNeoDir()
-    
-    blnIsPed = ModString.ContainsCaseInsensitive(strPath, strDir)
-    blnIsPed = IIf(ModMetaVision.MetaVision_GetDepartment = vbNullString, blnIsPed, ModMetaVision.MetaVision_GetDepartment = "Pediatrie")
+    blnIsPed = Not IsNeo()
     
     IsPed = blnIsPed
 

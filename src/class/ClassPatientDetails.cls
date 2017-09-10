@@ -17,6 +17,7 @@ Private m_AD As Date
 Private m_WT As Double
 Private m_BW As Double
 Private m_LE As Double
+Private m_GS As String
 Private m_GW As Integer
 Private m_GD As Integer
 
@@ -128,6 +129,19 @@ Public Property Let PatientId(ByVal strId As String)
 
 End Property
 
+Public Property Get Geslacht() As String
+
+    Geslacht = m_GS
+
+End Property
+
+Public Property Let Geslacht(ByVal strGesl As String)
+   
+    If strGesl = "man" Or strGesl = "vrouw" Or strGesl = "onbepaald" Then
+        m_GS = strGesl
+    End If
+
+End Property
 Public Property Get GeboorteDatum() As Date
 
     GeboorteDatum = m_BD

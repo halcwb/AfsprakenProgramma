@@ -162,7 +162,7 @@ $J$81: 	=PedBerTPN!W22
 $L$81: 	=IF(AND(D81="""",H81=0),""D"","""")
 $D$82: 	=PedBerTPN!H6
 $E$82: 	=PedBerTPN!V6
-$F$82: 	=PedBerTPN!X6
+$F$82: 	=PedBerTPN!Y6
 $H$82: 	=PedBerTPN!H23
 $I$82: 	=PedBerTPN!V23
 $J$82: 	=PedBerTPN!W23

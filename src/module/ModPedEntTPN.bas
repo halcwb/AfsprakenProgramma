@@ -699,7 +699,7 @@ Private Sub EnterOpmAfspr(ByVal strRange As String)
     Dim frmOpmerking As FormOpmerking
     
     Set frmOpmerking = New FormOpmerking
-    frmOpmerking.txtOpmerking.Text = ModRange.GetRangeValue(strRange, vbNullString)
+    frmOpmerking.SetText ModRange.GetRangeValue(strRange, vbNullString)
     frmOpmerking.Show
     
     If frmOpmerking.txtOpmerking.Text <> "Cancel" Then

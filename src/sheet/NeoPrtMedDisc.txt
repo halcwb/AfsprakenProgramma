@@ -2,7 +2,7 @@
 $E$2: 	=Txt_Pat_GeboorteDat
 $G$2: 	=Txt_Pat_Gewicht
 $AA$2: 	=TODAY()
-$B$4: 	=GlobBerMedDisc!AQ2
+$B$4: 	=GlobBerMedDisc!AR2
 $C$4: 	=IF(GlobGuiMedDisc!J9<>"""",GlobGuiMedDisc!J9,"""")
 $D$4: 	=IF(AND(C4<>"""",C4<>""STOP""),GlobBerMedDisc!H2&"" ""&GlobBerMedDisc!F2,"""")
 $E$4: 	=IF(AND(C4<>"""",C4<>""STOP""),GlobBerMedDisc!L2,"" "")
@@ -31,7 +31,7 @@ $AA$4: 	=IF($C4="""","""",IF(VLOOKUP($C4,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",VLO
 $AB$4: 	=IF($C4="""","""",IF(VLOOKUP($C4,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C4,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$4: 	=IF($C4="""","""",IF(VLOOKUP($C4,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C4,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$4: 	=IF($C4="""","""",IF(VLOOKUP($C4,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C4,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$5: 	=GlobBerMedDisc!AQ3
+$B$5: 	=GlobBerMedDisc!AR3
 $C$5: 	=IF(GlobGuiMedDisc!J10<>"""",GlobGuiMedDisc!J10,"""")
 $D$5: 	=IF(AND(C5<>"""",C5<>""STOP""),GlobBerMedDisc!H3&"" ""&GlobBerMedDisc!F3,"""")
 $E$5: 	=IF(AND(C5<>"""",C5<>""STOP""),GlobBerMedDisc!L3,"" "")
@@ -60,7 +60,7 @@ $AA$5: 	=IF($C5="""","""",IF(VLOOKUP($C5,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",VLO
 $AB$5: 	=IF($C5="""","""",IF(VLOOKUP($C5,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C5,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$5: 	=IF($C5="""","""",IF(VLOOKUP($C5,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C5,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$5: 	=IF($C5="""","""",IF(VLOOKUP($C5,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C5,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$6: 	=GlobBerMedDisc!AQ4
+$B$6: 	=GlobBerMedDisc!AR4
 $C$6: 	=IF(GlobGuiMedDisc!J11<>"""",GlobGuiMedDisc!J11,"""")
 $D$6: 	=IF(AND(C6<>"""",C6<>""STOP""),GlobBerMedDisc!H4&"" ""&GlobBerMedDisc!F4,"""")
 $E$6: 	=IF(AND(C6<>"""",C6<>""STOP""),GlobBerMedDisc!L4,"" "")
@@ -89,7 +89,7 @@ $AA$6: 	=IF($C6="""","""",IF(VLOOKUP($C6,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",VLO
 $AB$6: 	=IF($C6="""","""",IF(VLOOKUP($C6,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C6,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$6: 	=IF($C6="""","""",IF(VLOOKUP($C6,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C6,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$6: 	=IF($C6="""","""",IF(VLOOKUP($C6,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C6,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$7: 	=GlobBerMedDisc!AQ5
+$B$7: 	=GlobBerMedDisc!AR5
 $C$7: 	=IF(GlobGuiMedDisc!J12<>"""",GlobGuiMedDisc!J12,"""")
 $D$7: 	=IF(AND(C7<>"""",C7<>""STOP""),GlobBerMedDisc!H5&"" ""&GlobBerMedDisc!F5,"""")
 $E$7: 	=IF(AND(C7<>"""",C7<>""STOP""),GlobBerMedDisc!L5,"" "")
@@ -118,7 +118,7 @@ $AA$7: 	=IF($C7="""","""",IF(VLOOKUP($C7,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",VLO
 $AB$7: 	=IF($C7="""","""",IF(VLOOKUP($C7,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C7,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$7: 	=IF($C7="""","""",IF(VLOOKUP($C7,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C7,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$7: 	=IF($C7="""","""",IF(VLOOKUP($C7,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C7,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$8: 	=GlobBerMedDisc!AQ6
+$B$8: 	=GlobBerMedDisc!AR6
 $C$8: 	=IF(GlobGuiMedDisc!J13<>"""",GlobGuiMedDisc!J13,"""")
 $D$8: 	=IF(AND(C8<>"""",C8<>""STOP""),GlobBerMedDisc!H6&"" ""&GlobBerMedDisc!F6,"""")
 $E$8: 	=IF(AND(C8<>"""",C8<>""STOP""),GlobBerMedDisc!L6,"" "")
@@ -147,7 +147,7 @@ $AA$8: 	=IF($C8="""","""",IF(VLOOKUP($C8,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",VLO
 $AB$8: 	=IF($C8="""","""",IF(VLOOKUP($C8,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C8,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$8: 	=IF($C8="""","""",IF(VLOOKUP($C8,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C8,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$8: 	=IF($C8="""","""",IF(VLOOKUP($C8,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C8,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$9: 	=GlobBerMedDisc!AQ7
+$B$9: 	=GlobBerMedDisc!AR7
 $C$9: 	=IF(GlobGuiMedDisc!J14<>"""",GlobGuiMedDisc!J14,"""")
 $D$9: 	=IF(AND(C9<>"""",C9<>""STOP""),GlobBerMedDisc!H7&"" ""&GlobBerMedDisc!F7,"""")
 $E$9: 	=IF(AND(C9<>"""",C9<>""STOP""),GlobBerMedDisc!L7,"" "")
@@ -176,7 +176,7 @@ $AA$9: 	=IF($C9="""","""",IF(VLOOKUP($C9,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",VLO
 $AB$9: 	=IF($C9="""","""",IF(VLOOKUP($C9,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C9,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$9: 	=IF($C9="""","""",IF(VLOOKUP($C9,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C9,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$9: 	=IF($C9="""","""",IF(VLOOKUP($C9,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C9,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$10: 	=GlobBerMedDisc!AQ8
+$B$10: 	=GlobBerMedDisc!AR8
 $C$10: 	=IF(GlobGuiMedDisc!J15<>"""",GlobGuiMedDisc!J15,"""")
 $D$10: 	=IF(AND(C10<>"""",C10<>""STOP""),GlobBerMedDisc!H8&"" ""&GlobBerMedDisc!F8,"""")
 $E$10: 	=IF(AND(C10<>"""",C10<>""STOP""),GlobBerMedDisc!L8,"" "")
@@ -205,7 +205,7 @@ $AA$10: 	=IF($C10="""","""",IF(VLOOKUP($C10,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$10: 	=IF($C10="""","""",IF(VLOOKUP($C10,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C10,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$10: 	=IF($C10="""","""",IF(VLOOKUP($C10,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C10,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$10: 	=IF($C10="""","""",IF(VLOOKUP($C10,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C10,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$11: 	=GlobBerMedDisc!AQ9
+$B$11: 	=GlobBerMedDisc!AR9
 $C$11: 	=IF(GlobGuiMedDisc!J16<>"""",GlobGuiMedDisc!J16,"""")
 $D$11: 	=IF(AND(C11<>"""",C11<>""STOP""),GlobBerMedDisc!H9&"" ""&GlobBerMedDisc!F9,"""")
 $E$11: 	=IF(AND(C11<>"""",C11<>""STOP""),GlobBerMedDisc!L9,"" "")
@@ -234,7 +234,7 @@ $AA$11: 	=IF($C11="""","""",IF(VLOOKUP($C11,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$11: 	=IF($C11="""","""",IF(VLOOKUP($C11,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C11,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$11: 	=IF($C11="""","""",IF(VLOOKUP($C11,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C11,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$11: 	=IF($C11="""","""",IF(VLOOKUP($C11,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C11,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$12: 	=GlobBerMedDisc!AQ10
+$B$12: 	=GlobBerMedDisc!AR10
 $C$12: 	=IF(GlobGuiMedDisc!J17<>"""",GlobGuiMedDisc!J17,"""")
 $D$12: 	=IF(AND(C12<>"""",C12<>""STOP""),GlobBerMedDisc!H10&"" ""&GlobBerMedDisc!F10,"""")
 $E$12: 	=IF(AND(C12<>"""",C12<>""STOP""),GlobBerMedDisc!L10,"" "")
@@ -263,7 +263,7 @@ $AA$12: 	=IF($C12="""","""",IF(VLOOKUP($C12,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$12: 	=IF($C12="""","""",IF(VLOOKUP($C12,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C12,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$12: 	=IF($C12="""","""",IF(VLOOKUP($C12,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C12,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$12: 	=IF($C12="""","""",IF(VLOOKUP($C12,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C12,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$13: 	=GlobBerMedDisc!AQ11
+$B$13: 	=GlobBerMedDisc!AR11
 $C$13: 	=IF(GlobGuiMedDisc!J18<>"""",GlobGuiMedDisc!J18,"""")
 $D$13: 	=IF(AND(C13<>"""",C13<>""STOP""),GlobBerMedDisc!H11&"" ""&GlobBerMedDisc!F11,"""")
 $E$13: 	=IF(AND(C13<>"""",C13<>""STOP""),GlobBerMedDisc!L11,"" "")
@@ -292,7 +292,7 @@ $AA$13: 	=IF($C13="""","""",IF(VLOOKUP($C13,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$13: 	=IF($C13="""","""",IF(VLOOKUP($C13,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C13,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$13: 	=IF($C13="""","""",IF(VLOOKUP($C13,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C13,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$13: 	=IF($C13="""","""",IF(VLOOKUP($C13,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C13,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$14: 	=GlobBerMedDisc!AQ12
+$B$14: 	=GlobBerMedDisc!AR12
 $C$14: 	=IF(GlobGuiMedDisc!J19<>"""",GlobGuiMedDisc!J19,"""")
 $D$14: 	=IF(AND(C14<>"""",C14<>""STOP""),GlobBerMedDisc!H12&"" ""&GlobBerMedDisc!F12,"""")
 $E$14: 	=IF(AND(C14<>"""",C14<>""STOP""),GlobBerMedDisc!L12,"" "")
@@ -321,7 +321,7 @@ $AA$14: 	=IF($C14="""","""",IF(VLOOKUP($C14,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$14: 	=IF($C14="""","""",IF(VLOOKUP($C14,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C14,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$14: 	=IF($C14="""","""",IF(VLOOKUP($C14,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C14,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$14: 	=IF($C14="""","""",IF(VLOOKUP($C14,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C14,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$15: 	=GlobBerMedDisc!AQ13
+$B$15: 	=GlobBerMedDisc!AR13
 $C$15: 	=IF(GlobGuiMedDisc!J20<>"""",GlobGuiMedDisc!J20,"""")
 $D$15: 	=IF(AND(C15<>"""",C15<>""STOP""),GlobBerMedDisc!H13&"" ""&GlobBerMedDisc!F13,"""")
 $E$15: 	=IF(AND(C15<>"""",C15<>""STOP""),GlobBerMedDisc!L13,"" "")
@@ -350,7 +350,7 @@ $AA$15: 	=IF($C15="""","""",IF(VLOOKUP($C15,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$15: 	=IF($C15="""","""",IF(VLOOKUP($C15,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C15,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$15: 	=IF($C15="""","""",IF(VLOOKUP($C15,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C15,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$15: 	=IF($C15="""","""",IF(VLOOKUP($C15,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C15,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$16: 	=GlobBerMedDisc!AQ14
+$B$16: 	=GlobBerMedDisc!AR14
 $C$16: 	=IF(GlobGuiMedDisc!J21<>"""",GlobGuiMedDisc!J21,"""")
 $D$16: 	=IF(AND(C16<>"""",C16<>""STOP""),GlobBerMedDisc!H14&"" ""&GlobBerMedDisc!F14,"""")
 $E$16: 	=IF(AND(C16<>"""",C16<>""STOP""),GlobBerMedDisc!L14,"" "")
@@ -379,7 +379,7 @@ $AA$16: 	=IF($C16="""","""",IF(VLOOKUP($C16,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$16: 	=IF($C16="""","""",IF(VLOOKUP($C16,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C16,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$16: 	=IF($C16="""","""",IF(VLOOKUP($C16,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C16,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$16: 	=IF($C16="""","""",IF(VLOOKUP($C16,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C16,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$17: 	=GlobBerMedDisc!AQ15
+$B$17: 	=GlobBerMedDisc!AR15
 $C$17: 	=IF(GlobGuiMedDisc!J22<>"""",GlobGuiMedDisc!J22,"""")
 $D$17: 	=IF(AND(C17<>"""",C17<>""STOP""),GlobBerMedDisc!H15&"" ""&GlobBerMedDisc!F15,"""")
 $E$17: 	=IF(AND(C17<>"""",C17<>""STOP""),GlobBerMedDisc!L15,"" "")
@@ -408,7 +408,7 @@ $AA$17: 	=IF($C17="""","""",IF(VLOOKUP($C17,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$17: 	=IF($C17="""","""",IF(VLOOKUP($C17,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C17,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$17: 	=IF($C17="""","""",IF(VLOOKUP($C17,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C17,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$17: 	=IF($C17="""","""",IF(VLOOKUP($C17,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C17,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$18: 	=GlobBerMedDisc!AQ16
+$B$18: 	=GlobBerMedDisc!AR16
 $C$18: 	=IF(GlobGuiMedDisc!J23<>"""",GlobGuiMedDisc!J23,"""")
 $D$18: 	=IF(AND(C18<>"""",C18<>""STOP""),GlobBerMedDisc!H16&"" ""&GlobBerMedDisc!F16,"""")
 $E$18: 	=IF(AND(C18<>"""",C18<>""STOP""),GlobBerMedDisc!L16,"" "")
@@ -437,7 +437,7 @@ $AA$18: 	=IF($C18="""","""",IF(VLOOKUP($C18,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$18: 	=IF($C18="""","""",IF(VLOOKUP($C18,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C18,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$18: 	=IF($C18="""","""",IF(VLOOKUP($C18,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C18,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$18: 	=IF($C18="""","""",IF(VLOOKUP($C18,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C18,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$19: 	=GlobBerMedDisc!AQ17
+$B$19: 	=GlobBerMedDisc!AR17
 $C$19: 	=IF(GlobGuiMedDisc!J24<>"""",GlobGuiMedDisc!J24,"""")
 $D$19: 	=IF(AND(C19<>"""",C19<>""STOP""),GlobBerMedDisc!H17&"" ""&GlobBerMedDisc!F17,"""")
 $E$19: 	=IF(AND(C19<>"""",C19<>""STOP""),GlobBerMedDisc!L17,"" "")
@@ -466,7 +466,7 @@ $AA$19: 	=IF($C19="""","""",IF(VLOOKUP($C19,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$19: 	=IF($C19="""","""",IF(VLOOKUP($C19,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C19,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$19: 	=IF($C19="""","""",IF(VLOOKUP($C19,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C19,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$19: 	=IF($C19="""","""",IF(VLOOKUP($C19,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C19,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$20: 	=GlobBerMedDisc!AQ18
+$B$20: 	=GlobBerMedDisc!AR18
 $C$20: 	=IF(GlobGuiMedDisc!J25<>"""",GlobGuiMedDisc!J25,"""")
 $D$20: 	=IF(AND(C20<>"""",C20<>""STOP""),GlobBerMedDisc!H18&"" ""&GlobBerMedDisc!F18,"""")
 $E$20: 	=IF(AND(C20<>"""",C20<>""STOP""),GlobBerMedDisc!L18,"" "")
@@ -495,7 +495,7 @@ $AA$20: 	=IF($C20="""","""",IF(VLOOKUP($C20,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$20: 	=IF($C20="""","""",IF(VLOOKUP($C20,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C20,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$20: 	=IF($C20="""","""",IF(VLOOKUP($C20,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C20,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$20: 	=IF($C20="""","""",IF(VLOOKUP($C20,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C20,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$21: 	=GlobBerMedDisc!AQ19
+$B$21: 	=GlobBerMedDisc!AR19
 $C$21: 	=IF(GlobGuiMedDisc!J26<>"""",GlobGuiMedDisc!J26,"""")
 $D$21: 	=IF(AND(C21<>"""",C21<>""STOP""),GlobBerMedDisc!H19&"" ""&GlobBerMedDisc!F19,"""")
 $E$21: 	=IF(AND(C21<>"""",C21<>""STOP""),GlobBerMedDisc!L19,"" "")
@@ -524,7 +524,7 @@ $AA$21: 	=IF($C21="""","""",IF(VLOOKUP($C21,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$21: 	=IF($C21="""","""",IF(VLOOKUP($C21,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C21,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$21: 	=IF($C21="""","""",IF(VLOOKUP($C21,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C21,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$21: 	=IF($C21="""","""",IF(VLOOKUP($C21,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C21,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$22: 	=GlobBerMedDisc!AQ20
+$B$22: 	=GlobBerMedDisc!AR20
 $C$22: 	=IF(GlobGuiMedDisc!J27<>"""",GlobGuiMedDisc!J27,"""")
 $D$22: 	=IF(AND(C22<>"""",C22<>""STOP""),GlobBerMedDisc!H20&"" ""&GlobBerMedDisc!F20,"""")
 $E$22: 	=IF(AND(C22<>"""",C22<>""STOP""),GlobBerMedDisc!L20,"" "")
@@ -553,7 +553,7 @@ $AA$22: 	=IF($C22="""","""",IF(VLOOKUP($C22,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$22: 	=IF($C22="""","""",IF(VLOOKUP($C22,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C22,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$22: 	=IF($C22="""","""",IF(VLOOKUP($C22,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C22,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$22: 	=IF($C22="""","""",IF(VLOOKUP($C22,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C22,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$23: 	=GlobBerMedDisc!AQ21
+$B$23: 	=GlobBerMedDisc!AR21
 $C$23: 	=IF(GlobGuiMedDisc!J28<>"""",GlobGuiMedDisc!J28,"""")
 $D$23: 	=IF(AND(C23<>"""",C23<>""STOP""),GlobBerMedDisc!H21&"" ""&GlobBerMedDisc!F21,"""")
 $E$23: 	=IF(AND(C23<>"""",C23<>""STOP""),GlobBerMedDisc!L21,"" "")
@@ -582,7 +582,7 @@ $AA$23: 	=IF($C23="""","""",IF(VLOOKUP($C23,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$23: 	=IF($C23="""","""",IF(VLOOKUP($C23,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C23,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$23: 	=IF($C23="""","""",IF(VLOOKUP($C23,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C23,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$23: 	=IF($C23="""","""",IF(VLOOKUP($C23,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C23,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$24: 	=GlobBerMedDisc!AQ22
+$B$24: 	=GlobBerMedDisc!AR22
 $C$24: 	=IF(GlobGuiMedDisc!J29<>"""",GlobGuiMedDisc!J29,"""")
 $D$24: 	=IF(AND(C24<>"""",C24<>""STOP""),GlobBerMedDisc!H22&"" ""&GlobBerMedDisc!F22,"""")
 $E$24: 	=IF(AND(C24<>"""",C24<>""STOP""),GlobBerMedDisc!L22,"" "")
@@ -615,7 +615,7 @@ $B$25: 	=Txt_Pat_FullName
 $E$25: 	=Txt_Pat_GeboorteDat
 $G$25: 	=Txt_Pat_Gewicht
 $AA$25: 	=TODAY()
-$B$27: 	=GlobBerMedDisc!AQ23
+$B$27: 	=GlobBerMedDisc!AR23
 $C$27: 	=IF(GlobGuiMedDisc!J30<>"""",GlobGuiMedDisc!J30,"""")
 $D$27: 	=IF(AND(C27<>"""",C27<>""STOP""),GlobBerMedDisc!H23&"" ""&GlobBerMedDisc!F23,"""")
 $E$27: 	=IF(AND(C27<>"""",C27<>""STOP""),GlobBerMedDisc!L23,"" "")
@@ -644,7 +644,7 @@ $AA$27: 	=IF($C27="""","""",IF(VLOOKUP($C27,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$27: 	=IF($C27="""","""",IF(VLOOKUP($C27,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C27,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$27: 	=IF($C27="""","""",IF(VLOOKUP($C27,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C27,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$27: 	=IF($C27="""","""",IF(VLOOKUP($C27,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C27,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$28: 	=GlobBerMedDisc!AQ24
+$B$28: 	=GlobBerMedDisc!AR24
 $C$28: 	=IF(GlobGuiMedDisc!J31<>"""",GlobGuiMedDisc!J31,"""")
 $D$28: 	=IF(AND(C28<>"""",C28<>""STOP""),GlobBerMedDisc!H24&"" ""&GlobBerMedDisc!F24,"""")
 $E$28: 	=IF(AND(C28<>"""",C28<>""STOP""),GlobBerMedDisc!L24,"" "")
@@ -673,7 +673,7 @@ $AA$28: 	=IF($C28="""","""",IF(VLOOKUP($C28,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$28: 	=IF($C28="""","""",IF(VLOOKUP($C28,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C28,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$28: 	=IF($C28="""","""",IF(VLOOKUP($C28,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C28,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$28: 	=IF($C28="""","""",IF(VLOOKUP($C28,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C28,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$29: 	=GlobBerMedDisc!AQ25
+$B$29: 	=GlobBerMedDisc!AR25
 $C$29: 	=IF(GlobGuiMedDisc!J32<>"""",GlobGuiMedDisc!J32,"""")
 $D$29: 	=IF(AND(C29<>"""",C29<>""STOP""),GlobBerMedDisc!H25&"" ""&GlobBerMedDisc!F25,"""")
 $E$29: 	=IF(AND(C29<>"""",C29<>""STOP""),GlobBerMedDisc!L25,"" "")
@@ -702,7 +702,7 @@ $AA$29: 	=IF($C29="""","""",IF(VLOOKUP($C29,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$29: 	=IF($C29="""","""",IF(VLOOKUP($C29,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C29,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$29: 	=IF($C29="""","""",IF(VLOOKUP($C29,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C29,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$29: 	=IF($C29="""","""",IF(VLOOKUP($C29,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C29,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$30: 	=GlobBerMedDisc!AQ26
+$B$30: 	=GlobBerMedDisc!AR26
 $C$30: 	=IF(GlobGuiMedDisc!J33<>"""",GlobGuiMedDisc!J33,"""")
 $D$30: 	=IF(AND(C30<>"""",C30<>""STOP""),GlobBerMedDisc!H26&"" ""&GlobBerMedDisc!F26,"""")
 $E$30: 	=IF(AND(C30<>"""",C30<>""STOP""),GlobBerMedDisc!L26,"" "")
@@ -731,7 +731,7 @@ $AA$30: 	=IF($C30="""","""",IF(VLOOKUP($C30,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$30: 	=IF($C30="""","""",IF(VLOOKUP($C30,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C30,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$30: 	=IF($C30="""","""",IF(VLOOKUP($C30,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C30,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$30: 	=IF($C30="""","""",IF(VLOOKUP($C30,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C30,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$31: 	=GlobBerMedDisc!AQ27
+$B$31: 	=GlobBerMedDisc!AR27
 $C$31: 	=IF(GlobGuiMedDisc!J34<>"""",GlobGuiMedDisc!J34,"""")
 $D$31: 	=IF(AND(C31<>"""",C31<>""STOP""),GlobBerMedDisc!H27&"" ""&GlobBerMedDisc!F27,"""")
 $E$31: 	=IF(AND(C31<>"""",C31<>""STOP""),GlobBerMedDisc!L27,"" "")
@@ -760,7 +760,7 @@ $AA$31: 	=IF($C31="""","""",IF(VLOOKUP($C31,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$31: 	=IF($C31="""","""",IF(VLOOKUP($C31,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C31,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$31: 	=IF($C31="""","""",IF(VLOOKUP($C31,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C31,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$31: 	=IF($C31="""","""",IF(VLOOKUP($C31,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C31,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$32: 	=GlobBerMedDisc!AQ28
+$B$32: 	=GlobBerMedDisc!AR28
 $C$32: 	=IF(GlobGuiMedDisc!J35<>"""",GlobGuiMedDisc!J35,"""")
 $D$32: 	=IF(AND(C32<>"""",C32<>""STOP""),GlobBerMedDisc!H28&"" ""&GlobBerMedDisc!F28,"""")
 $E$32: 	=IF(AND(C32<>"""",C32<>""STOP""),GlobBerMedDisc!L28,"" "")
@@ -789,7 +789,7 @@ $AA$32: 	=IF($C32="""","""",IF(VLOOKUP($C32,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$32: 	=IF($C32="""","""",IF(VLOOKUP($C32,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C32,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$32: 	=IF($C32="""","""",IF(VLOOKUP($C32,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C32,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$32: 	=IF($C32="""","""",IF(VLOOKUP($C32,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C32,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$33: 	=GlobBerMedDisc!AQ29
+$B$33: 	=GlobBerMedDisc!AR29
 $C$33: 	=IF(GlobGuiMedDisc!J36<>"""",GlobGuiMedDisc!J36,"""")
 $D$33: 	=IF(AND(C33<>"""",C33<>""STOP""),GlobBerMedDisc!H29&"" ""&GlobBerMedDisc!F29,"""")
 $E$33: 	=IF(AND(C33<>"""",C33<>""STOP""),GlobBerMedDisc!L29,"" "")
@@ -818,7 +818,7 @@ $AA$33: 	=IF($C33="""","""",IF(VLOOKUP($C33,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$33: 	=IF($C33="""","""",IF(VLOOKUP($C33,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C33,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$33: 	=IF($C33="""","""",IF(VLOOKUP($C33,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C33,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$33: 	=IF($C33="""","""",IF(VLOOKUP($C33,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C33,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$34: 	=GlobBerMedDisc!AQ30
+$B$34: 	=GlobBerMedDisc!AR30
 $C$34: 	=IF(GlobGuiMedDisc!J37<>"""",GlobGuiMedDisc!J37,"""")
 $D$34: 	=IF(AND(C34<>"""",C34<>""STOP""),GlobBerMedDisc!H30&"" ""&GlobBerMedDisc!F30,"""")
 $E$34: 	=IF(AND(C34<>"""",C34<>""STOP""),GlobBerMedDisc!L30,"" "")
@@ -847,7 +847,7 @@ $AA$34: 	=IF($C34="""","""",IF(VLOOKUP($C34,Tbl_Glob_MedFreq,AA$1,FALSE)=0,"""",
 $AB$34: 	=IF($C34="""","""",IF(VLOOKUP($C34,Tbl_Glob_MedFreq,AB$1,FALSE)=0,"""",VLOOKUP($C34,Tbl_Glob_MedFreq,AB$1,FALSE)))
 $AC$34: 	=IF($C34="""","""",IF(VLOOKUP($C34,Tbl_Glob_MedFreq,AC$1,FALSE)=0,"""",VLOOKUP($C34,Tbl_Glob_MedFreq,AC$1,FALSE)))
 $AD$34: 	=IF($C34="""","""",IF(VLOOKUP($C34,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",VLOOKUP($C34,Tbl_Glob_MedFreq,AD$1,FALSE)))
-$B$35: 	=GlobBerMedDisc!AQ31
+$B$35: 	=GlobBerMedDisc!AR31
 $C$35: 	=IF(GlobGuiMedDisc!J38<>"""",GlobGuiMedDisc!J38,"""")
 $D$35: 	=IF(AND(C35<>"""",C35<>""STOP""),GlobBerMedDisc!H31&"" ""&GlobBerMedDisc!F31,"""")
 $E$35: 	=IF(AND(C35<>"""",C35<>""STOP""),GlobBerMedDisc!L31,"" "")

@@ -188,19 +188,44 @@ Private Sub TestFixPrecision()
 
 End Sub
 
+Private Function IsEmptyValue(objCell As Range) As Boolean
+
+    Dim blnEmpty As Boolean
+    
+    blnEmpty = IsEmpty(objCell.Value2)
+    If Not blnEmpty Then blnEmpty = Trim(objCell.Value2) = vbNullString
+    If Not blnEmpty Then blnEmpty = Trim(objCell.Value2) = "0"
+    
+    IsEmptyValue = blnEmpty
+
+End Function
+
+Private Sub IsEmptyValue_Test()
+
+    MsgBox IsEmptyValue(shtPedBerTPN.Range("B36"))
+
+End Sub
+
 Public Function ConcatenateRange(objRange As Range, ByVal strDel As String) As String
 
     Dim strString As String
     Dim objCell As Range
     
     For Each objCell In objRange.Cells
-        strString = IIf(strString = vbNullString, objCell.Value2, strString & strDel & objCell.Value2)
+        If Not IsEmptyValue(objCell) Then
+            strString = IIf(strString = vbNullString, objCell.Value2, strString & strDel & objCell.Value2)
+        End If
     Next
-
+    
     ConcatenateRange = strString
 
 End Function
 
+Private Sub ConcatenateRange_Test()
+
+    MsgBox ConcatenateRange(shtPedBerTPN.Range("B31:B36"), "##")
+
+End Sub
 Public Function StringToDouble(ByVal strDbl As String) As Double
 
     StringToDouble = Val(Replace(strDbl, ",", "."))
@@ -213,4 +238,41 @@ Private Sub Test_StringToDouble()
     MsgBox StringToDouble("1,5")
 
 End Sub
+
+Private Function RemoveTrailing(ByVal strString As String, ByVal strDel As String) As String
+    
+    Dim intLeft As Integer
+
+    intLeft = Len(strString) - Len(strDel)
+    If intLeft > 0 Then strString = Left(strString, intLeft)
+    
+    RemoveTrailing = strString
+
+End Function
+
+Public Function ConcatenateKeyValue(objRange As Range, ByVal strRow As String, ByVal strCol As String) As String
+
+    Dim strString As String
+    Dim objCell As Range
+    Dim strKey As String
+    Dim strVal As String
+    
+    For Each objCell In objRange.Cells
+        If strKey = vbNullString Then
+            strKey = Trim(objCell.Value2)
+        Else
+            strVal = Trim(objCell.Value2)
+            strVal = IIf(strVal = "0", vbNullString, strVal)
+            If Not strVal = vbNullString Then
+                strString = strString & strKey & strCol & strVal & strRow
+            End If
+            strKey = vbNullString
+            strVal = vbNullString
+        End If
+    Next
+    
+    ConcatenateKeyValue = RemoveTrailing(strString, strRow)
+
+End Function
+
 

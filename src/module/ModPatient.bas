@@ -8,6 +8,7 @@ Private Const constGebDatum As String = "__4_GebDatum"
 Private Const constOpnDat As String = "_Pat_OpnDatum"
 Private Const constGewicht As String = "_Pat_Gewicht"
 Private Const constLengte As String = "_Pat_Lengte"
+Private Const constGeslacht As String = "_Pat_Geslacht"
 Private Const constDagen As String = "_Pat_GestDagen"
 Private Const constWeken As String = "_Pat_GestWeken"
 Private Const constGebGew As String = "_Pat_GebGew"
@@ -215,6 +216,7 @@ Public Sub WritePatientDetails(objPat As ClassPatientDetails)
     
     ModRange.SetRangeValue constGewicht, objPat.Gewicht * 10
     ModRange.SetRangeValue constLengte, objPat.Lengte
+    ModRange.SetRangeValue constGeslacht, objPat.Geslacht
     ModRange.SetRangeValue constGebGew, objPat.GeboorteGewicht
     ModRange.SetRangeValue constWeken, objPat.Weeks
     ModRange.SetRangeValue constDagen, objPat.Days

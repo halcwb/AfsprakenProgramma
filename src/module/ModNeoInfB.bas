@@ -370,6 +370,7 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
     Dim dblStand As Double
     Dim dblQty As Double
     Dim dblMaxConc As Double
+    Dim dblMinConc As Double
     Dim strMed As String
     
     dblAdvMin = GetMedicamentItemWithIndex(intMed, constAdvMinIndex)
@@ -377,6 +378,7 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
     dblOplQty = GetMedicamentItemWithIndex(intMed, constDefHoevIndex)
     dblStand = GetMedicamentItemWithIndex(intMed, constDefStandIndex)
     dblWeight = ModPatient.GetGewichtFromRange()
+    dblMinConc = GetMedicamentItemWithIndex(intMed, 9)
     dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
     strMed = GetMedicamentItemWithIndex(intMed, 1)
     
@@ -388,6 +390,7 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
     ' dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
     ElseIf dblStand * dblFactor > 0 Then
         dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
+        dblQty = IIf(dblQty / dblOplQty < dblMinConc, dblMinConc * dblOplQty, dblQty)
         dblQty = IIf(dblQty / dblOplQty > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
     Else
         dblQty = 0

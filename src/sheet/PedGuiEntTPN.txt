@@ -46,51 +46,51 @@ $C$18: 	=PedBerEnt!$G9
 $F$18: 	=_Ped_Ent_Opm
 $K$18: 	=PedBerEnt!A19
 $L$18: 	=PedBerEnt!B19
-$B$22: 	=PedBerTPN!X3
+$B$22: 	=PedBerTPN!Y3
 $F$22: 	=PedBerTPN!V3
 $I$22: 	=IF(F22<>"""","" ""&PedBerTPN!G3&"" ml/dag"","""")
-$J$22: 	=PedBerTPN!X21
+$J$22: 	=PedBerTPN!Y21
 $L$22: 	=PedBerTPN!V21
 $N$22: 	=IF(L22<>"""",PedBerTPN!G21&"" mL/dag"","""")
-$B$23: 	=PedBerTPN!X5
-$C$23: 	=PedBerTPN!Y5
+$B$23: 	=PedBerTPN!Y5
+$C$23: 	=PedBerTPN!Z5
 $F$23: 	=PedBerTPN!V5
 $G$23: 	=PedBerTPN!W5
 $I$23: 	=IF(F23="""","""","" ""&PedBerTPN!W5&""/dag"")
-$B$24: 	=PedBerTPN!X6
+$B$24: 	=PedBerTPN!Y6
 $F$24: 	=PedBerTPN!V6
 $G$24: 	=PedBerTPN!W6
-$H$24: 	=IF(PedBerTPN!W7="""","""","" in ""&PedBerTPN!W7&"" gluc 10%"")
+$H$24: 	=IF(PedBerTPN!W7="""","""","" + ""&PedBerTPN!W7&"" gluc 10%"")
 $I$24: 	=IF(F24="""","""","" "" &SUM(PedBerTPN!G6:G7)&"" ml/dag"")
 $L$24: 	=PedBerTPN!W22
 $G$25: 	=PedBerTPN!W8
-$B$26: 	=PedBerTPN!X9
+$B$26: 	=PedBerTPN!Y9
 $G$26: 	=PedBerTPN!W9
-$J$26: 	=PedBerTPN!X23
+$J$26: 	=PedBerTPN!Y23
 $L$26: 	=PedBerTPN!W23
-$B$27: 	=PedBerTPN!X10
+$B$27: 	=PedBerTPN!Y10
 $G$27: 	=PedBerTPN!W10
-$J$27: 	=PedBerTPN!X24
+$J$27: 	=PedBerTPN!Y24
 $L$27: 	=PedBerTPN!W24
-$B$29: 	=PedBerTPN!X12
+$B$29: 	=PedBerTPN!Y12
 $F$29: 	=PedBerTPN!V11
 $G$29: 	=PedBerTPN!W12
 $H$29: 	=IF(PedBerTPN!W11="""","""","" + ""&PedBerTPN!W11&"" gluc 10%"")
 $I$29: 	=IF(F29="""","""","" ""&SUM(PedBerTPN!G12:G13)+PedBerTPN!G11&"" ml/dag"")
-$B$30: 	=PedBerTPN!X13
+$B$30: 	=PedBerTPN!Y13
 $G$30: 	=PedBerTPN!W13
-$B$32: 	=PedBerTPN!X15
+$B$32: 	=PedBerTPN!Y15
 $F$32: 	=PedBerTPN!V14
 $G$32: 	=PedBerTPN!W15
 $H$32: 	=IF(PedBerTPN!W14="""","""","" + ""&PedBerTPN!W14&"" gluc 5%"")
 $I$32: 	=IF(PedBerTPN!W15="""","""","" ""&SUM(PedBerTPN!G14:G15)&"" ml/dag"")
-$B$34: 	=PedBerTPN!X16
+$B$34: 	=PedBerTPN!Y16
 $F$34: 	=PedBerTPN!V16
 $I$34: 	=IF(PedBerTPN!G16<>0,"" ""&PedBerTPN!G16&"" ml/dag"","""")
 $G$35: 	=PedBerTPN!W17
-$B$36: 	=PedBerTPN!X18
+$B$36: 	=PedBerTPN!Y18
 $G$36: 	=PedBerTPN!W18
-$B$37: 	=PedBerTPN!X19
+$B$37: 	=PedBerTPN!Y19
 $G$37: 	=PedBerTPN!W19
 $B$39: 	=IF(OR(F39=0,F39=""""),"""",""verw"")
 $F$39: 	=_Ped_TPN_Opm
