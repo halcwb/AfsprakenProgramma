@@ -176,18 +176,18 @@ Public Function GetPatients() As Collection
 
 End Function
 
-Public Function GetPatientDetails() As ClassPatientDetails
+Public Sub GetPatientDetails(objPat As ClassPatientDetails)
 
-    Dim objPat As ClassPatientDetails
     Dim dtmBd As Date
     Dim dtmAdm As Date
     
-    Set objPat = New ClassPatientDetails
     objPat.PatientId = ModRange.GetRangeValue(constPatNum, vbNullString)
+    objPat.Bed = ModBed.GetBed()
     objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
     objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
     objPat.Gewicht = ModRange.GetRangeValue(constGewicht, 0) / 10
     objPat.Lengte = ModRange.GetRangeValue(constLengte, 0)
+    objPat.Geslacht = ModRange.GetRangeValue(constGeslacht, vbNullString)
     objPat.GeboorteGewicht = ModRange.GetRangeValue(constGebGew, 0)
     objPat.Weeks = ModRange.GetRangeValue(constWeken, 0)
     objPat.Days = ModRange.GetRangeValue(constDagen, 0)
@@ -196,9 +196,7 @@ Public Function GetPatientDetails() As ClassPatientDetails
     dtmBd = ModRange.GetRangeValue(constGebDatum, ModDate.EmptyDate)
     objPat.SetAdmissionAndBirthDate dtmAdm, dtmBd
     
-    Set GetPatientDetails = objPat
-
-End Function
+End Sub
 
 Public Sub WritePatientDetails(objPat As ClassPatientDetails)
 
@@ -220,6 +218,8 @@ Public Sub WritePatientDetails(objPat As ClassPatientDetails)
     ModRange.SetRangeValue constGebGew, objPat.GeboorteGewicht
     ModRange.SetRangeValue constWeken, objPat.Weeks
     ModRange.SetRangeValue constDagen, objPat.Days
+    
+    ModBed.SetBed objPat.Bed
 
 End Sub
 
@@ -228,7 +228,8 @@ Public Sub EnterPatientDetails()
     Dim frmPat As FormPatient
     Dim objPat As ClassPatientDetails
     
-    Set objPat = GetPatientDetails()
+    Set objPat = New ClassPatientDetails
+    GetPatientDetails objPat
     Set frmPat = New FormPatient
     
     frmPat.SetPatient objPat

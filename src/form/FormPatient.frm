@@ -72,25 +72,25 @@ End Sub
 Private Sub btnRefresh_Click()
 
     Dim strId As String
-    Dim objPat As ClassPatientDetails
     
     strId = IIf(txtPatNum.Text = vbNullString, MetaVision_GetCurrentPatientID(), vbNullString)
     If Not (strId = vbNullString And txtPatNum.Text = vbNullString) Then
-        Set objPat = MetaVision_GetPatientDetails(strId, txtPatNum.Text)
-        Me.txtAdmDay = DateTime.Day(objPat.OpnameDatum)
-        Me.txtAdmMonth = DateTime.Month(objPat.OpnameDatum)
-        Me.txtAdmYear = DateTime.Year(objPat.OpnameDatum)
-        Me.txtPatNum = objPat.PatientId
-        Me.txtLastName = objPat.AchterNaam
-        Me.txtFirstName = objPat.VoorNaam
-        Me.txtBirthDay = DateTime.Day(objPat.GeboorteDatum)
-        Me.txtBirthMonth = DateTime.Month(objPat.GeboorteDatum)
-        Me.txtBirthYear = DateTime.Year(objPat.GeboorteDatum)
-        Me.txtWeight = objPat.Gewicht
-        Me.txtLength = objPat.Lengte
-        Me.txtBirthWeight = objPat.GeboorteGewicht
-        Me.txtGestDay = objPat.Days
-        Me.txtGestWeek = objPat.Weeks
+        MetaVision_GetPatientDetails m_Pat, strId, txtPatNum.Text, m_Pat.Bed
+        Me.txtAdmDay = DateTime.Day(m_Pat.OpnameDatum)
+        Me.txtAdmMonth = DateTime.Month(m_Pat.OpnameDatum)
+        Me.txtAdmYear = DateTime.Year(m_Pat.OpnameDatum)
+        Me.txtPatNum = m_Pat.PatientId
+        Me.txtLastName = m_Pat.AchterNaam
+        Me.txtFirstName = m_Pat.VoorNaam
+        Me.txtBirthDay = DateTime.Day(m_Pat.GeboorteDatum)
+        Me.txtBirthMonth = DateTime.Month(m_Pat.GeboorteDatum)
+        Me.txtBirthYear = DateTime.Year(m_Pat.GeboorteDatum)
+        Me.txtWeight = m_Pat.Gewicht
+        Me.txtLength = m_Pat.Lengte
+        Me.cboGeslacht.Text = m_Pat.Geslacht
+        Me.txtBirthWeight = m_Pat.GeboorteGewicht
+        Me.txtGestDay = m_Pat.Days
+        Me.txtGestWeek = m_Pat.Weeks
         
         Validate vbNullString
     End If
@@ -192,6 +192,8 @@ Private Sub cmdClear_Click()
     txtWeight.Value = vbNullString
     txtLength.Value = vbNullString
     
+    cboGeslacht.Value = vbNullString
+    
     txtBirthWeight.Value = vbNullString
     txtGestWeek.Value = vbNullString
     txtGestDay.Value = vbNullString
@@ -218,7 +220,7 @@ Private Sub cmdOK_Click()
     m_Pat.GeboorteGewicht = StringToDouble(txtBirthWeight.Value)
     m_Pat.Weeks = StringToDouble(txtGestWeek.Value)
     m_Pat.Days = StringToDouble(txtGestDay.Value)
-
+    
     Me.Hide
 
 End Sub
@@ -330,6 +332,7 @@ Public Sub SetPatient(objPat As ClassPatientDetails)
     txtFirstName.Value = m_Pat.VoorNaam
     txtWeight.Value = IIf(m_Pat.Gewicht = 0, vbNullString, m_Pat.Gewicht)
     txtLength.Value = IIf(m_Pat.Lengte = 0, vbNullString, m_Pat.Lengte)
+    cboGeslacht.Text = objPat.Geslacht
     txtBirthWeight.Value = IIf(m_Pat.GeboorteGewicht = 0, vbNullString, m_Pat.GeboorteGewicht)
     txtGestWeek.Value = IIf(m_Pat.Weeks = 0, vbNullString, m_Pat.Weeks)
     txtGestDay.Value = IIf(m_Pat.Days = 0, vbNullString, m_Pat.Days)

@@ -20,6 +20,8 @@ Private m_LE As Double
 Private m_GS As String
 Private m_GW As Integer
 Private m_GD As Integer
+Private m_LU As String
+
 
 Public Property Get AchterNaam() As String
 
@@ -129,6 +131,18 @@ Public Property Let PatientId(ByVal strId As String)
 
 End Property
 
+Public Property Get Bed() As String
+
+    Bed = m_LU
+
+End Property
+
+Public Property Let Bed(ByVal strBed As String)
+
+    m_LU = strBed
+
+End Property
+
 Public Property Get Geslacht() As String
 
     Geslacht = m_GS
@@ -137,11 +151,17 @@ End Property
 
 Public Property Let Geslacht(ByVal strGesl As String)
    
+    strGesl = Trim(Strings.LCase(strGesl))
     If strGesl = "man" Or strGesl = "vrouw" Or strGesl = "onbepaald" Then
-        m_GS = strGesl
+        m_GS = "man"
+    ElseIf strGesl = "vrouw" Then
+        m_GS = "vrouw"
+    ElseIf strGesl = "onbepaald" Or strGesl = "onbekend" Then
+        m_GS = "onbepaald"
     End If
 
 End Property
+
 Public Property Get GeboorteDatum() As Date
 
     GeboorteDatum = m_BD

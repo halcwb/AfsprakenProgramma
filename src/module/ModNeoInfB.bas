@@ -396,7 +396,7 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
         dblQty = 0
     End If
     
-    GetMedicamentMinQty = ModString.FixPrecision(dblQty, 1)
+    GetMedicamentMinQty = ModString.FixPrecision(dblQty, 2)
 
 End Function
 

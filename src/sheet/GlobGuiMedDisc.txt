@@ -1,12 +1,12 @@
 "$G$2: 	=Txt_Pat_AfspraakDat
-$N$2: 	=Txt_Pat_OpnameDat
+$N$2: 	=Txt_Pat_GeboorteDat
 $R$2: 	=Txt_Pat_Gewicht
 $T$2: 	=Txt_Pat_Bed
 $G$3: 	=Txt_Pat_FullName
-$N$3: 	=Txt_Pat_GeboorteDat
+$N$3: 	=Txt_Pat_Leeftijd
 $R$3: 	=Txt_Pat_Lengte
 $G$4: 	=Txt_Pat_PatNo
-$N$4: 	=Txt_Pat_Leeftijd
+$N$4: 	=Txt_Pat_Geslacht
 $R$4: 	=Txt_Pat_Oppervlak
 $B$9: 	=GlobBerMedDisc!AN2
 $C$9: 	=GlobBerMedDisc!AQ2

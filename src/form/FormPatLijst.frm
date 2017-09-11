@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormPatLijst 
    Caption         =   "Kies een patient ..."
-   ClientHeight    =   4665
+   ClientHeight    =   11145
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   4020
+   ClientWidth     =   6150
    OleObjectBlob   =   "FormPatLijst.frx":0000
    StartUpPosition =   1  'CenterOwner
 End

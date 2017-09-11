@@ -5,8 +5,8 @@ $G$3: 	=NeoBerInfB!$AL$58
 $E$4: 	=NeoBerInfB!$AR$57
 $F$4: 	=NeoBerInfB!$AR$56
 $G$4: 	=NeoBerInfB!$AR$58
-$J$4: 	=NeoBerInfB!$AM$56
-$K$4: 	=NeoBerInfB!$AM$57
+$J$4: 	=NeoBerInfB!$AM$57
+$K$4: 	=NeoBerInfB!$AM$56
 $L$4: 	=NeoBerInfB!$AM$58
 $M$4: 	=IF(_Glob_Lab_Natrium>0,_Glob_Lab_Natrium,"""")
 $O$4: 	=NeoBerInfB!$AV$57
@@ -17,8 +17,8 @@ $E$5: 	=NeoBerInfB!$AT$57
 $F$5: 	=NeoBerInfB!$AT$56
 $G$5: 	=NeoBerInfB!$AT$58
 $H$5: 	=IF(_Glob_Lab_Triglyceriden>0,_Glob_Lab_Triglyceriden,"""")
-$J$5: 	=NeoBerInfB!$AN$56
-$K$5: 	=NeoBerInfB!$AN$57
+$J$5: 	=NeoBerInfB!$AN$57
+$K$5: 	=NeoBerInfB!$AN$56
 $L$5: 	=NeoBerInfB!$AN$58
 $M$5: 	=IF(_Glob_Lab_Kalium>0,_Glob_Lab_Kalium,"""")
 $O$5: 	=NeoBerInfB!$AQ$57
@@ -29,8 +29,8 @@ $E$6: 	=NeoBerInfB!$AS$57
 $F$6: 	=NeoBerInfB!$AS$56
 $G$6: 	=NeoBerInfB!$AS$58
 $H$6: 	=IF(_Glob_Lab_Glucose>0,_Glob_Lab_Glucose,"""")
-$J$6: 	=NeoBerInfB!$AO$56
-$K$6: 	=NeoBerInfB!$AO$57
+$J$6: 	=NeoBerInfB!$AO$57
+$K$6: 	=NeoBerInfB!$AO$56
 $L$6: 	=NeoBerInfB!$AO$58
 $M$6: 	=IF(_Glob_Lab_Calcium>0,_Glob_Lab_Calcium,"""")
 $O$6: 	=NeoBerInfB!$AW$57
@@ -39,8 +39,8 @@ $Q$6: 	=NeoBerInfB!$AW$58
 $E$7: 	=NeoBerInfB!$AU$57
 $F$7: 	=NeoBerInfB!$AU$56
 $G$7: 	=NeoBerInfB!$AU$58
-$J$7: 	=NeoBerInfB!$AP$56
-$K$7: 	=NeoBerInfB!$AP$57
+$J$7: 	=NeoBerInfB!$AP$57
+$K$7: 	=NeoBerInfB!$AP$56
 $L$7: 	=NeoBerInfB!$AP$58
 $M$7: 	=IF(_Glob_Lab_Magnesium>0,_Glob_Lab_Magnesium,"""")
 $O$7: 	=NeoBerInfB!$AX$57
@@ -52,12 +52,13 @@ $I$9: 	=Txt_Pat_PatNo
 $N$9: 	=Txt_Pat_Leeftijd
 $Q$9: 	=Txt_Pat_GeboorteDat
 $I$10: 	=Txt_Pat_FullName
-$N$10: 	=IF(_Pat_Gewicht>0,FixPrecision((_Pat_Gewicht/10),3)&"" kg"","""")
+$N$10: 	=IF(_Pat_Gewicht>0,FixPrecision((_Pat_Gewicht/10),4)&"" kg"","""")
 $Q$10: 	=Txt_Pat_GestAge
 $I$11: 	=Txt_Pat_AfspraakDat
 $N$11: 	=Txt_Pat_OpnameDat
 $Q$11: 	=Txt_Pat_GebGew
 $I$12: 	=Txt_Pat_Bed
+$N$12: 	=Txt_Pat_Geslacht
 $A$15: 	=NeoBerInfB!AI7
 $F$15: 	=NeoBerInfB!Q7
 $M$15: 	=ROUND(NeoBerInfB!B7,0)&"" ml/ kg/ 24 uur""
@@ -200,6 +201,8 @@ $K$54: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C45&"" ml"","""")
 $M$54: 	=IF(NeoBerInfB!B45>0,NeoBerInfB!B45&"" ml"","""")
 $K$55: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C46&"" ml"","""")
 $M$55: 	=IF(NeoBerInfB!B46>0,NeoBerInfB!B46&"" ml"","""")
+$G$56: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!C47&"" ml"","""")
+$I$56: 	=IF(NeoBerInfB!$D$41=2,NeoBerInfB!C47&"" ml"","""")
 $K$56: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C47&"" ml"","""")
 $M$56: 	=IF(NeoBerInfB!B47>0,NeoBerInfB!B47&"" ml"","""")
 $G$57: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!C48&"" ml"","""")

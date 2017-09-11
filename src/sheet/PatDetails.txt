@@ -16,4 +16,5 @@ $B$29: 	=IF(AND(_Pat_Gewicht>0,_Pat_Lengte>0),""Lichamelijk oppervlak: ""&ROUND(
 $B$30: 	=IF(OR(__1_Bed=0,__1_Bed=""""),"""",""Bed: ""&__1_Bed)
 $B$31: 	=IF(_Pat_GebGew=0,"""",_Pat_GebGew&"" gram"")
 $B$32: 	=IF(_Pat_GestWeken=0,"""",_Pat_GestWeken&"" Weken ""&(IF(_Pat_GestDagen=0,"""",_Pat_GestDagen&"" Dag(-en)"")))
+$B$33: 	=IF(_Pat_Geslacht = 0,""onbekend"",_Pat_Geslacht)
 "
