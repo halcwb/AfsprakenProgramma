@@ -112,9 +112,9 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
             SetBed strBed
         End If
         
+        blnAll = ModRange.CopyTempSheetToNamedRanges(True)
         If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar blnShowProgress       ' Make sure that infuusbrief data is updated
         
-        blnAll = ModRange.CopyTempSheetToNamedRanges(True)
         If Not blnAll And blnAsk Then
             If blnShowProgress Then
                 strTitle = FormProgress.Caption

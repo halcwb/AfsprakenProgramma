@@ -54,6 +54,12 @@ Public Function CopyTempSheetToNamedRanges(ByVal blnShowProgress As Boolean) As 
 
 End Function
 
+Private Sub Test_CopyTempSheetToNamedRanges()
+
+    CopyTempSheetToNamedRanges False
+
+End Sub
+
 Public Sub SetNameToRange(ByVal strName As String, objRange As Range)
 
     ModAssert.AssertTrue objRange.Rows.Count = 1 And objRange.Columns.Count = 1, "Name cannot be set to multi cell", True

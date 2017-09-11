@@ -45,6 +45,32 @@ Private Const constBereidingTekst As String = "AX"
 
 Private Const constTestResult As String = "AH"
 
+Public Function Test_NeoInfB_FillContMed(ByVal blnPass As Boolean) As Boolean
+
+    Dim intN As Integer
+    
+    For intN = 1 To 10
+        blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intN, IntNToStrN(intN), intN, 0, 0, 0, 0)
+    Next
+    ModNeoInfB.CopyCurrentInfVarToData True
+    
+    Test_NeoInfB_FillContMed = blnPass
+
+End Function
+
+Public Function Test_NeoInfB_EnterContMed(ByVal blnPass As Boolean, ByVal intN As Integer, ByVal strM As String, ByVal intMed As Integer, ByVal dblHoev As Double, ByVal intOpl As Integer, ByVal dblOplHoev As Double, ByVal dblStand As Double) As Boolean
+
+    blnPass = blnPass And ModRange.SetRangeValue(constMedicament & strM, intMed)
+    ChangeMedIV intN
+    If dblHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constHoeveelheid & strM, dblHoev * 10)
+    If intOpl > 1 Then blnPass = blnPass And ModRange.SetRangeValue(constOplosmiddel & strM, intOpl)
+    If dblOplHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constOploshoeveelheid & strM, dblOplHoev)
+    If dblStand > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constInfuusStand & strM, dblStand * 10)
+
+    Test_NeoInfB_EnterContMed = blnPass
+
+End Function
+
 Public Sub Test_NeoInfB_ContMed()
 
     Dim wbkTests As Workbook
@@ -116,12 +142,13 @@ Public Sub Test_NeoInfB_ContMed()
         ' Voer testcase in
         For intM = 1 To 10
             strM = IIf(intM < 10, "0" & intM, intM)
-            blnPass = blnPass And ModRange.SetRangeValue(constMedicament & strM, intMed)
-            ChangeMedIV intM
-            If dblHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constHoeveelheid & strM, dblHoev * 10)
-            If intOpl > 1 Then blnPass = blnPass And ModRange.SetRangeValue(constOplosmiddel & strM, intOpl)
-            If dblOplHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constOploshoeveelheid & strM, dblOplHoev)
-            If dblStand > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constInfuusStand & strM, dblStand * 10)
+            blnPass = blnPass & Test_NeoInfB_EnterContMed(blnPass, intM, strM, intMed, dblHoev, intOpl, dblOplHoev, dblStand)
+'            blnPass = blnPass And ModRange.SetRangeValue(constMedicament & strM, intMed)
+'            ChangeMedIV intM
+'            If dblHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constHoeveelheid & strM, dblHoev * 10)
+'            If intOpl > 1 Then blnPass = blnPass And ModRange.SetRangeValue(constOplosmiddel & strM, intOpl)
+'            If dblOplHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constOploshoeveelheid & strM, dblOplHoev)
+'            If dblStand > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constInfuusStand & strM, dblStand * 10)
         Next
         
         ' Schrijf gewicht

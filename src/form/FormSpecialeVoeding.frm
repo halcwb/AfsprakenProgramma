@@ -15,6 +15,21 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Const constSpecVoed = "_Glob_SpecialeVoeding_"
+
+'energy
+'eiwit
+'KH
+'vet
+'Na
+'K
+'Ca
+'P
+'Mg
+'Fe
+'VitD
+'Cl
+
 
 Private Sub cmdCancel_Click()
 
@@ -24,15 +39,15 @@ End Sub
 
 Private Sub cmdOK_Click()
 
-    ModRange.SetRangeValue "SpecVoed_1", txtCalorieen.Text
-    ModRange.SetRangeValue "SpecVoed_2", txtEiwit.Text
-    ModRange.SetRangeValue "SpecVoed_3", txtKoolHydraten.Text
-    ModRange.SetRangeValue "SpecVoed_4", txtVet.Text
-    ModRange.SetRangeValue "SpecVoed_5", txtNatrium.Text
-    ModRange.SetRangeValue "SpecVoed_6", txtKalium.Text
-    ModRange.SetRangeValue "SpecVoed_7", txtCalcium.Text
-    ModRange.SetRangeValue "SpecVoed_8", txtPhosfaat.Text
-    ModRange.SetRangeValue "SpecVoed_9", txtMagnesium.Text
+    ModRange.SetRangeValue constSpecVoed & "01", txtCalorieen.Text
+    ModRange.SetRangeValue constSpecVoed & "02", txtEiwit.Text
+    ModRange.SetRangeValue constSpecVoed & "03", txtKoolHydraten.Text
+    ModRange.SetRangeValue constSpecVoed & "04", txtVet.Text
+    ModRange.SetRangeValue constSpecVoed & "05", txtNatrium.Text
+    ModRange.SetRangeValue constSpecVoed & "06", txtKalium.Text
+    ModRange.SetRangeValue constSpecVoed & "07", txtCalcium.Text
+    ModRange.SetRangeValue constSpecVoed & "08", txtPhosfaat.Text
+    ModRange.SetRangeValue constSpecVoed & "09", txtMagnesium.Text
 
     Me.Hide
 
@@ -50,15 +65,15 @@ Private Sub UserForm_Activate()
 
     CenterForm
 
-    txtCalorieen.Text = ModRange.GetRangeValue("SpecVoed_1", vbNullString)
-    txtEiwit.Text = ModRange.GetRangeValue("SpecVoed_2", vbNullString)
-    txtKoolHydraten.Text = ModRange.GetRangeValue("SpecVoed_3", vbNullString)
-    txtVet.Text = ModRange.GetRangeValue("SpecVoed_4", vbNullString)
-    txtNatrium.Text = ModRange.GetRangeValue("SpecVoed_5", vbNullString)
-    txtKalium.Text = ModRange.GetRangeValue("SpecVoed_6", vbNullString)
-    txtCalcium.Text = ModRange.GetRangeValue("SpecVoed_7", vbNullString)
-    txtPhosfaat.Text = ModRange.GetRangeValue("SpecVoed_8", vbNullString)
-    txtMagnesium.Text = ModRange.GetRangeValue("SpecVoed_9", vbNullString)
+    txtCalorieen.Text = ModRange.GetRangeValue(constSpecVoed & "01", vbNullString)
+    txtEiwit.Text = ModRange.GetRangeValue(constSpecVoed & "02", vbNullString)
+    txtKoolHydraten.Text = ModRange.GetRangeValue(constSpecVoed & "03", vbNullString)
+    txtVet.Text = ModRange.GetRangeValue(constSpecVoed & "04", vbNullString)
+    txtNatrium.Text = ModRange.GetRangeValue(constSpecVoed & "05", vbNullString)
+    txtKalium.Text = ModRange.GetRangeValue(constSpecVoed & "06", vbNullString)
+    txtCalcium.Text = ModRange.GetRangeValue(constSpecVoed & "07", vbNullString)
+    txtPhosfaat.Text = ModRange.GetRangeValue(constSpecVoed & "08", vbNullString)
+    txtMagnesium.Text = ModRange.GetRangeValue(constSpecVoed & "09", vbNullString)
 
 End Sub
 

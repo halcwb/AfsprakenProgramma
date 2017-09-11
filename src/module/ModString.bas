@@ -275,4 +275,9 @@ Public Function ConcatenateKeyValue(objRange As Range, ByVal strRow As String, B
 
 End Function
 
+Public Function IntNToStrN(ByVal intN As Integer) As String
+
+    IntNToStrN = IIf(intN < 10, "0" & intN, intN)
+
+End Function
 
