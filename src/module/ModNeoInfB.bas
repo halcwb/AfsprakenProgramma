@@ -369,8 +369,14 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
     Dim dblOplQty As Double
     Dim dblStand As Double
     Dim dblQty As Double
+    Dim dblFix As Double
+    Dim dblDelta As Double
     Dim dblMaxConc As Double
     Dim dblMinConc As Double
+    Dim dblConc As Double
+    Dim dblFilter As Double
+    Dim intN As Integer
+    Dim intPrec As Integer
     Dim strMed As String
     
     dblAdvMin = GetMedicamentItemWithIndex(intMed, constAdvMinIndex)
@@ -392,11 +398,34 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
         dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
         dblQty = IIf(dblQty / dblOplQty < dblMinConc, dblMinConc * dblOplQty, dblQty)
         dblQty = IIf(dblQty / dblOplQty > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
+        
+        dblFilter = 0.001
+        intPrec = IIf(dblQty >= 1, 2, 1)
+        dblFix = StringToDouble(FixPrecision(dblQty, intPrec))
+        
+        intN = 1
+        dblDelta = dblQty - dblFix
+        dblConc = dblFix / dblOplQty
+        Do While dblConc < dblMinConc And Not dblMinConc - dblConc < dblFilter
+            dblFix = FixPrecision(dblQty + dblDelta * intN, intPrec)
+            intN = intN + 1
+            dblConc = dblFix / dblOplQty
+        Loop
+        
+        intN = 1
+        dblDelta = dblFix - dblQty
+        dblConc = dblFix / dblOplQty
+        Do While dblConc > dblMaxConc And Not dblConc - dblMaxConc < dblFilter
+            dblFix = FixPrecision(dblQty - dblDelta * intN, intPrec)
+            intN = intN + 1
+            dblConc = dblFix / dblOplQty
+        Loop
+        
     Else
         dblQty = 0
     End If
     
-    GetMedicamentMinQty = ModString.FixPrecision(dblQty, 2)
+    GetMedicamentMinQty = dblFix
 
 End Function
 

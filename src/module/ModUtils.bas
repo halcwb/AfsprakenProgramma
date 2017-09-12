@@ -37,9 +37,11 @@ Public Sub CopyToClipboard(ByVal strText As String)
     Dim objClip As MSForms.DataObject
     
     Set objClip = New MSForms.DataObject
-    objClip.SetText strText
-    objClip.PutInClipboard
-
+    If Not strText = vbNullString Then
+        objClip.SetText strText
+        objClip.PutInClipboard
+    End If
+    
 End Sub
 
 Public Function GetField(objRs As Recordset, ByVal strField As String) As Variant

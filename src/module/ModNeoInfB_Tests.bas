@@ -36,8 +36,8 @@ Private Const constInfuusStand As String = "Var_Neo_InfB_Cont_Stand_"
 
 Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
 Private Const constTblOpl As String = "Tbl_Neo_OplVlst"
-Private Const constTblVerwacht As String = "T3:AE"
-Private Const constTblTekst As String = "AS3:AT"
+Private Const constTblVerwacht As String = "U3:AG"
+Private Const constTblTekst As String = "AV3:AX"
 
 Private Const constAfsprTekst As String = "AV"
 Private Const constEtiketTekst As String = "AW"
@@ -142,7 +142,7 @@ Public Sub Test_NeoInfB_ContMed()
         ' Voer testcase in
         For intM = 1 To 10
             strM = IIf(intM < 10, "0" & intM, intM)
-            blnPass = blnPass & Test_NeoInfB_EnterContMed(blnPass, intM, strM, intMed, dblHoev, intOpl, dblOplHoev, dblStand)
+            blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intM, strM, intMed, dblHoev, intOpl, dblOplHoev, dblStand)
 '            blnPass = blnPass And ModRange.SetRangeValue(constMedicament & strM, intMed)
 '            ChangeMedIV intM
 '            If dblHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constHoeveelheid & strM, dblHoev * 10)

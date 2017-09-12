@@ -9,7 +9,7 @@ $B$23: 	=IF(((Var_AfspraakDatum-__4_GebDatum)/365)>100,"""",TRUNC((Var_AfspraakD
 $B$24: 	=IF(Var_AfspraakDatum-__4_GebDatum<=28,B23,B22)
 $B$25: 	=IF(__2_AchterNaam="""","""",IF(LEN(C25)>40,LEFT(C25,40)&""…"",C25))
 $C$25: 	=__2_AchterNaam&"", ""&__3_VoorNaam
-$B$26: 	=IF(AND(__4_GebDatum>0,_Pat_OpnDatum>0),""(dag ""&Var_AfspraakDatum-_Pat_OpnDatum+1&"")"", """")
+$B$26: 	=IF(AND(__4_GebDatum>0,_Pat_OpnDatum>0),""(dag ""&ROUND(Var_AfspraakDatum-_Pat_OpnDatum+1,0)&"")"", """")
 $B$27: 	=IF(_Pat_Gewicht>0,""Gewicht: ""&FixPrecision(_Pat_Gewicht/10, 3)&"" kg"", ""Gewicht:"")
 $B$28: 	=IF(_Pat_Lengte>0,""Lengte: ""&_Pat_Lengte&"" cm"",""Lengte:"")
 $B$29: 	=IF(AND(_Pat_Gewicht>0,_Pat_Lengte>0),""Lichamelijk oppervlak: ""&ROUND(POWER(_Pat_Gewicht/10,0.425)*POWER(((_Pat_Lengte/100)*100),0.725)*0.007184,2)&"" m2"", ""Lichamelijk oppervlak:"")

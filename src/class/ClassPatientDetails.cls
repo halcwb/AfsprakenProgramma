@@ -152,7 +152,7 @@ End Property
 Public Property Let Geslacht(ByVal strGesl As String)
    
     strGesl = Trim(Strings.LCase(strGesl))
-    If strGesl = "man" Or strGesl = "vrouw" Or strGesl = "onbepaald" Then
+    If strGesl = "man" Then
         m_GS = "man"
     ElseIf strGesl = "vrouw" Then
         m_GS = "vrouw"
