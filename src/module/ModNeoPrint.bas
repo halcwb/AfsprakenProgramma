@@ -40,3 +40,10 @@ Public Sub PrintApotheekWerkBrief()
     Next intNo
 
 End Sub
+
+Public Sub PrintNeoWerkBrief()
+
+    shtNeoPrtWerkbr.Unprotect ModConst.CONST_PASSWORD
+    PrintSheet shtNeoPrtWerkbr, 1, True
+
+End Sub

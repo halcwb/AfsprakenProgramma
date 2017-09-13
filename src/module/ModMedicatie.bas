@@ -1,6 +1,8 @@
 Attribute VB_Name = "ModMedicatie"
 Option Explicit
 
+Private Const constTblNeoMedCont As String = "Tbl_Neo_MedIV"
+
 Public Function Medicatie_CalcEpiQty(ByVal dblWght As Double) As Double
 
     Medicatie_CalcEpiQty = dblWght
@@ -27,7 +29,7 @@ End Function
 
 Public Function GetNeoMedContIVName(ByVal intMed As Integer) As String
 
-    GetNeoMedContIVName = GetMedContIVName(intMed, "Tbl_Neo_MedIV")
+    GetNeoMedContIVName = GetMedContIVName(intMed, constTblNeoMedCont)
 
 End Function
 

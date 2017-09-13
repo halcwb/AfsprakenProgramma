@@ -135,3 +135,27 @@ Public Sub SetNeoMedIVConditionalFormatting()
     
 End Sub
 
+Public Sub SetMedDiscConditionalFormatting()
+    
+    Dim strDoseWarn As String
+    Dim strDoseErr As String
+    
+    Dim strConcErr As String
+    Dim strOplErr As String
+    Dim strTimeErr As String
+    
+    strDoseErr = "=GlobBerMedDisc!AW"
+    strDoseWarn = "=GlobBerMedDisc!AV"
+    
+    strConcErr = "=GlobBerMedDisc!BA"
+    strOplErr = "=GlobBerMedDisc!BB"
+    strTimeErr = "=GlobBerMedDisc!BC"
+    
+    SetConditionalFormattingWarnErr shtGlobGuiMedDisc, "N", strDoseErr, strDoseWarn, 9, 38, 7
+    
+    SetConditionalFormattingErr shtGlobGuiMedDisc, "R", strConcErr, 9, 38, 7
+    SetConditionalFormattingErr shtGlobGuiMedDisc, "P", strOplErr, 9, 38, 7
+    SetConditionalFormattingErr shtGlobGuiMedDisc, "S", strTimeErr, 9, 38, 7
+    
+
+End Sub

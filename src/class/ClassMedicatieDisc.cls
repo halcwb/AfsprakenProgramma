@@ -22,6 +22,97 @@ Private m_Dosis As String
 Private m_DosisEenheid As String
 Private m_Routes As String
 Private m_Indicaties As String
+Private m_PICU_Onder As Double
+Private m_PICU_Boven As Double
+Private m_NICU_Onder As Double
+Private m_NICU_Boven As Double
+Private m_MaxConc As Double
+Private m_OplVlst As String
+Private m_MinTijd As Integer
+
+Public Property Get MaxConc() As Double
+
+    MaxConc = m_MaxConc
+
+End Property
+
+Public Property Let MaxConc(ByVal dblConc As Double)
+
+    m_MaxConc = dblConc
+
+End Property
+
+Public Property Get OplVlst() As String
+
+    OplVlst = m_OplVlst
+
+End Property
+
+Public Property Let OplVlst(ByVal strVlst As String)
+
+    m_OplVlst = strVlst
+
+End Property
+
+Public Property Get MinTijd() As Integer
+
+    MinTijd = m_MinTijd
+
+End Property
+
+Public Property Let MinTijd(ByVal intTime As Integer)
+
+    m_MinTijd = intTime
+
+End Property
+
+Public Property Get PICU_Onder() As Double
+    
+    PICU_Onder = m_PICU_Onder
+    
+End Property
+
+Public Property Let PICU_Onder(ByVal dblOnder As Double)
+
+    m_PICU_Onder = dblOnder
+
+End Property
+
+Public Property Get PICU_Boven() As Double
+    
+    PICU_Boven = m_PICU_Boven
+    
+End Property
+
+Public Property Let PICU_Boven(ByVal dblBoven As Double)
+
+    m_PICU_Boven = dblBoven
+
+End Property
+
+Public Property Get NICU_Onder() As Double
+    
+    NICU_Onder = m_NICU_Onder
+    
+End Property
+
+Public Property Let NICU_Onder(ByVal dblOnder As Double)
+
+    m_NICU_Onder = dblOnder
+
+End Property
+
+Public Property Get NICU_Boven() As Double
+    
+    NICU_Boven = m_NICU_Boven
+    
+End Property
+
+Public Property Let NICU_Boven(ByVal dblBoven As Double)
+
+    m_NICU_Boven = dblBoven
+
+End Property
 
 Public Property Get GPK() As String
 
@@ -193,13 +284,13 @@ End Property
 
 Public Function GetRoutes() As String()
 
-    GetRoutes = Split(m_Routes, "/")
+    GetRoutes = Split(m_Routes, "||")
 
 End Function
 
 Public Function GetIndicaties() As String()
 
-    GetIndicaties = Split(m_Indicaties, "/")
+    GetIndicaties = Split(m_Indicaties, "||")
     
 End Function
 

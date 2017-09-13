@@ -124,11 +124,10 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
               
         Case "btnNeoPrintApoth"                             ' -> Apotheek
-            ' ModSheet.GoToSheet shtNeoPrtApoth, "A1"
             ModNeoPrint.PrintApotheekWerkBrief
         
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
-            ' ModSheet.GoToSheet shtNeoPrtWerkbr, "A1"
+            ModNeoPrint.PrintNeoWerkBrief
             
         'grpDevelopment                                     ' -- DEVELOPMENT --
         

@@ -11,6 +11,7 @@ Private Const constMedIVStand As String = "_Ped_MedIV_Stand_"
 Private Const constMedIVCount As Integer = 15
 
 Private Const constStandOplKeuze As Integer = 2
+Private Const constStandOplVlst As Integer = 15
 Private Const constStandHoevIndx As Integer = 18
 Private Const constStandVolIndx As Integer = 19
 Private Const constUnitIndx As Integer = 2
@@ -241,12 +242,9 @@ Private Sub SetToStandard(ByVal intN As Integer)
     Dim strStand As String
     Dim strN As String
     Dim intKeuze As Integer
-    Dim intOplKeuze As Integer
     
     On Error GoTo SetToStandardError
 
-    intOplKeuze = 15
-    
     strN = IIf(intN < 10, "0" & intN, intN)
     strMedicament = constMedIVKeuze & strN
     strMedSterkte = constMedIVSterkte & strN
@@ -264,7 +262,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
     If intKeuze = 1 Then                         ' No medicament was selected so clear the line
         Clear intN
     Else                                         ' Else find the right standard solution
-        varOplossing = ModExcel.Excel_VLookup(Range(constTblMed).Cells(intKeuze, 1), constTblMed, intOplKeuze)
+        varOplossing = ModExcel.Excel_VLookup(Range(constTblMed).Cells(intKeuze, 1), constTblMed, constStandOplVlst)
         varOplossing = IIf(varOplossing = 0, constStandOplKeuze, varOplossing) ' Use NaCl 0.9% as stand solution if not specified otherwise
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
@@ -700,3 +698,132 @@ Public Sub PedContIV_Text()
     Set frmOpmerking = Nothing
 
 End Sub
+
+
+Private Sub ResetOplVlst(ByVal strOpl, ByVal intOpl As Integer)
+
+    ModMessage.ShowMsgBoxInfo "Ongeldige oplossing vloeistof voor dit medicament"
+    ModRange.SetRangeValue strOpl, intOpl
+
+End Sub
+
+Private Sub CheckOplVlst(ByVal intN As Integer)
+    
+    Dim strN As String
+    Dim intMed As Integer
+    Dim intOplVlst As Integer
+    Dim intAdvVlst As Integer
+    
+    strN = ModString.IntNToStrN(intN)
+    intMed = ModRange.GetRangeValue(constMedIVKeuze & strN, 0)
+    If intMed > 0 Then
+        intAdvVlst = ModExcel.Excel_VLookup(Range(constTblMed).Cells(intMed, 1), constTblMed, constStandOplVlst)
+        'intAdvVlst = GetMedicamentItemWithIndex(intMed, constAdvOplIndex)
+        intOplVlst = ModRange.GetRangeValue(constMedIVOplVlst & strN, 0)
+        'Geen oplossing vloeistof
+        If intAdvVlst = 1 And Not intOplVlst = 1 Then
+            ResetOplVlst constMedIVOplVlst & strN, intAdvVlst
+        End If
+        'Oplossing vloeistof is NaCl
+        If intAdvVlst = 2 And Not intOplVlst = 2 Then
+            ResetOplVlst constMedIVOplVlst & strN, intAdvVlst
+        End If
+        'Oplossing vloeistof is glucose
+        If intAdvVlst > 2 And intOplVlst <= 2 Then
+            ResetOplVlst constMedIVOplVlst & strN, intAdvVlst
+        End If
+                
+    End If
+    
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_01()
+
+    CheckOplVlst 1
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_02()
+
+    CheckOplVlst 2
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_03()
+
+    CheckOplVlst 3
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_04()
+
+    CheckOplVlst 4
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_05()
+
+    CheckOplVlst 5
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_06()
+
+    CheckOplVlst 6
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_07()
+
+    CheckOplVlst 7
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_08()
+
+    CheckOplVlst 8
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_09()
+
+    CheckOplVlst 9
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_10()
+
+    CheckOplVlst 10
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_11()
+
+    CheckOplVlst 11
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_12()
+
+    CheckOplVlst 12
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_13()
+
+    CheckOplVlst 13
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_14()
+
+    CheckOplVlst 14
+
+End Sub
+
+Public Sub PedContIV_CheckOplVlst_15()
+
+    CheckOplVlst 15
+
+End Sub
+

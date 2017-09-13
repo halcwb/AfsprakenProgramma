@@ -392,6 +392,8 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
     If ModString.ContainsCaseInsensitive(strMed, "doxapram") Then
         dblQty = dblMaxConc * dblOplQty
         
+        intPrec = IIf(dblQty >= 1, 2, 1)
+        dblFix = StringToDouble(FixPrecision(dblQty, intPrec))
     ' dblAdvMin = dblStand * dblFactor * (dblQty / dblOplQty) / dblWeight
     ' dblQty = dblAdvMin * dblOplQty * dblWeight / (dblStand * dblFactor)
     ElseIf dblStand * dblFactor > 0 Then
@@ -422,7 +424,7 @@ Private Function GetMedicamentMinQty(ByVal intMed As Integer) As Double
         Loop
         
     Else
-        dblQty = 0
+        dblFix = 0
     End If
     
     GetMedicamentMinQty = dblFix
@@ -1222,4 +1224,102 @@ NeoInfB_ShowVoedingPickListError:
     Set frmPickList = Nothing
     
 End Sub
+
+Private Sub ResetOplVlst(ByVal strOpl, ByVal intOpl As Integer)
+
+    ModMessage.ShowMsgBoxInfo "Ongeldige oplossing vloeistof voor dit medicament"
+    ModRange.SetRangeValue strOpl, intOpl
+
+End Sub
+
+Private Sub CheckOplVlst(ByVal intN As Integer)
+    
+    Dim strN As String
+    Dim intMed As Integer
+    Dim intOplVlst As Integer
+    Dim intAdvVlst As Integer
+    
+    strN = ModString.IntNToStrN(intN)
+    intMed = ModRange.GetRangeValue(constMedKeuze & strN, 0)
+    If intMed > 0 Then
+        intAdvVlst = GetMedicamentItemWithIndex(intMed, constAdvOplIndex)
+        intOplVlst = ModRange.GetRangeValue(constOplossing & strN, 0)
+        'Geen oplossing vloeistof
+        If intAdvVlst = 1 And Not intOplVlst = 1 Then
+            ResetOplVlst constOplossing & strN, intAdvVlst
+        End If
+        'Oplossing vloeistof is NaCl
+        If intAdvVlst = 12 And Not intOplVlst = 12 Then
+            ResetOplVlst constOplossing & strN, intAdvVlst
+        End If
+        'Oplossing vloeistof is glucose
+        If intAdvVlst > 1 And intAdvVlst < 12 And (intOplVlst = 1 Or intOplVlst > 11) Then
+            ResetOplVlst constOplossing & strN, intAdvVlst
+        End If
+                
+    End If
+    
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_01()
+
+    CheckOplVlst 1
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_02()
+
+    CheckOplVlst 2
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_03()
+
+    CheckOplVlst 3
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_04()
+
+    CheckOplVlst 4
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_05()
+
+    CheckOplVlst 5
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_06()
+
+    CheckOplVlst 6
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_07()
+
+    CheckOplVlst 7
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_08()
+
+    CheckOplVlst 8
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_09()
+
+    CheckOplVlst 9
+
+End Sub
+
+Public Sub NeoInfB_CheckOplVlst_10()
+
+    CheckOplVlst 10
+
+End Sub
+
+
 

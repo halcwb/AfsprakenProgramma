@@ -2,6 +2,7 @@ Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
 Private Const constFormularium As String = "FormulariumDb.xlsx"
+Private Const constFormDbStart As Integer = 3
 
 ' --- Medicament ---
 Private Const constGPK As String = "_Glob_MedDisc_GPK_"              ' GPK code
@@ -15,6 +16,11 @@ Private Const constStandDose As String = "_Glob_MedDisc_StandDose_"  ' Dose stan
 Private Const constDoseUnit As String = "_Glob_MedDisc_DoseEenh_"    ' Dose eenheid
 Private Const constRoute As String = "_Glob_MedDisc_Toed_"           ' Toediening route
 Private Const constIndic As String = "_Glob_MedDisc_Ind_"            ' Indicatie
+Private Const constOnder As String = "_Glob_MedDisc_Onder_"          ' Dagdosering ondergrens
+Private Const constBoven As String = "_Glob_MedDisc_Boven_"          ' Dag dosering bovengrens
+Private Const constMaxConc As String = "_Glob_MedDisc_MaxConc_"      ' Maximale concentratie
+Private Const constOplVlst As String = "_Glob_MedDisc_OplVlst_"      ' Verplichte oplos vloeistof
+Private Const constMinTijd As String = "_Glob_MedDisc_MinTijd_"      ' Minimale inloop tijd
 
 ' --- Voorschrift ---
 Private Const constPRN As String = "_Glob_MedDisc_PRN_"              ' PRN
@@ -124,6 +130,12 @@ Private Sub Clear(ByVal intN As Integer)
     ModRange.SetRangeValue constSolVol & strN, 0
     ModRange.SetRangeValue constTime & strN, 0
     ModRange.SetRangeValue constText & strN, vbNullString
+    
+    ModRange.SetRangeValue constOnder & strN, 0
+    ModRange.SetRangeValue constBoven & strN, 0
+    ModRange.SetRangeValue constMaxConc & strN, 0
+    ModRange.SetRangeValue constOplVlst & strN, vbNullString
+    ModRange.SetRangeValue constMinTijd & strN, 0
 
 End Sub
 
@@ -336,7 +348,7 @@ Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProg
     Set objFormRange = objSheet.Range("A1").CurrentRegion
         
     intC = objFormRange.Rows.Count
-    For intN = 2 To intC
+    For intN = constFormDbStart To intC
         Set objMed = New ClassMedicatieDisc
         
         With objMed
@@ -354,6 +366,13 @@ Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProg
             .DosisEenheid = objFormRange.Cells(intN, 12)
             .Routes = objFormRange.Cells(intN, 8)
             .Indicaties = objFormRange.Cells(intN, 13)
+            .PICU_Onder = objFormRange.Cells(intN, 14).Value2
+            .PICU_Boven = objFormRange.Cells(intN, 15).Value2
+            .NICU_Onder = objFormRange.Cells(intN, 16).Value2
+            .NICU_Boven = objFormRange.Cells(intN, 17).Value2
+            .MaxConc = objFormRange.Cells(intN, 18).Value2
+            .OplVlst = objFormRange.Cells(intN, 19).Value2
+            .MinTijd = objFormRange.Cells(intN, 20).Value2
         End With
         
         objFormularium.AddMedicament objMed
@@ -439,6 +458,24 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute
     ModRange.SetRangeValue constDoseUnit & strN, strDosEenh
     ModRange.SetRangeValue constRoute & strN, strRoute
     ModRange.SetRangeValue constIndic & strN, strInd
+    
+    If IsPed Then
+        ModRange.SetRangeValue constOnder & strN, objMed.PICU_Onder
+        ModRange.SetRangeValue constBoven & strN, objMed.PICU_Boven
+    Else
+        ModRange.SetRangeValue constOnder & strN, objMed.NICU_Onder
+        ModRange.SetRangeValue constBoven & strN, objMed.NICU_Boven
+    End If
+    
+    ModRange.SetRangeValue constMaxConc & strN, objMed.MaxConc
+    ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst
+    ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
+    
+    If objMed.OplVlst = "NaCl" Then
+        ModRange.SetRangeValue constSolNo & strN, 2
+    ElseIf objMed.OplVlst = "glucose" Then
+        ModRange.SetRangeValue constSolNo & strN, 4
+    End If
 
 End Sub
 

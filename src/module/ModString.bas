@@ -166,7 +166,7 @@ Private Sub TestGetPrecision()
 
 End Sub
 
-Public Function FixPrecision(ByVal dblNum As Double, ByVal intN As Integer) As String
+Public Function FixPrecision(ByVal dblNum As Double, ByVal intN As Integer) As Double
 
     Dim dblFix As Double
     Dim intP As Integer
