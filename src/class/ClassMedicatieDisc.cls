@@ -22,6 +22,7 @@ Private m_Dosis As String
 Private m_DosisEenheid As String
 Private m_Routes As String
 Private m_Indicaties As String
+Private m_IndicatieList As String
 Private m_PICU_Onder As Double
 Private m_PICU_Boven As Double
 Private m_NICU_Onder As Double
@@ -278,6 +279,8 @@ End Property
 
 Public Property Let Indicaties(ByVal strIndicaties As String)
 
+    strIndicaties = IIf(ModString.StringIsZeroOrEmpty(strIndicaties), vbNullString, strIndicaties)
+    If m_IndicatieList = vbNullString Then m_IndicatieList = strIndicaties
     m_Indicaties = Strings.LCase(strIndicaties)
 
 End Property
@@ -290,7 +293,7 @@ End Function
 
 Public Function GetIndicaties() As String()
 
-    GetIndicaties = Split(m_Indicaties, "||")
+    GetIndicaties = Split(m_IndicatieList, "||")
     
 End Function
 

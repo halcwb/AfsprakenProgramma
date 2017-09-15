@@ -281,3 +281,9 @@ Public Function IntNToStrN(ByVal intN As Integer) As String
 
 End Function
 
+Public Function StringIsZeroOrEmpty(ByVal strString As String) As Boolean
+
+    StringIsZeroOrEmpty = Trim(strString) = "0" Or strString = vbNullString
+    
+End Function
+
