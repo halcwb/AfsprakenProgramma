@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   7485
+   ClientHeight    =   9900
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10050
@@ -23,6 +23,9 @@ Private m_Etiket As String
 
 Private m_IsGPK As Boolean
 Private m_LoadGPK As Boolean
+
+Private m_Freq As Dictionary
+
 
 Public Sub SetNoFormMed()
 
@@ -181,6 +184,9 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
 End Function
 
 Private Sub LoadMedicament()
+    
+    Dim intN As Integer
+    Dim arrFreq() As String
 
     With m_Medicament
     
@@ -203,6 +209,20 @@ Private Sub LoadMedicament()
         
         FillCombo cboRoute, .GetRoutes()
         FillCombo cboIndicatie, .GetIndicaties()
+        
+        If Not .DosisEenheid = vbNullString Then cboDoseUnit.Text = .DosisEenheid & "/kg/dag"
+        
+        If Not .FreqList = vbNullString Then
+            arrFreq = Split(.FreqList, "||")
+            cboFreq.Clear
+            For intN = 0 To UBound(arrFreq)
+                cboFreq.AddItem arrFreq(intN)
+            Next
+        Else
+            LoadFreq
+        End If
+        
+        If Not .Freq = vbNullString Then cboFreq.Value = .Freq
         
     End With
 
@@ -253,6 +273,15 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     cboIndicatie.Clear
     cboIndicatie.Value = vbNullString
     
+    cboFreq.Value = vbNullString
+    txtNormDose.Value = vbNullString
+    txtMinDose.Value = vbNullString
+    txtMaxDose.Value = vbNullString
+    txtCalcDose.Value = vbNullString
+    cboDoseUnit.Value = vbNullString
+    lblCalcDose.Caption = vbNullString
+    lblDoseUnit.Caption = vbNullString
+    
     cboGeneriek.SetFocus
     
     Set m_Medicament = Nothing
@@ -288,6 +317,34 @@ Private Sub cboRoute_Change()
     
     strValid = ValidateCombo(cboRoute)
     Validate strValid
+
+End Sub
+
+Private Sub cmdCalc_Click()
+
+    Dim dblDose As Double
+    Dim dblWght As Double
+    Dim dblVal As Double
+    Dim dblCalc As Double
+    Dim dblFact As Double
+    
+    dblFact = m_Freq.Item(cboFreq.Text)
+    dblDose = txtNormDose.Value
+    dblWght = ModPatient.GetGewichtFromRange()
+    
+    If dblFact = 0 Or dblDose = 0 Or dblWght = 0 Then Exit Sub
+    
+    dblVal = dblDose * dblWght / dblFact
+    dblVal = ModExcel.Excel_RoundBy(dblVal, txtDosis.Value)
+    
+    dblCalc = dblVal * dblFact / dblWght
+    
+    m_Medicament.CalcDose = dblCalc
+    m_Medicament.Freq = cboFreq.Text
+    
+    txtCalcDose.Value = dblCalc
+    lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDosis.Value & " " & cboDosisEenheid.Text
+    lblDoseUnit.Caption = cboDoseUnit.Value
 
 End Sub
 
@@ -429,6 +486,20 @@ Private Sub UserForm_Activate()
 
 End Sub
 
+Private Sub LoadFreq()
+
+    Dim varKey As Variant
+    
+    If m_Freq Is Nothing Then
+        Set m_Freq = ModMedDisc.GetMedicationFreqs()
+    End If
+    
+    For Each varKey In m_Freq.Keys
+        cboFreq.AddItem varKey
+    Next
+
+End Sub
+
 Private Sub UserForm_Initialize()
 
     Dim intN As Integer
@@ -455,6 +526,8 @@ Private Sub UserForm_Initialize()
         ModProgress.SetJobPercentage "Generieken toevoegen", intC, intN
     Next intN
     
+    LoadFreq
+    
     cboGeneriek.TabIndex = 0
     cboVorm.TabIndex = 1
     txtSterkte.TabIndex = 2
@@ -464,10 +537,16 @@ Private Sub UserForm_Initialize()
     cboRoute.TabIndex = 6
     cboIndicatie.TabIndex = 7
     
-    cmdFormularium.TabIndex = 8
-    cmdOK.TabIndex = 9
-    cmdClear.TabIndex = 10
-    cmdCancel.TabIndex = 11
+    cboFreq.TabIndex = 8
+    txtNormDose.TabIndex = 9
+    cboDoseUnit.TabIndex = 10
+    txtMaxDose.TabIndex = 11
+    
+    cmdCalc.TabIndex = 12
+    cmdFormularium.TabIndex = 13
+    cmdOK.TabIndex = 14
+    cmdClear.TabIndex = 15
+    cmdCancel.TabIndex = 16
        
     ModProgress.FinishProgress
 

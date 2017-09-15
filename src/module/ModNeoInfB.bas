@@ -329,7 +329,7 @@ Public Sub NeoInfB_ShowFormCopy1700ToAct()
     
 End Sub
 
-Private Sub test()
+Private Sub Test()
     
     Dim varItem As Variant
     Dim arr1700Items() As String

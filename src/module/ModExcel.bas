@@ -31,4 +31,21 @@ Private Sub Test_Excel_Index()
  
 End Sub
 
+Public Function Excel_RoundBy(ByVal dblValue, dblStep) As Double
+
+    Dim dblRound As Double
+    
+    dblRound = Application.WorksheetFunction.MRound(dblValue, dblStep)
+    
+    Excel_RoundBy = dblRound
+
+End Function
+
+Private Sub Test_Excel_RoundBy()
+    
+    MsgBox Excel_RoundBy(20, 7)
+
+End Sub
+
+
 

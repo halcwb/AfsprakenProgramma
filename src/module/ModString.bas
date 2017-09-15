@@ -59,7 +59,7 @@ Public Function StartsWith(ByVal strString As String, ByVal strValue As String) 
 
 End Function
 
-Private Sub test()
+Private Sub Test()
     Dim strString As String
     Dim strStart As String
     

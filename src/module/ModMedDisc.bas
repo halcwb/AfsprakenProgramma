@@ -1,8 +1,36 @@
 Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
-Private Const constFormularium As String = "FormulariumDb.xlsx"
+Private Const constFreqTable = "Tbl_Glob_MedFreq"
+
+Private Const constFormularium As String = "FormulariumDb.xlsm"
 Private Const constFormDbStart As Integer = 3
+
+'--- Formularium ---
+Private Const constGPKIndx As Integer = 1
+Private Const constATCIndx As Integer = 2
+Private Const constHoofdGroepIndx As Integer = 3
+Private Const constSubGroepIndx As Integer = 4
+Private Const constGeneriekIndx As Integer = 5
+Private Const constEtiketIndx As Integer = 6
+Private Const constVormIndx As Integer = 7
+Private Const constRouteIndx As Integer = 8
+Private Const constSterkteIndx As Integer = 9
+Private Const constEenheidIndx As Integer = 10
+Private Const constStandDoseIndx As Integer = 11
+Private Const constDoseEenheidIndx As Integer = 12
+Private Const constIndicatiesIndx As Integer = 13
+Private Const constFreqIndx As Integer = 14
+Private Const constPICU_DoseIndx As Integer = 15
+Private Const constPICU_OnderIndx As Integer = 16
+Private Const constPICU_BovenIndx As Integer = 17
+Private Const constNICU_DoseIndx As Integer = 18
+Private Const constNICU_OnderIndx As Integer = 19
+Private Const constNICU_BovenIndx As Integer = 20
+Private Const constMaxConcIndx As Integer = 21
+Private Const constOplVlstIndx As Integer = 22
+Private Const constMinTijdIndx As Integer = 23
+
 
 ' --- Medicament ---
 Private Const constGPK As String = "_Glob_MedDisc_GPK_"              ' GPK code
@@ -31,6 +59,9 @@ Private Const constSolNo As String = "_Glob_MedDisc_OplKeuze_"       ' Oplossing
 Private Const constSolVol As String = "_Glob_MedDisc_OplVol_"        ' Oplossing volume
 Private Const constTime As String = "_Glob_MedDisc_Inloop_"          ' Inloop tijd
 Private Const constText As String = "_Glob_MedDisc_Opm_"             ' Opmerking
+
+Private Const constFreqList As String = "Var_MedDisc_FreqList_"
+Private Const constFreqText As String = "Var_MedDisc_FreqText_"
 
 Private Const constVerw As String = "AL"
 Private Const constMedCount As Integer = 30
@@ -319,6 +350,36 @@ Public Sub MedDisc_Clear_30()
 
 End Sub
 
+Public Function GetMedicationFreqs() As Dictionary
+
+    Dim objTable As Range
+    Dim dictFreq As Dictionary
+    Dim strFreq As String
+    Dim dblFactor As Double
+    Dim intN As Integer
+    Dim intC As Integer
+    
+    Set objTable = ModRange.GetRange(constFreqTable)
+    Set dictFreq = New Dictionary
+    
+    intC = objTable.Rows.Count
+    For intN = 2 To intC
+        strFreq = objTable.Cells(intN, 1).Value2
+        dblFactor = objTable.Cells(intN, 2).Value2
+        dictFreq.Add strFreq, dblFactor
+    Next
+    
+    Set GetMedicationFreqs = dictFreq
+
+End Function
+
+Private Sub Test_GetMedicationFreqs()
+
+    GetMedicationFreqs
+
+End Sub
+
+
 Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer
@@ -352,27 +413,30 @@ Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProg
         Set objMed = New ClassMedicatieDisc
         
         With objMed
-            .GPK = objFormRange.Cells(intN, 1)
-            .TherapieGroep = objFormRange.Cells(intN, 3)
-            .TherapieSubgroep = objFormRange.Cells(intN, 4)
+            .GPK = objFormRange.Cells(intN, constGPKIndx).Value2
+            .TherapieGroep = objFormRange.Cells(intN, constHoofdGroepIndx).Value2
+            .TherapieSubgroep = objFormRange.Cells(intN, constSubGroepIndx).Value2
             
-            .ATC = objFormRange.Cells(intN, 2)
-            .Generiek = objFormRange.Cells(intN, 5)
-            .Vorm = objFormRange.Cells(intN, 7)
-            .Sterkte = objFormRange.Cells(intN, 9)
-            .SterkteEenheid = objFormRange.Cells(intN, 10)
-            .Etiket = objFormRange.Cells(intN, 6)
-            .Dosis = objFormRange.Cells(intN, 11)
-            .DosisEenheid = objFormRange.Cells(intN, 12)
-            .Routes = objFormRange.Cells(intN, 8)
-            .Indicaties = objFormRange.Cells(intN, 13)
-            .PICU_Onder = objFormRange.Cells(intN, 14).Value2
-            .PICU_Boven = objFormRange.Cells(intN, 15).Value2
-            .NICU_Onder = objFormRange.Cells(intN, 16).Value2
-            .NICU_Boven = objFormRange.Cells(intN, 17).Value2
-            .MaxConc = objFormRange.Cells(intN, 18).Value2
-            .OplVlst = objFormRange.Cells(intN, 19).Value2
-            .MinTijd = objFormRange.Cells(intN, 20).Value2
+            .ATC = objFormRange.Cells(intN, constATCIndx).Value2
+            .Generiek = objFormRange.Cells(intN, constGeneriekIndx).Value2
+            .Vorm = objFormRange.Cells(intN, constVormIndx).Value2
+            .Sterkte = objFormRange.Cells(intN, constSterkteIndx).Value2
+            .SterkteEenheid = objFormRange.Cells(intN, constEenheidIndx).Value2
+            .Etiket = objFormRange.Cells(intN, constEtiketIndx).Value2
+            .Dosis = objFormRange.Cells(intN, constStandDoseIndx).Value2
+            .DosisEenheid = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
+            .Routes = objFormRange.Cells(intN, constRouteIndx).Value2
+            .Indicaties = objFormRange.Cells(intN, constIndicatiesIndx).Value2
+            .FreqList = objFormRange.Cells(intN, constFreqIndx).Value2
+            .PICU_Dose = objFormRange.Cells(intN, constPICU_DoseIndx).Value2
+            .PICU_Onder = objFormRange.Cells(intN, constPICU_OnderIndx).Value2
+            .PICU_Boven = objFormRange.Cells(intN, constPICU_BovenIndx).Value2
+            .NICU_Dose = objFormRange.Cells(intN, constNICU_DoseIndx).Value2
+            .NICU_Onder = objFormRange.Cells(intN, constNICU_OnderIndx).Value2
+            .NICU_Boven = objFormRange.Cells(intN, constNICU_BovenIndx).Value2
+            .MaxConc = objFormRange.Cells(intN, constMaxConcIndx).Value2
+            .OplVlst = objFormRange.Cells(intN, constOplVlstIndx).Value2
+            .MinTijd = objFormRange.Cells(intN, constMinTijdIndx).Value2
         End With
         
         objFormularium.AddMedicament objMed
@@ -424,6 +488,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         .cboDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         .cboRoute.Text = ModRange.GetRangeValue(constRoute & strN, vbNullString)
         .cboIndicatie.Text = ModRange.GetRangeValue(constIndic & strN, vbNullString)
+        .cboFreq.Text = ModRange.GetRangeValue(constFreqText & strN, vbNullString)
         
         .Show
         
@@ -446,6 +511,11 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
 End Sub
 
 Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute As String, strDosEenh As String, strInd As String)
+    
+    Dim intFreq As Integer
+    Dim varFreq As Variant
+    Dim dictFreq As Dictionary
+    Dim intDoseQty As Integer
     
     ModRange.SetRangeValue constGPK & strN, objMed.GPK
     ModRange.SetRangeValue constATC & strN, objMed.ATC
@@ -475,6 +545,23 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute
         ModRange.SetRangeValue constSolNo & strN, 2
     ElseIf objMed.OplVlst = "glucose" Then
         ModRange.SetRangeValue constSolNo & strN, 4
+    End If
+    
+    If Not objMed.Freq = vbNullString Then
+        Set dictFreq = GetMedicationFreqs()
+        intFreq = 2
+        For Each varFreq In dictFreq
+            If varFreq = objMed.Freq Then Exit For
+            intFreq = intFreq + 1
+        Next
+        ModRange.SetRangeValue constFreq & strN, intFreq
+    End If
+    
+    If Not objMed.FreqList = vbNullString Then ModRange.SetRangeValue constFreqList & strN, objMed.FreqList
+    
+    If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
+        intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.Dosis
+        ModRange.SetRangeValue constDoseQty & strN, intDoseQty
     End If
 
 End Sub

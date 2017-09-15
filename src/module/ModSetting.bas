@@ -336,7 +336,7 @@ Public Function GetPatientsFilePath(ByVal strFileName As String) As String
 
 End Function
 
-Private Sub test()
+Private Sub Test()
 
     MsgBox GetPatientsFilePath("Test")
     

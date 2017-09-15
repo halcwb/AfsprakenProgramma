@@ -23,13 +23,54 @@ Private m_DosisEenheid As String
 Private m_Routes As String
 Private m_Indicaties As String
 Private m_IndicatieList As String
+Private m_FreqList As String
+Private m_Freq As String
+Private m_CalcDose As Double
+Private m_PICU_Dose As Double
 Private m_PICU_Onder As Double
 Private m_PICU_Boven As Double
+Private m_NICU_Dose As Double
 Private m_NICU_Onder As Double
 Private m_NICU_Boven As Double
 Private m_MaxConc As Double
 Private m_OplVlst As String
 Private m_MinTijd As Integer
+
+Public Property Get CalcDose() As Double
+
+    CalcDose = m_CalcDose
+
+End Property
+
+Public Property Let CalcDose(ByVal dblDose As Double)
+
+    m_CalcDose = dblDose
+
+End Property
+
+Public Property Get FreqList() As String
+
+    FreqList = m_FreqList
+
+End Property
+
+Public Property Let FreqList(ByVal strFreqList As String)
+
+    m_FreqList = strFreqList
+
+End Property
+
+Public Property Get Freq() As String
+
+    Freq = m_Freq
+
+End Property
+
+Public Property Let Freq(ByVal strFreq As String)
+
+    m_Freq = strFreq
+
+End Property
 
 Public Property Get MaxConc() As Double
 
@@ -67,6 +108,18 @@ Public Property Let MinTijd(ByVal intTime As Integer)
 
 End Property
 
+Public Property Get PICU_Dose() As Double
+    
+    PICU_Dose = m_PICU_Dose
+    
+End Property
+
+Public Property Let PICU_Dose(ByVal dblDose As Double)
+
+    m_PICU_Dose = dblDose
+
+End Property
+
 Public Property Get PICU_Onder() As Double
     
     PICU_Onder = m_PICU_Onder
@@ -88,6 +141,18 @@ End Property
 Public Property Let PICU_Boven(ByVal dblBoven As Double)
 
     m_PICU_Boven = dblBoven
+
+End Property
+
+Public Property Get NICU_Dose() As Double
+    
+    NICU_Dose = m_NICU_Dose
+    
+End Property
+
+Public Property Let NICU_Dose(ByVal dblDose As Double)
+
+    m_NICU_Dose = dblDose
 
 End Property
 
