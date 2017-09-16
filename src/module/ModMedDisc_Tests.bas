@@ -18,7 +18,7 @@ Private Const constMedicament As String = "AQ"   ' Medicament
 ' --- Voorschrift ---
 Private Const constPRN As String = "_Glob_MedDisc_PRN_" ' PRN
 Private Const constPRNText As String = "_Glob_MedDisc_PRNText_" ' PRN tekst
-Private Const constFreq As String = "_Glob_MedDisc_Tijden_" ' Frequentie
+Private Const constFreq As String = "_Glob_MedDisc_Freq_" ' Frequentie
 Private Const constDoseQty As String = "_Glob_MedDisc_DoseHoev_" ' Dose hoeveelheid
 Private Const constSolNo As String = "_Glob_MedDisc_OplKeuze_" ' Oplossing vloeistof
 Private Const constSolVol As String = "_Glob_MedDisc_OplVol_" ' Oplossing volume
@@ -96,7 +96,7 @@ Public Sub Test_MedDisc()
             strIndic = vbNullString
         End If
         
-        ModMedDisc.MedDisc_SetMed objMed, strN, strRoute, objMed.DosisEenheid, strIndic
+        ModMedDisc.MedDisc_SetMed objMed, strN, strRoute, objMed.DoseEenheid, strIndic
         ModRange.SetRangeValue constFreq & strN, intTime
         ModRange.SetRangeValue constDoseQty & strN, intN
         

@@ -23,6 +23,7 @@ End Sub
 Public Sub SetToDevelopmentMode()
 
     Dim blnDevelop As Boolean
+    Dim objWindow As Window
     
     blnDevelop = Not ModSetting.GetDevelopmentMode()
     
@@ -34,7 +35,9 @@ Public Sub SetToDevelopmentMode()
         ModSheet.UnhideNonUserInterfaceSheets True
                 
         ModSetting.SetDevelopmentMode True
-        SetWindowToCloseApp WbkAfspraken.Windows(1)
+        For Each objWindow In WbkAfspraken.Windows
+            SetWindowToCloseApp objWindow
+        Next
         
         Application.ScreenUpdating = True
         ModProgress.FinishProgress

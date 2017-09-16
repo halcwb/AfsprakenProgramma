@@ -48,3 +48,8 @@
 # Add tests
 !/tests/
 !/tests/*.xlsx
+
+# Add db files
+!/db/
+!/db/*.xlsx
+!/db/*.xlsm

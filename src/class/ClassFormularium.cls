@@ -146,7 +146,7 @@ Public Sub AddMedicament(ByVal objMed As ClassMedicatieDisc)
     AddGeneriek objMed.Generiek
     AddVorm objMed.Vorm
     AddSterkteEenheid objMed.SterkteEenheid
-    AddDosisEenheid objMed.DosisEenheid
+    AddDosisEenheid objMed.DoseEenheid
     
     For Each varRoute In objMed.GetRoutes()
         AddRoute varRoute

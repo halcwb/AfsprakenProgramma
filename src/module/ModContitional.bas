@@ -54,6 +54,19 @@ Private Sub SetConditionalFormattingWarnErr(objSheet As Worksheet, ByVal strRang
 
 End Sub
 
+Private Sub SetConditionalFormattingWarn(objSheet As Worksheet, ByVal strRange As String, ByVal strWarn As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
+
+    Dim intN As Integer
+
+    For intN = intStart To intStop
+        ClearContitionalFormatting objSheet, strRange & intN
+        
+        SetContionalFormatting objSheet, strRange & intN, strWarn & (intN - intOffSet), WarnSet, True
+    Next
+    
+
+End Sub
+
 Private Sub SetConditionalFormattingErr(objSheet As Worksheet, ByVal strRange As String, ByVal strErr As String, ByVal intStart As Integer, ByVal intStop As Integer, ByVal intOffSet As Integer)
 
     Dim intN As Integer
@@ -137,6 +150,7 @@ End Sub
 
 Public Sub SetMedDiscConditionalFormatting()
     
+    Dim strFreqWarn As String
     Dim strDoseWarn As String
     Dim strDoseErr As String
     
@@ -144,18 +158,19 @@ Public Sub SetMedDiscConditionalFormatting()
     Dim strOplErr As String
     Dim strTimeErr As String
     
-    strDoseErr = "=GlobBerMedDisc!AW"
-    strDoseWarn = "=GlobBerMedDisc!AV"
+    strFreqWarn = "=GlobBerMedDisc!BF"
+    strDoseWarn = "=GlobBerMedDisc!BL"
+    strDoseErr = "=GlobBerMedDisc!BM"
     
     strConcErr = "=GlobBerMedDisc!BA"
     strOplErr = "=GlobBerMedDisc!BB"
     strTimeErr = "=GlobBerMedDisc!BC"
     
+    SetConditionalFormattingWarn shtGlobGuiMedDisc, "J", strFreqWarn, 9, 38, 7
     SetConditionalFormattingWarnErr shtGlobGuiMedDisc, "N", strDoseErr, strDoseWarn, 9, 38, 7
     
     SetConditionalFormattingErr shtGlobGuiMedDisc, "R", strConcErr, 9, 38, 7
-    SetConditionalFormattingErr shtGlobGuiMedDisc, "P", strOplErr, 9, 38, 7
+'    SetConditionalFormattingErr shtGlobGuiMedDisc, "P", strOplErr, 9, 38, 7
     SetConditionalFormattingErr shtGlobGuiMedDisc, "S", strTimeErr, 9, 38, 7
-    
 
 End Sub

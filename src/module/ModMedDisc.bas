@@ -27,40 +27,46 @@ Private Const constPICU_BovenIndx As Integer = 17
 Private Const constNICU_DoseIndx As Integer = 18
 Private Const constNICU_OnderIndx As Integer = 19
 Private Const constNICU_BovenIndx As Integer = 20
-Private Const constMaxConcIndx As Integer = 21
-Private Const constOplVlstIndx As Integer = 22
-Private Const constMinTijdIndx As Integer = 23
+Private Const constMaxDoseIndx As Integer = 21
+Private Const constMaxConcIndx As Integer = 22
+Private Const constOplVlstIndx As Integer = 23
+Private Const constMinTijdIndx As Integer = 24
 
 
 ' --- Medicament ---
-Private Const constGPK As String = "_Glob_MedDisc_GPK_"              ' GPK code
-Private Const constATC As String = "_Glob_MedDisc_ATC_"              ' ATC code
-Private Const constGeneric As String = "_Glob_MedDisc_Generic_"      ' Generiek
-Private Const constVorm As String = "_Glob_MedDisc_Vorm_"            ' Medicament vorm
-Private Const constConc As String = "_Glob_MedDisc_Sterkte_"         ' Sterkte
-Private Const constConcUnit As String = "_Glob_MedDisc_SterkteEenh_" ' Sterkte eenheid
-Private Const constLabel As String = "_Glob_MedDisc_Etiket_"         ' Etiket
-Private Const constStandDose As String = "_Glob_MedDisc_StandDose_"  ' Dose standaard
-Private Const constDoseUnit As String = "_Glob_MedDisc_DoseEenh_"    ' Dose eenheid
-Private Const constRoute As String = "_Glob_MedDisc_Toed_"           ' Toediening route
-Private Const constIndic As String = "_Glob_MedDisc_Ind_"            ' Indicatie
-Private Const constOnder As String = "_Glob_MedDisc_Onder_"          ' Dagdosering ondergrens
-Private Const constBoven As String = "_Glob_MedDisc_Boven_"          ' Dag dosering bovengrens
-Private Const constMaxConc As String = "_Glob_MedDisc_MaxConc_"      ' Maximale concentratie
-Private Const constOplVlst As String = "_Glob_MedDisc_OplVlst_"      ' Verplichte oplos vloeistof
-Private Const constMinTijd As String = "_Glob_MedDisc_MinTijd_"      ' Minimale inloop tijd
+Private Const constGPK As String = "_Glob_MedDisc_GPK_"                 ' GPK code
+Private Const constATC As String = "_Glob_MedDisc_ATC_"                 ' ATC code
+Private Const constGeneric As String = "_Glob_MedDisc_Generic_"         ' Generiek
+Private Const constVorm As String = "_Glob_MedDisc_Vorm_"               ' Medicament vorm
+Private Const constConc As String = "_Glob_MedDisc_Sterkte_"            ' Sterkte
+Private Const constConcUnit As String = "_Glob_MedDisc_SterkteEenh_"    ' Sterkte eenheid
+Private Const constLabel As String = "_Glob_MedDisc_Etiket_"            ' Etiket
+Private Const constStandDose As String = "_Glob_MedDisc_StandDose_"     ' Dose standaard
+Private Const constDoseUnit As String = "_Glob_MedDisc_DoseEenh_"       ' Dose eenheid
+Private Const constRoute As String = "_Glob_MedDisc_Toed_"              ' Toediening route
+Private Const constIndic As String = "_Glob_MedDisc_Ind_"               ' Indicatie
 
 ' --- Voorschrift ---
-Private Const constPRN As String = "_Glob_MedDisc_PRN_"              ' PRN
-Private Const constPRNText As String = "_Glob_MedDisc_PRNText_"      ' PRN tekst
-Private Const constFreq As String = "_Glob_MedDisc_Tijden_"          ' Frequentie
-Private Const constDoseQty As String = "_Glob_MedDisc_DoseHoev_"     ' Dose hoeveelheid
-Private Const constSolNo As String = "_Glob_MedDisc_OplKeuze_"       ' Oplossing vloeistof
-Private Const constSolVol As String = "_Glob_MedDisc_OplVol_"        ' Oplossing volume
-Private Const constTime As String = "_Glob_MedDisc_Inloop_"          ' Inloop tijd
-Private Const constText As String = "_Glob_MedDisc_Opm_"             ' Opmerking
+Private Const constPRN As String = "_Glob_MedDisc_PRN_"                 ' PRN
+Private Const constPRNText As String = "_Glob_MedDisc_PRNText_"         ' PRN tekst
+Private Const constFreq As String = "_Glob_MedDisc_Freq_"               ' Frequentie
+Private Const constDoseQty As String = "_Glob_MedDisc_DoseHoev_"        ' Dose hoeveelheid
+Private Const constSolNo As String = "_Glob_MedDisc_OplKeuze_"          ' Oplossing vloeistof
+Private Const constSolVol As String = "_Glob_MedDisc_OplVol_"           ' Oplossing volume
+Private Const constTime As String = "_Glob_MedDisc_Inloop_"             ' Inloop tijd
+Private Const constText As String = "_Glob_MedDisc_Opm_"                ' Opmerking
 
-Private Const constFreqList As String = "Var_MedDisc_FreqList_"
+'--- Medicatie Controle ---
+Private Const constFreqList As String = "_Glob_MedDisc_FreqList_"       ' Lijst van frequenties
+Private Const constNormDose As String = "_Glob_MedDisc_NormDose_"       ' Normale dosering
+Private Const constMinDose As String = "_Glob_MedDisc_Onder_"           ' Dagdosering ondergrens
+Private Const constMaxDose As String = "_Glob_MedDisc_Boven_"           ' Dag dosering bovengrens
+Private Const constAbsDose As String = "_Glob_MedDisc_MaxDose_"         ' Maximale dosering
+
+Private Const constMaxConc As String = "_Glob_MedDisc_MaxConc_"         ' Maximale concentratie
+Private Const constOplVlst As String = "_Glob_MedDisc_OplVlst_"         ' Verplichte oplos vloeistof
+Private Const constMinTijd As String = "_Glob_MedDisc_MinTijd_"         ' Minimale inloop tijd
+
 Private Const constFreqText As String = "Var_MedDisc_FreqText_"
 
 Private Const constVerw As String = "AL"
@@ -88,19 +94,19 @@ Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal i
     
     If frmPickList.GetAction = vbNullString Then
     
-        For intN = 1 To intMax                 ' First remove nonselected items
+        For intN = 1 To intMax                   ' First remove nonselected items
             strN = IIf(intN < 10, "0" & intN, intN)
             strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
             If Not strKeuze = vbNullString Then
                 If frmPickList.IsMedicamentSelected(strKeuze) Then
                     frmPickList.UnselectMedicament (strKeuze)
                 Else
-                    Clear intN ' Remove is specific to PedContIV replace with appropriate sub when copy paste
+                    Clear intN                   ' Remove is specific to PedContIV replace with appropriate sub when copy paste
                 End If
             End If
         Next intN
         
-        Do While frmPickList.HasSelectedMedicamenten()  ' Then add selected items
+        Do While frmPickList.HasSelectedMedicamenten() ' Then add selected items
             For intN = 1 To intMax
                 strN = IIf(intN < 10, "0" & intN, intN)
                 strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
@@ -134,7 +140,6 @@ Public Sub MedDisc_ShowPickList()
     
 End Sub
 
-
 Private Sub Clear(ByVal intN As Integer)
 
     Dim strN As String
@@ -162,8 +167,12 @@ Private Sub Clear(ByVal intN As Integer)
     ModRange.SetRangeValue constTime & strN, 0
     ModRange.SetRangeValue constText & strN, vbNullString
     
-    ModRange.SetRangeValue constOnder & strN, 0
-    ModRange.SetRangeValue constBoven & strN, 0
+    ModRange.SetRangeValue constFreqList & strN, vbNullString
+    ModRange.SetRangeValue constNormDose & strN, 0
+    ModRange.SetRangeValue constMinDose & strN, 0
+    ModRange.SetRangeValue constMaxDose & strN, 0
+    ModRange.SetRangeValue constAbsDose & strN, 0
+    
     ModRange.SetRangeValue constMaxConc & strN, 0
     ModRange.SetRangeValue constOplVlst & strN, vbNullString
     ModRange.SetRangeValue constMinTijd & strN, 0
@@ -379,7 +388,6 @@ Private Sub Test_GetMedicationFreqs()
 
 End Sub
 
-
 Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer
@@ -423,17 +431,15 @@ Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProg
             .Sterkte = objFormRange.Cells(intN, constSterkteIndx).Value2
             .SterkteEenheid = objFormRange.Cells(intN, constEenheidIndx).Value2
             .Etiket = objFormRange.Cells(intN, constEtiketIndx).Value2
-            .Dosis = objFormRange.Cells(intN, constStandDoseIndx).Value2
-            .DosisEenheid = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
+            .DeelDose = objFormRange.Cells(intN, constStandDoseIndx).Value2
+            .DoseEenheid = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
             .Routes = objFormRange.Cells(intN, constRouteIndx).Value2
             .Indicaties = objFormRange.Cells(intN, constIndicatiesIndx).Value2
             .FreqList = objFormRange.Cells(intN, constFreqIndx).Value2
-            .PICU_Dose = objFormRange.Cells(intN, constPICU_DoseIndx).Value2
-            .PICU_Onder = objFormRange.Cells(intN, constPICU_OnderIndx).Value2
-            .PICU_Boven = objFormRange.Cells(intN, constPICU_BovenIndx).Value2
-            .NICU_Dose = objFormRange.Cells(intN, constNICU_DoseIndx).Value2
-            .NICU_Onder = objFormRange.Cells(intN, constNICU_OnderIndx).Value2
-            .NICU_Boven = objFormRange.Cells(intN, constNICU_BovenIndx).Value2
+            .NormDose = objFormRange.Cells(intN, IIf(IsPed, constPICU_DoseIndx, constNICU_DoseIndx)).Value2
+            .MinDose = objFormRange.Cells(intN, IIf(IsPed, constPICU_OnderIndx, constNICU_OnderIndx)).Value2
+            .MaxDose = objFormRange.Cells(intN, IIf(IsPed, constPICU_BovenIndx, constNICU_BovenIndx)).Value2
+            .AbsDose = objFormRange.Cells(intN, constMaxDoseIndx).Value2
             .MaxConc = objFormRange.Cells(intN, constMaxConcIndx).Value2
             .OplVlst = objFormRange.Cells(intN, constOplVlstIndx).Value2
             .MinTijd = objFormRange.Cells(intN, constMinTijdIndx).Value2
@@ -471,24 +477,28 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         .ClearForm True
         
         blnLoad = False
-        If ModRange.GetRangeValue(constGPK & strN, 0) > 0 Then                      ' Drug from formularium
+        If ModRange.GetRangeValue(constGPK & strN, 0) > 0 Then ' Drug from formularium
             blnLoad = .LoadGPK(CStr(ModRange.GetRangeValue(constGPK & strN, vbNullString)))
         End If
         
-        If Not blnLoad Then                                                          ' Manually entered drug
+        If Not blnLoad Then                      ' Manually entered drug
             .SetNoFormMed
             .cboGeneriek.Text = ModRange.GetRangeValue(constGeneric & strN, vbNullString)
             .cboVorm.Text = ModRange.GetRangeValue(constVorm & strN, vbNullString)
-            .txtSterkte.Text = ModRange.GetRangeValue(constConc & strN, vbNullString)
+            .SetTextBoxNumericValue .txtSterkte, ModRange.GetRangeValue(constConc & strN, 0)
             .cboSterkteEenheid.Text = ModRange.GetRangeValue(constConcUnit & strN, vbNullString)
             .cboDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         End If
-                                                                                    ' Edited details
-        .txtDosis.Text = ModRange.GetRangeValue(constStandDose & strN, vbNullString)
+        ' Edited details
         .cboDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         .cboRoute.Text = ModRange.GetRangeValue(constRoute & strN, vbNullString)
         .cboIndicatie.Text = ModRange.GetRangeValue(constIndic & strN, vbNullString)
         .cboFreq.Text = ModRange.GetRangeValue(constFreqText & strN, vbNullString)
+        
+        If .txtNormDose.Value = vbNullString Then .txtNormDose.Text = ModRange.GetRangeValue(constNormDose & strN, vbNullString)
+        If .txtMinDose.Value = vbNullString Then .txtMinDose.Text = ModRange.GetRangeValue(constMinDose & strN, vbNullString)
+        If .txtMaxDose.Value = vbNullString Then .txtMaxDose.Text = ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
+        If .txtAbsMax.Value = vbNullString Then .txtAbsMax.Text = ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
         
         .Show
         
@@ -521,22 +531,19 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute
     ModRange.SetRangeValue constATC & strN, objMed.ATC
     ModRange.SetRangeValue constGeneric & strN, objMed.Generiek
     ModRange.SetRangeValue constVorm & strN, objMed.Vorm
-    ModRange.SetRangeValue constConc & strN, Conversion.CDbl(Strings.Replace(objMed.Sterkte, ",", "."))
+    ModRange.SetRangeValue constConc & strN, objMed.Sterkte
     ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
     ModRange.SetRangeValue constLabel & strN, objMed.Etiket
-    ModRange.SetRangeValue constStandDose & strN, StringToDouble(Strings.Replace(objMed.Dosis, ",", "."))
+    ModRange.SetRangeValue constStandDose & strN, objMed.DeelDose
     ModRange.SetRangeValue constDoseUnit & strN, strDosEenh
     ModRange.SetRangeValue constRoute & strN, strRoute
     ModRange.SetRangeValue constIndic & strN, strInd
     
-    If IsPed Then
-        ModRange.SetRangeValue constOnder & strN, objMed.PICU_Onder
-        ModRange.SetRangeValue constBoven & strN, objMed.PICU_Boven
-    Else
-        ModRange.SetRangeValue constOnder & strN, objMed.NICU_Onder
-        ModRange.SetRangeValue constBoven & strN, objMed.NICU_Boven
-    End If
-    
+    ModRange.SetRangeValue constNormDose & strN, objMed.NormDose
+    ModRange.SetRangeValue constMinDose & strN, objMed.MinDose
+    ModRange.SetRangeValue constMaxDose & strN, objMed.MaxDose
+    ModRange.SetRangeValue constAbsDose & strN, objMed.AbsDose
+      
     ModRange.SetRangeValue constMaxConc & strN, objMed.MaxConc
     ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst
     ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
@@ -560,7 +567,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute
     If Not objMed.FreqList = vbNullString Then ModRange.SetRangeValue constFreqList & strN, objMed.FreqList
     
     If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
-        intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.Dosis
+        intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.DeelDose
         ModRange.SetRangeValue constDoseQty & strN, intDoseQty
     End If
 
@@ -785,6 +792,7 @@ Public Sub MedDisc_EnterText_03()
     OpmMedDisc 3
 
 End Sub
+
 Public Sub MedDisc_EnterText_04()
     
     OpmMedDisc 4
@@ -995,6 +1003,7 @@ Public Sub MedDisc_PRN_03()
     OpenPRNForm 3
 
 End Sub
+
 Public Sub MedDisc_PRN_04()
     
     OpenPRNForm 4
@@ -1156,3 +1165,4 @@ Public Sub MedDisc_PRN_30()
     OpenPRNForm 30
 
 End Sub
+

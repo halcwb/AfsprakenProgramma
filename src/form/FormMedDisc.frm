@@ -33,16 +33,30 @@ Public Sub SetNoFormMed()
 
 End Sub
 
-Private Sub Validate(ByVal strValid As String)
+Private Function IsAbsMaxInvalid() As Boolean
+    
+    IsAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.GetGewichtFromRange() > 50
 
+End Function
+
+Private Function IsDoseControlInValid() As Boolean
+
+    IsDoseControlInValid = txtNormDose.Value = vbNullString And txtMaxDose.Value = vbNullString
+
+End Function
+
+Private Sub Validate(ByVal strValid As String)
     
     If strValid = vbNullString Then
     
-        strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", vbNullString)
+        strValid = IIf(IsDoseControlInValid And Not IsAbsMaxInvalid, "Voer of een norm dosering in en/of een max (en evt. min en abs max) dosering", strValid)
+        strValid = IIf(IsAbsMaxInvalid, "Gewicht boven de 50 kg, voer een absolute maximum dosering in", strValid)
+    
+        strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", strValid)
         strValid = IIf(cboRoute.Value = vbNullString, "Kies een route", strValid)
         
         strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering grootte in", strValid)
-        strValid = IIf(txtDosis.Value = vbNullString, "Voer dosering eenheid in", strValid)
+        strValid = IIf(txtDeelDose.Value = vbNullString, "Voer dosering eenheid in", strValid)
         strValid = IIf(cboSterkteEenheid.Value = vbNullString, "Voer sterkte eenheid in", strValid)
         strValid = IIf(txtSterkte.Value = vbNullString, "Voer sterkte in", strValid)
         
@@ -52,6 +66,7 @@ Private Sub Validate(ByVal strValid As String)
     End If
     
     lblValid.Caption = strValid
+    cmdCalc.Enabled = Not cboFreq.Value = vbNullString And Not txtNormDose.Value = vbNullString
     cmdOK.Enabled = strValid = vbNullString
 
 End Sub
@@ -129,6 +144,10 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
         Next
         
         cboIndicatie.Clear
+        
+        cboFreq.Clear
+        LoadFreq
+        
     End If
 
 End Sub
@@ -202,15 +221,15 @@ Private Sub LoadMedicament()
         txtSterkte.Text = .Sterkte
         cboSterkteEenheid.Text = .SterkteEenheid
         
-        txtDosis.Text = .Dosis
+        txtDeelDose.Text = .DeelDose
         
         FillCombo cboDosisEenheid, GetDosisEenheden()
-        cboDosisEenheid.Text = .DosisEenheid
+        cboDosisEenheid.Text = .DoseEenheid
         
         FillCombo cboRoute, .GetRoutes()
         FillCombo cboIndicatie, .GetIndicaties()
         
-        If Not .DosisEenheid = vbNullString Then cboDoseUnit.Text = .DosisEenheid & "/kg/dag"
+        If Not .DoseEenheid = vbNullString Then cboDoseUnit.Text = .DoseEenheid & "/kg/dag"
         
         If Not .FreqList = vbNullString Then
             arrFreq = Split(.FreqList, "||")
@@ -224,7 +243,26 @@ Private Sub LoadMedicament()
         
         If Not .Freq = vbNullString Then cboFreq.Value = .Freq
         
+        SetTextBoxNumericValue txtNormDose, .NormDose
+        SetTextBoxNumericValue txtMinDose, .MinDose
+        SetTextBoxNumericValue txtMaxDose, .MaxDose
+        SetTextBoxNumericValue txtAbsMax, .AbsDose
+        
     End With
+
+End Sub
+
+Public Sub SetTextBoxNumericValue(txtBox As MSForms.TextBox, ByVal strValue As String)
+    
+    If Not IsNumeric(strValue) Then strValue = vbNullString
+    strValue = ModString.StringToDouble(strValue)
+    txtBox.Value = IIf(strValue = "0", vbNullString, strValue)
+    
+End Sub
+
+Private Sub TextBoxStringNumericValue(txtBox As MSForms.TextBox)
+
+    SetTextBoxNumericValue txtBox, txtBox.Value
 
 End Sub
 
@@ -261,7 +299,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     If blnClearGeneric Then cboGeneriek.Value = vbNullString
     cboVorm.Value = vbNullString
     
-    txtDosis.Value = vbNullString
+    txtDeelDose.Value = vbNullString
     cboDosisEenheid.Clear
     cboDosisEenheid.Value = vbNullString
     
@@ -277,6 +315,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     txtNormDose.Value = vbNullString
     txtMinDose.Value = vbNullString
     txtMaxDose.Value = vbNullString
+    txtAbsMax.Value = vbNullString
     txtCalcDose.Value = vbNullString
     cboDoseUnit.Value = vbNullString
     lblCalcDose.Caption = vbNullString
@@ -329,21 +368,21 @@ Private Sub cmdCalc_Click()
     Dim dblFact As Double
     
     dblFact = m_Freq.Item(cboFreq.Text)
-    dblDose = txtNormDose.Value
+    dblDose = IIf(txtNormDose.Value = vbNullString, 0, txtNormDose.Value)
     dblWght = ModPatient.GetGewichtFromRange()
     
     If dblFact = 0 Or dblDose = 0 Or dblWght = 0 Then Exit Sub
     
     dblVal = dblDose * dblWght / dblFact
-    dblVal = ModExcel.Excel_RoundBy(dblVal, txtDosis.Value)
+    dblVal = ModExcel.Excel_RoundBy(dblVal, txtDeelDose.Value)
     
     dblCalc = dblVal * dblFact / dblWght
     
     m_Medicament.CalcDose = dblCalc
     m_Medicament.Freq = cboFreq.Text
     
-    txtCalcDose.Value = dblCalc
-    lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDosis.Value & " " & cboDosisEenheid.Text
+    txtCalcDose.Value = ModString.FixPrecision(dblCalc, 2)
+    lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDeelDose.Value & " " & cboDosisEenheid.Text
     lblDoseUnit.Caption = cboDoseUnit.Value
 
 End Sub
@@ -388,8 +427,7 @@ Private Sub cmdOK_Click()
     
         Set m_Medicament = New ClassMedicatieDisc
         
-        m_Medicament.Dosis = StringToDouble(txtDosis.Value)
-        m_Medicament.DosisEenheid = cboDosisEenheid.Value
+        m_Medicament.DoseEenheid = cboDosisEenheid.Value
         m_Medicament.Generiek = cboGeneriek.Value
         m_Medicament.Indicaties = cboIndicatie.Value
         m_Medicament.Routes = cboRoute.Value
@@ -397,35 +435,40 @@ Private Sub cmdOK_Click()
         m_Medicament.SterkteEenheid = cboSterkteEenheid.Value
         m_Medicament.Vorm = cboVorm.Value
         
-    Else
-        
-        m_Medicament.Dosis = StringToDouble(txtDosis.Value)
-        m_Medicament.Routes = cboRoute.Value
-        m_Medicament.Indicaties = cboIndicatie.Value
-    
     End If
+    
+    m_Medicament.DeelDose = StringToDouble(txtDeelDose.Value)
+    m_Medicament.Routes = cboRoute.Value
+    m_Medicament.Indicaties = cboIndicatie.Value
+    m_Medicament.Freq = cboFreq.Value
+    m_Medicament.NormDose = StringToDouble(txtNormDose.Value)
+    m_Medicament.MinDose = StringToDouble(txtMinDose.Value)
+    m_Medicament.MaxDose = StringToDouble(txtMaxDose.Value)
+    m_Medicament.CalcDose = StringToDouble(txtCalcDose.Value)
 
     CloseForm "OK"
 
 End Sub
 
-Private Sub txtAfronding_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
-
-    If KeyAscii >= 48 And KeyAscii <= 57 Then
-    Else
-        If KeyAscii = 46 Or KeyAscii = 44 Then
-                KeyAscii = 44
-            Else
-                'Bij elke andere waarde negeren
-                KeyAscii = 0
-                Beep
-            End If
-    End If
-        
+Private Sub txtAbsMax_AfterUpdate()
+    
+    TextBoxStringNumericValue txtAbsMax
 
 End Sub
 
-Private Sub txtDosis_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+Private Sub txtAbsMax_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+    
+    ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtDeelDose_AfterUpdate()
+
+    TextBoxStringNumericValue txtDeelDose
+
+End Sub
+
+Private Sub txtDeelDose_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
     Validate vbNullString
 
@@ -440,6 +483,60 @@ Private Sub cboVorm_Change()
 
 End Sub
 
+Private Sub txtDeelDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtMaxDose_AfterUpdate()
+
+    TextBoxStringNumericValue txtMaxDose
+
+End Sub
+
+Private Sub txtMaxDose_Change()
+
+    Validate vbNullString
+
+End Sub
+
+Private Sub txtMaxDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtMinDose_AfterUpdate()
+
+    TextBoxStringNumericValue txtMinDose
+
+End Sub
+
+Private Sub txtMinDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtNormDose_AfterUpdate()
+
+    TextBoxStringNumericValue txtNormDose
+    
+End Sub
+
+Private Sub txtNormDose_Change()
+
+    Validate vbNullString
+
+End Sub
+
+Private Sub txtNormDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
 Private Sub txtSterkte_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
     Validate vbNullString
@@ -448,16 +545,7 @@ End Sub
 
 Private Sub txtSterkte_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
-    If KeyAscii >= 48 And KeyAscii <= 57 Then
-    Else
-        If KeyAscii = 46 Or KeyAscii = 44 Then
-                KeyAscii = 44
-            Else
-                'Bij elke andere waarde negeren
-                KeyAscii = 0
-                Beep
-            End If
-    End If
+    ModUtils.OnlyNumericAscii KeyAscii
 
 End Sub
 
@@ -532,7 +620,7 @@ Private Sub UserForm_Initialize()
     cboVorm.TabIndex = 1
     txtSterkte.TabIndex = 2
     cboSterkteEenheid.TabIndex = 3
-    txtDosis.TabIndex = 4
+    txtDeelDose.TabIndex = 4
     cboDosisEenheid.TabIndex = 5
     cboRoute.TabIndex = 6
     cboIndicatie.TabIndex = 7
@@ -540,13 +628,15 @@ Private Sub UserForm_Initialize()
     cboFreq.TabIndex = 8
     txtNormDose.TabIndex = 9
     cboDoseUnit.TabIndex = 10
-    txtMaxDose.TabIndex = 11
+    txtMinDose.TabIndex = 11
+    txtMaxDose.TabIndex = 12
+    txtAbsMax.TabIndex = 13
     
-    cmdCalc.TabIndex = 12
-    cmdFormularium.TabIndex = 13
-    cmdOK.TabIndex = 14
-    cmdClear.TabIndex = 15
-    cmdCancel.TabIndex = 16
+    cmdCalc.TabIndex = 14
+    cmdFormularium.TabIndex = 15
+    cmdOK.TabIndex = 16
+    cmdClear.TabIndex = 17
+    cmdCancel.TabIndex = 18
        
     ModProgress.FinishProgress
 
@@ -558,3 +648,4 @@ Private Sub UserForm_QueryClose(intCancel As Integer, intMode As Integer)
     cmdCancel_Click
 
 End Sub
+

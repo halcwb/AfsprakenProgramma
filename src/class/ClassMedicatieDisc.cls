@@ -16,25 +16,47 @@ Private m_TherapieSubgroep As String
 Private m_Generiek As String
 Private m_Vorm As String
 Private m_Etiket As String
-Private m_Sterkte As String
+Private m_Sterkte As Double
 Private m_SterkteEenheid As String
-Private m_Dosis As String
-Private m_DosisEenheid As String
+Private m_DeelDose As Double
+Private m_DoseEenheid As String
 Private m_Routes As String
 Private m_Indicaties As String
 Private m_IndicatieList As String
 Private m_FreqList As String
 Private m_Freq As String
 Private m_CalcDose As Double
-Private m_PICU_Dose As Double
-Private m_PICU_Onder As Double
-Private m_PICU_Boven As Double
-Private m_NICU_Dose As Double
-Private m_NICU_Onder As Double
-Private m_NICU_Boven As Double
+Private m_NormDose As Double
+Private m_MinDose As Double
+Private m_MaxDose As Double
+Private m_AbsDose As Double
 Private m_MaxConc As Double
 Private m_OplVlst As String
 Private m_MinTijd As Integer
+
+Public Property Get MaxDose() As Double
+
+    MaxDose = m_MaxDose
+
+End Property
+
+Public Property Let MaxDose(ByVal dblDose As Double)
+
+    m_MaxDose = dblDose
+
+End Property
+
+Public Property Get NormDose() As Double
+
+    NormDose = m_NormDose
+
+End Property
+
+Public Property Let NormDose(ByVal dblDose As Double)
+
+    m_NormDose = dblDose
+
+End Property
 
 Public Property Get CalcDose() As Double
 
@@ -108,75 +130,27 @@ Public Property Let MinTijd(ByVal intTime As Integer)
 
 End Property
 
-Public Property Get PICU_Dose() As Double
+Public Property Get MinDose() As Double
     
-    PICU_Dose = m_PICU_Dose
-    
-End Property
-
-Public Property Let PICU_Dose(ByVal dblDose As Double)
-
-    m_PICU_Dose = dblDose
-
-End Property
-
-Public Property Get PICU_Onder() As Double
-    
-    PICU_Onder = m_PICU_Onder
+    MinDose = m_MinDose
     
 End Property
 
-Public Property Let PICU_Onder(ByVal dblOnder As Double)
+Public Property Let MinDose(ByVal dblDose As Double)
 
-    m_PICU_Onder = dblOnder
-
-End Property
-
-Public Property Get PICU_Boven() As Double
-    
-    PICU_Boven = m_PICU_Boven
-    
-End Property
-
-Public Property Let PICU_Boven(ByVal dblBoven As Double)
-
-    m_PICU_Boven = dblBoven
+    m_MinDose = dblDose
 
 End Property
 
-Public Property Get NICU_Dose() As Double
+Public Property Get AbsDose() As Double
     
-    NICU_Dose = m_NICU_Dose
-    
-End Property
-
-Public Property Let NICU_Dose(ByVal dblDose As Double)
-
-    m_NICU_Dose = dblDose
-
-End Property
-
-Public Property Get NICU_Onder() As Double
-    
-    NICU_Onder = m_NICU_Onder
+    AbsDose = m_AbsDose
     
 End Property
 
-Public Property Let NICU_Onder(ByVal dblOnder As Double)
+Public Property Let AbsDose(ByVal dblDose As Double)
 
-    m_NICU_Onder = dblOnder
-
-End Property
-
-Public Property Get NICU_Boven() As Double
-    
-    NICU_Boven = m_NICU_Boven
-    
-End Property
-
-Public Property Let NICU_Boven(ByVal dblBoven As Double)
-
-    m_NICU_Boven = dblBoven
+    m_AbsDose = dblDose
 
 End Property
 
@@ -288,13 +262,13 @@ Public Property Let Routes(ByVal strRoutes As String)
 
 End Property
 
-Public Property Get Sterkte() As String
+Public Property Get Sterkte() As Double
 
     Sterkte = m_Sterkte
 
 End Property
 
-Public Property Let Sterkte(ByVal strSterkte As String)
+Public Property Let Sterkte(ByVal strSterkte As Double)
 
     m_Sterkte = strSterkte
 
@@ -312,27 +286,27 @@ Public Property Let SterkteEenheid(ByVal strSterkteEenheid As String)
 
 End Property
 
-Public Property Get Dosis() As String
+Public Property Get DeelDose() As Double
 
-    Dosis = m_Dosis
-
-End Property
-
-Public Property Let Dosis(ByVal strDosis As String)
-
-    m_Dosis = strDosis
+    DeelDose = m_DeelDose
 
 End Property
 
-Public Property Get DosisEenheid() As String
+Public Property Let DeelDose(ByVal dblDose As Double)
 
-    DosisEenheid = m_DosisEenheid
+    m_DeelDose = dblDose
 
 End Property
 
-Public Property Let DosisEenheid(ByVal strDosisEenheid As String)
+Public Property Get DoseEenheid() As String
 
-    m_DosisEenheid = strDosisEenheid
+    DoseEenheid = m_DoseEenheid
+
+End Property
+
+Public Property Let DoseEenheid(ByVal strDosisEenheid As String)
+
+    m_DoseEenheid = strDosisEenheid
 
 End Property
 
