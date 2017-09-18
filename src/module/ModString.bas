@@ -184,7 +184,7 @@ End Function
 
 Private Sub TestFixPrecision()
 
-    MsgBox FixPrecision(0.001453213, 2)
+    MsgBox FixPrecision(0.0347, 1)
 
 End Sub
 

@@ -361,21 +361,14 @@ Private Sub TestGetMinimumAdvice()
 
 End Sub
 
-
-Private Function CalculateMedicamentQtyByDose(ByVal intMed As Integer, ByVal dblDose As Double) As Double
+Private Function CalculateMedicamentQtyByDose(ByVal strN As String, ByVal intMed As Integer, ByVal dblDose As Double) As Double
 
     Dim dblFactor As Double
     Dim dblWeight As Double
     Dim dblOplQty As Double
     Dim dblStand As Double
     Dim dblQty As Double
-    Dim dblFix As Double
-    Dim dblDelta As Double
     Dim dblMaxConc As Double
-    Dim dblMinConc As Double
-    Dim dblConc As Double
-    Dim dblFilter As Double
-    Dim intN As Integer
     Dim intPrec As Integer
     Dim strMed As String
     
@@ -383,7 +376,6 @@ Private Function CalculateMedicamentQtyByDose(ByVal intMed As Integer, ByVal dbl
     dblOplQty = GetMedicamentItemWithIndex(intMed, constDefHoevIndex)
     dblStand = GetMedicamentItemWithIndex(intMed, constDefStandIndex)
     dblWeight = ModPatient.GetGewichtFromRange()
-    dblMinConc = GetMedicamentItemWithIndex(intMed, 9)
     dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
     strMed = GetMedicamentItemWithIndex(intMed, 1)
     
@@ -392,41 +384,17 @@ Private Function CalculateMedicamentQtyByDose(ByVal intMed As Integer, ByVal dbl
         dblQty = dblMaxConc * dblOplQty
         
         intPrec = IIf(dblQty >= 0.1, 2, 1)
-        dblFix = StringToDouble(FixPrecision(dblQty, intPrec))
+        dblQty = StringToDouble(FixPrecision(dblQty, intPrec))
     ' dblDose = dblStand * dblFactor * (dblQty / dblOplQty) / dblWeight
     ' dblQty = dblDose * dblOplQty * dblWeight / (dblStand * dblFactor)
     ElseIf dblStand * dblFactor > 0 Then
         dblQty = dblDose * dblOplQty * dblWeight / (dblStand * dblFactor)
-        dblQty = IIf(dblQty / dblOplQty < dblMinConc, dblMinConc * dblOplQty, dblQty)
-        dblQty = IIf(dblQty / dblOplQty > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
-        
-        dblFilter = 0.001
-        intPrec = IIf(dblQty >= 0.1, 2, 1)
-        dblFix = StringToDouble(FixPrecision(dblQty, intPrec))
-        
-        intN = 1
-        dblDelta = dblQty - dblFix
-        dblConc = dblFix / dblOplQty
-        Do While dblConc < dblMinConc And Not dblMinConc - dblConc < dblFilter
-            dblFix = FixPrecision(dblQty + dblDelta * intN, intPrec)
-            intN = intN + 1
-            dblConc = dblFix / dblOplQty
-        Loop
-        
-        intN = 1
-        dblDelta = dblFix - dblQty
-        dblConc = dblFix / dblOplQty
-        Do While dblConc > dblMaxConc And Not dblConc - dblMaxConc < dblFilter
-            dblFix = FixPrecision(dblQty - dblDelta * intN, intPrec)
-            intN = intN + 1
-            dblConc = dblFix / dblOplQty
-        Loop
-        
+        dblQty = CorrectMedQty(strN, intMed, dblQty)
     Else
-        dblFix = 0
+        dblQty = 0
     End If
     
-    CalculateMedicamentQtyByDose = dblFix
+    CalculateMedicamentQtyByDose = dblQty
 
 End Function
 
@@ -468,6 +436,8 @@ Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolea
         strMedName = ModMedicatie.GetNeoMedContIVName(varMedIndex)
         If IsEpiduraal(strMedName) Then
             ModRange.SetRangeValue strMedSterkte, ModMedicatie.Medicatie_CalcEpiQty(ModPatient.GetGewichtFromRange()) * 10
+        Else
+            ModRange.SetRangeValue strMedSterkte, 0
         End If
     End If
     
@@ -637,18 +607,71 @@ Public Sub NeoInfB_IntakePerKg()
 
 End Sub
 
+Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, ByVal dblQty As Double) As Double
+
+    Dim dblMultiple As Double
+    Dim dblFactor As Double
+    Dim dblOplQty As Double
+    Dim dblMaxConc As Double
+    Dim dblMinConc As Double
+    Dim dblConc As Double
+    Dim dblFilter As Double
+    Dim intN As Integer
+    
+    dblOplQty = ModRange.GetRangeValue(constOplHoev & strN, 0)
+    
+    If dblOplQty = 0 Then
+        dblQty = 0
+    Else
+        dblMinConc = GetMedicamentItemWithIndex(intMed, 9)
+        dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
+                
+        dblFactor = IIf(dblQty < 1, 100, 10)
+        dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4) / dblFactor
+        
+        dblConc = dblQty / dblOplQty
+        dblQty = IIf(dblConc < dblMinConc, dblMinConc * dblOplQty, dblQty)
+        dblQty = IIf(dblConc > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
+    
+        If dblMultiple > 0 Then
+            dblQty = ModExcel.Excel_RoundBy(dblQty, dblMultiple)
+            If dblQty = 0 Then dblQty = dblMultiple
+        End If
+                 
+        dblConc = dblQty / dblOplQty
+        Do While dblConc < dblMinConc
+            dblQty = dblQty + dblMultiple
+            dblConc = dblQty / dblOplQty
+        Loop
+        
+        dblConc = dblQty / dblOplQty
+        Do While dblConc > dblMaxConc
+            dblQty = dblQty - dblMultiple
+            dblConc = dblQty / dblOplQty
+        Loop
+    
+    End If
+    
+    CorrectMedQty = dblQty
+    
+End Function
+
 Private Sub MedSterkte(ByVal intN As Integer)
 
     Dim frmInvoer As FormInvoerNumeriek
     Dim strSterkte As String
     Dim strN As String
     Dim intMedKeuze As Integer
+    Dim strMed As String
+    Dim dblQty As Double
     Dim strUnit As String
     
     Dim objTblMed As Range
     
     strN = IIf(intN < 10, "0" & intN, intN)
     intMedKeuze = ModRange.GetRangeValue(constMedKeuze & strN, 1)
+    strMed = GetMedicamentItemWithIndex(intMedKeuze, 1)
+    
     If intMedKeuze <= 1 Then Exit Sub
     
     Set objTblMed = Range(constTblMedIV)
@@ -663,8 +686,13 @@ Private Sub MedSterkte(ByVal intN As Integer)
         .lblEenheid = strUnit
         .txtWaarde = ModRange.GetRangeValue(strSterkte, 0) / 10
         .Show
-        If IsNumeric(.txtWaarde) Then _
-            ModRange.SetRangeValue strSterkte, .txtWaarde * 10
+        
+        If IsNumeric(.txtWaarde) Then
+            dblQty = ModString.StringToDouble(.txtWaarde)
+            If Not IsEpiduraal(strMed) Then dblQty = CorrectMedQty(strN, intMedKeuze, dblQty)
+            ModRange.SetRangeValue strSterkte, dblQty * 10
+        End If
+        
     End With
     
     Set frmInvoer = Nothing
@@ -1312,22 +1340,39 @@ Public Sub NeoInfB_CheckOplVlst_10()
 
 End Sub
 
+Public Sub NeoInfB_SetTestDose(ByVal strN As String, ByVal dblDose As Double)
+
+    Dim dblQty As Double
+    Dim intMed As Integer
+    
+    intMed = ModRange.GetRangeValue(constMedKeuze & strN, vbNullString)
+    If intMed <= 1 Then Exit Sub
+    
+    If Not dblDose = 0 Then
+        dblQty = CalculateMedicamentQtyByDose(strN, intMed, dblDose)
+        ModRange.SetRangeValue constMedSterkte & strN, dblQty * 10
+    End If
+
+End Sub
+
 Private Sub SetDose(ByVal intN As Integer)
 
     Dim strN As String
     Dim frmDose As FormInvoerNumeriek
     Dim intMed As Integer
+    Dim strMed As String
     Dim dblDose As Double
     Dim dblQty As Double
     Dim strEenheid As String
     
     strN = IntNToStrN(intN)
     intMed = ModRange.GetRangeValue(constMedKeuze & strN, vbNullString)
+    strMed = ModExcel.Excel_Index(constTblMedIV, intMed, 1)
     
-    If intMed <= 1 Then Exit Sub
+    If intMed <= 1 Or ModString.ContainsCaseInsensitive(strMed, "epiduraal") Then Exit Sub
     
     strEenheid = ModExcel.Excel_Index(constTblMedIV, intMed, constDoseEenheidIndx)
-    dblDose = ModExcel.Excel_Index("Tbl_Neo_BerMedCont", intMed - 1, 7)
+    dblDose = ModExcel.Excel_Index("Tbl_Neo_BerMedCont", intN, 7)
     
     Set frmDose = New FormInvoerNumeriek
     
@@ -1338,13 +1383,11 @@ Private Sub SetDose(ByVal intN As Integer)
         
         If Not .txtWaarde.Value = vbNullString Then
             dblDose = StringToDouble(.txtWaarde.Value)
-            dblQty = CalculateMedicamentQtyByDose(intMed, dblDose)
+            dblQty = CalculateMedicamentQtyByDose(strN, intMed, dblDose)
             ModRange.SetRangeValue constMedSterkte & strN, dblQty * 10
         End If
     End With
     
-    
-
 End Sub
 
 Public Sub NeoInfB_SetDose_01()

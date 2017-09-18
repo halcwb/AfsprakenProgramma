@@ -4,28 +4,29 @@ Option Explicit
 Public Const CONST_TEST_ERROR As Long = vbObjectError + 1
 
 Private Const constTestStart As Integer = 3
-Private Const constTestCount As Integer = 461
 Private Const constTestNum As String = "A"
+
 Private Const constSetupGewicht As String = "B"
 Private Const constSetupMedicament As String = "C"
-Private Const constSetupHoeveelheid As String = "D"
-Private Const constSetupOplosmiddel As String = "E"
-Private Const constSetupOploshoeveelheid As String = "F"
+Private Const constSetupMedicamentHoeveelheid As String = "D"
+Private Const constSetupOplosVloeistof As String = "E"
+Private Const constSetupOplosHoeveelheid As String = "F"
 Private Const constSetupInfuusStand As String = "G"
+Private Const constSetupDosering As String = "H"
 
-Private Const constActGewicht As String = "U"
-Private Const constActMedicament As String = "V"
-Private Const constActHoeveelheid As String = "W"
-Private Const constActEenheid As String = "X"
-Private Const constActOplosmiddel As String = "Y"
-Private Const constActTotaalVolume As String = "Z"
-Private Const constActInfuusStand As String = "AA"
-Private Const constActDosis As String = "AB"
-Private Const constACTDosisEenheid As String = "AC"
-Private Const constActNormaalWaarde As String = "AD"
-Private Const constActInloopTijd As String = "AE"
-Private Const constActMedVolume As String = "AF"
-Private Const constActOplVolume As String = "AG"
+Private Const constActGewicht As String = "V"
+Private Const constActMedicament As String = "W"
+Private Const constActMedicamentHoeveelheid As String = "X"
+Private Const constActMedicamentEenheid As String = "Y"
+Private Const constActOplosVloeistof As String = "Z"
+Private Const constActOplosHoeveelheid As String = "AA"
+Private Const constActInfuusStand As String = "AB"
+Private Const constActDosering As String = "AC"
+Private Const constActDoseringEenheid As String = "AD"
+Private Const constActNormaalWaarde As String = "AE"
+Private Const constActInloopTijd As String = "AF"
+Private Const constActMedicamentVolume As String = "AG"
+Private Const constActOplossingVolume As String = "AH"
 
 Private Const constGewicht As String = "_Pat_Gewicht"
 Private Const constMedicament As String = "Var_Neo_InfB_Cont_MedKeuze_"
@@ -36,21 +37,21 @@ Private Const constInfuusStand As String = "Var_Neo_InfB_Cont_Stand_"
 
 Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
 Private Const constTblOpl As String = "Tbl_Neo_OplVlst"
-Private Const constTblVerwacht As String = "U3:AG"
-Private Const constTblTekst As String = "AV3:AX"
+Private Const constTblVerwacht As String = "V3:AH"
+Private Const constTblTekst As String = "AW3:AY"
 
-Private Const constAfsprTekst As String = "AV"
-Private Const constEtiketTekst As String = "AW"
-Private Const constBereidingTekst As String = "AX"
+Private Const constAfsprTekst As String = "AW"
+Private Const constEtiketTekst As String = "AX"
+Private Const constBereidingTekst As String = "AY"
 
-Private Const constTestResult As String = "AH"
+Private Const constTestResult As String = "AI"
 
 Public Function Test_NeoInfB_FillContMed(ByVal blnPass As Boolean) As Boolean
 
     Dim intN As Integer
     
     For intN = 1 To 10
-        blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intN, IntNToStrN(intN), intN, 0, 0, 0, 0)
+        blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intN, IntNToStrN(intN), intN, 0, 0, 0, 0, 0)
     Next
     ModNeoInfB.CopyCurrentInfVarToData True
     
@@ -58,14 +59,17 @@ Public Function Test_NeoInfB_FillContMed(ByVal blnPass As Boolean) As Boolean
 
 End Function
 
-Public Function Test_NeoInfB_EnterContMed(ByVal blnPass As Boolean, ByVal intN As Integer, ByVal strM As String, ByVal intMed As Integer, ByVal dblHoev As Double, ByVal intOpl As Integer, ByVal dblOplHoev As Double, ByVal dblStand As Double) As Boolean
+Public Function Test_NeoInfB_EnterContMed(ByVal blnPass As Boolean, ByVal intN As Integer, ByVal strM As String, ByVal intMed As Integer, ByVal dblHoev As Double, ByVal intOpl As Integer, ByVal dblOplHoev As Double, ByVal dblStand As Double, ByVal dblDose As Double) As Boolean
 
     blnPass = blnPass And ModRange.SetRangeValue(constMedicament & strM, intMed)
     ChangeMedIV intN
+    
     If dblHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constHoeveelheid & strM, dblHoev * 10)
     If intOpl > 1 Then blnPass = blnPass And ModRange.SetRangeValue(constOplosmiddel & strM, intOpl)
     If dblOplHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constOploshoeveelheid & strM, dblOplHoev)
     If dblStand > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constInfuusStand & strM, dblStand * 10)
+    
+    If dblDose > 0 Then ModNeoInfB.NeoInfB_SetTestDose strM, dblDose
 
     Test_NeoInfB_EnterContMed = blnPass
 
@@ -75,6 +79,7 @@ Public Sub Test_NeoInfB_ContMed()
 
     Dim wbkTests As Workbook
     Dim shtTests As Worksheet
+    Dim intTestCount As Integer
     Dim intN As Integer
     Dim intM As Integer
     Dim strM As String
@@ -83,32 +88,52 @@ Public Sub Test_NeoInfB_ContMed()
     Dim dblVal As Double
     Dim dblGew As Double
     Dim intMed As Integer
-    Dim dblHoev As Double
+    Dim dblMedQty As Double
     Dim intOpl As Integer
     Dim dblOplHoev As Double
     Dim dblStand As Double
+    Dim dblDose As Double
     Dim intSpuitN As Integer
     Dim intI As Integer
     Dim strTekst As String
     Dim blnPass As Boolean
     Dim blnShowMsg As Boolean
     
+    Dim dlgFile As FileDialog
+    Dim varFile As Variant
+    
     On Error GoTo Test_NeoInfB_ContMedError
     
     ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
     
-    'ModPatient.PatientClearAll False, True
+    ' ModPatient.PatientClearAll False, True
     
-    Set wbkTests = Workbooks.Open(WbkAfspraken.Path & "/tests/Tests.xlsx")
+    Set dlgFile = Application.FileDialog(msoFileDialogFilePicker)
+    With dlgFile
+        .AllowMultiSelect = False
+        .Filters.Add "Tests", "*.xlsx", 2
+        .FilterIndex = 2
+        .InitialFileName = WbkAfspraken.Path & "\tests\"
+        If .Show Then
+            For Each varFile In .SelectedItems
+                If Not varFile = vbNullString Then Exit For
+                
+            Next
+        End If
+    End With
+    Set dlgFile = Nothing
+    
+    Set wbkTests = Workbooks.Open(varFile)
     Set shtTests = wbkTests.Sheets("NICU_ContMed")
     
-    shtTests.Range(constTblVerwacht & constTestCount + 2).ClearContents
-    shtTests.Range(constTblTekst & constTestCount + 2).ClearContents
+    intTestCount = shtTests.Range("A1").CurrentRegion.Rows.Count - 3
+    shtTests.Range(constTblVerwacht & intTestCount + 2).ClearContents
+    shtTests.Range(constTblTekst & intTestCount + 2).ClearContents
 
     blnPass = True
-    For intN = constTestStart To constTestCount + 2
+    For intN = constTestStart To intTestCount + 2
         strNo = shtTests.Range(constTestNum & intN).Value2
-        ModProgress.SetJobPercentage "Testing", constTestCount, (intN - 2)
+        ModProgress.SetJobPercentage "Testing", intTestCount, (intN - 2)
         
         ' Gewicht
         dblGew = ModString.StringToDouble(shtTests.Range(constSetupGewicht & intN).Value2)
@@ -123,10 +148,10 @@ Public Sub Test_NeoInfB_ContMed()
         End If
         
         ' Hoeveelheid
-        dblHoev = ModString.StringToDouble(shtTests.Range(constSetupHoeveelheid & intN).Value2)
+        dblMedQty = ModString.StringToDouble(shtTests.Range(constSetupMedicamentHoeveelheid & intN).Value2)
         
         ' Oplosmiddel
-        varVal = shtTests.Range(constSetupOplosmiddel & intN).Value2
+        varVal = shtTests.Range(constSetupOplosVloeistof & intN).Value2
         If IsEmpty(varVal) Then
             intOpl = 1
         Else
@@ -134,18 +159,21 @@ Public Sub Test_NeoInfB_ContMed()
         End If
         
         ' Totale volume
-        dblOplHoev = ModString.StringToDouble(shtTests.Range(constSetupOploshoeveelheid & intN).Value2)
+        dblOplHoev = ModString.StringToDouble(shtTests.Range(constSetupOplosHoeveelheid & intN).Value2)
         
         ' Infuus stand
         dblStand = ModString.StringToDouble(shtTests.Range(constSetupInfuusStand & intN).Value2)
         
+        ' Dosering
+        dblDose = ModString.StringToDouble(shtTests.Range(constSetupDosering & intN).Value2)
+        
         ' Voer testcase in
         For intM = 1 To 10
             strM = IIf(intM < 10, "0" & intM, intM)
-            blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intM, strM, intMed, dblHoev, intOpl, dblOplHoev, dblStand)
+            blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intM, strM, intMed, dblMedQty, intOpl, dblOplHoev, dblStand, dblDose)
 '            blnPass = blnPass And ModRange.SetRangeValue(constMedicament & strM, intMed)
 '            ChangeMedIV intM
-'            If dblHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constHoeveelheid & strM, dblHoev * 10)
+'            If dblMedQty > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constHoeveelheid & strM, dblMedQty * 10)
 '            If intOpl > 1 Then blnPass = blnPass And ModRange.SetRangeValue(constOplosmiddel & strM, intOpl)
 '            If dblOplHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constOploshoeveelheid & strM, dblOplHoev)
 '            If dblStand > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constInfuusStand & strM, dblStand * 10)
@@ -202,7 +230,7 @@ Public Sub Test_NeoInfB_ContMed()
             End If
         Next
         ' Schrijf actuele medicament hoeveelheid
-        shtTests.Range(constActHoeveelheid & intN).Value2 = varVal
+        shtTests.Range(constActMedicamentHoeveelheid & intN).Value2 = varVal
         
         
         ' ================ Check medicament eenheid ================
@@ -235,7 +263,7 @@ Public Sub Test_NeoInfB_ContMed()
             End If
         Next
         ' Schrijf medicament eenheid
-        shtTests.Range(constActEenheid & intN).Value2 = varVal
+        shtTests.Range(constActMedicamentEenheid & intN).Value2 = varVal
                 
         
         ' ================ Check oplosmiddel ================
@@ -250,7 +278,7 @@ Public Sub Test_NeoInfB_ContMed()
             If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
         Next
         ' Schrijf oplosmiddel
-        shtTests.Range(constActOplosmiddel & intN).Value2 = varVal
+        shtTests.Range(constActOplosVloeistof & intN).Value2 = varVal
         
         
         ' ================ Check totaal volume ================
@@ -275,7 +303,7 @@ Public Sub Test_NeoInfB_ContMed()
             End If
         Next
         ' Schrijf actuele oplossing hoeveelheid
-        shtTests.Range(constActTotaalVolume & intN).Value2 = varVal
+        shtTests.Range(constActOplosHoeveelheid & intN).Value2 = varVal
         
         
         '  ================ Check infuus stand ================
@@ -312,8 +340,8 @@ Public Sub Test_NeoInfB_ContMed()
         End If
         ' Schrijf dosis
         If Not varVal = vbNullString Then
-            shtTests.Range(constActDosis & intN).Value2 = ModString.StringToDouble(Split(varVal, " ")(0))
-            shtTests.Range(constACTDosisEenheid & intN).Value2 = Split(varVal, " ")(1)
+            shtTests.Range(constActDosering & intN).Value2 = ModString.StringToDouble(Split(varVal, " ")(0))
+            shtTests.Range(constActDoseringEenheid & intN).Value2 = Split(varVal, " ")(1)
         End If
         
         ' ================ Check normaal waarde ================
@@ -356,7 +384,7 @@ Public Sub Test_NeoInfB_ContMed()
             blnPass = blnPass And Equals(varVal, dblVal)
         Next
         ' Schrijf medicament volume
-        shtTests.Range(constActMedVolume & intN).Value2 = varVal
+        shtTests.Range(constActMedicamentVolume & intN).Value2 = varVal
                 
         
         ' ================ Check oplossing volume ================
@@ -371,7 +399,7 @@ Public Sub Test_NeoInfB_ContMed()
             blnPass = blnPass And Equals(varVal, dblVal)
         Next
         ' Schrijf oplossing volume
-        shtTests.Range(constActOplVolume & intN).Value2 = varVal
+        shtTests.Range(constActOplossingVolume & intN).Value2 = varVal
         
         
         ' ================ Check Afspraak Tekst ================
@@ -408,7 +436,7 @@ Public Sub Test_NeoInfB_ContMed()
 
     ModProgress.FinishProgress
     
-    blnPass = blnPass And shtTests.Range(constTestResult & constTestCount + 3).Value
+    blnPass = blnPass And shtTests.Range(constTestResult & intTestCount + 3).Value
 
     If blnPass Then
         ModMessage.ShowMsgBoxInfo "Alle testen geslaagt"
