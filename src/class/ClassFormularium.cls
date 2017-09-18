@@ -40,12 +40,6 @@ Public Function GetSterkteEenheden() As Collection
 
 End Function
 
-Private Sub AddSterkteEenheid(ByVal strEenheid As String)
-
-    If Not HasSterkteEenheid(strEenheid) Then m_colSterkteEenheden.Add strEenheid
-
-End Sub
-
 Public Function HasDosisEenheid(ByVal strEenheid As String) As Boolean
 
     Dim varItem As Variant
@@ -68,12 +62,6 @@ Public Function GetDosisEenheden() As Collection
     Set GetDosisEenheden = m_colDosisEenheden
 
 End Function
-
-Private Sub AddDosisEenheid(ByVal strEenheid As String)
-
-    If Not HasDosisEenheid(strEenheid) Then m_colDosisEenheden.Add strEenheid
-
-End Sub
 
 Public Function HasRoute(ByVal strRoute As String) As Boolean
 
@@ -98,12 +86,6 @@ Public Function GetRoutes() As Collection
 
 End Function
 
-Private Sub AddRoute(ByVal strRoute As String)
-
-    If Not HasRoute(strRoute) Then m_colRoutes.Add strRoute
-
-End Sub
-
 Public Function HasVorm(ByVal strVorm As String) As Boolean
 
     Dim varItem As Variant
@@ -127,12 +109,6 @@ Public Function GetVormen() As Collection
 
 End Function
 
-Private Sub AddVorm(ByVal strVorm As String)
-
-    If Not HasVorm(strVorm) Then m_colVorm.Add strVorm
-
-End Sub
-
 Public Sub AddMedicament(ByVal objMed As ClassMedicatieDisc)
 
     Dim varRoute As Variant
@@ -143,13 +119,13 @@ Public Sub AddMedicament(ByVal objMed As ClassMedicatieDisc)
     
     m_colMedicamenten.Add objMed
     
-    AddGeneriek objMed.Generiek
-    AddVorm objMed.Vorm
-    AddSterkteEenheid objMed.SterkteEenheid
-    AddDosisEenheid objMed.DoseEenheid
+    CollectionAddDistinctStringNotEmpty m_colGeneriek, objMed.Generiek
+    CollectionAddDistinctStringNotEmpty m_colVorm, objMed.Vorm
+    CollectionAddDistinctStringNotEmpty m_colSterkteEenheden, objMed.SterkteEenheid
+    CollectionAddDistinctStringNotEmpty m_colDosisEenheden, objMed.DoseEenheid
     
-    For Each varRoute In objMed.GetRoutes()
-        AddRoute varRoute
+    For Each varRoute In objMed.GetRouteList()
+        CollectionAddDistinctStringNotEmpty m_colRoutes, varRoute
     Next
     
     m_lngCount = m_lngCount + 1
@@ -210,14 +186,6 @@ Public Property Get MedicamentCount() As Variant
     MedicamentCount = m_lngCount - 1
 
 End Property
-
-Private Sub AddGeneriek(ByVal strGeneriek As String)
-
-    If Not HasGeneriek(strGeneriek) Then
-        m_colGeneriek.Add strGeneriek
-    End If
-
-End Sub
 
 Public Function HasGeneriek(ByVal strGeneriek As String) As Boolean
 

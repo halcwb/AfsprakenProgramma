@@ -20,10 +20,8 @@ Private m_Sterkte As Double
 Private m_SterkteEenheid As String
 Private m_DeelDose As Double
 Private m_DoseEenheid As String
-Private m_Routes As String
-Private m_Indicaties As String
-Private m_IndicatieList As String
-Private m_FreqList As String
+Private m_Route As String
+Private m_Indicatie As String
 Private m_Freq As String
 Private m_CalcDose As Double
 Private m_NormDose As Double
@@ -33,6 +31,10 @@ Private m_AbsDose As Double
 Private m_MaxConc As Double
 Private m_OplVlst As String
 Private m_MinTijd As Integer
+
+Private m_IndicatieList As Collection
+Private m_RouteList As Collection
+Private m_FreqList As Collection
 
 Public Property Get MaxDose() As Double
 
@@ -70,17 +72,30 @@ Public Property Let CalcDose(ByVal dblDose As Double)
 
 End Property
 
-Public Property Get FreqList() As String
+Public Sub SetFreqList(ByVal strFreqList As String)
 
-    FreqList = m_FreqList
+    FillCollection m_FreqList, strFreqList
 
-End Property
+End Sub
 
-Public Property Let FreqList(ByVal strFreqList As String)
+Public Function GetFreqList() As Collection
 
-    m_FreqList = strFreqList
+    Set GetFreqList = m_FreqList
 
-End Property
+End Function
+
+Public Function GetFreqListString() As String
+
+    Dim varItem As Variant
+    Dim strList As String
+
+    For Each varItem In m_FreqList
+        strList = IIf(strList = vbNullString, varItem, strList & " ||" & varItem)
+    Next
+    
+    GetFreqListString = strList
+    
+End Function
 
 Public Property Get Freq() As String
 
@@ -250,15 +265,15 @@ Public Property Let Vorm(ByVal strVorm As String)
 
 End Property
 
-Public Property Get Routes() As String
+Public Property Get Route() As String
 
-    Routes = m_Routes
+    Route = m_Route
 
 End Property
 
-Public Property Let Routes(ByVal strRoutes As String)
+Public Property Let Route(ByVal strRoute As String)
 
-    m_Routes = strRoutes
+    m_Route = strRoute
 
 End Property
 
@@ -310,29 +325,63 @@ Public Property Let DoseEenheid(ByVal strDosisEenheid As String)
 
 End Property
 
-Public Property Get Indicaties() As String
+Public Property Get Indicatie() As String
 
-    Indicaties = m_Indicaties
-
-End Property
-
-Public Property Let Indicaties(ByVal strIndicaties As String)
-
-    strIndicaties = IIf(ModString.StringIsZeroOrEmpty(strIndicaties), vbNullString, strIndicaties)
-    If m_IndicatieList = vbNullString Then m_IndicatieList = strIndicaties
-    m_Indicaties = Strings.LCase(strIndicaties)
+    Indicatie = m_Indicatie
 
 End Property
 
-Public Function GetRoutes() As String()
+Public Property Let Indicatie(ByVal strIndicatie As String)
 
-    GetRoutes = Split(m_Routes, "||")
+    m_Indicatie = Strings.LCase(strIndicatie)
+
+End Property
+
+Private Sub FillCollection(objColl As Collection, ByVal strItems As String)
+
+    Dim varItem As Variant
+    Dim arrItem() As String
+    Dim objC As ClassStringComparer
+    
+    If objColl Is Nothing Then
+        strItems = IIf(ModString.StringIsZeroOrEmpty(strItems), vbNullString, strItems)
+        strItems = Strings.LCase(strItems)
+        arrItem = Split(strItems, "||")
+        
+        Set objColl = New Collection
+        Set objC = New ClassStringComparer
+        
+        For Each varItem In arrItem
+            CollectionAddDistinctStringNotEmpty objColl, varItem
+        Next
+        
+        ModCollection.CollectionSort objColl, objC
+
+    End If
+
+End Sub
+
+Public Sub SetRouteList(ByVal strRoutes As String)
+
+    FillCollection m_RouteList, strRoutes
+
+End Sub
+
+Public Function GetRouteList() As Collection
+    
+    Set GetRouteList = m_RouteList
 
 End Function
 
-Public Function GetIndicaties() As String()
+Public Function SetIndicatieList(ByVal strIndicaties As String)
 
-    GetIndicaties = Split(m_IndicatieList, "||")
+    FillCollection m_IndicatieList, strIndicaties
+
+End Function
+
+Public Function GetIndicatieList() As Collection
+
+    Set GetIndicatieList = m_IndicatieList
     
 End Function
 

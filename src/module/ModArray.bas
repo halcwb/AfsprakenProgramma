@@ -338,13 +338,25 @@ Public Function ArrayAddAllFromCol(colSrc As Collection, varDest() As Variant) A
     ReDim Preserve varDest(lngCount + colSrc.Count)
     
     For Each varElement In colSrc
-        Set varDest(lngCount + lngN) = varElement
+        varDest(lngCount + lngN) = varElement
         lngN = lngN + 1
     Next varElement
     
     ArrayAddAllFromCol = (VariantArrayLength(varDest) = lngCount)
     
 End Function
+
+Private Sub Test_ArrayAddAllFromCol()
+    
+    Dim objCol As Collection
+    Dim arrArray() As Variant
+
+    arrArray = Array()
+    Set objCol = New Collection
+    objCol.Add "Test"
+    ArrayAddAllFromCol objCol, arrArray
+
+End Sub
 
 
 'Adds all elements from the source collection, colSrc, to the destination collection, varDest.

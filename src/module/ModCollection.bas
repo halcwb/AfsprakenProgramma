@@ -127,3 +127,13 @@ Public Function CollectionAddAllFromArray(varSrc() As Variant, colDest As Collec
     
 End Function
 
+Public Sub CollectionAddDistinctStringNotEmpty(objColl As Collection, ByVal varValue As Variant)
+
+    If Not IsEmpty(varValue) Then
+        varValue = CStr(varValue)
+        If Not StringIsZeroOrEmpty(varValue) And Not CollectionContains(varValue, objColl) Then
+            objColl.Add varValue
+        End If
+    End If
+
+End Sub

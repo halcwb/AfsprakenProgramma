@@ -76,12 +76,12 @@ Private Const constMedCount As Integer = 30
 ' Copy paste function cannot be reused because of private clear method
 Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
 
-    Dim frmPickList As FormPedMedDiscPickList
+    Dim frmPickList As FormMedDiscPickList
     Dim intN As Integer
     Dim strN As String
     Dim strKeuze As String
     
-    Set frmPickList = New FormPedMedDiscPickList
+    Set frmPickList = New FormMedDiscPickList
     frmPickList.LoadMedicamenten colTbl
     
     For intN = 1 To intMax
@@ -433,9 +433,11 @@ Public Sub GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProg
             .Etiket = objFormRange.Cells(intN, constEtiketIndx).Value2
             .DeelDose = objFormRange.Cells(intN, constStandDoseIndx).Value2
             .DoseEenheid = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
-            .Routes = objFormRange.Cells(intN, constRouteIndx).Value2
-            .Indicaties = objFormRange.Cells(intN, constIndicatiesIndx).Value2
-            .FreqList = objFormRange.Cells(intN, constFreqIndx).Value2
+            
+            .SetRouteList objFormRange.Cells(intN, constRouteIndx).Value2
+            .SetIndicatieList objFormRange.Cells(intN, constIndicatiesIndx).Value2
+            .SetFreqList objFormRange.Cells(intN, constFreqIndx).Value2
+            
             .NormDose = objFormRange.Cells(intN, IIf(IsPed, constPICU_DoseIndx, constNICU_DoseIndx)).Value2
             .MinDose = objFormRange.Cells(intN, IIf(IsPed, constPICU_OnderIndx, constNICU_OnderIndx)).Value2
             .MaxDose = objFormRange.Cells(intN, IIf(IsPed, constPICU_BovenIndx, constNICU_BovenIndx)).Value2
@@ -462,6 +464,15 @@ GetMedicamentenError:
     
     ModLog.LogError "Could not retrieve medicament from: " & strFileName
     
+    On Error Resume Next
+    
+    Workbooks(strName).Close
+
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+    
+    ModProgress.FinishProgress
+    
 End Sub
 
 Private Sub MedicamentInvoeren(ByVal intN As Integer)
@@ -484,21 +495,22 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         If Not blnLoad Then                      ' Manually entered drug
             .SetNoFormMed
             .cboGeneriek.Text = ModRange.GetRangeValue(constGeneric & strN, vbNullString)
-            .cboVorm.Text = ModRange.GetRangeValue(constVorm & strN, vbNullString)
-            .SetTextBoxNumericValue .txtSterkte, ModRange.GetRangeValue(constConc & strN, 0)
-            .cboSterkteEenheid.Text = ModRange.GetRangeValue(constConcUnit & strN, vbNullString)
-            .cboDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
+            .SetComboBoxIfNotEmpty .cboVorm, ModRange.GetRangeValue(constVorm & strN, vbNullString)
+            .SetTextBoxIfNotEmpty .txtSterkte, ModRange.GetRangeValue(constConc & strN, 0)
+            .SetComboBoxIfNotEmpty .cboSterkteEenheid, ModRange.GetRangeValue(constConcUnit & strN, vbNullString)
+            .SetComboBoxIfNotEmpty .cboDosisEenheid, ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         End If
-        ' Edited details
-        .cboDosisEenheid.Text = ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
-        .cboRoute.Text = ModRange.GetRangeValue(constRoute & strN, vbNullString)
-        .cboIndicatie.Text = ModRange.GetRangeValue(constIndic & strN, vbNullString)
-        .cboFreq.Text = ModRange.GetRangeValue(constFreqText & strN, vbNullString)
         
-        If .txtNormDose.Value = vbNullString Then .txtNormDose.Text = ModRange.GetRangeValue(constNormDose & strN, vbNullString)
-        If .txtMinDose.Value = vbNullString Then .txtMinDose.Text = ModRange.GetRangeValue(constMinDose & strN, vbNullString)
-        If .txtMaxDose.Value = vbNullString Then .txtMaxDose.Text = ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
-        If .txtAbsMax.Value = vbNullString Then .txtAbsMax.Text = ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
+        ' Edited details
+        .SetComboBoxIfNotEmpty .cboDosisEenheid, ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
+        .SetComboBoxIfNotEmpty .cboRoute, ModRange.GetRangeValue(constRoute & strN, vbNullString)
+        .SetComboBoxIfNotEmpty .cboIndicatie, ModRange.GetRangeValue(constIndic & strN, vbNullString)
+        .SetComboBoxIfNotEmpty .cboFreq, ModRange.GetRangeValue(constFreqText & strN, vbNullString)
+        
+        .SetTextBoxIfNotEmpty .txtNormDose, ModRange.GetRangeValue(constNormDose & strN, vbNullString)
+        .SetTextBoxIfNotEmpty .txtMinDose, ModRange.GetRangeValue(constMinDose & strN, vbNullString)
+        .SetTextBoxIfNotEmpty .txtMaxDose, ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
+        .SetTextBoxIfNotEmpty .txtAbsMax, ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
         
         .Show
         
@@ -507,7 +519,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
             
                 Set objMed = .GetSelectedMedicament()
                 ' -- Medicament --
-                MedDisc_SetMed objMed, strN, .GetSelectedRoute(), .GetSelectedDosisEenheid(), .GetSelectedIndication()
+                MedDisc_SetMed objMed, strN
                 
             End If
 
@@ -520,7 +532,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
 
 End Sub
 
-Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute As String, strDosEenh As String, strInd As String)
+Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     
     Dim intFreq As Integer
     Dim varFreq As Variant
@@ -535,9 +547,9 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute
     ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
     ModRange.SetRangeValue constLabel & strN, objMed.Etiket
     ModRange.SetRangeValue constStandDose & strN, objMed.DeelDose
-    ModRange.SetRangeValue constDoseUnit & strN, strDosEenh
-    ModRange.SetRangeValue constRoute & strN, strRoute
-    ModRange.SetRangeValue constIndic & strN, strInd
+    ModRange.SetRangeValue constDoseUnit & strN, objMed.DoseEenheid
+    ModRange.SetRangeValue constRoute & strN, objMed.Route
+    ModRange.SetRangeValue constIndic & strN, objMed.Indicatie
     
     ModRange.SetRangeValue constNormDose & strN, objMed.NormDose
     ModRange.SetRangeValue constMinDose & strN, objMed.MinDose
@@ -564,7 +576,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String, strRoute
         ModRange.SetRangeValue constFreq & strN, intFreq
     End If
     
-    If Not objMed.FreqList = vbNullString Then ModRange.SetRangeValue constFreqList & strN, objMed.FreqList
+    ModRange.SetRangeValue constFreqList & strN, objMed.GetFreqListString
     
     If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
         intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.DeelDose

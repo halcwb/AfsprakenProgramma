@@ -15,7 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private m_Medicament As ClassMedicatieDisc
+Private m_Med As ClassMedicatieDisc
 Private m_Formularium As ClassFormularium
 Private m_TherapieGroep As String
 Private m_SubGroep As String
@@ -71,33 +71,15 @@ Private Sub Validate(ByVal strValid As String)
 
 End Sub
 
-Public Function GetSelectedDosisEenheid() As String
-
-    GetSelectedDosisEenheid = cboDosisEenheid.Value
-
-End Function
-
-Public Function GetSelectedRoute() As String
-
-    GetSelectedRoute = cboRoute.Value
-
-End Function
-
-Public Function GetSelectedIndication() As String
-
-    GetSelectedIndication = cboIndicatie.Value
-
-End Function
-
 Public Function HasSelectedMedicament() As Boolean
 
-    HasSelectedMedicament = Not m_Medicament Is Nothing
+    HasSelectedMedicament = Not m_Med Is Nothing
 
 End Function
 
 Public Function GetSelectedMedicament() As ClassMedicatieDisc
 
-    Set GetSelectedMedicament = m_Medicament
+    Set GetSelectedMedicament = m_Med
 
 End Function
 
@@ -123,32 +105,22 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
         lblGPK.Caption = vbNullString
         lblATC.Caption = vbNullString
         
-        cboVorm.Clear
-        For Each varItem In m_Formularium.GetVormen
-            cboVorm.AddItem varItem
-        Next
-        
-        cboSterkteEenheid.Clear
-        For Each varItem In m_Formularium.GetSterkteEenheden()
-            cboSterkteEenheid.AddItem varItem
-        Next
-    
-        cboDosisEenheid.Clear
-        For Each varItem In m_Formularium.GetDosisEenheden
-            cboDosisEenheid.AddItem varItem
-        Next
-        
-        cboRoute.Clear
-        For Each varItem In m_Formularium.GetRoutes
-            cboRoute.AddItem varItem
-        Next
+        FillCombo cboVorm, m_Formularium.GetVormen()
+        FillCombo cboSterkteEenheid, m_Formularium.GetSterkteEenheden()
+        FillCombo cboDosisEenheid, m_Formularium.GetDosisEenheden()
+        FillCombo cboRoute, m_Formularium.GetRoutes()
         
         cboIndicatie.Clear
         
-        cboFreq.Clear
         LoadFreq
         
     End If
+
+End Sub
+
+Private Sub cboFreq_Change()
+
+    Validate vbNullString
 
 End Sub
 
@@ -158,7 +130,7 @@ Private Sub cboGeneriek_Change()
 
     If cboGeneriek.ListIndex > -1 Then
         SetToGPKMode True
-        Set m_Medicament = m_Formularium.Item(cboGeneriek.ListIndex + 1)
+        Set m_Med = m_Formularium.Item(cboGeneriek.ListIndex + 1)
         LoadMedicament
     Else
         SetToGPKMode False
@@ -173,7 +145,7 @@ Public Function GetGPK() As String
     Dim strGPK As String
     
     strGPK = "0"
-    If Not m_Medicament Is Nothing Then strGPK = m_Medicament.GPK
+    If Not m_Med Is Nothing Then strGPK = m_Med.GPK
     
     GetGPK = strGPK
 
@@ -185,16 +157,16 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
 
     blnLoad = True
     
-    Set m_Medicament = m_Formularium.GPK(strGPK)
+    Set m_Med = m_Formularium.GPK(strGPK)
     
-    If m_Medicament Is Nothing Then
+    If m_Med Is Nothing Then
         SetToGPKMode False
         blnLoad = False
     Else
         SetToGPKMode True
         LoadMedicament
         m_LoadGPK = True
-        cboGeneriek.Text = m_Medicament.Generiek
+        cboGeneriek.Text = m_Med.Generiek
         m_LoadGPK = False
     End If
     
@@ -207,7 +179,7 @@ Private Sub LoadMedicament()
     Dim intN As Integer
     Dim arrFreq() As String
 
-    With m_Medicament
+    With m_Med
     
         lblTherapieGroep.Caption = .TherapieGroep
         lblSubGroep.Caption = .TherapieSubgroep
@@ -226,17 +198,13 @@ Private Sub LoadMedicament()
         FillCombo cboDosisEenheid, GetDosisEenheden()
         cboDosisEenheid.Text = .DoseEenheid
         
-        FillCombo cboRoute, .GetRoutes()
-        FillCombo cboIndicatie, .GetIndicaties()
+        FillCombo cboRoute, .GetRouteList()
+        FillCombo cboIndicatie, .GetIndicatieList()
         
         If Not .DoseEenheid = vbNullString Then cboDoseUnit.Text = .DoseEenheid & "/kg/dag"
         
-        If Not .FreqList = vbNullString Then
-            arrFreq = Split(.FreqList, "||")
-            cboFreq.Clear
-            For intN = 0 To UBound(arrFreq)
-                cboFreq.AddItem arrFreq(intN)
-            Next
+        If Not .GetFreqListString = vbNullString Then
+            FillCombo cboFreq, .GetFreqList()
         Else
             LoadFreq
         End If
@@ -249,6 +217,18 @@ Private Sub LoadMedicament()
         SetTextBoxNumericValue txtAbsMax, .AbsDose
         
     End With
+
+End Sub
+
+Public Sub SetComboBoxIfNotEmpty(cboBox As MSForms.ComboBox, ByVal strValue As String)
+
+    If Not ModString.StringIsZeroOrEmpty(strValue) Then cboBox.Value = strValue
+
+End Sub
+
+Public Sub SetTextBoxIfNotEmpty(txtBox As MSForms.TextBox, ByVal strValue As String)
+
+    If Not ModString.StringIsZeroOrEmpty(strValue) Then txtBox.Value = strValue
 
 End Sub
 
@@ -266,27 +246,26 @@ Private Sub TextBoxStringNumericValue(txtBox As MSForms.TextBox)
 
 End Sub
 
-Private Function GetDosisEenheden() As String()
+Private Function GetDosisEenheden() As Collection
 
-    Dim arrEenheden() As String
-    
-    ModArray.StringArrayAddAllFromCol m_Formularium.GetDosisEenheden, arrEenheden
-        
-    GetDosisEenheden = arrEenheden
+    Set GetDosisEenheden = m_Formularium.GetDosisEenheden()
 
 End Function
 
-Private Sub FillCombo(objCombo As ComboBox, arrItems() As String)
+Private Sub FillCombo(objCombo As ComboBox, colItems As Collection)
 
     Dim varItem As Variant
 
     objCombo.Clear
     
-    For Each varItem In arrItems
-        objCombo.AddItem CStr(varItem)
+    For Each varItem In colItems
+        varItem = CStr(varItem)
+        If Not varItem = vbNullString Then objCombo.AddItem CStr(varItem)
     Next varItem
     
-    If UBound(arrItems) = 0 Then objCombo.Text = arrItems(0)
+    If objCombo.ListCount = 1 Then
+        objCombo.Text = objCombo.List(0)
+    End If
     
 End Sub
 
@@ -306,8 +285,8 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     txtSterkte.Text = vbNullString
     cboSterkteEenheid.Text = vbNullString
     
-    cboRoute.Clear
-    cboRoute.Value = vbNullString
+    FillCombo cboRoute, m_Formularium.GetRoutes()
+    
     cboIndicatie.Clear
     cboIndicatie.Value = vbNullString
     
@@ -323,7 +302,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     
     cboGeneriek.SetFocus
     
-    Set m_Medicament = Nothing
+    Set m_Med = Nothing
 
 End Sub
 
@@ -378,8 +357,8 @@ Private Sub cmdCalc_Click()
     
     dblCalc = dblVal * dblFact / dblWght
     
-    m_Medicament.CalcDose = dblCalc
-    m_Medicament.Freq = cboFreq.Text
+    m_Med.CalcDose = dblCalc
+    m_Med.Freq = cboFreq.Text
     
     txtCalcDose.Value = ModString.FixPrecision(dblCalc, 2)
     lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDeelDose.Value & " " & cboDosisEenheid.Text
@@ -391,8 +370,8 @@ Private Sub cmdFormularium_Click()
     Dim strUrl As String
     
     strUrl = "https://www.kinderformularium.nl/"
-    If Not m_Medicament.ATC = vbNullString Then
-        strUrl = strUrl & "geneesmiddelen?atc_code=" + m_Medicament.ATC
+    If Not m_Med.ATC = vbNullString Then
+        strUrl = strUrl & "geneesmiddelen?atc_code=" + m_Med.ATC
     Else
         strUrl = strUrl & "geneesmiddelen?name=" + cboGeneriek.Text
     End If
@@ -425,26 +404,25 @@ Private Sub cmdOK_Click()
 
     If Not m_IsGPK Then
     
-        Set m_Medicament = New ClassMedicatieDisc
+        Set m_Med = New ClassMedicatieDisc
         
-        m_Medicament.DoseEenheid = cboDosisEenheid.Value
-        m_Medicament.Generiek = cboGeneriek.Value
-        m_Medicament.Indicaties = cboIndicatie.Value
-        m_Medicament.Routes = cboRoute.Value
-        m_Medicament.Sterkte = StringToDouble(txtSterkte.Value)
-        m_Medicament.SterkteEenheid = cboSterkteEenheid.Value
-        m_Medicament.Vorm = cboVorm.Value
+        m_Med.DoseEenheid = cboDosisEenheid.Value
+        m_Med.Generiek = cboGeneriek.Value
+        m_Med.Sterkte = StringToDouble(txtSterkte.Value)
+        m_Med.SterkteEenheid = cboSterkteEenheid.Value
+        m_Med.Vorm = cboVorm.Value
         
     End If
     
-    m_Medicament.DeelDose = StringToDouble(txtDeelDose.Value)
-    m_Medicament.Routes = cboRoute.Value
-    m_Medicament.Indicaties = cboIndicatie.Value
-    m_Medicament.Freq = cboFreq.Value
-    m_Medicament.NormDose = StringToDouble(txtNormDose.Value)
-    m_Medicament.MinDose = StringToDouble(txtMinDose.Value)
-    m_Medicament.MaxDose = StringToDouble(txtMaxDose.Value)
-    m_Medicament.CalcDose = StringToDouble(txtCalcDose.Value)
+    m_Med.DeelDose = StringToDouble(txtDeelDose.Value)
+    m_Med.Route = cboRoute.Value
+    m_Med.Indicatie = cboIndicatie.Value
+    m_Med.Freq = cboFreq.Value
+    
+    m_Med.NormDose = StringToDouble(txtNormDose.Value)
+    m_Med.MinDose = StringToDouble(txtMinDose.Value)
+    m_Med.MaxDose = StringToDouble(txtMaxDose.Value)
+    m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
 
     CloseForm "OK"
 
@@ -577,6 +555,8 @@ End Sub
 Private Sub LoadFreq()
 
     Dim varKey As Variant
+    
+    cboFreq.Clear
     
     If m_Freq Is Nothing Then
         Set m_Freq = ModMedDisc.GetMedicationFreqs()

@@ -57,10 +57,10 @@ Public Sub Test_MedDisc()
     Dim intN As Integer
     Dim intC As Integer
     Dim strN As String
-    Dim arrRoute() As String
+    Dim colRoute As Collection
     Dim strRoute As String
     Dim strIndic As String
-    Dim arrIndic() As String
+    Dim colIndic As Collection
     Dim intTime  As Integer
     
     Set objForm = New ClassFormularium
@@ -82,21 +82,21 @@ Public Sub Test_MedDisc()
         
         strN = IIf(intN < 10, "0" & intN, intN)
         
-        arrRoute = objMed.GetRoutes()
-        If UBound(arrRoute) >= 0 Then
-            strRoute = arrRoute(0)
+        Set colRoute = objMed.GetRouteList()
+        If colRoute.Count = 1 Then
+            strRoute = colRoute.Item(1)
         Else
             strRoute = vbNullString
         End If
         
-        arrIndic = objMed.GetIndicaties()
-        If UBound(arrIndic) >= 0 Then
-            strIndic = arrIndic(0)
+        Set colIndic = objMed.GetIndicatieList()
+        If colIndic.Count = 1 Then
+            strIndic = colIndic.Item(1)
         Else
             strIndic = vbNullString
         End If
         
-        ModMedDisc.MedDisc_SetMed objMed, strN, strRoute, objMed.DoseEenheid, strIndic
+        ModMedDisc.MedDisc_SetMed objMed, strN
         ModRange.SetRangeValue constFreq & strN, intTime
         ModRange.SetRangeValue constDoseQty & strN, intN
         
