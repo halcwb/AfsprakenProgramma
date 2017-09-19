@@ -42,6 +42,8 @@
 
 # Add docs
 !/docs/
+!/docs/*.docx
+/docs/~*.*
 !/docs/img/
 !/docs/img/*.png
 
