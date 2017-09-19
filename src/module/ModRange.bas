@@ -428,7 +428,6 @@ Public Sub NaamGeven()
 
 End Sub
 
-
 Public Function CollectionFromRange(ByVal strRange As String, ByVal intStart As Integer) As Collection
 
     Dim colCol As Collection

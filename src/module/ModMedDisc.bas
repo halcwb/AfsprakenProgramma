@@ -358,14 +358,16 @@ End Sub
 Private Sub MedicamentInvoeren(ByVal intN As Integer)
 
     Dim objMed As ClassMedicatieDisc
+    Dim objForm As FormMedDisc
     Dim strN As String
     Dim blnLoad As Boolean
       
     strN = IIf(intN < 10, "0" & intN, intN)
     
-    With FormMedDisc
+    Set objForm = New FormMedDisc
+    With objForm
     
-        .ClearForm True
+        .Caption = "Kies een medicament voor regel " & strN
         
         blnLoad = False
         If ModRange.GetRangeValue(constGPK & strN, 0) > 0 Then ' Drug from formularium
@@ -409,8 +411,24 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
             End If
         End If
     End With
+    
+    Set objForm = Nothing
 
 End Sub
+
+Private Function CalculateOplossingVolume(ByVal dblSterkte As Double, ByVal dblMaxConc As Double) As Double
+    
+    Dim dblVolume
+    
+    If dblMaxConc > 0 Then
+        ' maxoonc = sterkte / volume -> volume = sterkte / maxconc
+        dblVolume = dblSterkte / dblMaxConc
+    End If
+
+    CalculateOplossingVolume = dblVolume
+
+End Function
+
 
 Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     
@@ -418,6 +436,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     Dim varFreq As Variant
     Dim dictFreq As Dictionary
     Dim intDoseQty As Integer
+    Dim dblOplVol As Double
     
     ModRange.SetRangeValue constGPK & strN, objMed.GPK
     ModRange.SetRangeValue constATC & strN, objMed.ATC
@@ -461,6 +480,13 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
         intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.DeelDose
         ModRange.SetRangeValue constDoseQty & strN, intDoseQty
+        
+        dblOplVol = CalculateOplossingVolume(intDoseQty * objMed.DeelDose, objMed.MaxConc)
+    
+        If Not dblOplVol = 0 Then
+            ModRange.SetRangeValue constSolVol & strN, dblOplVol
+        End If
+    
     End If
 
 End Sub

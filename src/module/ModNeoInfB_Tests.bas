@@ -98,22 +98,18 @@ Public Sub Test_NeoInfB_ContMed()
     Dim strTekst As String
     Dim blnPass As Boolean
     Dim blnShowMsg As Boolean
+    Dim blnDevelop As Boolean
     
     Dim dlgFile As FileDialog
     Dim varFile As Variant
     
     On Error GoTo Test_NeoInfB_ContMedError
     
-    ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
-    
-    ' ModPatient.PatientClearAll False, True
     
     Set dlgFile = Application.FileDialog(msoFileDialogFilePicker)
     With dlgFile
         .AllowMultiSelect = False
-'        .Filters.Add "Tests", "*.xlsx", 2
-'        .FilterIndex = 2
-        .InitialFileName = WbkAfspraken.Path & "\tests\"
+        .InitialFileName = WbkAfspraken.Path
         If .Show Then
             For Each varFile In .SelectedItems
                 If Not varFile = vbNullString Then Exit For
@@ -122,6 +118,13 @@ Public Sub Test_NeoInfB_ContMed()
         End If
     End With
     Set dlgFile = Nothing
+    
+    If CStr(varFile) = vbNullString Then Exit Sub
+    
+    ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
+    
+    blnDevelop = ModSetting.GetDevelopmentMode()
+    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
     
     Set wbkTests = Workbooks.Open(varFile)
     Set shtTests = wbkTests.Sheets("NICU_ContMed")
@@ -447,6 +450,8 @@ Public Sub Test_NeoInfB_ContMed()
     wbkTests.Close True
     Set shtTests = Nothing
     Set wbkTests = Nothing
+        
+    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
     
     Exit Sub
     
@@ -460,6 +465,9 @@ Test_NeoInfB_ContMedError:
     wbkTests.Close True
     Set shtTests = Nothing
     Set wbkTests = Nothing
+
+    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
+
 End Sub
 
 Private Function Equals(ByVal strVal1 As Variant, ByVal strVal2 As Variant)

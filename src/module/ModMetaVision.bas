@@ -26,6 +26,8 @@ Private Const constEMPIDb As String = "EMPI Database"
 Private Const constDepartment As String = "Afdeling"
 Private Const constDomain As String = "Domain Department"
 
+Private Const constTblMedOpdr As String = "Tbl_Glob_MedOpdr"
+
 Private Enum ParamIds
     Leeftijd = 7225
     Gewicht = 12677
@@ -611,3 +613,91 @@ Public Sub MetaVision_SyncLab()
     GetLeverNierFunctie strHospNum
     
 End Sub
+
+Public Sub MetaVision_GetMedicatieOpdrachten()
+
+    Dim strSql As String
+    Dim objRs As Recordset
+    Dim strServer As String
+    Dim strDatabase As String
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim strMO As String
+    Dim objRange As Range
+    
+    On Error GoTo GetMedicatieOpdrachtenError
+    
+    ModProgress.StartProgress "Medicatie opdrachten uit MetaVision ophalen"
+
+    strSql = strSql & "SELECT p.ParameterName MO" & vbNewLine
+    strSql = strSql & "FROM Parameters p " & vbNewLine
+    strSql = strSql & "INNER JOIN ParametersCategories pc ON pc.CategoryID = p.CategoryID" & vbNewLine
+    strSql = strSql & "WHERE pc.CategoryName = 'Opdr Medicatie Taken'" & vbNewLine
+    strSql = strSql & "ORDER BY p.ParameterName" & vbNewLine
+
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    Set objRs = objConn.Execute(strSql)
+    
+    intN = 1
+    intC = shtGlobTblMedOpdr.Range("A1").CurrentRegion.Rows.Count
+    intC = IIf(intC < 10, 900, intC)
+    If Not (objRs.BOF And objRs.EOF) Then
+        Do While Not objRs.EOF
+            strMO = CStr(objRs.Fields("MO"))
+            shtGlobTblMedOpdr.Cells(intN, 1).Value2 = strMO
+            intN = intN + 1
+            ModProgress.SetJobPercentage strMO, intC, intN
+            objRs.MoveNext
+        Loop
+    End If
+    
+    Set objRange = shtGlobTblMedOpdr.Range("A1").CurrentRegion
+    If ModRange.NameExists(constTblMedOpdr) Then WbkAfspraken.Names(constTblMedOpdr).Delete
+    objRange.Name = constTblMedOpdr
+    
+    ModProgress.FinishProgress
+    
+    objConn.Close
+    Set objConn = Nothing
+    
+    Exit Sub
+    
+GetMedicatieOpdrachtenError:
+
+    On Error Resume Next
+    
+    ModProgress.FinishProgress
+    
+    ModMessage.ShowMsgBoxError "Kan medicatie opdrachten niet ophalen"
+    
+    objConn.Close
+    Set objConn = Nothing
+
+End Sub
+
+Private Sub Test_RangeAdress()
+
+    Dim objRange As Range
+    
+    On Error GoTo GetMedicatieOpdrachtenError
+    
+    
+    Set objRange = shtGlobTblMedOpdr.Range("A1").CurrentRegion
+    If ModRange.NameExists(constTblMedOpdr) Then WbkAfspraken.Names(constTblMedOpdr).Delete
+    objRange.Name = constTblMedOpdr
+    
+    Exit Sub
+    
+GetMedicatieOpdrachtenError:
+
+    On Error Resume Next
+    
+    
+    ModMessage.ShowMsgBoxError "Kan medicatie opdrachten niet ophalen"
+    End Sub

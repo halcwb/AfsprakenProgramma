@@ -32,7 +32,6 @@ Private Const constMaxConcIndx As Integer = 22
 Private Const constOplVlstIndx As Integer = 23
 Private Const constMinTijdIndx As Integer = 24
 
-
 Public Sub Formularium_Initialize()
 
     Dim intN As Integer

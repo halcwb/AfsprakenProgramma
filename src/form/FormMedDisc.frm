@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   9900
+   ClientHeight    =   12150
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10050
@@ -16,7 +16,6 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private m_Med As ClassMedicatieDisc
-Private m_Formularium As ClassFormularium
 Private m_TherapieGroep As String
 Private m_SubGroep As String
 Private m_Etiket As String
@@ -55,8 +54,8 @@ Private Sub Validate(ByVal strValid As String)
         strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", strValid)
         strValid = IIf(cboRoute.Value = vbNullString, "Kies een route", strValid)
         
-        strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering grootte in", strValid)
-        strValid = IIf(txtDeelDose.Value = vbNullString, "Voer dosering eenheid in", strValid)
+        strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering eenheid in", strValid)
+        strValid = IIf(txtDeelDose.Value = vbNullString, "Voer een deelbaarheid in", strValid)
         strValid = IIf(cboSterkteEenheid.Value = vbNullString, "Voer sterkte eenheid in", strValid)
         strValid = IIf(txtSterkte.Value = vbNullString, "Voer sterkte in", strValid)
         
@@ -66,7 +65,6 @@ Private Sub Validate(ByVal strValid As String)
     End If
     
     lblValid.Caption = strValid
-    cmdCalc.Enabled = Not cboFreq.Value = vbNullString And Not txtNormDose.Value = vbNullString
     cmdOK.Enabled = strValid = vbNullString
 
 End Sub
@@ -105,10 +103,10 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
         lblGPK.Caption = vbNullString
         lblATC.Caption = vbNullString
         
-        FillCombo cboVorm, m_Formularium.GetVormen()
-        FillCombo cboSterkteEenheid, m_Formularium.GetSterkteEenheden()
-        FillCombo cboDosisEenheid, m_Formularium.GetDosisEenheden()
-        FillCombo cboRoute, m_Formularium.GetRoutes()
+        FillCombo cboVorm, Formularium_GetFormularium().GetVormen()
+        FillCombo cboSterkteEenheid, Formularium_GetFormularium().GetSterkteEenheden()
+        FillCombo cboDosisEenheid, Formularium_GetFormularium.GetDosisEenheden()
+        FillCombo cboRoute, Formularium_GetFormularium.GetRoutes()
         
         cboIndicatie.Clear
         
@@ -120,6 +118,7 @@ End Sub
 
 Private Sub cboFreq_Change()
 
+    CalculateDose
     Validate vbNullString
 
 End Sub
@@ -130,7 +129,7 @@ Private Sub cboGeneriek_Change()
 
     If cboGeneriek.ListIndex > -1 Then
         SetToGPKMode True
-        Set m_Med = m_Formularium.Item(cboGeneriek.ListIndex + 1)
+        Set m_Med = Formularium_GetFormularium.Item(cboGeneriek.ListIndex + 1)
         LoadMedicament
     Else
         SetToGPKMode False
@@ -157,7 +156,7 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
 
     blnLoad = True
     
-    Set m_Med = m_Formularium.GPK(strGPK)
+    Set m_Med = Formularium_GetFormularium.GPK(strGPK)
     
     If m_Med Is Nothing Then
         SetToGPKMode False
@@ -216,6 +215,9 @@ Private Sub LoadMedicament()
         SetTextBoxNumericValue txtMaxDose, .MaxDose
         SetTextBoxNumericValue txtAbsMax, .AbsDose
         
+        SetTextBoxNumericValue txtMaxConc, .MaxConc
+        SetTextBoxNumericValue txtTijd, .MinTijd
+        
     End With
 
 End Sub
@@ -248,7 +250,7 @@ End Sub
 
 Private Function GetDosisEenheden() As Collection
 
-    Set GetDosisEenheden = m_Formularium.GetDosisEenheden()
+    Set GetDosisEenheden = Formularium_GetFormularium.GetDosisEenheden()
 
 End Function
 
@@ -285,7 +287,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     txtSterkte.Text = vbNullString
     cboSterkteEenheid.Text = vbNullString
     
-    FillCombo cboRoute, m_Formularium.GetRoutes()
+    FillCombo cboRoute, Formularium_GetFormularium.GetRoutes()
     
     cboIndicatie.Clear
     cboIndicatie.Value = vbNullString
@@ -338,19 +340,24 @@ Private Sub cboRoute_Change()
 
 End Sub
 
-Private Sub cmdCalc_Click()
+Private Sub CalculateDose()
 
     Dim dblDose As Double
     Dim dblWght As Double
     Dim dblVal As Double
     Dim dblCalc As Double
     Dim dblFact As Double
+    Dim dblDeel As Double
     
     dblFact = m_Freq.Item(cboFreq.Text)
-    dblDose = IIf(txtNormDose.Value = vbNullString, 0, txtNormDose.Value)
+    dblDose = StringToDouble(txtNormDose.Value)
     dblWght = ModPatient.GetGewichtFromRange()
+    dblDeel = StringToDouble(txtDeelDose.Value)
     
-    If dblFact = 0 Or dblDose = 0 Or dblWght = 0 Then Exit Sub
+    If dblFact = 0 Or dblDose = 0 Or dblWght = 0 Or dblDeel = 0 Then
+        SetTextBoxNumericValue txtCalcDose, 0
+        Exit Sub
+    End If
     
     dblVal = dblDose * dblWght / dblFact
     dblVal = ModExcel.Excel_RoundBy(dblVal, txtDeelDose.Value)
@@ -446,6 +453,12 @@ Private Sub txtDeelDose_AfterUpdate()
 
 End Sub
 
+Private Sub txtDeelDose_Change()
+
+    CalculateDose
+
+End Sub
+
 Private Sub txtDeelDose_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
     Validate vbNullString
@@ -505,6 +518,7 @@ End Sub
 
 Private Sub txtNormDose_Change()
 
+    CalculateDose
     Validate vbNullString
 
 End Sub
@@ -580,11 +594,10 @@ Private Sub UserForm_Initialize()
     m_SubGroep = lblSubGroep.Caption
     m_Etiket = lblEtiket.Caption
     
-    Set m_Formularium = ModFormularium.Formularium_GetFormularium
-    intC = m_Formularium.MedicamentCount
+    intC = Formularium_GetFormularium.MedicamentCount
     
     For intN = 1 To intC
-        cboGeneriek.AddItem m_Formularium.Item(intN).Generiek
+        cboGeneriek.AddItem Formularium_GetFormularium.Item(intN).Generiek
     Next intN
     
     LoadFreq
@@ -605,7 +618,6 @@ Private Sub UserForm_Initialize()
     txtMaxDose.TabIndex = 12
     txtAbsMax.TabIndex = 13
     
-    cmdCalc.TabIndex = 14
     cmdFormularium.TabIndex = 15
     cmdOK.TabIndex = 16
     cmdClear.TabIndex = 17

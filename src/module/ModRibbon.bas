@@ -169,6 +169,12 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnOpenLogFiles"                              ' -> Log files openen
              ModAdmin.ModAdmin_OpenLogFiles
         
+        Case "btnRefreshMedOpdr"                            ' -> MetaVision Medicatie Opdrachten Verversen
+             ModMetaVision.MetaVision_GetMedicatieOpdrachten
+        
+        Case "btnRunTests"                                  ' -> Acceptatie Tests Draaien
+             ModNeoInfB_Tests.Test_NeoInfB_ContMed
+        
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
             
