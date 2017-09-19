@@ -12,3 +12,4 @@ Public Const CONST_PASSWORD As String = "hla"
 'Default error message
 Public Const CONST_DEFAULTERROR_MSG As String = "Er is een fout opgetreden. Neem contact op met uw functioneel beheerder."
 
+Public Const CONST_LOGPATTERN As String = "Afspraken2017.log"

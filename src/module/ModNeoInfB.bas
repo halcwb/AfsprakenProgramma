@@ -610,7 +610,7 @@ End Sub
 Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, ByVal dblQty As Double) As Double
 
     Dim dblMultiple As Double
-    Dim dblFactor As Double
+    Dim intFactor As Integer
     Dim dblOplQty As Double
     Dim dblMaxConc As Double
     Dim dblMinConc As Double
@@ -626,8 +626,10 @@ Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, By
         dblMinConc = GetMedicamentItemWithIndex(intMed, 9)
         dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
                 
-        dblFactor = IIf(dblQty < 1, 100, 10)
-        dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4) / dblFactor
+        dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4)
+        intFactor = IIf(dblQty / dblMultiple < 1, 100, 10)
+        intFactor = IIf(dblQty / dblMultiple > 10, 1, intFactor)
+        dblMultiple = dblMultiple / intFactor
         
         dblConc = dblQty / dblOplQty
         dblQty = IIf(dblConc < dblMinConc, dblMinConc * dblOplQty, dblQty)

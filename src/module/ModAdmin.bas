@@ -84,4 +84,15 @@ Public Sub SetUpNeoDataDir()
 
 End Sub
 
+Public Sub ModAdmin_OpenLogFiles()
+
+    Dim objForm As FormLog
+    
+    Set objForm = New FormLog
+    
+    objForm.Show
+    
+    Set objForm = Nothing
+
+End Sub
 

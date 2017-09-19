@@ -188,7 +188,24 @@ Public Sub SetLogDir(ByVal strDir As String)
 
 End Sub
 
-Public Function GetLogPath() As String
+Public Function GetLogFileDir() As String
+    
+    Dim strPath As String
+    Dim strDom As String
+    
+    strDom = Environ$("USERDOMAIN")
+    
+    If strDom = "DS" Then
+        strPath = constUMCU_LogPath
+    Else
+        strPath = WbkAfspraken.Path & "\" & GetLogDir()
+    End If
+    
+    GetLogFileDir = strPath
+
+End Function
+
+Public Function GetLogFilePath() As String
 
     Dim strPath As String
     Dim strDom As String
@@ -200,18 +217,18 @@ Public Function GetLogPath() As String
     strDom = Environ$("USERDOMAIN")
     
     If strDom = "DS" Then
-        strPath = constUMCU_LogPath & "\" & strUser & "_" & strCmpN & "_" & "Afspraken2017.log"
+        strPath = GetLogFileDir & "\" & strUser & "_" & strCmpN & "_" & CONST_LOGPATTERN
     Else
-        strPath = WbkAfspraken.Path & "\" & GetLogDir()
+        strPath = GetLogFileDir()
     End If
     
-    GetLogPath = strPath
+    GetLogFilePath = strPath
 
 End Function
 
-Private Sub Test_GetLogPath()
+Private Sub Test_GetLogFilePath()
 
-    MsgBox GetLogPath()
+    MsgBox GetLogFilePath()
 
 End Sub
 

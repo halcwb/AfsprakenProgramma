@@ -574,24 +574,17 @@ Private Sub UserForm_Initialize()
     Dim intC As Integer
     Dim strTitle As String
 
-    strTitle = "Formularium wordt geladen, een ogenblik geduld a.u.b. ..."
-    
-    ModProgress.StartProgress strTitle
-    
     m_LoadGPK = False
     
     m_TherapieGroep = lblTherapieGroep.Caption
     m_SubGroep = lblSubGroep.Caption
     m_Etiket = lblEtiket.Caption
     
-    Set m_Formularium = New ClassFormularium
-    m_Formularium.GetMedicamenten (True)
-    
+    Set m_Formularium = ModFormularium.Formularium_GetFormularium
     intC = m_Formularium.MedicamentCount
+    
     For intN = 1 To intC
         cboGeneriek.AddItem m_Formularium.Item(intN).Generiek
-        
-        ModProgress.SetJobPercentage "Generieken toevoegen", intC, intN
     Next intN
     
     LoadFreq
@@ -618,8 +611,6 @@ Private Sub UserForm_Initialize()
     cmdClear.TabIndex = 17
     cmdCancel.TabIndex = 18
        
-    ModProgress.FinishProgress
-
 End Sub
 
 Private Sub UserForm_QueryClose(intCancel As Integer, intMode As Integer)

@@ -49,14 +49,14 @@ Public Sub LogError(ByVal strError As String)
     blnLog = ModSetting.GetEnableLogging()
 
     EnableLogging
-    LogToFile ModSetting.GetLogPath(), Error, strError
+    LogToFile ModSetting.GetLogFilePath(), Error, strError
     If Not blnLog Then ModLog.DisableLogging
 
 End Sub
 
 Public Sub LogInfo(ByVal strInfo As String)
 
-    LogToFile ModSetting.GetLogPath(), Info, strInfo
+    LogToFile ModSetting.GetLogFilePath(), Info, strInfo
 
 End Sub
 
@@ -75,7 +75,7 @@ Public Sub LogActionStart(ByVal strAction As String, strParams() As Variant)
 
     strMsg = "Begin " + strAction + ": " + Join(strParams, ", ")
 
-    strFile = ModSetting.GetLogPath()
+    strFile = ModSetting.GetLogFilePath()
     LogToFile strFile, Info, strMsg
     
 End Sub
@@ -95,7 +95,7 @@ Public Sub LogActionEnd(ByVal strAction As String)
 
     strMsg = "End " + strAction
 
-    strFile = ModSetting.GetLogPath()
+    strFile = ModSetting.GetLogFilePath()
     LogToFile strFile, Info, strMsg
     
 End Sub
@@ -109,21 +109,62 @@ Public Sub LogToFile(ByVal strFile As String, ByVal enmLevel As LogLevel, ByVal 
     
 End Sub
 
-
 Public Sub ModLog_ViewLog()
 Attribute ModLog_ViewLog.VB_ProcData.VB_Invoke_Func = "l\n14"
-
+    
     Dim strPath As String
+
+    strPath = GetLogFilePath()
+    ModLog_OpenLog (strPath)
+
+End Sub
+
+Public Sub ModLog_OpenLog(ByVal strPath As String)
+
     Dim objShell As Object
     
     On Error Resume Next
     
-    strPath = GetLogPath()
     Set objShell = CreateObject("WScript.Shell")
     objShell.Run "notepad " & strPath
     
     Set objShell = Nothing
 
 End Sub
+
+Public Function ModLog_GetLogList() As Dictionary
+
+    Dim objDict As Dictionary
+    Dim strPattern As String
+    Dim strUser As String
+    Dim varLog As Variant
+    Dim arrLog() As String
+    Dim intN As Integer
+    Dim intC As Integer
+    
+    Set objDict = New Dictionary
+    
+    On Error GoTo LogListError
+    
+    strPattern = "*" & ModConst.CONST_LOGPATTERN
+    arrLog = ModFile.GetFilesByPattern(ModSetting.GetLogFileDir(), strPattern)
+    
+    intN = 0
+    intC = UBound(arrLog)
+    For intN = 0 To intC
+        strUser = Split(CStr(arrLog(intN)), "_")(0)
+        objDict.Add arrLog(intN), strUser
+    Next
+    
+    Set ModLog_GetLogList = objDict
+    
+    Exit Function
+
+LogListError:
+
+    Set ModLog_GetLogList = objDict
+
+End Function
+
 
 

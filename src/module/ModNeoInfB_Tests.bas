@@ -111,8 +111,8 @@ Public Sub Test_NeoInfB_ContMed()
     Set dlgFile = Application.FileDialog(msoFileDialogFilePicker)
     With dlgFile
         .AllowMultiSelect = False
-        .Filters.Add "Tests", "*.xlsx", 2
-        .FilterIndex = 2
+'        .Filters.Add "Tests", "*.xlsx", 2
+'        .FilterIndex = 2
         .InitialFileName = WbkAfspraken.Path & "\tests\"
         If .Show Then
             For Each varFile In .SelectedItems

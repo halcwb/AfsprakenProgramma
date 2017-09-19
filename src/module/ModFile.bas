@@ -108,6 +108,26 @@ Public Sub FileDelete(ByVal strFile As String)
 
 End Sub
 
+Public Function GetFilesByPattern(ByVal strDir As String, ByVal strPattern As String) As String()
+
+    Dim arrFiles() As String
+    Dim strFile As String
+    Dim intN As Integer
+    
+    strFile = Dir(strDir & "\" & strPattern)
+    intN = -1
+    
+    Do While Len(strFile) > 0
+        intN = intN + 1
+        ReDim Preserve arrFiles(intN)
+        arrFiles(intN) = strFile
+        strFile = Dir
+    Loop
+    
+    GetFilesByPattern = arrFiles
+
+End Function
+
 Public Function GetFiles(ByVal strDir As String) As String()
 
     Dim arrFiles() As String

@@ -166,6 +166,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnCreateNeoData"                             ' -> Neonatologie DataFiles
              ModAdmin.SetUpNeoDataDir
         
+        Case "btnOpenLogFiles"                              ' -> Log files openen
+             ModAdmin.ModAdmin_OpenLogFiles
+        
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
             
@@ -193,7 +196,7 @@ Public Sub GetVisiblePed(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     If blnIsPed Or blnIsDevelop Then
         blnVisible = True
     Else
-        blnVisible = False
+        blnVisible = True ' False
     End If
     
 End Sub
@@ -209,7 +212,7 @@ Public Sub GetVisibleNeo(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     If blnIsNeo Or blnIsDevelop Then
         blnVisible = True
     Else
-        blnVisible = False
+        blnVisible = True ' False
     End If
     
 End Sub

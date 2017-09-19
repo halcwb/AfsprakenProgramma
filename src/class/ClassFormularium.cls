@@ -171,7 +171,7 @@ Public Function GetMedicamenten(ByVal blnShowProgress As Boolean) As Collection
 
     Dim objC As ClassStringComparer
 
-    ModMedDisc.GetMedicamenten Me, blnShowProgress
+    Formularium_GetMedicamenten Me, blnShowProgress
     
     Set objC = New ClassStringComparer
     ModCollection.CollectionSort m_colVorm, objC
