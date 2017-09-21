@@ -25,7 +25,9 @@ Public Sub SetToDevelopmentMode()
     Dim blnDevelop As Boolean
     Dim objWindow As Window
     
-    blnDevelop = Not ModSetting.GetDevelopmentMode()
+    blnDevelop = Not ModSetting.IsDevelopmentMode()
+    
+    shtGlobGuiFront.Select
     
     If blnDevelop Then
         ModProgress.StartProgress "Zet in Ontwikkel Modus"
@@ -66,6 +68,12 @@ Public Sub CloseAfspraken()
         Exit Sub
     End If
     
+    If Application.Workbooks.Count > 1 Then
+        ModMessage.ShowMsgBoxExclam "Er zijn nog andere Excel bestanden geopend, sla deze eerst op anders worden deze niet opgeslagen!"
+        Exit Sub
+    End If
+    
+    shtGlobGuiFront.Select
     strAction = "ModApplication.CloseAfspraken"
     
     ModLog.LogActionStart strAction, strParams
@@ -152,15 +160,15 @@ Public Sub InitializeAfspraken()
     
     ModLog.LogActionStart strAction, strParams
     
+    shtGlobGuiFront.Select
+    DoEvents                           ' Make sure sheet is shown before proceding
+        
     SetCaptionAndHideBars              ' Setup Excel Application
     
     For Each objWind In WbkAfspraken.Windows
         SetWindowToOpenApp objWind
     Next
-    
-    shtGlobGuiFront.Select
-    DoEvents                           ' Make sure sheet is shown before proceding
-    
+        
     Application.Visible = True
     ModProgress.StartProgress "Start Afspraken Programma"
             
@@ -175,9 +183,7 @@ Public Sub InitializeAfspraken()
     ' Clean everything
     ModRange.SetRangeValue constVersie, vbNullString
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
-        
-    ModSheet.SelectPedOrNeoStartSheet False  ' Select the first GUI sheet
-    
+            
     strBed = ModMetaVision.MetaVision_GetCurrentBedName()
     If strBed <> vbNullString Then
         ModBed.SetBed strBed
@@ -185,6 +191,8 @@ Public Sub InitializeAfspraken()
     Else
         ModPatient.PatientClearAll False, True ' Default start with no patient
     End If
+    
+    ModSheet.SelectPedOrNeoStartSheet False  ' Select the first GUI sheet
     
     ModProgress.FinishProgress
     ModLog.LogActionEnd strAction
@@ -250,7 +258,7 @@ Private Sub SetCaptionAndHideBars()
 
     Dim blnIsDevelop As Boolean
     
-    blnIsDevelop = ModSetting.GetDevelopmentMode()
+    blnIsDevelop = ModSetting.IsDevelopmentMode()
     
     SetApplicationTitle
     

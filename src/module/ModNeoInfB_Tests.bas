@@ -123,7 +123,7 @@ Public Sub Test_NeoInfB_ContMed()
     
     ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
     
-    blnDevelop = ModSetting.GetDevelopmentMode()
+    blnDevelop = ModSetting.IsDevelopmentMode()
     If Not blnDevelop Then ModApplication.SetToDevelopmentMode
     
     Set wbkTests = Workbooks.Open(varFile)

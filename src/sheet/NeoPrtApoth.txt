@@ -27,7 +27,7 @@ $B$10: 	=""Product: ""&INDEX(Tbl_Neo_BerMedCont,A5,20)
 $B$13: 	=""Oplosmiddel: ""&IFERROR( VLOOKUP(J6,Tbl_Glob_ParEnt,14,FALSE),"""")
 $A$17: 	=IF(INDEX(Tbl_Neo_BerMedCont,A5,37)<1,1,INDEX(Tbl_Neo_BerMedCont,A5,37))
 $B$17: 	=""Aantal spuiten: ""&A17
-$B$19: 	= IF(INDEX(Tbl_Neo_BerMedCont,A5,23)="""","""",IF(AND(N5=0,O5<10,D5<>""insuline""),NeoTblMedIV!A30&CHAR(10)&CHAR(10)& INDEX(Tbl_Neo_BerMedCont,A5,23),INDEX(Tbl_Neo_BerMedCont,A5,23)))
+$B$19: 	= IF(INDEX(Tbl_Neo_BerMedCont,A5,23)="""","""",IF(AND(N5=0,O5<10,D5<>""insuline""),NeoTblMedIV!B30&CHAR(10)&CHAR(10)& INDEX(Tbl_Neo_BerMedCont,A5,23),INDEX(Tbl_Neo_BerMedCont,A5,23)))
 $A$45: 	=IF(E44<=$A$17,TODAY(),"""")
 $C$45: 	=IF(E44<=$A$17,$O$1,"""")
 $G$45: 	=IF(K44<=$A$17,TODAY(),"""")

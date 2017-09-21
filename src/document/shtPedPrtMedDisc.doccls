@@ -11,7 +11,7 @@ Option Explicit
 
 Private Sub Worksheet_Activate()
     
-    If ModSetting.GetDevelopmentMode() Then
+    If ModSetting.IsDevelopmentMode() Then
         ModApplication.SetWindowToCloseApp WbkAfspraken.Windows(1)
     Else
         ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)

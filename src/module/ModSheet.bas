@@ -245,7 +245,7 @@ Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnA
     Else
         shtSheet.PrintOut Copies:=intNum
     End If
-    If Not ModSetting.GetDevelopmentMode Then shtSheet.Protect ModConst.CONST_PASSWORD
+    If Not ModSetting.IsDevelopmentMode Then shtSheet.Protect ModConst.CONST_PASSWORD
     
 End Sub
 

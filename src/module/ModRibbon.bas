@@ -152,7 +152,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnExportSource"                              ' -> Export To Source
             ModUtils.ExportForSourceControl
         
-        'grpAdmin                                           ' -- ADMISTRATION --
+        'grpFB                                              ' -- ADMISTRATION FUNCTIONEEL BEHEER --
         
         Case "btnOpenSettings"                              ' -> Instellingen
              ModMessage.ShowMsgBoxExclam "Nog niet geimplementeerd"
@@ -172,8 +172,19 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnRefreshMedOpdr"                            ' -> MetaVision Medicatie Opdrachten Verversen
              ModMetaVision.MetaVision_GetMedicatieOpdrachten
         
+        'grpFB                                              ' -- ADMISTRATION APOTHEEK --
+        
         Case "btnRunTests"                                  ' -> Acceptatie Tests Draaien
              ModNeoInfB_Tests.Test_NeoInfB_ContMed
+        
+        Case "btnNeoMedCont"                                ' -> Beheer Continue Medicatie Neo
+             ModAdmin.Admin_TblNeoMedCont
+        
+        Case "btnPedMedCont"                                ' -> Beheer Continue Medicatie Ped
+             ModAdmin.Admin_TblPedMedCont
+        
+        Case "btnParent"                                    ' -> Beheer Parenterale Vloeistoffen
+             ModAdmin.Admin_TblGlobParent
         
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
@@ -231,7 +242,7 @@ End Sub
 
 Public Sub GetVisibleAdmin(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
-    blnVisible = True ' ModSetting.IsDevelopmentMode()
+    blnVisible = ModSetting.IsDevelopmentDir() Or ModSetting.IsTrainingDir()
     
 End Sub
 

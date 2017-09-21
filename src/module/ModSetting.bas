@@ -63,9 +63,9 @@ SetSettingError:
     
 End Sub
 
-Public Function GetDevelopmentMode() As Boolean
+Public Function IsDevelopmentMode() As Boolean
 
-    GetDevelopmentMode = CBool(GetSetting(constDevMode))
+    IsDevelopmentMode = CBool(GetSetting(constDevMode))
 
 End Function
 
@@ -78,6 +78,18 @@ Public Function IsDevelopmentDir() As Boolean
     blnDevDir = ModString.ContainsCaseInsensitive(strActDir, GetDevelopmentDir)
     
     IsDevelopmentDir = blnDevDir
+
+End Function
+
+Public Function IsTrainingDir() As Boolean
+
+    Dim blnTrain As Boolean
+    Dim strActDir As String
+    
+    strActDir = WbkAfspraken.Path
+    blnTrain = ModString.ContainsCaseInsensitive(strActDir, "Train")
+    
+    IsTrainingDir = blnTrain
 
 End Function
 

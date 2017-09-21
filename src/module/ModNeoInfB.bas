@@ -627,8 +627,9 @@ Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, By
         dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
                 
         dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4)
-        intFactor = IIf(dblQty / dblMultiple < 1, 100, 10)
-        intFactor = IIf(dblQty / dblMultiple > 10, 1, intFactor)
+        intFactor = 1
+        intFactor = IIf(dblQty / dblMultiple < 1, 10, intFactor)
+        intFactor = IIf(dblQty / dblMultiple < 0.1, 100, intFactor)
         dblMultiple = dblMultiple / intFactor
         
         dblConc = dblQty / dblOplQty
