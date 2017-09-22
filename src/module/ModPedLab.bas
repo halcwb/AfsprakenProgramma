@@ -18,18 +18,12 @@ Public Enum PedLabRondes
     PedLabRondeDag1 = 6
 End Enum
 
-Private Function NToString(ByVal intN As Integer) As String
-    
-    NToString = IIf(intN < 10, "0" & intN, intN)
-
-End Function
-
 Private Sub SetLabRonde(ByVal strRonde As String, ByVal intC As Integer, ByVal blnValue As Boolean)
 
     Dim intN As Integer
     
     For intN = 1 To intC
-        ModRange.SetRangeValue strRonde & "_" & NToString(intN), blnValue
+        ModRange.SetRangeValue strRonde & "_" & IntNToStrN(intN), blnValue
     Next
 
 End Sub

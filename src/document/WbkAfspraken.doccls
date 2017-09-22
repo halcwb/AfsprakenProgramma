@@ -9,11 +9,15 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
+Public blnCancelAfsprakenClose As Boolean
+
 Private Sub Workbook_BeforeClose(ByRef blnCancel As Boolean)
     
+    blnCancelAfsprakenClose = False
     Me.Saved = True ' DisplayAlerts = False doesn' prevent save dialog
                     ' http://www.microsofttraining.net/post-34753-applicationdisplayalerts--false.html
     ModApplication.CloseAfspraken
+    blnCancel = blnCancelAfsprakenClose
 
 End Sub
 

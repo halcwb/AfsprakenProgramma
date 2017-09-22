@@ -4,7 +4,7 @@ Option Explicit
 Private blnDontClose As Boolean
 Private blnCloseHaseRun As Boolean
 
-Private Const constVersie As String = "Var_Glob_Versie"
+Private Const constVersie As String = "Var_Glob_AppVersie"
 Private Const constDate As String = "Var_AfspraakDatum"
 
 Private Const constBarDel As String = " | "
@@ -19,6 +19,12 @@ Public Sub SetDontClose(ByVal blnClose As Boolean)
     blnDontClose = blnClose
 
 End Sub
+
+Public Function Application_GetVersion() As String
+
+    Application_GetVersion = ModRange.GetRangeValue(constVersie, vbNullString)
+
+End Function
 
 Public Sub SetToDevelopmentMode()
 
@@ -70,6 +76,7 @@ Public Sub CloseAfspraken()
     
     If Application.Workbooks.Count > 1 Then
         ModMessage.ShowMsgBoxExclam "Er zijn nog andere Excel bestanden geopend, sla deze eerst op anders worden deze niet opgeslagen!"
+        WbkAfspraken.blnCancelAfsprakenClose = True
         Exit Sub
     End If
     
@@ -106,6 +113,7 @@ Public Sub CloseAfspraken()
     If Not blnDontClose Then
         Application.StatusBar = vbNullString
         Application.DisplayAlerts = False
+        WbkAfspraken.blnCancelAfsprakenClose = False
         Application.Quit
     End If
 

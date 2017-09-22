@@ -32,7 +32,7 @@ Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal
     frmPickList.LoadMedicamenten colTbl
     
     For intN = 1 To intMax
-        strN = IIf(intMax > 9, IIf(intN < 10, "0" & intN, intN), intN)
+        strN = IIf(intMax > 9, IntNToStrN(intN), intN)
         intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
         If intKeuze > 1 Then frmPickList.SelectMedicament intKeuze
     Next intN
@@ -42,7 +42,7 @@ Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal
     If frmPickList.GetAction = vbNullString Then
     
         For intN = 1 To intMax                 ' First remove nonselected items
-            strN = IIf(intN < 10, "0" & intN, intN)
+            strN = IntNToStrN(intN)
             intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
             If intKeuze > 1 Then
                 If frmPickList.IsMedicamentSelected(intKeuze) Then
@@ -55,7 +55,7 @@ Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal
         
         Do While frmPickList.HasSelectedMedicamenten()  ' Then add selected items
             For intN = 1 To intMax
-                strN = IIf(intN < 10, "0" & intN, intN)
+                strN = IntNToStrN(intN)
                 intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
                 If intKeuze <= 1 Then
                     intKeuze = frmPickList.GetFirstSelectedMedicament(True)
@@ -91,7 +91,7 @@ Private Sub Clear(ByVal intN As Integer)
     
     strN = IIf(intN < 10, "0" + intN, intN)
     
-    strN = IIf(intN < 10, "0" & intN, intN)
+    strN = IntNToStrN(intN)
     strMedicament = constMedIVKeuze & strN
     strMedSterkte = constMedIVSterkte & strN
     strOplHoev = constMedIVOplVol & strN
@@ -245,7 +245,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
     
     On Error GoTo SetToStandardError
 
-    strN = IIf(intN < 10, "0" & intN, intN)
+    strN = IntNToStrN(intN)
     strMedicament = constMedIVKeuze & strN
     strMedSterkte = constMedIVSterkte & strN
     strOplHoev = constMedIVOplVol & strN

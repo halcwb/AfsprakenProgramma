@@ -15,7 +15,7 @@ End Sub
 
 Private Sub TestPrintApotheekBrief()
 
-    PrintBriefNo 1, True
+    PrintBriefNo 1, False
 
 End Sub
 
@@ -26,7 +26,7 @@ Public Sub PrintApotheekWerkBrief()
     Dim strNo As String
     Dim blnAsk As Boolean
     
-    blnAsk = True
+    blnAsk = False
     For intNo = 1 To 10
     
         strNo = IIf(intNo < 10, "0" & intNo, intNo)
@@ -44,6 +44,6 @@ End Sub
 Public Sub PrintNeoWerkBrief()
 
     shtNeoPrtWerkbr.Unprotect ModConst.CONST_PASSWORD
-    PrintSheet shtNeoPrtWerkbr, 1, True
+    PrintSheet shtNeoPrtWerkbr, 1, False
 
 End Sub

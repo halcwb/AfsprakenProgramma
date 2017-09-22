@@ -34,7 +34,7 @@ End Sub
 
 Private Function IsAbsMaxInvalid() As Boolean
     
-    IsAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.GetGewichtFromRange() > 50
+    IsAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.GetGewichtFromRange() > 50 And txtNormDose.Value = vbNullString And txtMaxDose.Value = vbNullString
 
 End Function
 
@@ -48,8 +48,8 @@ Private Sub Validate(ByVal strValid As String)
     
     If strValid = vbNullString Then
     
-        strValid = IIf(IsDoseControlInValid And Not IsAbsMaxInvalid, "Voer of een norm dosering in en/of een max (en evt. min en abs max) dosering", strValid)
-        strValid = IIf(IsAbsMaxInvalid, "Gewicht boven de 50 kg, voer een absolute maximum dosering in", strValid)
+        strValid = IIf(IsDoseControlInValid, "Voer of een norm dosering in en/of een max (en evt. min en abs max) dosering", strValid)
+        strValid = IIf(IsAbsMaxInvalid, "Gewicht boven de 50 kg, voer een absolute maximum dosering in (of een norm dosering of max dosering)", strValid)
     
         strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", strValid)
         strValid = IIf(cboRoute.Value = vbNullString, "Kies een route", strValid)
@@ -438,6 +438,12 @@ End Sub
 Private Sub txtAbsMax_AfterUpdate()
     
     TextBoxStringNumericValue txtAbsMax
+
+End Sub
+
+Private Sub txtAbsMax_Change()
+
+    Validate vbNullString
 
 End Sub
 

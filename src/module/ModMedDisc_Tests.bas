@@ -80,7 +80,7 @@ Public Sub Test_MedDisc()
         intN = IIf(intN > constMedCount, 1, intN)
         intTime = IIf(intTime > constMedTime, 1, intTime)
         
-        strN = IIf(intN < 10, "0" & intN, intN)
+        strN = IntNToStrN(intN)
         
         Set colRoute = objMed.GetRouteList()
         If colRoute.Count = 1 Then
@@ -141,7 +141,7 @@ Private Sub WriteTestResults(shtTests As Worksheet, ByVal intC As Integer, ByVal
     Dim intT As Integer
     Dim intB As Integer
     
-    strN = IIf(intN < 10, "0" & intN, intN)
+    strN = IntNToStrN(intN)
     intT = intC + 2
     intB = intN + 1
     

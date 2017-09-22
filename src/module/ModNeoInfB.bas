@@ -382,11 +382,6 @@ Private Function CalculateMedicamentQtyByDose(ByVal strN As String, ByVal intMed
     ' Medicatie doxapram puur geen oplosvolume
     If ModString.ContainsCaseInsensitive(strMed, "doxapram") Then
         dblQty = dblMaxConc * dblOplQty
-        
-        intPrec = IIf(dblQty >= 0.1, 2, 1)
-        dblQty = StringToDouble(FixPrecision(dblQty, intPrec))
-    ' dblDose = dblStand * dblFactor * (dblQty / dblOplQty) / dblWeight
-    ' dblQty = dblDose * dblOplQty * dblWeight / (dblStand * dblFactor)
     ElseIf dblStand * dblFactor > 0 Then
         dblQty = dblDose * dblOplQty * dblWeight / (dblStand * dblFactor)
         dblQty = CorrectMedQty(strN, intMed, dblQty)
@@ -398,59 +393,50 @@ Private Function CalculateMedicamentQtyByDose(ByVal strN As String, ByVal intMed
 
 End Function
 
-Private Sub ChangeMedContIV(ByVal intRegel As Integer, ByVal blnRemove As Boolean)
+Private Sub ChangeMedContIV(ByVal intN As Integer, ByVal blnRemove As Boolean)
 
-    Dim strMedVar As String
-    Dim varMedIndex As Variant
+    Dim intMedIndx As Integer
     Dim strMedName As String
-    Dim strMedSterkte As String
-    Dim strOplHoev As String
-    Dim strOplossing As String
-    Dim strStand As String
-    Dim strExtra As String
-    Dim strRegel As String
+    Dim strN As String
       
     Dim dblOplQty As Double
+    Dim dblMedQty As Double
     Dim dblStand As Double
     
     Dim objTblMed As Range
     
     Set objTblMed = ModRange.GetRange(constTblMedIV)
-    strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
+    strN = IntNToStrN(intN)
     
-    strMedVar = constMedKeuze & strRegel
-    strMedSterkte = constMedSterkte & strRegel
-    strOplHoev = constOplHoev & strRegel
+    intMedIndx = IIf(blnRemove, 1, ModRange.GetRangeValue(constMedKeuze & strN, vbNullString))
     
-    strOplossing = constOplossing & strRegel
-    strStand = constStand & strRegel
-    strExtra = constExtra & IIf(intRegel + 1 < 10, "0" & (intRegel + 1), intRegel + 1)
-
-    varMedIndex = IIf(blnRemove, 1, ModRange.GetRangeValue(strMedVar, vbNullString))
+    dblOplQty = GetMedicamentItemWithIndex(intMedIndx, constDefHoevIndex)
+    dblStand = GetMedicamentItemWithIndex(intMedIndx, constDefStandIndex) * 10
     
-    If blnRemove Then ModRange.SetRangeValue strMedVar, 1
+    If blnRemove Then ModRange.SetRangeValue constMedKeuze & strN, 1
     
     If blnRemove Then
-        ModRange.SetRangeValue strMedSterkte, 0
+        ModRange.SetRangeValue constMedSterkte & strN, 0
     Else
-        strMedName = ModMedicatie.GetNeoMedContIVName(varMedIndex)
+        strMedName = ModMedicatie.GetNeoMedContIVName(intMedIndx)
         If IsEpiduraal(strMedName) Then
-            ModRange.SetRangeValue strMedSterkte, ModMedicatie.Medicatie_CalcEpiQty(ModPatient.GetGewichtFromRange()) * 10
+            dblMedQty = ModMedicatie.Medicatie_CalcEpiQty(ModPatient.GetGewichtFromRange())
+        ElseIf strMedName = "doxapram" Then
+            dblMedQty = CalculateMedicamentQtyByDose(strN, intMedIndx, 0)
         Else
-            ModRange.SetRangeValue strMedSterkte, 0
+            dblMedQty = 0
         End If
     End If
     
-    dblOplQty = GetMedicamentItemWithIndex(varMedIndex, constDefHoevIndex)
-    dblStand = GetMedicamentItemWithIndex(varMedIndex, constDefStandIndex) * 10
+    ModRange.SetRangeValue constMedSterkte & strN, dblMedQty * 10
     
-    ModRange.SetRangeValue strOplHoev, IIf(blnRemove, 0, dblOplQty)
-    ModRange.SetRangeValue strStand, IIf(blnRemove, 0, dblStand)
-    ModRange.SetRangeValue strExtra, False
+    ModRange.SetRangeValue constOplHoev & strN, IIf(blnRemove, 0, dblOplQty)
+    ModRange.SetRangeValue constStand & strN, IIf(blnRemove, 0, dblStand)
+    ModRange.SetRangeValue constExtra & strN, False
     
-    ModRange.SetRangeValue strOplossing, Application.VLookup(objTblMed.Cells(varMedIndex, 1), objTblMed, constAdvOplIndex, False)
-    If Not IsNumeric(ModRange.GetRangeValue(strOplossing, vbNullString)) Then
-        ModRange.SetRangeValue strOplossing, 1
+    ModRange.SetRangeValue constOplossing & strN, Application.VLookup(objTblMed.Cells(intMedIndx, 1), objTblMed, constAdvOplIndex, False)
+    If Not IsNumeric(ModRange.GetRangeValue(constOplossing & strN, vbNullString)) Then
+        ModRange.SetRangeValue constOplossing & strN, 1
     End If
     
 End Sub
@@ -628,7 +614,7 @@ Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, By
                 
         dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4)
         intFactor = 1
-        intFactor = IIf(dblQty / dblMultiple < 1, 10, intFactor)
+        intFactor = IIf(dblQty / dblMultiple < 10, 10, intFactor)
         intFactor = IIf(dblQty / dblMultiple < 0.1, 100, intFactor)
         dblMultiple = dblMultiple / intFactor
         
@@ -662,24 +648,19 @@ End Function
 Private Sub MedSterkte(ByVal intN As Integer)
 
     Dim frmInvoer As FormInvoerNumeriek
-    Dim strSterkte As String
-    Dim strN As String
-    Dim intMedKeuze As Integer
+    Dim intMed As Integer
     Dim strMed As String
     Dim dblQty As Double
     Dim strUnit As String
     
     Dim objTblMed As Range
     
-    strN = IIf(intN < 10, "0" & intN, intN)
-    intMedKeuze = ModRange.GetRangeValue(constMedKeuze & strN, 1)
-    strMed = GetMedicamentItemWithIndex(intMedKeuze, 1)
+    intMed = ModRange.GetRangeValue(constMedKeuze & IntNToStrN(intN), 1)
     
-    If intMedKeuze <= 1 Then Exit Sub
+    If intMed <= 1 Then Exit Sub
     
     Set objTblMed = Range(constTblMedIV)
-    strUnit = Application.VLookup(objTblMed.Cells(intMedKeuze, 1), objTblMed, constUnitIndex, False)
-    strSterkte = constMedSterkte & strN
+    strUnit = Application.VLookup(objTblMed.Cells(intMed, 1), objTblMed, constUnitIndex, False)
     
     Set frmInvoer = New FormInvoerNumeriek
     
@@ -687,13 +668,12 @@ Private Sub MedSterkte(ByVal intN As Integer)
         .Caption = "Medicament " & intN
         .lblParameter = "Sterkte"
         .lblEenheid = strUnit
-        .txtWaarde = ModRange.GetRangeValue(strSterkte, 0) / 10
+        .txtWaarde = ModRange.GetRangeValue(constMedSterkte & IntNToStrN(intN), 0) / 10
         .Show
         
         If IsNumeric(.txtWaarde) Then
             dblQty = ModString.StringToDouble(.txtWaarde)
-            If Not IsEpiduraal(strMed) Then dblQty = CorrectMedQty(strN, intMedKeuze, dblQty)
-            ModRange.SetRangeValue strSterkte, dblQty * 10
+            SetMedSterkteNeoInfB intN, dblQty
         End If
         
     End With
@@ -701,6 +681,21 @@ Private Sub MedSterkte(ByVal intN As Integer)
     Set frmInvoer = Nothing
 
 End Sub
+
+Public Function SetMedSterkteNeoInfB(intN As Integer, dblQty As Double) As Boolean
+
+    Dim strN As String
+    Dim intMed As Integer
+    Dim strMed As String
+    
+    strN = IntNToStrN(intN)
+    intMed = ModRange.GetRangeValue(constMedKeuze & strN, 1)
+    strMed = GetMedicamentItemWithIndex(intMed, 1)
+
+    If Not IsEpiduraal(strMed) Then dblQty = CorrectMedQty(strN, intMed, dblQty)
+    SetMedSterkteNeoInfB = ModRange.SetRangeValue(constMedSterkte & strN, dblQty * 10)
+    
+End Function
 
 Public Sub NeoInfB_MedConc_01()
 
@@ -1068,7 +1063,7 @@ Private Sub ShowMedIVPickList(ByVal strTbl As String, ByVal strRange As String, 
     frmPickList.LoadMedicamenten colTbl
     
     For intN = 1 To intMax
-        strN = IIf(intMax > 9, IIf(intN < 10, "0" & intN, intN), intN)
+        strN = IIf(intMax > 9, IntNToStrN(intN), intN)
         intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
         If intKeuze > 1 Then frmPickList.SelectMedicament intKeuze
     Next intN
@@ -1078,7 +1073,7 @@ Private Sub ShowMedIVPickList(ByVal strTbl As String, ByVal strRange As String, 
     If frmPickList.GetAction = vbNullString Then
     
         For intN = 1 To intMax                 ' First remove nonselected items
-            strN = IIf(intN < 10, "0" & intN, intN)
+            strN = IntNToStrN(intN)
             intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
             If intKeuze > 1 Then
                 If frmPickList.IsMedicamentSelected(intKeuze) Then
@@ -1091,7 +1086,7 @@ Private Sub ShowMedIVPickList(ByVal strTbl As String, ByVal strRange As String, 
         
         Do While frmPickList.HasSelectedMedicamenten()  ' Then add selected items
             For intN = 1 To intMax
-                strN = IIf(intN < 10, "0" & intN, intN)
+                strN = IntNToStrN(intN)
                 intKeuze = ModRange.GetRangeValue(strRange & strN, 1)
                 If intKeuze <= 1 Then
                     intKeuze = frmPickList.GetFirstSelectedMedicament(True)

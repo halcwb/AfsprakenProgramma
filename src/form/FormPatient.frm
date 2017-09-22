@@ -211,8 +211,8 @@ Private Sub cmdOK_Click()
         m_Pat.SetAdmissionAndBirthDate dtmAdm, dtmBd
     End If
     
-    m_Pat.PatientId = txtPatNum.Value
-    m_Pat.AchterNaam = txtLastName.Value
+    m_Pat.PatientId = CStr(txtPatNum.Text)
+    m_Pat.AchterNaam = txtLastName.Text
     m_Pat.VoorNaam = txtFirstName.Text
     m_Pat.Gewicht = ModString.StringToDouble(txtWeight.Value)
     m_Pat.Lengte = ModString.StringToDouble(txtLength.Value)

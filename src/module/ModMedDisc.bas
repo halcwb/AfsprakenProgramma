@@ -56,7 +56,7 @@ Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal i
     frmPickList.LoadMedicamenten colTbl
     
     For intN = 1 To intMax
-        strN = IIf(intMax > 9, IIf(intN < 10, "0" & intN, intN), intN)
+        strN = IIf(intMax > 9, IntNToStrN(intN), intN)
         strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
         If Not strKeuze = vbNullString Then frmPickList.SelectMedicament strKeuze
     Next intN
@@ -66,7 +66,7 @@ Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal i
     If frmPickList.GetAction = vbNullString Then
     
         For intN = 1 To intMax                   ' First remove nonselected items
-            strN = IIf(intN < 10, "0" & intN, intN)
+            strN = IntNToStrN(intN)
             strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
             If Not strKeuze = vbNullString Then
                 If frmPickList.IsMedicamentSelected(strKeuze) Then
@@ -79,7 +79,7 @@ Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal i
         
         Do While frmPickList.HasSelectedMedicamenten() ' Then add selected items
             For intN = 1 To intMax
-                strN = IIf(intN < 10, "0" & intN, intN)
+                strN = IntNToStrN(intN)
                 strKeuze = ModRange.GetRangeValue(strRange & strN, 1)
                 If strKeuze = vbNullString Then
                     strKeuze = frmPickList.GetFirstSelectedMedicament(True)
@@ -110,7 +110,7 @@ Private Sub Clear(ByVal intN As Integer)
 
     Dim strN As String
     
-    strN = IIf(intN < 10, "0" & intN, intN)
+    strN = IntNToStrN(intN)
 
     ModRange.SetRangeValue constGPK & strN, 0
     ModRange.SetRangeValue constATC & strN, vbNullString
@@ -362,7 +362,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
     Dim strN As String
     Dim blnLoad As Boolean
       
-    strN = IIf(intN < 10, "0" & intN, intN)
+    strN = IntNToStrN(intN)
     
     Set objForm = New FormMedDisc
     With objForm
@@ -679,7 +679,7 @@ Private Sub OpmMedDisc(ByVal intN As Integer)
     Set frmOpmerking = New FormOpmerking
     
     strRange = constText
-    strRange = constText & IIf(intN < 10, "0" & intN, intN)
+    strRange = constText & IntNToStrN(intN)
 
     frmOpmerking.txtOpmerking.Text = ModRange.GetRangeValue(strRange, vbNullString)
     frmOpmerking.Show

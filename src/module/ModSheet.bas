@@ -238,6 +238,8 @@ Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnA
     
     If blnAsk Then
         m_blnPrev = ModMessage.ShowMsgBoxYesNo("Eerst preview zien?") = vbYes
+    Else
+        m_blnPrev = True
     End If
     
     If m_blnPrev Then
