@@ -356,6 +356,9 @@ Private Sub FillCollection(objColl As Collection, ByVal strItems As String)
         Next
         
         ModCollection.CollectionSort objColl, objC
+        If objColl.Count > 0 Then
+            If objColl.Item(1) = vbNullString Then objColl.Remove (1)
+        End If
 
     End If
 

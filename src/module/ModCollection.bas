@@ -137,3 +137,13 @@ Public Sub CollectionAddDistinctStringNotEmpty(objColl As Collection, ByVal varV
     End If
 
 End Sub
+
+Public Function ConcatenateCollection(objColl As Collection, ByVal strDel As String) As String
+
+    If objColl.Count > 0 Then
+        ConcatenateCollection = Join(CollectionToArray(objColl), strDel)
+    Else
+        ConcatenateCollection = vbNullString
+    End If
+
+End Function

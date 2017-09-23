@@ -107,7 +107,6 @@ Public Sub Test_NeoInfB_ContMed()
     
     On Error GoTo Test_NeoInfB_ContMedError
     
-    
     Set dlgFile = Application.FileDialog(msoFileDialogFilePicker)
     With dlgFile
         .AllowMultiSelect = False

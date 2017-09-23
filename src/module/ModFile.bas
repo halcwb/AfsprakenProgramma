@@ -170,3 +170,26 @@ Public Sub DeleteAllFilesInDir(ByVal strDir As String)
     End If
 
 End Sub
+
+Public Function File_GetTestFile() As String
+
+    Dim dlgFile As FileDialog
+    Dim varFile As Variant
+
+    Set dlgFile = Application.FileDialog(msoFileDialogFilePicker)
+    With dlgFile
+        .AllowMultiSelect = False
+        .InitialFileName = IIf(ModSetting.IsDevelopmentDir, WbkAfspraken.Path & "\tests\", WbkAfspraken.Path & "\..\Tests\")
+        If .Show Then
+            For Each varFile In .SelectedItems
+                If Not varFile = vbNullString Then Exit For
+                
+            Next
+        End If
+    End With
+    Set dlgFile = Nothing
+    
+    File_GetTestFile = IIf(IsEmpty(varFile), vbNullString, CStr(varFile))
+
+
+End Function

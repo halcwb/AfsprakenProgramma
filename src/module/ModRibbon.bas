@@ -174,9 +174,6 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         'grpFB                                              ' -- ADMISTRATION APOTHEEK --
         
-        Case "btnRunTests"                                  ' -> Acceptatie Tests Draaien
-             ModNeoInfB_Tests.Test_NeoInfB_ContMed
-        
         Case "btnNeoMedCont"                                ' -> Beheer Continue Medicatie Neo
              ModAdmin.Admin_TblNeoMedCont
         
@@ -186,6 +183,14 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnParent"                                    ' -> Beheer Parenterale Vloeistoffen
              ModAdmin.Admin_TblGlobParent
         
+        'grpFB                                              ' -- ACCEPTATIE TESTS --
+        
+        Case "btnNeoMedContTests"                           ' -> Neo Continue Medicatie
+             ModNeoInfB_Tests.Test_NeoInfB_ContMed
+        
+        Case "btnNeoMedPrintTests"                          ' -> Neo Werkbrief en Apotheek prints
+             ModNeoInfB_Tests.Test_NeoInfB_Print
+                
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
             
