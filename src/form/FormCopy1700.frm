@@ -22,6 +22,24 @@ Private Const constContIVCount As Integer = 16
 Private Const constTPN As String = "Txt_Neo_InfB_TPN_"
 Private Const constTPNCount As Integer = 13
 
+Private Sub chkContinueMedicatie_Change()
+
+    ContMedSelected chkContinueMedicatie.Value
+
+End Sub
+
+Private Sub chkTPN_Change()
+
+    TPNSelected chkTPN.Value
+
+End Sub
+
+Private Sub chkVoeding_Change()
+
+    VoedingSelected chkVoeding.Value
+
+End Sub
+
 Private Sub cmdCancel_Click()
     
     Me.Hide
@@ -30,24 +48,24 @@ End Sub
 
 Private Sub cmdOK_Click()
     
-    ModNeoInfB.NeoInfB_Copy1700ToAct Me.optAlles.Value, Me.chkVoeding.Value, Me.chkContinueMedicatie.Value, Me.chkTPN.Value
+    lblAction.Caption = "OK"
     Me.Hide
 
 End Sub
 
 Private Sub optAlles_Click()
     
-    frmVoeding.Enabled = False
-    frmContMed.Enabled = False
-    frmTPN.Enabled = False
+    chkContinueMedicatie.Value = True
+    chkTPN.Value = True
+    chkVoeding.Value = True
 
 End Sub
 
 Private Sub optPerBlok_Click()
     
-    frmVoeding.Enabled = True
-    frmContMed.Enabled = True
-    frmTPN.Enabled = True
+    chkContinueMedicatie.Value = False
+    chkTPN.Value = False
+    chkVoeding.Value = False
 
 End Sub
 
@@ -88,6 +106,9 @@ Private Sub RemoveDoubles(ByVal strList As String)
 End Sub
 
 Private Sub AddItemToList(ByVal strList As String, ByVal strItem As String, ByVal intN As Integer, ByVal bln1700 As Boolean)
+
+    ' Do not add vocht intake as item
+    If strItem = constTPN And intN = 2 Then Exit Sub
 
     strList = IIf(bln1700, Replace(strList, "Act", "1700"), strList)
     strItem = IIf(intN < 10, strItem & "0" & intN, strItem & intN)
@@ -136,6 +157,42 @@ Private Sub UserForm_Activate()
 
 End Sub
 
+Private Sub VoedingSelected(ByVal blnSelect As Boolean)
+
+    If blnSelect Then
+        lstActVoed.BackColor = &H80000005
+        lst1700Voed.BackColor = &H80000005
+    Else
+        lstActVoed.BackColor = &H8000000B
+        lst1700Voed.BackColor = &H8000000B
+    End If
+
+End Sub
+
+Private Sub TPNSelected(ByVal blnSelect As Boolean)
+
+    If blnSelect Then
+        lstActTPN.BackColor = &H80000005
+        lst1700TPN.BackColor = &H80000005
+    Else
+        lstActTPN.BackColor = &H8000000B
+        lst1700TPN.BackColor = &H8000000B
+    End If
+
+End Sub
+
+Private Sub ContMedSelected(ByVal blnSelect As Boolean)
+
+    If blnSelect Then
+        lstActMed.BackColor = &H80000005
+        lst1700Med.BackColor = &H80000005
+    Else
+        lstActMed.BackColor = &H8000000B
+        lst1700Med.BackColor = &H8000000B
+    End If
+
+End Sub
+
 Private Sub UserForm_Initialize()
 
     ModProgress.StartProgress "Afspraken laden"
@@ -151,6 +208,17 @@ Private Sub UserForm_Initialize()
     RemoveDoubles "lstActVoed"
     RemoveDoubles "lstActMed"
     RemoveDoubles "lstActTPN"
+    
+    ' Set defaults
+    optPerBlok.Value = True
+    chkTPN.Value = True
+    VoedingSelected False
+    ContMedSelected False
+    
+    lblBijschrift.Caption = "Per item groep (voeding, TPN, continue medicatie) worden alleen de afspraken getoond die verschillen. Zijn er geen verschillen dan is de item groep leeg."
+    lblBijschrift.Caption = lblBijschrift.Caption & vbNewLine & "N.B. Actuele afspraken worden overschreven voor de geselecteerde item groep(-en)."
+    
+    cmdOK.SetFocus
     
     ModProgress.FinishProgress
 

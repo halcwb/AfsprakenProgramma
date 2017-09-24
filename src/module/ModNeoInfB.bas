@@ -4,7 +4,7 @@ Option Explicit
 Private Const constIntakeAdvice As String = "B7"
 
 Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
-Private Const constMedIVMax As Integer = 12
+Private Const constMedIVMax As Integer = 10
 Private Const constDoseEenheidIndx As Integer = 3
 
 Private Const constActInfB As String = "Actuele Afspraken"
@@ -71,6 +71,8 @@ Private Const constTblToevoegMM As String = "Tbl_Neo_PoedMM"
 Private Const constToevoegMMCount As Integer = 4
 Private Const constTblToevoegKV As String = "Tbl_Neo_PoedKV"
 Private Const constToevoegKVCount As Integer = 4
+
+Private Const constTPNGluc As String = "AL50"
 
 Public Function IsEpiduraal(ByVal strText As String) As Boolean
 
@@ -255,7 +257,20 @@ Private Function ChangeTo1700(arrItems() As String) As String()
 
 End Function
 
-Public Sub NeoInfB_Copy1700ToAct(ByVal blnAlles As Boolean, ByVal blnVoeding As Boolean, ByVal blnContMed As Boolean, ByVal blnTPN As Boolean)
+' Drie speciale situaties
+' 1. SST gluc 10% 1700 = Actueel
+' 1. SST gluc 10% 1700 > Actueel
+' 1. SST gluc 10% 1700 < Actueel
+Private Sub Copy1700ToAct(ByVal blnAlles As Boolean, ByVal blnVoeding As Boolean, ByVal blnContMed As Boolean, ByVal blnTPN As Boolean)
+    
+    Dim dblGluc As Double
+    Dim dblVocht As Double
+    
+    If ModPatient.GetGewichtFromRange() = 0 Then Exit Sub
+    
+    dblGluc = shtNeoBerInfB.Range(constTPNGluc).Value2
+    
+    ModProgress.StartProgress "1700 Afspraken overnemen"
     
     If blnAlles Then
         blnVoeding = True
@@ -274,6 +289,20 @@ Public Sub NeoInfB_Copy1700ToAct(ByVal blnAlles As Boolean, ByVal blnVoeding As 
     If blnTPN Then
         TPNOvernemen
     End If
+    
+    ModNeoInfB.NeoInfB_SelectInfB False, True
+    
+    If dblGluc = shtNeoBerInfB.Range(constTPNGluc).Value2 Then
+        ' Do nothing
+    Else
+        ' Correct for increase or decrease in TPN glucose
+        ' Increase or decrease vocht intake
+        dblVocht = ModRange.GetRangeValue(constIntakePerKg, 0)
+        dblVocht = dblVocht + ((dblGluc - shtNeoBerInfB.Range(constTPNGluc)) / ModPatient.GetGewichtFromRange())
+        ModRange.SetRangeValue constIntakePerKg, dblVocht
+    End If
+    
+    ModProgress.FinishProgress
 
 End Sub
 
@@ -322,6 +351,10 @@ Public Sub NeoInfB_ShowFormCopy1700ToAct()
     
     Set frmCopy1700 = New FormCopy1700
     frmCopy1700.Show
+    
+    If frmCopy1700.lblAction.Caption = "OK" Then
+        Copy1700ToAct frmCopy1700.optAlles.Value, frmCopy1700.chkVoeding.Value, frmCopy1700.chkContinueMedicatie.Value, frmCopy1700.chkTPN.Value
+    End If
 
     Set frmCopy1700 = Nothing
     

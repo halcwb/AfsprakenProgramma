@@ -2,7 +2,7 @@ Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
 Private Const constFreqTable = "Tbl_Glob_MedFreq"
-
+Private Const constTblMedOpdr As String = "Tbl_Glob_MedOpdr"
 
 ' --- Medicament ---
 Private Const constGPK As String = "_Glob_MedDisc_GPK_"                 ' GPK code
@@ -99,10 +99,26 @@ End Sub
 Public Sub MedDisc_ShowPickList()
 
     Dim objForm As ClassFormularium
+    Dim objGenCol As Collection
+    Dim objTable As Range
+    Dim varGen As Variant
     
     Set objForm = Formularium_GetFormularium
-       
-    ShowPickList objForm.GetGenerieken, constGeneric, 1, constMedCount
+    Set objGenCol = New Collection
+    Set objTable = ModRange.GetRange(constTblMedOpdr)
+    
+    For Each varGen In objTable
+        varGen = CStr(varGen)
+        If Not varGen = vbNullString Then
+            varGen = Split(varGen, " ")(0)
+            varGen = LCase(varGen)
+            If CollectionContains(varGen, objForm.GetGenerieken()) Then
+                If Not CollectionContains(varGen, objGenCol) Then objGenCol.Add varGen
+            End If
+        End If
+    Next
+    
+    ShowPickList objGenCol, constGeneric, 1, constMedCount
     
 End Sub
 

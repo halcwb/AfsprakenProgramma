@@ -189,7 +189,7 @@ Public Sub InitializeAfspraken()
     Application.ScreenUpdating = True
     
     ' Clean everything
-    ModRange.SetRangeValue constVersie, vbNullString
+    ModRange.SetRangeValue "Var_Glob_Versie", vbNullString
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
             
     strBed = ModMetaVision.MetaVision_GetCurrentBedName()
