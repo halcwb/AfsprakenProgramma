@@ -190,4 +190,21 @@ Public Function SetAdmissionAndBirthDate(ByVal dtmAdm As Date, ByVal dtmBd As Da
     
 End Function
 
+Public Sub Clear()
+
+ m_ID = vbNullString
+ m_AN = vbNullString
+ m_VN = vbNullString
+ m_BD = ModDate.EmptyDate
+ m_AD = ModDate.EmptyDate
+ m_WT = 0
+ m_BW = 0
+ m_LE = 0
+ m_GS = vbNullString
+ m_GW = 0
+ m_GD = 0
+ m_LU = vbNullString
+
+End Sub
+
 

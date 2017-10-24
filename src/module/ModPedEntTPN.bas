@@ -262,8 +262,6 @@ Public Sub PedEntTPN_ShowVoedingPickList()
     
     End If
     
-    Set frmPickList = Nothing
-    
 End Sub
 
 
@@ -706,8 +704,6 @@ Private Sub EnterOpmAfspr(ByVal strRange As String)
         ModRange.SetRangeValue strRange, frmOpmerking.txtOpmerking.Text
     End If
        
-    Set frmOpmerking = Nothing
-
 End Sub
 
 Public Sub PedEntTPN_EntText()
@@ -730,8 +726,6 @@ Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String)
     frmInvoer.SetValue strRange, strItem, ModRange.GetRangeValue(strRange, 0), "mL", vbNullString
     frmInvoer.Show
     
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Sub PedEntTPN_TPN()
@@ -850,8 +844,6 @@ Public Sub PedEntTPN_SpecVoed()
     Set frmSpecialeVoeding = New FormSpecialeVoeding
     frmSpecialeVoeding.Show
     
-    Set frmSpecialeVoeding = Nothing
-
 End Sub
 
 Public Sub PedEntTPN_ChangeEnt()

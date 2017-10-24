@@ -59,8 +59,6 @@ Public Sub PedLijnPM_ShowPickList()
     
     End If
     
-    Set frmPickList = Nothing
-    
 End Sub
 
 Private Sub Clear(ByVal intN As Integer)
@@ -119,8 +117,6 @@ Private Sub EnterOpm()
     
     frmOpmerking.txtOpmerking.Text = vbNullString
     
-    Set frmOpmerking = Nothing
-
 End Sub
 
 Public Sub PedLijnPM_Clear_Opm()

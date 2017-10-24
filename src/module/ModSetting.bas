@@ -134,30 +134,6 @@ Public Sub ToggleLogging()
 
 End Sub
 
-Private Function GetNeoDir() As String
-
-    GetNeoDir = CStr(GetSetting(constNeoDir))
-
-End Function
-
-Public Sub SetNeoDir(ByVal strDir As String)
-
-    SetSetting constNeoDir, strDir
-
-End Sub
-
-Private Function GetPedDir() As String
-
-    GetPedDir = CStr(GetSetting(constPedDir))
-
-End Function
-
-Public Sub SetPedDir(ByVal strDir As String)
-
-    SetSetting constPedDir, strDir
-
-End Sub
-
 Public Function GetDevelopmentDir() As String
 
     GetDevelopmentDir = CStr(GetSetting(constDevDir))
@@ -344,12 +320,13 @@ End Function
 
 Public Function GetPatientsFileName() As String
     
-    Dim blnNeo As Boolean
+    Dim blnPed As Boolean
+    Dim strDep As String
     
-    blnNeo = False
-    If IsDevelopmentDir() Then blnNeo = ModMessage.ShowMsgBoxYesNo("Ja(Yes) voor Neo anders Pediatrie") = vbYes
+    blnPed = MetaVision_IsPediatrie()
+    If IsDevelopmentDir() Then blnPed = ModMessage.ShowMsgBoxYesNo("Ja(Yes) voor Pediatrie anders Neonatologie") = vbYes
     
-    GetPatientsFileName = IIf(IsNeoDir() Or IsNeo() Or blnNeo, CONST_NICU_BEDS, CONST_PICU_BEDS)
+    GetPatientsFileName = IIf(blnPed, CONST_PICU_BEDS, CONST_NICU_BEDS)
 
 End Function
 
@@ -369,45 +346,5 @@ Private Sub Test()
 
     MsgBox GetPatientsFilePath("Test")
     
-End Sub
-
-Public Function IsNeo() As Boolean
-
-    Dim strPath As String
-    Dim strDir As String
-    Dim blnIsNeo As Boolean
-
-    strPath = Application.ActiveWorkbook.Path
-    strDir = ModSetting.GetNeoDir()
-    
-    blnIsNeo = ModString.ContainsCaseInsensitive(strPath, strDir)
-    blnIsNeo = IIf(ModMetaVision.MetaVision_GetDepartment = vbNullString, blnIsNeo, ModMetaVision.MetaVision_GetDepartment = "Neonatologie")
-    
-    IsNeo = blnIsNeo
-
-End Function
-
-Private Sub Test_IsNeo()
-
-    MsgBox IsNeo()
-
-End Sub
-
-Public Function IsPed() As Boolean
-
-    Dim strPath As String
-    Dim strDir As String
-    Dim blnIsPed As Boolean
-
-    blnIsPed = Not IsNeo()
-    
-    IsPed = blnIsPed
-
-End Function
-
-Private Sub Test_IsPed()
-
-    MsgBox IsPed()
-
 End Sub
 

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   12150
+   ClientHeight    =   13290
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10050
@@ -19,6 +19,7 @@ Private m_Med As ClassMedicatieDisc
 Private m_TherapieGroep As String
 Private m_SubGroep As String
 Private m_Etiket As String
+Private m_Product As String
 
 Private m_IsGPK As Boolean
 Private m_LoadGPK As Boolean
@@ -112,7 +113,14 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
         
         LoadFreq
         
+        FillCombo cboOplVlst, MedDisc_GetOplVlstCol()
     End If
+
+End Sub
+
+Private Sub cboDosisEenheid_Change()
+
+    SetDoseUnit
 
 End Sub
 
@@ -173,6 +181,21 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
 
 End Function
 
+Private Sub SetDoseUnit()
+
+    Dim strUnit As String
+    
+    strUnit = Trim(cboDosisEenheid.Text)
+    
+    If Not strUnit = vbNullString Then
+        cboDoseUnit.Text = strUnit & "/kg/dag"
+        cboKeerUnit.Text = strUnit
+        lblDoseUnit.Caption = cboDoseUnit.Value
+        lblConcUnit.Caption = strUnit & "/ml"
+    End If
+
+End Sub
+
 Private Sub LoadMedicament()
     
     Dim intN As Integer
@@ -183,6 +206,7 @@ Private Sub LoadMedicament()
         lblTherapieGroep.Caption = .TherapieGroep
         lblSubGroep.Caption = .TherapieSubgroep
         lblEtiket.Caption = .Etiket
+        lblProduct.Caption = .Product
         
         lblGPK.Caption = .GPK
         lblATC.Caption = .ATC
@@ -200,8 +224,6 @@ Private Sub LoadMedicament()
         FillCombo cboRoute, .GetRouteList()
         FillCombo cboIndicatie, .GetIndicatieList()
         
-        If Not .DoseEenheid = vbNullString Then cboDoseUnit.Text = .DoseEenheid & "/kg/dag"
-        
         If Not .GetFreqListString = vbNullString Then
             FillCombo cboFreq, .GetFreqList()
         Else
@@ -218,6 +240,7 @@ Private Sub LoadMedicament()
         SetTextBoxNumericValue txtMaxConc, .MaxConc
         SetTextBoxNumericValue txtTijd, .MinTijd
         
+        cboOplVlst.Value = .OplVlst
     End With
 
 End Sub
@@ -276,6 +299,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     lblTherapieGroep.Caption = m_TherapieGroep
     lblSubGroep.Caption = m_SubGroep
     lblEtiket.Caption = m_Etiket
+    lblProduct.Caption = m_Product
     
     If blnClearGeneric Then cboGeneriek.Value = vbNullString
     cboVorm.Value = vbNullString
@@ -348,6 +372,7 @@ Private Sub CalculateDose()
     Dim dblCalc As Double
     Dim dblFact As Double
     Dim dblDeel As Double
+    Dim dblKeer As Double
     
     dblFact = m_Freq.Item(cboFreq.Text)
     dblDose = StringToDouble(txtNormDose.Value)
@@ -363,13 +388,33 @@ Private Sub CalculateDose()
     dblVal = ModExcel.Excel_RoundBy(dblVal, txtDeelDose.Value)
     
     dblCalc = dblVal * dblFact / dblWght
+    dblKeer = dblCalc * dblWght / dblFact
     
+    If m_Med Is Nothing Then Set m_Med = New ClassMedicatieDisc
     m_Med.CalcDose = dblCalc
     m_Med.Freq = cboFreq.Text
     
     txtCalcDose.Value = ModString.FixPrecision(dblCalc, 2)
+    txtKeerDose.Value = dblKeer
+    
+    CalculateVolume
+    
     lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDeelDose.Value & " " & cboDosisEenheid.Text
-    lblDoseUnit.Caption = cboDoseUnit.Value
+
+End Sub
+
+Private Sub CalculateVolume()
+
+    Dim dblKeer As Double
+    Dim dblConc As Double
+    Dim dblVol As Double
+    
+    dblKeer = StringToDouble(txtKeerDose.Value)
+    dblConc = StringToDouble(txtMaxConc.Value)
+    If dblConc > 0 Then
+        dblVol = dblKeer / dblConc
+        txtOplVol.Value = ModExcel.Excel_RoundBy(dblVol, 1)
+    End If
 
 End Sub
 
@@ -413,7 +458,6 @@ Private Sub cmdOK_Click()
     
         Set m_Med = New ClassMedicatieDisc
         
-        m_Med.DoseEenheid = cboDosisEenheid.Value
         m_Med.Generiek = cboGeneriek.Value
         m_Med.Sterkte = StringToDouble(txtSterkte.Value)
         m_Med.SterkteEenheid = cboSterkteEenheid.Value
@@ -422,14 +466,22 @@ Private Sub cmdOK_Click()
     End If
     
     m_Med.DeelDose = StringToDouble(txtDeelDose.Value)
+    m_Med.DoseEenheid = cboDosisEenheid.Value
+    
     m_Med.Route = cboRoute.Value
     m_Med.Indicatie = cboIndicatie.Value
+    
     m_Med.Freq = cboFreq.Value
     
     m_Med.NormDose = StringToDouble(txtNormDose.Value)
     m_Med.MinDose = StringToDouble(txtMinDose.Value)
     m_Med.MaxDose = StringToDouble(txtMaxDose.Value)
+    m_Med.AbsDose = StringToDouble(txtAbsMax.Value)
     m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
+    
+    m_Med.OplVlst = cboOplVlst.Value
+    m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
+    m_Med.MinTijd = StringToDouble(txtTijd.Value)
 
     CloseForm "OK"
 
@@ -483,6 +535,12 @@ End Sub
 Private Sub txtDeelDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtMaxConc_Change()
+
+    CalculateVolume
 
 End Sub
 
@@ -599,6 +657,7 @@ Private Sub UserForm_Initialize()
     m_TherapieGroep = lblTherapieGroep.Caption
     m_SubGroep = lblSubGroep.Caption
     m_Etiket = lblEtiket.Caption
+    m_Product = lblProduct.Caption
     
     intC = Formularium_GetFormularium.MedicamentCount
     
@@ -607,6 +666,7 @@ Private Sub UserForm_Initialize()
     Next intN
     
     LoadFreq
+    FillCombo cboOplVlst, MedDisc_GetOplVlstCol()
     
     cboGeneriek.TabIndex = 0
     cboVorm.TabIndex = 1
@@ -619,15 +679,25 @@ Private Sub UserForm_Initialize()
     
     cboFreq.TabIndex = 8
     txtNormDose.TabIndex = 9
-    cboDoseUnit.TabIndex = 10
-    txtMinDose.TabIndex = 11
-    txtMaxDose.TabIndex = 12
-    txtAbsMax.TabIndex = 13
+'    cboDoseUnit.TabIndex = 10
+    txtMinDose.TabIndex = 10
+    txtMaxDose.TabIndex = 11
+    txtAbsMax.TabIndex = 12
     
-    cmdFormularium.TabIndex = 15
-    cmdOK.TabIndex = 16
-    cmdClear.TabIndex = 17
-    cmdCancel.TabIndex = 18
+    cmdFormularium.TabIndex = 13
+    cmdOK.TabIndex = 14
+    cmdClear.TabIndex = 15
+    cmdCancel.TabIndex = 16
+    
+    cboDoseUnit.TabStop = False
+    txtKeerDose.TabStop = False
+    cboKeerUnit.TabStop = False
+    txtCalcDose.TabStop = False
+       
+    cboDoseUnit.Enabled = False
+    txtKeerDose.Enabled = False
+    cboKeerUnit.Enabled = False
+    txtCalcDose.Enabled = False
        
 End Sub
 

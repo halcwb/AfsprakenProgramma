@@ -29,8 +29,6 @@ Private Sub EnterText(ByVal strCaption As String, ByVal strName As String, ByVal
         If .IsOK Then ModRange.SetRangeValue strRange, .Tekst
     End With
     
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Sub PedAfspr_OverigeText()

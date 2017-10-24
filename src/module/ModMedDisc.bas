@@ -43,6 +43,15 @@ Private Const constFreqText As String = "Var_MedDisc_FreqText_"
 Private Const constVerw As String = "AL"
 Private Const constMedCount As Integer = 30
 
+Public Function MedDisc_CanonGen(ByVal strGeneriek As String) As String
+
+    strGeneriek = Trim(LCase(strGeneriek))
+    strGeneriek = Replace(strGeneriek, "/", "+")
+    strGeneriek = Replace(strGeneriek, " ", "-")
+    
+    MedDisc_CanonGen = strGeneriek
+
+End Function
 
 ' Copy paste function cannot be reused because of private clear method
 Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
@@ -91,9 +100,6 @@ Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal i
     
     End If
     
-    Set frmPickList = Nothing
-
-
 End Sub
 
 Public Sub MedDisc_ShowPickList()
@@ -107,8 +113,9 @@ Public Sub MedDisc_ShowPickList()
     Set objGenCol = New Collection
     Set objTable = ModRange.GetRange(constTblMedOpdr)
     
+    ' Use only generieken from MetaVision
     For Each varGen In objTable
-        varGen = CStr(varGen)
+        varGen = Trim(CStr(varGen))
         If Not varGen = vbNullString Then
             varGen = Split(varGen, " ")(0)
             varGen = LCase(varGen)
@@ -370,12 +377,13 @@ Private Sub Test_GetMedicationFreqs()
 
 End Sub
 
-
 Private Sub MedicamentInvoeren(ByVal intN As Integer)
 
     Dim objMed As ClassMedicatieDisc
     Dim objForm As FormMedDisc
     Dim strN As String
+    Dim intOplVlst As Integer
+    Dim strOplVlst As String
     Dim blnLoad As Boolean
       
     strN = IntNToStrN(intN)
@@ -396,7 +404,6 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
             .SetComboBoxIfNotEmpty .cboVorm, ModRange.GetRangeValue(constVorm & strN, vbNullString)
             .SetTextBoxIfNotEmpty .txtSterkte, ModRange.GetRangeValue(constConc & strN, 0)
             .SetComboBoxIfNotEmpty .cboSterkteEenheid, ModRange.GetRangeValue(constConcUnit & strN, vbNullString)
-            .SetComboBoxIfNotEmpty .cboDosisEenheid, ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         End If
         
         ' Edited details
@@ -405,10 +412,17 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         .SetComboBoxIfNotEmpty .cboIndicatie, ModRange.GetRangeValue(constIndic & strN, vbNullString)
         .SetComboBoxIfNotEmpty .cboFreq, ModRange.GetRangeValue(constFreqText & strN, vbNullString)
         
+        .SetTextBoxIfNotEmpty .txtDeelDose, ModRange.GetRangeValue(constStandDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtNormDose, ModRange.GetRangeValue(constNormDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMinDose, ModRange.GetRangeValue(constMinDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMaxDose, ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtAbsMax, ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
+        
+        intOplVlst = ModRange.GetRangeValue(constSolNo & strN, 1)
+        strOplVlst = ModExcel.Excel_Index("Tbl_Glob_MedDisc_OplVl", intOplVlst, 1)
+        .SetComboBoxIfNotEmpty .cboOplVlst, strOplVlst
+        
+        .SetTextBoxIfNotEmpty .txtTijd, ModRange.GetRangeValue(constTime & strN, vbNullString)
         
         .Show
         
@@ -428,8 +442,6 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         End If
     End With
     
-    Set objForm = Nothing
-
 End Sub
 
 Private Function CalculateOplossingVolume(ByVal dblSterkte As Double, ByVal dblMaxConc As Double) As Double
@@ -444,7 +456,6 @@ Private Function CalculateOplossingVolume(ByVal dblSterkte As Double, ByVal dblM
     CalculateOplossingVolume = dblVolume
 
 End Function
-
 
 Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     
@@ -475,11 +486,15 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst
     ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
     
-    If objMed.OplVlst = "NaCl" Then
+    If objMed.OplVlst = "NaCl 0,9%" Then
         ModRange.SetRangeValue constSolNo & strN, 2
-    ElseIf objMed.OplVlst = "glucose" Then
+    ElseIf objMed.OplVlst = "glucose 5%" Then
+        ModRange.SetRangeValue constSolNo & strN, 3
+    ElseIf objMed.OplVlst = "glucose 10%" Then
         ModRange.SetRangeValue constSolNo & strN, 4
     End If
+    
+    ModRange.SetRangeValue constTime & strN, objMed.MinTijd
     
     If Not objMed.Freq = vbNullString Then
         Set dictFreq = GetMedicationFreqs()
@@ -705,8 +720,6 @@ Private Sub OpmMedDisc(ByVal intN As Integer)
     End If
     frmOpmerking.txtOpmerking.Text = vbNullString
     
-    Set frmOpmerking = Nothing
-
 End Sub
 
 Public Sub MedDisc_EnterText_01()
@@ -916,8 +929,6 @@ Private Sub OpenPRNForm(ByVal intN As Integer)
     frmPrn.Caption = strTitle
     frmPrn.Show
     
-    Set frmPrn = Nothing
-
 End Sub
 
 Public Sub MedDisc_PRN_01()
@@ -1099,4 +1110,21 @@ Public Sub MedDisc_PRN_30()
     OpenPRNForm 30
 
 End Sub
+
+Public Function MedDisc_GetOplVlstCol() As Collection
+
+    Dim objCol As Collection
+    Dim objTable As Range
+    Dim varItem As Variant
+    
+    Set objTable = ModRange.GetRange("Tbl_Glob_MedDisc_OplVl")
+    Set objCol = New Collection
+    
+    For Each varItem In objTable
+        objCol.Add varItem
+    Next
+
+    Set MedDisc_GetOplVlstCol = objCol
+    
+End Function
 

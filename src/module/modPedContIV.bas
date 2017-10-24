@@ -11,10 +11,11 @@ Private Const constMedIVStand As String = "_Ped_MedIV_Stand_"
 Private Const constMedIVCount As Integer = 15
 
 Private Const constStandOplKeuze As Integer = 2
-Private Const constStandOplVlst As Integer = 15
-Private Const constStandHoevIndx As Integer = 18
-Private Const constStandVolIndx As Integer = 19
+Private Const constStandOplVlst As Integer = 17
+Private Const constStandHoevIndx As Integer = 20
+Private Const constStandVolIndx As Integer = 21
 Private Const constUnitIndx As Integer = 2
+Private Const constFactorIndex As Integer = 23
 
 
 ' Copy paste function cannot be reused because of private clear method
@@ -68,9 +69,6 @@ Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal
     
     End If
     
-    Set frmPickList = Nothing
-
-
 End Sub
 
 Public Sub PedContIV_ShowPickList()
@@ -398,8 +396,6 @@ Private Sub EnterNumeric(ByVal intRegel As Integer, ByVal strRange As String, By
         End If
     End With
     
-    Set frmInvoer = Nothing
-    
     Exit Sub
     
 OpenInvoerNumeriekError:
@@ -642,8 +638,6 @@ Private Sub EnterMed(ByVal intN As Integer)
     
     End If
     
-    Set frmMedIV = Nothing
-        
 End Sub
 
 Public Sub PedContIV_EnterMed_16()
@@ -695,8 +689,6 @@ Public Sub PedContIV_Text()
         ModRange.SetRangeValue constMedIVOpm, frmOpmerking.txtOpmerking.Text
     End If
     
-    Set frmOpmerking = Nothing
-
 End Sub
 
 
@@ -824,6 +816,168 @@ End Sub
 Public Sub PedContIV_CheckOplVlst_15()
 
     CheckOplVlst 15
+
+End Sub
+
+Private Function CalculateStandByDose(ByVal intN As Integer, ByVal intMed As Integer, ByVal dblDose As Double) As Double
+
+    Dim strN As String
+    Dim dblFactor As Double
+    Dim dblWeight As Double
+    Dim dblOplQty As Double
+    Dim dblStand As Double
+    Dim dblQty As Double
+    Dim intPrec As Integer
+    Dim strMed As String
+    
+    strN = IntNToStrN(intN)
+    dblFactor = GetMedicamentItemWithIndex(intMed, constFactorIndex)
+    dblOplQty = ModRange.GetRangeValue(constMedIVOplVol & strN, 0)
+    dblOplQty = IIf(dblOplQty = 0, ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 9), dblOplQty)
+    dblQty = ModRange.GetRangeValue(constMedIVSterkte & strN, 0)
+    dblQty = IIf(dblQty = 0, ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 8), dblQty)
+    dblWeight = ModPatient.GetGewichtFromRange()
+    strMed = GetMedicamentItemWithIndex(intMed, 1)
+    
+    dblStand = dblDose * dblOplQty * dblWeight / (dblQty * dblFactor)
+    
+    CalculateStandByDose = dblStand
+
+End Function
+
+Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIndex As Integer) As Variant
+
+    Dim objTblMed As Range
+    
+    Set objTblMed = ModRange.GetRange(constTblMed)
+
+    GetMedicamentItemWithIndex = objTblMed.Cells(intMed, intIndex).Value2
+    
+End Function
+
+Private Sub SetStandByDose(ByVal intN As Integer)
+
+    Dim strN As String
+    Dim frmDose As FormInvoerNumeriek
+    Dim intMed As Integer
+    Dim strMed As String
+    Dim dblRate As Double
+    Dim dblDose As Double
+    Dim varDose As Variant
+    Dim strEenheid As String
+    
+    strN = IntNToStrN(intN)
+    intMed = ModRange.GetRangeValue(constMedIVKeuze & strN, vbNullString)
+    strMed = ModExcel.Excel_Index(constTblMed, intMed, 1)
+    
+    If ModString.ContainsCaseInsensitive(strMed, "epiduraal") Then Exit Sub
+    
+    strEenheid = ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 38)
+    
+    varDose = ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 10)
+    dblDose = ModString.StringToDouble(varDose)
+    
+    Set frmDose = New FormInvoerNumeriek
+    
+    With frmDose
+        .SetValue vbNullString, "Dose:", dblDose, strEenheid, vbNullString
+        
+        .Show
+        
+        If Not .txtWaarde.Value = vbNullString Then
+            dblDose = StringToDouble(.txtWaarde.Value)
+            dblRate = CalculateStandByDose(intN, intMed, dblDose)
+            dblRate = ModExcel.Excel_RoundBy(dblRate, 0.1)
+            ModRange.SetRangeValue constMedIVStand & strN, dblRate * 10
+        End If
+    End With
+
+End Sub
+
+Public Sub PedContIV_SetRate_01()
+
+    SetStandByDose 1
+
+End Sub
+
+Public Sub PedContIV_SetRate_02()
+
+    SetStandByDose 2
+
+End Sub
+
+Public Sub PedContIV_SetRate_03()
+
+    SetStandByDose 3
+
+End Sub
+
+Public Sub PedContIV_SetRate_04()
+
+    SetStandByDose 4
+
+End Sub
+
+
+Public Sub PedContIV_SetRate_05()
+
+    SetStandByDose 5
+
+End Sub
+
+Public Sub PedContIV_SetRate_06()
+
+    SetStandByDose 6
+
+End Sub
+
+Public Sub PedContIV_SetRate_07()
+
+    SetStandByDose 7
+
+End Sub
+
+Public Sub PedContIV_SetRate_08()
+
+    SetStandByDose 8
+
+End Sub
+
+Public Sub PedContIV_SetRate_09()
+
+    SetStandByDose 9
+
+End Sub
+
+Public Sub PedContIV_SetRate_10()
+
+    SetStandByDose 10
+
+End Sub
+
+Public Sub PedContIV_SetRate_11()
+
+    SetStandByDose 11
+
+End Sub
+Public Sub PedContIV_SetRate_12()
+
+    SetStandByDose 12
+
+End Sub
+Public Sub PedContIV_SetRate_13()
+
+    SetStandByDose 13
+
+End Sub
+Public Sub PedContIV_SetRate_14()
+
+    SetStandByDose 14
+
+End Sub
+Public Sub PedContIV_SetRate_15()
+
+    SetStandByDose 15
 
 End Sub
 

@@ -58,8 +58,6 @@ Public Sub Patient_EnterWeight()
     
     ModPedEntTPN.PedEntTPN_SelectStandardTPN
     
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Sub Patient_EnterLength()
@@ -76,8 +74,6 @@ Public Sub Patient_EnterLength()
         
     End With
     
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Function GetGewichtFromRange() As Double
@@ -113,9 +109,6 @@ Public Sub OpenPatientLijst(ByVal strCaption As String)
         .LoadPatients colPats
         .Show
     End With
-    
-    Set colPats = Nothing
-    Set frmPats = Nothing
     
     Exit Sub
     
@@ -236,7 +229,6 @@ Public Sub EnterPatientDetails()
     frmPat.Show
     
     WritePatientDetails objPat
-    Set frmPat = Nothing
 
 End Sub
 
@@ -252,7 +244,9 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             
     Dim blnInfB As Boolean
     
-    blnInfB = (ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()) And Not (strStartWith = "_Ped" Or strStartWith = "_Glob")
+    Application.ScreenUpdating = False
+    
+    blnInfB = (MetaVision_IsNeonatologie() Or ModSetting.IsDevelopmentDir()) And Not (strStartWith = "_Ped" Or strStartWith = "_Glob")
             
     If blnShowWarn Then
         If blnShowProgress Then
@@ -298,10 +292,14 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             ModNeoInfB.NeoInfB_RemoveVoed
         End If
         
+        ModRange.SetRangeValue "Var_Neo_PrintApothNo", 0
+        
         ModApplication.SetDateToDayFormula
         ModApplication.SetApplicationTitle
     End If
     
+    Application.ScreenUpdating = True
+
 End Sub
 
 Public Sub PatientClearPed()

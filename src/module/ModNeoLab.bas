@@ -25,6 +25,4 @@ Public Sub NeoLab_EnterText()
     End If
     frmOpmerking.txtOpmerking.Text = vbNullString
     
-    Set frmOpmerking = Nothing
-    
 End Sub

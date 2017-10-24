@@ -74,8 +74,6 @@ Public Sub UnhideNonUserInterfaceSheets(ByVal blnShowProgress As Boolean)
 
     Next shtSheet
 
-    Set colShts = Nothing
-
 End Sub
 
 Public Sub HideAndUnProtectNonUserInterfaceSheets(ByVal blnShowProgress As Boolean)
@@ -100,8 +98,6 @@ Public Sub HideAndUnProtectNonUserInterfaceSheets(ByVal blnShowProgress As Boole
         intN = intN + 1
 
     Next shtSheet
-
-    Set colShts = Nothing
 
 End Sub
 
@@ -128,8 +124,6 @@ Public Sub UnprotectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
         
     Next objItem
             
-    Set colShts = Nothing
-            
 End Sub
 
 Public Sub ProtectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
@@ -154,8 +148,6 @@ Public Sub ProtectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
         If blnShowProgress Then ModProgress.SetJobPercentage "Stel beveiliging in", intC, intN
         
     Next objItem
-
-    Set colShts = Nothing
 
 End Sub
 
@@ -195,7 +187,7 @@ End Function
 
 Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet, ByVal blnStartProgress As Boolean)
 
-    If ModSetting.IsPed() Then
+    If MetaVision_IsPediatrie() Then
         GoToSheet shtPed, "A1"
     Else
         If shtNeo.Name = shtNeoGuiInfB.Name Then
@@ -235,6 +227,7 @@ End Sub
 Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnAsk As Boolean)
   
     shtSheet.Unprotect ModConst.CONST_PASSWORD
+    shtSheet.PageSetup.LeftHeader = "AfsprakenProgramma " & ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
     
     If blnAsk Then
         m_blnPrev = ModMessage.ShowMsgBoxYesNo("Eerst preview zien?") = vbYes

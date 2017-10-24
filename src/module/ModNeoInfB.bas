@@ -4,6 +4,7 @@ Option Explicit
 Private Const constIntakeAdvice As String = "B7"
 
 Private Const constTblMedIV As String = "Tbl_Neo_MedIV"
+Private Const constTblNeoOpl As String = "Tbl_Neo_OplVlst"
 Private Const constMedIVMax As Integer = 10
 Private Const constDoseEenheidIndx As Integer = 3
 
@@ -20,7 +21,7 @@ Private Const constEnt As String = "_Ent_"
 Private Const constTPN As String = "_TPN_"
 
 Private Const constIntakePerKg As String = "Var_Neo_InfB_TPN_IntakePerKg"
-Private Const constTPNParEnt As String = "Var_Neo_InfB_TPN_Parenteraal"
+Private Const constTPNParEnt As String = "Var_Neo_InfB_TPN_ParEnteraal"
 
 Private Const constLipidKeuze As String = "Var_Neo_InfB_TPN_IntralipidSmof"
 Private Const constLipidStand As String = "Var_Neo_InfB_TPN_IntraLipid"
@@ -356,8 +357,6 @@ Public Sub NeoInfB_ShowFormCopy1700ToAct()
         Copy1700ToAct frmCopy1700.optAlles.Value, frmCopy1700.chkVoeding.Value, frmCopy1700.chkContinueMedicatie.Value, frmCopy1700.chkTPN.Value
     End If
 
-    Set frmCopy1700 = Nothing
-    
     NeoInfB_SelectInfB bln1700, True
     
 End Sub
@@ -384,8 +383,6 @@ Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIn
 
     GetMedicamentItemWithIndex = objTblMed.Cells(intMed, intIndex).Value2
     
-    Set objTblMed = Nothing
-
 End Function
 
 Private Sub TestGetMinimumAdvice()
@@ -406,8 +403,8 @@ Private Function CalculateMedicamentQtyByDose(ByVal strN As String, ByVal intMed
     Dim strMed As String
     
     dblFactor = GetMedicamentItemWithIndex(intMed, constFactorIndex)
-    dblOplQty = GetMedicamentItemWithIndex(intMed, constDefHoevIndex)
-    dblStand = GetMedicamentItemWithIndex(intMed, constDefStandIndex)
+    dblOplQty = ModRange.GetRangeValue(constOplHoev & strN, 0)
+    dblStand = ModRange.GetRangeValue(constStand & strN, 0) / 10
     dblWeight = ModPatient.GetGewichtFromRange()
     dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
     strMed = GetMedicamentItemWithIndex(intMed, 1)
@@ -415,7 +412,7 @@ Private Function CalculateMedicamentQtyByDose(ByVal strN As String, ByVal intMed
     ' Medicatie doxapram puur geen oplosvolume
     If ModString.ContainsCaseInsensitive(strMed, "doxapram") Then
         dblQty = dblMaxConc * dblOplQty
-    ElseIf dblStand * dblFactor > 0 Then
+    ElseIf dblStand * dblFactor > 0 And dblDose > 0 Then
         dblQty = dblDose * dblOplQty * dblWeight / (dblStand * dblFactor)
         dblQty = CorrectMedQty(strN, intMed, dblQty)
     Else
@@ -642,30 +639,34 @@ Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, By
     If dblOplQty = 0 Then
         dblQty = 0
     Else
+        ' Haal de minimale en maximale concentratie op
         dblMinConc = GetMedicamentItemWithIndex(intMed, 9)
         dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
-                
-        dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4)
-        intFactor = 1
-        intFactor = IIf(dblQty / dblMultiple < 10, 10, intFactor)
-        intFactor = IIf(dblQty / dblMultiple < 0.1, 100, intFactor)
-        dblMultiple = dblMultiple / intFactor
-        
+        ' Corrigeer de hoeveelheid naar min of max concentratie
         dblConc = dblQty / dblOplQty
         dblQty = IIf(dblConc < dblMinConc, dblMinConc * dblOplQty, dblQty)
         dblQty = IIf(dblConc > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
-    
+        ' Bepaal of hoevelheid een veelvoud van hele, tiende of honderste milliliters is
+        dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4)
+        intFactor = 1                                                   ' >=10ml  hele getallen geen decimalen
+        intFactor = IIf(dblQty / dblMultiple < 10, 10, intFactor)       ' >=1,0  <10 ml   1 decimaal nauwkeurig 0,1
+        intFactor = IIf(dblQty / dblMultiple < 1, 100, intFactor)       ' >=0,1 < 1,0 ml:     2 decimalen nauwkeurig 0,01
+        intFactor = IIf(dblQty / dblMultiple <= 0.1, 100, intFactor)    ' <0,1ml  2 decimalen nauwkeurig 0,01 + verdunningstekst
+        dblMultiple = dblMultiple / intFactor
+        ' Corrigeer de hoeveelheid naar een veelvoud
         If dblMultiple > 0 Then
             dblQty = ModExcel.Excel_RoundBy(dblQty, dblMultiple)
             If dblQty = 0 Then dblQty = dblMultiple
         End If
-                 
+        ' Check opnieuw of de minimale concentratie wordt overschreden
+        ' Voeg anders steeds 1 veelvoud van de hoeveelheid toe
         dblConc = dblQty / dblOplQty
         Do While dblConc < dblMinConc
             dblQty = dblQty + dblMultiple
             dblConc = dblQty / dblOplQty
         Loop
-        
+        ' Check opnieuw of de maximale concentratie wordt overschreden
+        ' Haal anders steeds 1 veelvoud van de hoeveelheid af
         dblConc = dblQty / dblOplQty
         Do While dblConc > dblMaxConc
             dblQty = dblQty - dblMultiple
@@ -711,8 +712,6 @@ Private Sub MedSterkte(ByVal intN As Integer)
         
     End With
     
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Function SetMedSterkteNeoInfB(intN As Integer, dblQty As Double) As Boolean
@@ -872,8 +871,6 @@ Private Sub EnterText(ByVal strCaption As String, ByVal strName As String, ByVal
         If .IsOK Then ModRange.SetRangeValue strRange, .Tekst
     End With
     
-    Set frmInvoer = Nothing
-
 End Sub
 
 Public Sub NeoInfB_MedText_1()
@@ -1131,8 +1128,6 @@ Private Sub ShowMedIVPickList(ByVal strTbl As String, ByVal strRange As String, 
     
     End If
     
-    Set frmPickList = Nothing
-
 End Sub
 
 
@@ -1262,8 +1257,6 @@ Public Sub NeoInfB_ShowVoedingPickList()
     
     End If
     
-    Set frmPickList = Nothing
-    
     Exit Sub
     
 NeoInfB_ShowVoedingPickListError:
@@ -1275,14 +1268,23 @@ NeoInfB_ShowVoedingPickListError:
     
 End Sub
 
-Private Sub ResetOplVlst(ByVal strOpl, ByVal intOpl As Integer)
+Private Sub ResetOplVlst(ByVal strOpl, ByVal intOpl As Integer, blnShowWarn)
 
-    ModMessage.ShowMsgBoxInfo "Ongeldige oplossing vloeistof voor dit medicament"
+    If blnShowWarn Then
+        ModMessage.ShowMsgBoxInfo "Ongeldige oplossing vloeistof voor dit medicament"
+    End If
+    
     ModRange.SetRangeValue strOpl, intOpl
 
 End Sub
 
-Private Sub CheckOplVlst(ByVal intN As Integer)
+Public Sub NeoInfB_TestCheckOplVlst(ByVal intN As Integer)
+
+    CheckOplVlst intN, False
+
+End Sub
+
+Private Sub CheckOplVlst(ByVal intN As Integer, ByVal blnShowWarn As Boolean)
     
     Dim strN As String
     Dim intMed As Integer
@@ -1296,15 +1298,15 @@ Private Sub CheckOplVlst(ByVal intN As Integer)
         intOplVlst = ModRange.GetRangeValue(constOplossing & strN, 0)
         'Geen oplossing vloeistof
         If intAdvVlst = 1 And Not intOplVlst = 1 Then
-            ResetOplVlst constOplossing & strN, intAdvVlst
+            ResetOplVlst constOplossing & strN, intAdvVlst, blnShowWarn
         End If
         'Oplossing vloeistof is NaCl
         If intAdvVlst = 12 And Not intOplVlst = 12 Then
-            ResetOplVlst constOplossing & strN, intAdvVlst
+            ResetOplVlst constOplossing & strN, intAdvVlst, blnShowWarn
         End If
         'Oplossing vloeistof is glucose
         If intAdvVlst > 1 And intAdvVlst < 12 And (intOplVlst = 1 Or intOplVlst > 11) Then
-            ResetOplVlst constOplossing & strN, intAdvVlst
+            ResetOplVlst constOplossing & strN, intAdvVlst, blnShowWarn
         End If
                 
     End If
@@ -1313,61 +1315,61 @@ End Sub
 
 Public Sub NeoInfB_CheckOplVlst_01()
 
-    CheckOplVlst 1
+    CheckOplVlst 1, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_02()
 
-    CheckOplVlst 2
+    CheckOplVlst 2, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_03()
 
-    CheckOplVlst 3
+    CheckOplVlst 3, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_04()
 
-    CheckOplVlst 4
+    CheckOplVlst 4, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_05()
 
-    CheckOplVlst 5
+    CheckOplVlst 5, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_06()
 
-    CheckOplVlst 6
+    CheckOplVlst 6, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_07()
 
-    CheckOplVlst 7
+    CheckOplVlst 7, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_08()
 
-    CheckOplVlst 8
+    CheckOplVlst 8, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_09()
 
-    CheckOplVlst 9
+    CheckOplVlst 9, True
 
 End Sub
 
 Public Sub NeoInfB_CheckOplVlst_10()
 
-    CheckOplVlst 10
+    CheckOplVlst 10, True
 
 End Sub
 
@@ -1481,3 +1483,11 @@ Public Sub NeoInfB_SetDose_10()
 
 End Sub
 
+Public Function NeoInfB_GetNeoOplVlst() As Range
+
+    Dim objTable As Range
+    
+    Set objTable = ModRange.GetRange(constTblNeoOpl)
+    Set NeoInfB_GetNeoOplVlst = objTable
+
+End Function

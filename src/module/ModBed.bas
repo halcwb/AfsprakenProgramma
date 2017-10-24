@@ -73,7 +73,7 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     Dim blnNeo As Boolean
     
     strBed = GetBed()
-    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()
+    blnNeo = MetaVision_IsNeonatologie()
     
     If blnAsk Then
         If blnShowProgress Then
@@ -124,7 +124,8 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
             ModMessage.ShowMsgBoxExclam "Niet alle data kon worden teruggezet!" & vbNewLine & "Controleer de afspraken goed"
         
             If blnShowProgress Then ModProgress.StartProgress strTitle
-        Else
+            
+            ModApplication.SetApplicationTitle
         End If
     End If
 
@@ -165,7 +166,7 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
     On Error GoTo CloseBedError
     
     strBed = GetBed()
-    blnNeo = ModApplication.IsNeoDir() Or ModSetting.IsDevelopmentDir()
+    blnNeo = MetaVision_IsNeonatologie()
     
     strAction = "ModBed.CloseBed"
     strParams = Array(blnAsk, strBed)

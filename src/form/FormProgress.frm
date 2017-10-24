@@ -44,6 +44,8 @@ Private Sub UserForm_Initialize()
     intWidth = Me.lblProgress.Width
     intFormW = Me.Width
     intFormH = Me.Height
+    
+    CenterForm
 
 End Sub
 

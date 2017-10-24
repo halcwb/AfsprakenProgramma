@@ -152,6 +152,7 @@ Public Function CopyWorkbookRangeToSheet(ByVal strFile As String, ByVal strBook 
         ' Open the workbook
         FileSystem.SetAttr strFile, Attributes:=vbNormal
         .Workbooks.Open strFile, True
+        
         ' Make sure the workbook can be shared
         SaveWorkBookAsShared .Workbooks(strBook), strFile
         If blnShowProgress Then ModProgress.SetJobPercentage strJob, 100, 50

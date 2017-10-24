@@ -14,6 +14,7 @@ Private m_ATC As String
 Private m_TherapieGroep As String
 Private m_TherapieSubgroep As String
 Private m_Generiek As String
+Private m_Product As String
 Private m_Vorm As String
 Private m_Etiket As String
 Private m_Sterkte As Double
@@ -89,9 +90,13 @@ Public Function GetFreqListString() As String
     Dim varItem As Variant
     Dim strList As String
 
-    For Each varItem In m_FreqList
-        strList = IIf(strList = vbNullString, varItem, strList & " ||" & varItem)
-    Next
+    If m_FreqList Is Nothing Then
+        GetFreqListString = vbNullString
+    Else
+        For Each varItem In m_FreqList
+            strList = IIf(strList = vbNullString, varItem, strList & " ||" & varItem)
+        Next
+    End If
     
     GetFreqListString = strList
     
@@ -193,6 +198,18 @@ Public Property Let ATC(ByVal strATC As String)
 
 End Property
 
+Public Property Get Product() As String
+
+    Product = m_Product
+
+End Property
+
+Public Property Let Product(ByVal strProduct As String)
+
+    m_Product = strProduct
+
+End Property
+
 Public Property Get TherapieGroep() As String
 
     TherapieGroep = m_TherapieGroep
@@ -225,7 +242,7 @@ End Property
 
 Public Property Let Generiek(ByVal strGeneriek As String)
 
-    m_Generiek = strGeneriek
+    m_Generiek = MedDisc_CanonGen(strGeneriek)
 
 End Property
 
@@ -343,23 +360,20 @@ Private Sub FillCollection(objColl As Collection, ByVal strItems As String)
     Dim arrItem() As String
     Dim objC As ClassStringComparer
     
-    If objColl Is Nothing Then
-        strItems = IIf(ModString.StringIsZeroOrEmpty(strItems), vbNullString, strItems)
-        strItems = Strings.LCase(strItems)
-        arrItem = Split(strItems, "||")
-        
-        Set objColl = New Collection
-        Set objC = New ClassStringComparer
-        
-        For Each varItem In arrItem
-            CollectionAddDistinctStringNotEmpty objColl, varItem
-        Next
-        
-        ModCollection.CollectionSort objColl, objC
-        If objColl.Count > 0 Then
-            If objColl.Item(1) = vbNullString Then objColl.Remove (1)
-        End If
-
+    strItems = IIf(ModString.StringIsZeroOrEmpty(strItems), vbNullString, strItems)
+    strItems = Strings.LCase(strItems)
+    arrItem = Split(strItems, "||")
+    
+    Set objColl = New Collection
+    Set objC = New ClassStringComparer
+    
+    For Each varItem In arrItem
+        CollectionAddDistinctStringNotEmpty objColl, Trim(CStr(varItem))
+    Next
+    
+    ModCollection.CollectionSort objColl, objC
+    If objColl.Count > 0 Then
+        If objColl.Item(1) = vbNullString Then objColl.Remove (1)
     End If
 
 End Sub

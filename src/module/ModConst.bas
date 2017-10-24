@@ -13,3 +13,8 @@ Public Const CONST_PASSWORD As String = "hla"
 Public Const CONST_DEFAULTERROR_MSG As String = "Er is een fout opgetreden. Neem contact op met uw functioneel beheerder."
 
 Public Const CONST_LOGPATTERN As String = "Afspraken2017.log"
+
+Public Const CONST_TEST_ERROR As Long = vbObjectError + 1
+
+Public Const CONST_APP_ERROR As Long = vbObjectError + 2
+

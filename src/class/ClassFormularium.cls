@@ -135,16 +135,16 @@ End Sub
 Public Function GPK(ByVal v_GPK As String) As ClassMedicatieDisc
 
     Dim objMed As ClassMedicatieDisc
-    Dim objRes As ClassMedicatieDisc
+'    Dim objRes As ClassMedicatieDisc
 
     For Each objMed In m_colMedicamenten
         If objMed.GPK = v_GPK Then
-            Set objRes = objMed
+'            Set objRes = objMed
             Exit For
         End If
     Next objMed
     
-    Set GPK = objRes
+    Set GPK = objMed
 
 End Function
 

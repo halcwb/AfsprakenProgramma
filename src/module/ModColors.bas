@@ -164,9 +164,6 @@ Public Sub ColorPedNeoRanges(ByVal blnNeo As Boolean)
                 
                 If blnProtected Then objTargetSheet.Protect ModConst.CONST_PASSWORD
                 
-                Set objSetting = Nothing
-                Set objTargetSheet = Nothing
-                Set objTargetRange = Nothing
             End If
             
             ModProgress.SetJobPercentage strSheet & ": " & strTarget, intTargetC, intTargetN

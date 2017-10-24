@@ -164,30 +164,28 @@ Public Sub InitializeAfspraken()
     
     On Error GoTo InitializeError
     
+    shtGlobGuiFront.Select
+    Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
+    
     strAction = "ModApplication.InitializeAfspraken"
     
     ModLog.LogActionStart strAction, strParams
-    
-    shtGlobGuiFront.Select
-    DoEvents                           ' Make sure sheet is shown before proceding
-        
+          
     SetCaptionAndHideBars              ' Setup Excel Application
     
     For Each objWind In WbkAfspraken.Windows
         SetWindowToOpenApp objWind
     Next
         
-    Application.Visible = True
     ModProgress.StartProgress "Start Afspraken Programma"
-            
-    Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
-    
+                
     ' Setup sheets
     ModSheet.ProtectUserInterfaceSheets True
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
     
-    Application.ScreenUpdating = True
-    
+    ' Load config tables
+    LoadConfigTables
+        
     ' Clean everything
     ModRange.SetRangeValue "Var_Glob_Versie", vbNullString
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
@@ -204,6 +202,8 @@ Public Sub InitializeAfspraken()
     
     ModProgress.FinishProgress
     ModLog.LogActionEnd strAction
+    
+    Application.ScreenUpdating = True
             
     Exit Sub
     
@@ -223,12 +223,16 @@ End Sub
 Public Sub UpdateStatusBar(ByVal strItem As String, ByVal strMessage As String)
 
     Dim varStatus() As String
+    Dim strStatus As String
     Dim varItem() As String
     Dim intN As Integer
     Dim intC As Integer
     Dim blnItemSet As Boolean
     
-    varStatus = Split(Application.StatusBar, constBarDel)
+    On Error Resume Next
+    
+    strStatus = CStr(Application.StatusBar)
+    varStatus = Split(strStatus, constBarDel)
     intC = UBound(varStatus)
     blnItemSet = False
     
@@ -266,6 +270,8 @@ Private Sub SetCaptionAndHideBars()
 
     Dim blnIsDevelop As Boolean
     
+    On Error GoTo SetCaptionAndHideBarsError
+    
     blnIsDevelop = ModSetting.IsDevelopmentMode()
     
     SetApplicationTitle
@@ -282,6 +288,12 @@ Private Sub SetCaptionAndHideBars()
     UpdateStatusBar "Versie", ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
     UpdateStatusBar "Omgeving", GetEnvironment()
     UpdateStatusBar "Afdeling", IIf(IsPedDir, "Pediatrie", "Neonatologie")
+    
+    Exit Sub
+    
+SetCaptionAndHideBarsError:
+
+    ModLog.LogError "SetCaptionAndHideBarsError"
     
 End Sub
 
@@ -311,9 +323,10 @@ Public Sub SetApplicationTitle()
     strVN = ModPatient.PatientVoorNaam()
     strAN = ModPatient.PatientAchterNaam()
     
-    If Not strBed = "0" Then
-        strTitle = strTitle & " Patient: " & strAN & " " & strVN & ", Bed: " & strBed
-    End If
+    strTitle = IIf(strAN = vbNullString, strTitle, strTitle & " Patient: " & strAN)
+    strTitle = IIf(strVN = vbNullString, strTitle, strTitle & ", " & strVN)
+    strTitle = IIf(strBed = vbNullString, strTitle, strTitle & " Bed: " & strBed)
+
     
     Application.Caption = strTitle
 
@@ -362,15 +375,214 @@ Private Function HasInPath(ByVal strDir As String) As Boolean
 
 End Function
 
-Public Function IsPedDir() As Boolean
+Private Function IsPedDir() As Boolean
 
-    IsPedDir = ModSetting.IsPed()
+    IsPedDir = MetaVision_IsPediatrie()
     
 End Function
 
-Public Function IsNeoDir() As Boolean
+Private Function IsNeoDir() As Boolean
 
-    IsNeoDir = ModSetting.IsNeo()
+    IsNeoDir = Not IsPedDir()
 
 End Function
+
+Private Sub LoadConfigTables()
+
+    Dim strFile As String
+    Dim strTable As String
+    Dim strSrc As String
+    
+    strTable = "Tbl_Admin_NeoMedCont"
+    strSrc = "A2:S24"
+    strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
+    
+    LoadConfigTable strFile, strTable, strSrc
+    
+    strTable = "Var_Neo_MedCont_VerdunningTekst"
+    strSrc = "A1"
+    strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
+    
+    LoadConfigTable strFile, strTable, strSrc
+    
+    strTable = "Tbl_Admin_PedMedCont"
+    strSrc = "A4:Q34"
+    strFile = WbkAfspraken.Path & "\db\PedMedCont.xlsx"
+    
+    LoadConfigTable strFile, strTable, strSrc
+
+    strTable = "Tbl_Admin_ParEnt"
+    strSrc = "A5:N45"
+    strFile = WbkAfspraken.Path & "\db\GlobParEnt.xlsx"
+    
+    LoadConfigTable strFile, strTable, strSrc
+
+End Sub
+
+Public Sub Application_SaveNeoMedContConfig()
+
+    Dim strFile As String
+    Dim strTable As String
+    Dim strDst As String
+    
+    Application.ScreenUpdating = False
+    ModProgress.StartProgress "Neo Continue Medicatie Configuratie Opslaan"
+    
+    strTable = "Tbl_Admin_NeoMedCont"
+    strDst = "A2:S24"
+    strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
+    
+    SaveConfigTable strFile, strTable, strDst
+    
+    strTable = "Var_Neo_MedCont_VerdunningTekst"
+    strDst = "A1"
+    strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
+    
+    SaveConfigTable strFile, strTable, strDst
+    
+    ModProgress.FinishProgress
+    Application.ScreenUpdating = True
+
+End Sub
+
+Public Sub Application_SaveParEntConfig()
+
+    Dim strFile As String
+    Dim strTable As String
+    Dim strDst As String
+    
+    Application.ScreenUpdating = False
+    ModProgress.StartProgress "Parenteralia Configuratie Opslaan"
+    
+    strTable = "Tbl_Admin_ParEnt"
+    strDst = "A5:N45"
+    strFile = WbkAfspraken.Path & "\db\GlobParEnt.xlsx"
+    
+    SaveConfigTable strFile, strTable, strDst
+        
+    ModProgress.FinishProgress
+    Application.ScreenUpdating = True
+
+End Sub
+
+Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)
+    
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim objDst As Range
+    
+    Dim intR As Integer
+    Dim intC As Integer
+    
+    Dim intN As Integer
+    Dim intJ As Integer
+    Dim intT As Integer
+    
+    Dim strMsg As String
+    
+    On Error GoTo LoadConfigTableError
+       
+    Application.DisplayAlerts = False
+        
+    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+    Set objSrc = objConfigWbk.Sheets(strTable).Range(strConfig)
+    Set objDst = ModRange.GetRange(strTable)
+        
+    intR = objSrc.Rows.Count
+    intC = objSrc.Columns.Count
+    
+    If Not intR = objDst.Rows.Count Or Not intC = objDst.Columns.Count Then Err.Raise ModConst.CONST_APP_ERROR, , ModConst.CONST_DEFAULTERROR_MSG
+    
+    intT = intR
+    For intN = 1 To intR
+        strMsg = strTable & " " & objDst.Cells(intN, 1).Value2
+        For intJ = 1 To intC
+            objDst.Cells(intN, intJ).Formula = objSrc.Cells(intN, intJ).Formula
+        Next
+        ModProgress.SetJobPercentage strMsg, intT, intN
+    Next
+    
+    objConfigWbk.Close False
+    
+    Set objConfigWbk = Nothing
+    
+    Application.DisplayAlerts = True
+    
+    Exit Sub
+    
+LoadConfigTableError:
+
+    ModLog.LogError "Kan config table " & strTable & " niet laden"
+    
+    On Error Resume Next
+    
+    objConfigWbk.Close False
+    
+    Set objDst = Nothing
+    Set objSrc = Nothing
+    Set objConfigWbk = Nothing
+    
+    Application.DisplayAlerts = True
+End Sub
+
+Private Sub SaveConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)
+    
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim objDst As Range
+    
+    Dim intR As Integer
+    Dim intC As Integer
+    
+    Dim intN As Integer
+    Dim intJ As Integer
+    Dim intT As Integer
+    
+    Dim strMsg As String
+    
+    On Error GoTo SaveConfigTableError
+    
+    Application.DisplayAlerts = False
+            
+    Set objConfigWbk = Workbooks.Open(strFile, True, False)
+    Set objDst = objConfigWbk.Sheets(strTable).Range(strConfig)
+    Set objSrc = ModRange.GetRange(strTable)
+        
+    intR = objSrc.Rows.Count
+    intC = objSrc.Columns.Count
+    
+    If Not intR = objDst.Rows.Count Or Not intC = objDst.Columns.Count Then Err.Raise ModConst.CONST_APP_ERROR, , ModConst.CONST_DEFAULTERROR_MSG
+    
+    intT = intR
+    For intN = 1 To intR
+        strMsg = objSrc.Cells(intN, 1).Value2
+        For intJ = 1 To intC
+            objDst.Cells(intN, intJ).Formula = objSrc.Cells(intN, intJ).Formula
+        Next
+        ModProgress.SetJobPercentage strMsg, intT, intN
+    Next
+    
+    objConfigWbk.Save
+    objConfigWbk.Close True
+    
+    Set objConfigWbk = Nothing
+    
+    Application.DisplayAlerts = True
+    Exit Sub
+    
+SaveConfigTableError:
+
+    ModLog.LogError "Kan config table " & strTable & " niet opslaan"
+    
+    On Error Resume Next
+    
+    objConfigWbk.Close False
+    
+    Set objDst = Nothing
+    Set objSrc = Nothing
+    Set objConfigWbk = Nothing
+    
+    Application.DisplayAlerts = True
+End Sub
+
 

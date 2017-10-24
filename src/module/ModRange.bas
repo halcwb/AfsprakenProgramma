@@ -364,8 +364,6 @@ Public Sub ReplaceRangeNames()
     
     Next intN
     
-    Set objRange = Nothing
-    
     ModProgress.FinishProgress
     ModMessage.ShowMsgBoxExclam "Names have been replaced"
 
@@ -384,8 +382,6 @@ Public Sub GiveNameToRange()
     Set frmNaamGeven = New FormNaamGeven
     frmNaamGeven.Show vbModal
     
-    Set frmNaamGeven = Nothing
-
 End Sub
 
 Public Sub RefreshPatientData()
@@ -424,8 +420,6 @@ Public Sub NaamGeven()
     Set frmNaam = New FormNaamGeven
     frmNaam.Show
     
-    Set frmNaam = Nothing
-
 End Sub
 
 Public Function CollectionFromRange(ByVal strRange As String, ByVal intStart As Integer) As Collection

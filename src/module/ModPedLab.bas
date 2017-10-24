@@ -102,8 +102,6 @@ Private Sub EnterText(ByVal strRange As String)
     
     frmOpmerking.txtOpmerking.Text = vbNullString
     
-    Set frmOpmerking = Nothing
-
 End Sub
 
 Public Sub PedLab_EnterText()

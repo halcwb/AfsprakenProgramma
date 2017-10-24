@@ -9,8 +9,6 @@ Public Sub SaveAndPrintAfspraken()
     ModBed.CloseBed (True)
     frmPrintAfspraken.Show
     
-    Set frmPrintAfspraken = Nothing
-    
 End Sub
 
 Public Sub AfsprakenPrinten()

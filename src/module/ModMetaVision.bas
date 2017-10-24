@@ -83,7 +83,7 @@ Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As Stri
         Do While Not objRs.EOF And Not blnFound
             strId = objRs.Fields("PatientId")
             If strId = strPatId Then
-                strBed = objRs.Fields("BedName")
+                strBed = Trim(CStr(objRs.Fields("BedName")))
                 blnFound = True
             End If
             objRs.MoveNext
@@ -123,7 +123,6 @@ Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As 
     If strPatId = vbNullString And strPatNum = vbNullString And strBed = vbNullString Then
         strSql = vbNullString
     Else
-        
         strSql = strSql & "DECLARE @patId AS int" & vbNewLine
         strSql = strSql & "DECLARE @bed AS nvarchar(100)" & vbNewLine
         strSql = strSql & "DECLARE @patNum AS nvarchar(40)" & vbNewLine
@@ -135,7 +134,7 @@ Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As 
         strSql = strSql & "DECLARE @gesl AS int" & vbNewLine
         strSql = strSql & "DECLARE @adD AS int" & vbNewLine
         strSql = strSql & "DECLARE @adW AS int" & vbNewLine
-        strSql = strSql & "" & vbNewLine
+        
         strSql = strSql & "SET @bd = 5372" & vbNewLine
         strSql = strSql & "SET @weightKg = 8365" & vbNewLine
         strSql = strSql & "SET @weightGr = 8456" & vbNewLine
@@ -158,7 +157,11 @@ Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As 
         strSql = strSql & ", pl.HospitalNumber" & vbNewLine
         strSql = strSql & ", pl.LastName" & vbNewLine
         strSql = strSql & ", pl.FirstName" & vbNewLine
-        strSql = strSql & ", dts.value BirthDate" & vbNewLine
+        strSql = strSql & ", (SELECT TOP 1 dts.Value" & vbNewLine
+        strSql = strSql & "   FROM DateTimeSignals dts" & vbNewLine
+        strSql = strSql & "   WHERE dts.PatientID = pl.PatientID AND dts.ParameterID = @bd" & vbNewLine
+        strSql = strSql & "   ORDER BY dts.[Time] DESC)" & vbNewLine
+        strSql = strSql & "   BirthDate" & vbNewLine
         strSql = strSql & ", (SELECT TOP 1 s.value / 1000 " & vbNewLine
         strSql = strSql & "   FROM Signals s " & vbNewLine
         strSql = strSql & "   WHERE s.PatientID = pl.PatientID AND s.ParameterID = @weightKg " & vbNewLine
@@ -191,14 +194,13 @@ Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As 
         strSql = strSql & ", pl.LocationFromTime" & vbNewLine
         strSql = strSql & "FROM PatientLogs pl" & vbNewLine
         strSql = strSql & "LEFT JOIN LogicalUnits lu ON lu.LogicalUnitID = pl.LogicalUnitID" & vbNewLine
-        strSql = strSql & "INNER JOIN Beds b ON b.BedID = pl.BedID" & vbNewLine
-        strSql = strSql & "LEFT JOIN DateTimeSignals dts ON dts.PatientID = pl.PatientID" & vbNewLine
+        strSql = strSql & "LEFT JOIN Beds b ON b.BedID = pl.BedID" & vbNewLine
         strSql = strSql & "WHERE " & vbNewLine
-        strSql = strSql & "dts.ParameterID = @bd" & vbNewLine
-        strSql = strSql & "AND (@patId IS NULL OR pl.PatientID = @patId)" & vbNewLine
+        strSql = strSql & "(@patId IS NULL OR pl.PatientID = @patId)" & vbNewLine
         strSql = strSql & "AND (@patNum IS NULL OR pl.HospitalNumber = @patNum)" & vbNewLine
-        strSql = strSql & "AND (@bed IS NULL OR b.BedName = @bed)" & vbNewLine
+        strSql = strSql & "AND (@bed IS NULL OR RTRIM(LTRIM(b.BedName)) = RTRIM(LTRIM(@bed)))" & vbNewLine
         strSql = strSql & "ORDER BY pl.LocationFromTime DESC" & vbNewLine
+
         
     End If
     
@@ -237,6 +239,8 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     
     If strServer = vbNullString Or strDatabase = vbNullString Or strSql = vbNullString Then Exit Sub
     
+    objPat.Clear
+    
     InitConnection strServer, strDatabase
     
     objConn.Open
@@ -244,9 +248,9 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     Set objRs = objConn.Execute(strSql)
     
     If Not objRs.EOF Then
-        dtmBd = ModString.StringToDate(objRs.Fields("BirthDate"))
+        If Not IsNull(objRs.Fields("BirthDate")) Then dtmBd = ModString.StringToDate(objRs.Fields("BirthDate"))
         objPat.PatientId = objRs.Fields("HospitalNumber")
-        If Not IsNull(objRs.Fields("BedName")) Then objPat.Bed = objRs.Fields("BedName")
+        If Not IsNull(objRs.Fields("BedName")) Then objPat.Bed = Trim(objRs.Fields("BedName"))
         objPat.AchterNaam = objRs.Fields("LastName")
         objPat.VoorNaam = objRs.Fields("FirstName")
         If Not IsNull(objRs.Fields("WeightKg")) Then objPat.Gewicht = ModString.FixPrecision(objRs.Fields("WeightKg"), 2)
@@ -479,9 +483,22 @@ Public Function MetaVision_GetDepartment() As String
 
 End Function
 
+Public Function MetaVision_IsPediatrie() As Boolean
+
+    MetaVision_IsPediatrie = Not MetaVision_GetDepartment() = "Neonatologie"
+
+End Function
+
+Public Function MetaVision_IsNeonatologie() As Boolean
+
+    MetaVision_IsNeonatologie = Not MetaVision_IsPediatrie()
+
+End Function
+
 Private Sub Test_MetaVision_GetDepartment()
 
     MsgBox MetaVision_GetDepartment()
+    MsgBox MetaVision_IsPediatrie()
 
 End Sub
 

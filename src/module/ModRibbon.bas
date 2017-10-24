@@ -14,6 +14,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
     
         'grpAfspraken                                       ' -- AFSPRAKEN --
         
+        Case "btnAbout"                                     ' -> Programma Voorblad
+            shtGlobGuiFront.Select
+        
         Case "btnClose"                                     ' -> Programma Afsluiten
             ModApplication.CloseAfspraken
         
@@ -180,8 +183,11 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnPedMedCont"                                ' -> Beheer Continue Medicatie Ped
              ModAdmin.Admin_TblPedMedCont
         
-        Case "btnParent"                                    ' -> Beheer Parenterale Vloeistoffen
-             ModAdmin.Admin_TblGlobParent
+        Case "btnParent"                                    ' -> Beheer ParEnterale Vloeistoffen
+             ModAdmin.Admin_TblGlobParEnt
+        
+        Case "btnMedDisc"                                    ' -> Beheer Discontinue medicatie
+             ModFormularium.Formularium_ShowConfig
         
         'grpFB                                              ' -- ACCEPTATIE TESTS --
         
@@ -213,7 +219,7 @@ Public Sub GetVisiblePed(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     Dim blnIsPed As Boolean
     
     blnIsDevelop = ModSetting.IsDevelopmentDir()
-    blnIsPed = ModSetting.IsPed()
+    blnIsPed = MetaVision_IsPediatrie()
     
     If blnIsPed Or blnIsDevelop Then
         blnVisible = True
@@ -229,7 +235,7 @@ Public Sub GetVisibleNeo(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     Dim blnIsNeo As Boolean
 
     blnIsDevelop = ModSetting.IsDevelopmentDir()
-    blnIsNeo = ModSetting.IsNeo()
+    blnIsNeo = MetaVision_IsNeonatologie()
     
     If blnIsNeo Or blnIsDevelop Then
         blnVisible = True
@@ -247,7 +253,7 @@ End Sub
 
 Public Sub GetVisibleAdmin(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
-    blnVisible = ModSetting.IsDevelopmentDir() Or ModSetting.IsTrainingDir()
+    blnVisible = True ' ModSetting.IsDevelopmentDir() Or ModSetting.IsTrainingDir()
     
 End Sub
 
@@ -257,8 +263,8 @@ Private Sub ClearAll()
         ModPatient.PatientClearNeo
         ModPatient.PatientClearPed
     Else
-        If ModApplication.IsNeoDir Then ModPatient.PatientClearNeo
-        If ModApplication.IsPedDir Then ModPatient.PatientClearPed
+        If MetaVision_IsNeonatologie() Then ModPatient.PatientClearNeo
+        If MetaVision_IsPediatrie() Then ModPatient.PatientClearPed
     End If
     
 End Sub
@@ -269,8 +275,8 @@ Private Sub ClearLab()
         ModNeoLab.NeoLab_Clear
         ModPedLab.PedLab_Clear
     Else
-        If ModApplication.IsNeoDir() Then ModNeoLab.NeoLab_Clear
-        If ModApplication.IsPedDir() Then ModPedLab.PedLab_Clear
+        If MetaVision_IsNeonatologie() Then ModNeoLab.NeoLab_Clear
+        If MetaVision_IsPediatrie() Then ModPedLab.PedLab_Clear
     End If
     
 End Sub
@@ -281,8 +287,8 @@ Private Sub ClearAfspraken()
         ModNeoAfspr.NeoAfspr_Clear
         ModPedAfspr.PedAfspr_Clear
     Else
-        If ModApplication.IsNeoDir() Then ModNeoAfspr.NeoAfspr_Clear
-        If ModApplication.IsPedDir() Then ModPedAfspr.PedAfspr_Clear
+        If MetaVision_IsNeonatologie() Then ModNeoAfspr.NeoAfspr_Clear
+        If MetaVision_IsPediatrie() Then ModPedAfspr.PedAfspr_Clear
     End If
 
 End Sub

@@ -1,8 +1,6 @@
 Attribute VB_Name = "ModNeoInfB_Tests"
 Option Explicit
 
-Public Const CONST_TEST_ERROR As Long = vbObjectError + 1
-
 Private Const constTestStart As Integer = 3
 Private Const constTestNum As String = "A"
 
@@ -68,6 +66,8 @@ Public Function Test_NeoInfB_EnterContMed(ByVal blnPass As Boolean, ByVal intN A
         dblHoev = SetMedSterkteNeoInfB(intN, dblHoev)
     End If
     If intOpl > 1 Then blnPass = blnPass And ModRange.SetRangeValue(constOplosmiddel & strM, intOpl)
+    NeoInfB_TestCheckOplVlst intN
+
     If dblOplHoev > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constOploshoeveelheid & strM, dblOplHoev)
     If dblStand > 0 Then blnPass = blnPass And ModRange.SetRangeValue(constInfuusStand & strM, dblStand * 10)
     
@@ -118,7 +118,6 @@ Public Sub Test_NeoInfB_ContMed()
             Next
         End If
     End With
-    Set dlgFile = Nothing
     
     If CStr(varFile) = vbNullString Then Exit Sub
     
@@ -438,6 +437,7 @@ Public Sub Test_NeoInfB_ContMed()
         
     Next
 
+    ModPatient.ClearPatientData "_Neo", False, True
     ModProgress.FinishProgress
     
     blnPass = blnPass And shtTests.Range(constTestResult & intTestCount + 3).Value
@@ -849,7 +849,7 @@ Public Sub Test_NeoInfB_Print()
         
         ' ================ Check dosis ================
         ' ToDo: fix empty test cases
-        varVal = Replace(shtNeoPrtWerkbr.Range("E" & (intM - 1) * 3 + 25).Value2, "= ", "")
+        varVal = Trim(Replace(shtNeoPrtWerkbr.Range("E" & (intM - 1) * 3 + 25).Value2, "= ", ""))
         If Not (IsEmpty(varVal) Or varVal = "") Then
             ' Check apotheek print
             shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
