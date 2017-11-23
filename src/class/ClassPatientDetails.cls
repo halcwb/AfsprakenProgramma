@@ -55,6 +55,7 @@ End Property
 
 Public Property Let Gewicht(ByVal dblWeight As Double)
 
+    dblWeight = ModString.FixPrecision(dblWeight, 2)
     If ModPatient.ValidWeightKg(dblWeight) Then m_WT = dblWeight
 
 End Property

@@ -101,6 +101,11 @@ End Sub
 
 Private Sub cboGeslacht_Change()
 
+    If cboGeslacht.ListIndex = -1 Then
+        cboGeslacht.SetFocus
+        ModMessage.ShowMsgBoxInfo "Geef een geldig geslacht op"
+    End If
+
     Validate vbNullString
 
 End Sub

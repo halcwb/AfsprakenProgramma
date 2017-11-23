@@ -46,12 +46,15 @@ Public Sub Patient_EnterWeight()
     Set frmInvoer = New FormInvoerNumeriek
     
     With frmInvoer
+        .lblText.Caption = "Voer gewicht in"
         .SetValue vbNullString, "Gewicht:", dblWeight, "kg", "Gewicht"
         
         .Show
         
         If Not .txtWaarde.Value = vbNullString Then
-            dblWeight = StringToDouble(.txtWaarde.Value) * 10
+            dblWeight = StringToDouble(.txtWaarde.Value)
+            dblWeight = ModString.FixPrecision(dblWeight, 2)
+'            dblWeight = dblWeight * 10
             ModRange.SetRangeValue constGewicht, dblWeight
         End If
     End With
@@ -69,6 +72,7 @@ Public Sub Patient_EnterLength()
     Set frmInvoer = New FormInvoerNumeriek
     
     With frmInvoer
+        .lblText.Caption = "Voer lengte in"
         .SetValue constLengte, "Lengte:", dblLength, "cm", "Lengte"
         .Show
         
@@ -78,7 +82,7 @@ End Sub
 
 Public Function GetGewichtFromRange() As Double
 
-    GetGewichtFromRange = StringToDouble(ModRange.GetRangeValue(constGewicht, 0)) / 10
+    GetGewichtFromRange = StringToDouble(ModRange.GetRangeValue(constGewicht, 0)) ' / 10
 
 End Function
 
@@ -178,7 +182,7 @@ Public Sub GetPatientDetails(objPat As ClassPatientDetails)
     objPat.Bed = ModBed.GetBed()
     objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
     objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
-    objPat.Gewicht = ModRange.GetRangeValue(constGewicht, 0) / 10
+    objPat.Gewicht = ModRange.GetRangeValue(constGewicht, 0) ' / 10
     objPat.Lengte = ModRange.GetRangeValue(constLengte, 0)
     objPat.Geslacht = ModRange.GetRangeValue(constGeslacht, vbNullString)
     objPat.GeboorteGewicht = ModRange.GetRangeValue(constGebGew, 0)
@@ -205,7 +209,7 @@ Public Sub WritePatientDetails(objPat As ClassPatientDetails)
         ModRange.SetRangeValue constOpnDat, objPat.OpnameDatum
     End If
     
-    ModRange.SetRangeValue constGewicht, objPat.Gewicht * 10
+    ModRange.SetRangeValue constGewicht, objPat.Gewicht ' * 10
     ModRange.SetRangeValue constLengte, objPat.Lengte
     ModRange.SetRangeValue constGeslacht, objPat.Geslacht
     ModRange.SetRangeValue constGebGew, objPat.GeboorteGewicht
@@ -244,7 +248,12 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
             
     Dim blnInfB As Boolean
     
-    Application.ScreenUpdating = False
+    With Application
+        .DisplayAlerts = False
+        .ScreenUpdating = False
+        .EnableEvents = False
+        .Calculation = xlCalculationManual
+    End With
     
     blnInfB = (MetaVision_IsNeonatologie() Or ModSetting.IsDevelopmentDir()) And Not (strStartWith = "_Ped" Or strStartWith = "_Glob")
             
@@ -298,7 +307,12 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
         ModApplication.SetApplicationTitle
     End If
     
-    Application.ScreenUpdating = True
+    With Application
+        .DisplayAlerts = True
+        .ScreenUpdating = True
+        .EnableEvents = True
+        .Calculation = xlCalculationAutomatic
+    End With
 
 End Sub
 

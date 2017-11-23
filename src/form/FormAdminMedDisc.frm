@@ -346,7 +346,11 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     lblEtiket.Caption = m_Etiket
     lblProduct.Caption = m_Product
     
-    If blnClearGeneric Then cboGeneriek.Value = vbNullString
+    If blnClearGeneric Then
+        cboGeneriek.Value = vbNullString
+    End If
+    txtSynon.Value = vbNullString
+    
     cboVorm.Value = vbNullString
     
     txtDeelDose.Value = vbNullString
@@ -458,7 +462,11 @@ Private Sub cmdOK_Click()
         Exit Sub
     End If
         
-    vbAnswer = ModMessage.ShowMsgBoxYesNo("Instellingen doorvoeren voor alle medicamenten met dezelfde generiek/route?")
+    If Not cboGeneriek.Value = txtSynon.Value Then
+        vbAnswer = vbNo
+    Else
+        vbAnswer = ModMessage.ShowMsgBoxYesNo("Instellingen doorvoeren voor alle medicamenten met dezelfde generiek/route?")
+    End If
     
     intC = ModFormularium.Formularium_GetFormConfig.MedicamentCount
     For intN = 1 To intC
@@ -470,6 +478,7 @@ Private Sub cmdOK_Click()
         Else
             Set objConfig = Formularium_GetFormConfig.GPK(m_Med.GPK)
             SetConfig objConfig
+            cboGeneriek.List(cboGeneriek.ListIndex) = objConfig.Generiek
         End If
     Next
     
@@ -839,42 +848,14 @@ Private Sub UserForm_Initialize()
     m_Etiket = lblEtiket.Caption
     m_Product = lblProduct.Caption
     
-    intC = Formularium_GetFormConfig.MedicamentCount
+    intC = Formularium_GetFormConfig.MedicamentCount + 1
     
     For intN = 1 To intC
         cboGeneriek.AddItem Formularium_GetFormConfig.Item(intN).Generiek
     Next intN
        
-    cboGeneriek.TabIndex = 0
-    cboVorm.TabIndex = 1
-    txtSterkte.TabIndex = 2
-    cboSterkteEenheid.TabIndex = 3
-    txtDeelDose.TabIndex = 4
-    cboDosisEenheid.TabIndex = 5
-'    cboRoute.TabIndex = 6
-'    cboIndicatie.TabIndex = 7
+    SetTabOrder2 ' GetTabControls()
     
-'    cboFreq.TabIndex = 8
-'    txtNormDose.TabIndex = 9
-''    cboDoseUnit.TabIndex = 10
-'    txtMinDose.TabIndex = 10
-'    txtMaxDose.TabIndex = 11
-'    txtAbsMax.TabIndex = 12
-    
-    cmdFormularium.TabIndex = 13
-    cmdOK.TabIndex = 14
-    cmdSave.TabIndex = 15
-    cmdCancel.TabIndex = 16
-    
-'    cboDoseUnit.TabStop = False
-'    txtKeerDose.TabStop = False
-'    cboKeerUnit.TabStop = False
-'
-'    cboDoseUnit.Enabled = False
-'    txtKeerDose.Enabled = False
-'    cboKeerUnit.Enabled = False
-'    txtCalcDose.Enabled = False
-
     FillCombo cboOplVlst, ModMedDisc.MedDisc_GetOplVlstCol
        
 End Sub
@@ -883,6 +864,42 @@ Private Sub UserForm_QueryClose(intCancel As Integer, intMode As Integer)
     
     intCancel = True
     cmdCancel_Click
+
+End Sub
+
+Private Sub SetTabOrder2()
+
+    frmDetails.TabIndex = 0
+    cboGeneriek.TabIndex = 0
+    txtSynon.TabIndex = 1
+    txtDeelDose.TabIndex = 2
+    cboDosisEenheid.TabIndex = 3
+    
+    frmFreq.TabIndex = 1
+    lbxFreq.TabIndex = 0
+    
+    frmDoseNeo.TabIndex = 2
+    txtNeoNormDose.TabIndex = 0
+    txtNeoMinDose.TabIndex = 1
+    txtNeoMaxDose.TabIndex = 2
+    
+    frmPedDose.TabIndex = 3
+    txtPedNormDose.TabIndex = 0
+    txtPedMinDose.TabIndex = 1
+    txtPedMaxDose.TabIndex = 2
+    
+    frmAbsMax.TabIndex = 4
+    txtAbsMax.TabIndex = 0
+    
+    frmOpls.TabIndex = 5
+    cboOplVlst.TabIndex = 0
+    txtMaxConc.TabIndex = 1
+    txtTijd.TabIndex = 2
+    
+    cmdFormularium.TabIndex = 6
+    cmdOK.TabIndex = 7
+    cmdSave.TabIndex = 8
+    cmdCancel.TabIndex = 9
 
 End Sub
 

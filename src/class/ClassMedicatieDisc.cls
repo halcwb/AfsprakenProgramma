@@ -24,6 +24,7 @@ Private m_DoseEenheid As String
 Private m_Route As String
 Private m_Indicatie As String
 Private m_Freq As String
+Private m_HasDose As Boolean
 Private m_CalcDose As Double
 Private m_NormDose As Double
 Private m_MinDose As Double
@@ -36,6 +37,18 @@ Private m_MinTijd As Integer
 Private m_IndicatieList As Collection
 Private m_RouteList As Collection
 Private m_FreqList As Collection
+
+Public Property Get HasDose() As Boolean
+
+    HasDose = m_HasDose
+
+End Property
+
+Public Property Let HasDose(ByVal blnHasDose As Boolean)
+
+    m_HasDose = blnHasDose
+
+End Property
 
 Public Property Get MaxDose() As Double
 

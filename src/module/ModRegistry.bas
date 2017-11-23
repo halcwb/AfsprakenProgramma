@@ -43,7 +43,7 @@ End Function
 
 Private Sub Test_ReadRegistryKey()
 
-    MsgBox ReadRegistryKey("HKEY_CURRENT_USER\Software\Classes\VirtualStore\MACHINE\SOFTWARE\Wow6432Node\iMD Soft\Database Connect\", "EMPI Server")
+    MsgBox ReadRegistryKey("HKEY_CURRENT_USER\Software\UMCU\MV", "UserLogin")
 
 End Sub
 

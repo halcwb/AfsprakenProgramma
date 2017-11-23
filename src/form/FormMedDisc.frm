@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   13290
+   ClientHeight    =   13860
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10050
@@ -25,7 +25,7 @@ Private m_IsGPK As Boolean
 Private m_LoadGPK As Boolean
 
 Private m_Freq As Dictionary
-
+Private m_Keer As Boolean
 
 Public Sub SetNoFormMed()
 
@@ -49,14 +49,17 @@ Private Sub Validate(ByVal strValid As String)
     
     If strValid = vbNullString Then
     
-        strValid = IIf(IsDoseControlInValid, "Voer of een norm dosering in en/of een max (en evt. min en abs max) dosering", strValid)
-        strValid = IIf(IsAbsMaxInvalid, "Gewicht boven de 50 kg, voer een absolute maximum dosering in (of een norm dosering of max dosering)", strValid)
-    
+        If frmDose.Visible Then
+            strValid = IIf(IsDoseControlInValid, "Voer of een advies dosering in en/of een max (en evt. min en abs max) dosering", strValid)
+            strValid = IIf(IsAbsMaxInvalid, "Gewicht boven de 50 kg, voer een absolute maximum dosering in (of een advies dosering of max dosering)", strValid)
+        
+            strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering eenheid in", strValid)
+            strValid = IIf(txtDeelDose.Value = vbNullString, "Voer een deelbaarheid in", strValid)
+        End If
+        
         strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", strValid)
         strValid = IIf(cboRoute.Value = vbNullString, "Kies een route", strValid)
         
-        strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering eenheid in", strValid)
-        strValid = IIf(txtDeelDose.Value = vbNullString, "Voer een deelbaarheid in", strValid)
         strValid = IIf(cboSterkteEenheid.Value = vbNullString, "Voer sterkte eenheid in", strValid)
         strValid = IIf(txtSterkte.Value = vbNullString, "Voer sterkte in", strValid)
         
@@ -66,7 +69,7 @@ Private Sub Validate(ByVal strValid As String)
     End If
     
     lblValid.Caption = strValid
-    cmdOK.Enabled = strValid = vbNullString
+    ' cmdOK.Enabled = strValid = vbNullString
 
 End Sub
 
@@ -191,6 +194,8 @@ Private Sub SetDoseUnit()
         cboDoseUnit.Text = strUnit & "/kg/dag"
         cboKeerUnit.Text = strUnit
         lblDoseUnit.Caption = cboDoseUnit.Value
+        lblMinMaxEenheid.Caption = cboDoseUnit.Value
+        lblAbsMaxEenheid.Caption = strUnit & "/dag"
         lblConcUnit.Caption = strUnit & "/ml"
     End If
 
@@ -215,6 +220,13 @@ Private Sub LoadMedicament()
         
         txtSterkte.Text = .Sterkte
         cboSterkteEenheid.Text = .SterkteEenheid
+        
+        If .DeelDose = 0 Then
+            chkDose.Value = False
+            chkDose_Click
+            
+            Exit Sub
+        End If
         
         txtDeelDose.Text = .DeelDose
         
@@ -364,6 +376,12 @@ Private Sub cboRoute_Change()
 
 End Sub
 
+Public Function GetFactorByFreq(ByVal strFreq As String) As Double
+
+    GetFactorByFreq = m_Freq.Item(strFreq)
+
+End Function
+
 Private Sub CalculateDose()
 
     Dim dblDose As Double
@@ -374,29 +392,39 @@ Private Sub CalculateDose()
     Dim dblDeel As Double
     Dim dblKeer As Double
     
-    dblFact = m_Freq.Item(cboFreq.Text)
+    dblFact = GetFactorByFreq(cboFreq.Text)
     dblDose = StringToDouble(txtNormDose.Value)
     dblWght = ModPatient.GetGewichtFromRange()
     dblDeel = StringToDouble(txtDeelDose.Value)
+    dblKeer = StringToDouble(txtKeerDose.Value)
+    dblKeer = IIf(dblDeel > 0, ModExcel.Excel_RoundBy(dblKeer, dblDeel), dblKeer)
     
-    If dblFact = 0 Or dblDose = 0 Or dblWght = 0 Or dblDeel = 0 Then
+    If dblFact = 0 Or (Not m_Keer And dblDose = 0) Or (m_Keer And dblKeer = 0) Or dblWght = 0 Or dblDeel = 0 Then
         SetTextBoxNumericValue txtCalcDose, 0
         Exit Sub
     End If
     
-    dblVal = dblDose * dblWght / dblFact
-    dblVal = ModExcel.Excel_RoundBy(dblVal, txtDeelDose.Value)
+    If m_Keer Then
+        
+        dblCalc = dblKeer * dblFact / dblWght
     
-    dblCalc = dblVal * dblFact / dblWght
-    dblKeer = dblCalc * dblWght / dblFact
+    Else
     
+        dblVal = dblDose * dblWght / dblFact
+        dblVal = ModExcel.Excel_RoundBy(dblVal, txtDeelDose.Value)
+        
+        dblCalc = dblVal * dblFact / dblWght
+        dblKeer = dblCalc * dblWght / dblFact
+    
+    End If
+        
     If m_Med Is Nothing Then Set m_Med = New ClassMedicatieDisc
     m_Med.CalcDose = dblCalc
     m_Med.Freq = cboFreq.Text
     
     txtCalcDose.Value = ModString.FixPrecision(dblCalc, 2)
     txtKeerDose.Value = dblKeer
-    
+        
     CalculateVolume
     
     lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDeelDose.Value & " " & cboDosisEenheid.Text
@@ -418,7 +446,19 @@ Private Sub CalculateVolume()
 
 End Sub
 
+Private Sub chkDose_Click()
+    
+    frmDose.Visible = chkDose.Value
+    frmOpl.Visible = chkDose.Value
+    txtDeelDose.Visible = chkDose.Value
+    cboDosisEenheid.Visible = chkDose.Value
+
+    Validate vbNullString
+
+End Sub
+
 Private Sub cmdFormularium_Click()
+    
     Dim strUrl As String
     
     strUrl = "https://www.kinderformularium.nl/"
@@ -452,7 +492,47 @@ Private Sub cmdClear_Click()
     
 End Sub
 
+Private Sub cmdKeerDose_Click()
+
+    Dim objPic As StdPicture
+
+    m_Keer = Not m_Keer
+    Set objPic = cmdKeerDose.Picture
+    cmdKeerDose.Picture = cmdNormDose.Picture
+    cmdNormDose.Picture = objPic
+    
+    ToggleDoseText
+
+    CalculateDose
+    
+End Sub
+
+Private Sub cmdNormDose_Click()
+    Dim objPic As StdPicture
+
+    m_Keer = Not m_Keer
+    Set objPic = cmdNormDose.Picture
+    cmdNormDose.Picture = cmdKeerDose.Picture
+    cmdKeerDose.Picture = objPic
+    
+    ToggleDoseText
+    
+    CalculateDose
+
+End Sub
+
 Private Sub cmdOK_Click()
+
+    Dim intAnswer As Integer
+    Dim strMsg As String
+    
+    If Not lblValid.Caption = vbNullString Then
+        strMsg = "Voorschrift is nog niet goed."
+        strMsg = strMsg & vbNewLine & lblValid.Caption
+        strMsg = strMsg & vbNewLine & "Toch invoeren?"
+        intAnswer = ModMessage.ShowMsgBoxYesNo(strMsg)
+        If intAnswer = vbNo Then Exit Sub
+    End If
 
     If Not m_IsGPK Then
     
@@ -465,25 +545,39 @@ Private Sub cmdOK_Click()
         
     End If
     
-    m_Med.DeelDose = StringToDouble(txtDeelDose.Value)
-    m_Med.DoseEenheid = cboDosisEenheid.Value
-    
     m_Med.Route = cboRoute.Value
     m_Med.Indicatie = cboIndicatie.Value
     
-    m_Med.Freq = cboFreq.Value
+    m_Med.HasDose = chkDose.Value
+    If m_Med.HasDose Then
+        m_Med.DeelDose = StringToDouble(txtDeelDose.Value)
+        m_Med.DoseEenheid = cboDosisEenheid.Value
+        
+        m_Med.Freq = cboFreq.Value
+        
+        m_Med.NormDose = StringToDouble(txtNormDose.Value)
+        m_Med.MinDose = StringToDouble(txtMinDose.Value)
+        m_Med.MaxDose = StringToDouble(txtMaxDose.Value)
+        m_Med.AbsDose = StringToDouble(txtAbsMax.Value)
+        m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
+        
+        m_Med.OplVlst = cboOplVlst.Value
+        m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
+        m_Med.MinTijd = StringToDouble(txtTijd.Value)
     
-    m_Med.NormDose = StringToDouble(txtNormDose.Value)
-    m_Med.MinDose = StringToDouble(txtMinDose.Value)
-    m_Med.MaxDose = StringToDouble(txtMaxDose.Value)
-    m_Med.AbsDose = StringToDouble(txtAbsMax.Value)
-    m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
+    End If
     
-    m_Med.OplVlst = cboOplVlst.Value
-    m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
-    m_Med.MinTijd = StringToDouble(txtTijd.Value)
-
     CloseForm "OK"
+
+End Sub
+
+Private Sub cmdParEnt_Click()
+
+    Dim strUrl As String
+    
+    strUrl = "https://kinderen-ic-umcutrecht.parenteralia.nl/"
+    
+    ActiveWorkbook.FollowHyperlink strUrl
 
 End Sub
 
@@ -502,6 +596,13 @@ End Sub
 Private Sub txtAbsMax_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     
     ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtCalcDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModMessage.ShowMsgBoxInfo "Deze waarde is berekend en kan niet worden gewijzigd!"
+    KeyAscii = 0
 
 End Sub
 
@@ -533,6 +634,36 @@ Private Sub cboVorm_Change()
 End Sub
 
 Private Sub txtDeelDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtKeerDose_AfterUpdate()
+
+    Dim dblDeel As Double
+    Dim dblKeer As Double
+    
+    dblDeel = StringToDouble(txtDeelDose.Value)
+    dblKeer = StringToDouble(txtKeerDose.Value)
+    dblKeer = IIf(dblDeel > 0, ModExcel.Excel_RoundBy(dblKeer, dblDeel), dblKeer)
+
+    SetTextBoxNumericValue txtKeerDose, dblKeer
+    
+    If dblKeer = 0 Then
+        ModMessage.ShowMsgBoxExclam "Deze keerdosering kan niet met een deelbaarheid van " & txtDeelDose.Text
+    End If
+
+End Sub
+
+Private Sub txtKeerDose_Change()
+
+    If m_Keer Then CalculateDose
+    Validate vbNullString
+
+End Sub
+
+Private Sub txtKeerDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.OnlyNumericAscii KeyAscii
 
@@ -582,7 +713,7 @@ End Sub
 
 Private Sub txtNormDose_Change()
 
-    CalculateDose
+    If Not m_Keer Then CalculateDose
     Validate vbNullString
 
 End Sub
@@ -646,6 +777,13 @@ Private Sub LoadFreq()
 
 End Sub
 
+Public Sub CaclculateWithKeerDose(ByVal dblKeer As Double)
+
+    txtKeerDose.Value = dblKeer
+    cmdKeerDose_Click
+
+End Sub
+
 Private Sub UserForm_Initialize()
 
     Dim intN As Integer
@@ -653,13 +791,14 @@ Private Sub UserForm_Initialize()
     Dim strTitle As String
 
     m_LoadGPK = False
+    m_Keer = False
     
     m_TherapieGroep = lblTherapieGroep.Caption
     m_SubGroep = lblSubGroep.Caption
     m_Etiket = lblEtiket.Caption
     m_Product = lblProduct.Caption
     
-    intC = Formularium_GetFormularium.MedicamentCount
+    intC = Formularium_GetFormularium.MedicamentCount + 1
     
     For intN = 1 To intC
         cboGeneriek.AddItem Formularium_GetFormularium.Item(intN).Generiek
@@ -678,16 +817,16 @@ Private Sub UserForm_Initialize()
     cboIndicatie.TabIndex = 7
     
     cboFreq.TabIndex = 8
-    txtNormDose.TabIndex = 9
-'    cboDoseUnit.TabIndex = 10
-    txtMinDose.TabIndex = 10
-    txtMaxDose.TabIndex = 11
-    txtAbsMax.TabIndex = 12
+    txtKeerDose.TabIndex = 9
+    txtNormDose.TabIndex = 10
+    txtMinDose.TabIndex = 11
+    txtMaxDose.TabIndex = 12
+    txtAbsMax.TabIndex = 13
     
-    cmdFormularium.TabIndex = 13
-    cmdOK.TabIndex = 14
-    cmdClear.TabIndex = 15
-    cmdCancel.TabIndex = 16
+    cmdFormularium.TabIndex = 14
+    cmdOK.TabIndex = 15
+    cmdClear.TabIndex = 16
+    cmdCancel.TabIndex = 17
     
     cboDoseUnit.TabStop = False
     txtKeerDose.TabStop = False
@@ -697,8 +836,16 @@ Private Sub UserForm_Initialize()
     cboDoseUnit.Enabled = False
     txtKeerDose.Enabled = False
     cboKeerUnit.Enabled = False
-    txtCalcDose.Enabled = False
+    
+    chkDose.Value = True
        
+End Sub
+
+Private Sub ToggleDoseText()
+
+    txtKeerDose.Enabled = m_Keer
+    txtNormDose.Enabled = Not m_Keer
+
 End Sub
 
 Private Sub UserForm_QueryClose(intCancel As Integer, intMode As Integer)

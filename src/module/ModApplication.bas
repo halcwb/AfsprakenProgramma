@@ -26,7 +26,7 @@ Public Function Application_GetVersion() As String
 
 End Function
 
-Public Sub SetToDevelopmentMode()
+Public Sub ToggleDevelopmentMode()
 
     Dim blnDevelop As Boolean
     Dim objWindow As Window
@@ -135,6 +135,7 @@ Private Sub SetWindow(objWindow As Window, ByVal blnDisplay As Boolean)
         .DisplayZeros = blnDisplay
         .DisplayVerticalScrollBar = True
         .DisplayHorizontalScrollBar = blnDisplay
+        
         .WindowState = xlMaximized
     End With
     
@@ -159,6 +160,7 @@ Public Sub InitializeAfspraken()
     Dim strError As String
     Dim strAction As String
     Dim strBed As String
+    Dim strPw As String
     Dim strParams() As Variant
     Dim objWind As Window
     
@@ -171,6 +173,21 @@ Public Sub InitializeAfspraken()
     
     ModLog.LogActionStart strAction, strParams
           
+    ClearLogin
+    MetaVision_SetUser
+    If ModRange.GetRangeValue("_User_Login", vbNullString) = vbNullString Then
+        strPw = ModMessage.ShowPasswordBox("Geef wachtwoord op om in te loggen, of start de applicatie op vanuit MetaVision")
+        If Not strPw = ModConst.CONST_PASSWORD Then
+            ModMessage.ShowMsgBoxExclam "Kan niet inloggen met dit wachtwoord"
+            Application.Quit
+        Else
+            ModRange.SetRangeValue "_User_Login", "Develop"
+            ModRange.SetRangeValue "_User_FirstName", "Ontwikkelaar"
+            ModRange.SetRangeValue "_User_LastName", "AfsprakenProgramma"
+            ModRange.SetRangeValue "_User_Type", "Beheerders"
+        End If
+    End If
+    
     SetCaptionAndHideBars              ' Setup Excel Application
     
     For Each objWind In WbkAfspraken.Windows
@@ -288,6 +305,7 @@ Private Sub SetCaptionAndHideBars()
     UpdateStatusBar "Versie", ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
     UpdateStatusBar "Omgeving", GetEnvironment()
     UpdateStatusBar "Afdeling", IIf(IsPedDir, "Pediatrie", "Neonatologie")
+    UpdateStatusBar "Login", ModRange.GetRangeValue("_User_Login", vbNullString)
     
     Exit Sub
     
@@ -406,7 +424,7 @@ Private Sub LoadConfigTables()
     LoadConfigTable strFile, strTable, strSrc
     
     strTable = "Tbl_Admin_PedMedCont"
-    strSrc = "A4:Q34"
+    strSrc = "A4:R34"
     strFile = WbkAfspraken.Path & "\db\PedMedCont.xlsx"
     
     LoadConfigTable strFile, strTable, strSrc
@@ -585,4 +603,25 @@ SaveConfigTableError:
     Application.DisplayAlerts = True
 End Sub
 
+Private Sub PrintScreen()
 
+    Application.SendKeys "(%{1068})"
+    DoEvents
+
+End Sub
+
+Public Sub Application_SendPrintScreen()
+
+    Dim objClip
+    PrintScreen
+    
+End Sub
+
+Private Sub ClearLogin()
+
+    ModRange.SetRangeValue "_User_Login", vbNullString
+    ModRange.SetRangeValue "_User_FirstName", vbNullString
+    ModRange.SetRangeValue "_User_LastName", vbNullString
+    ModRange.SetRangeValue "_User_Type", vbNullString
+    
+End Sub

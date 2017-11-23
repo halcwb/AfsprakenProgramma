@@ -2,6 +2,7 @@ Attribute VB_Name = "ModNeoAfspr"
 Option Explicit
 
 Private Const constWondKweek As String = "_Neo_AfsprD_Wondkweek"
+Private Const constOverig As String = "_Neo_AfsprD_OverigTekst"
 Private Const constNeoAfsprB As String = "_Neo_AfsprB_"
 Private Const constNeoAfsprD As String = "_Neo_AfsprD_"
 
@@ -33,6 +34,12 @@ End Sub
 Public Sub NeoAfspr_WondText()
 
     EnterText "Voer tekst in ...", "Voer locatie wond(en) in", constWondKweek
+
+End Sub
+
+Public Sub NeoAfspr_OverigText()
+
+    EnterText "Voer tekst in ...", "Voer een opmerking in voor overige afspraken", constOverig
 
 End Sub
 

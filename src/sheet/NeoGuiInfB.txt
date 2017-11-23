@@ -52,7 +52,7 @@ $I$9: 	=Txt_Pat_PatNo
 $N$9: 	=Txt_Pat_Leeftijd
 $Q$9: 	=Txt_Pat_GeboorteDat
 $I$10: 	=Txt_Pat_FullName
-$N$10: 	=IF(_Pat_Gewicht>0,FixPrecision((_Pat_Gewicht/10),4)&"" kg"","""")
+$N$10: 	=IF(_Pat_Gewicht>0,FixPrecision((_Pat_Gewicht),4)&"" kg"","""")
 $Q$10: 	=Txt_Pat_GestAge
 $I$11: 	=Txt_Pat_AfspraakDat
 $N$11: 	=Txt_Pat_OpnameDat
@@ -185,31 +185,38 @@ $D$43: 	=IF(Var_Neo_InfB_Cont_MedTekst_2="""","""",Var_Neo_InfB_Cont_MedTekst_2)
 $A$47: 	=NeoBerInfB!AI40
 $B$47: 	=NeoBerInfB!AJ40
 $G$47: 	=IF(NeoBerInfB!C40>0,NeoBerInfB!C40&"" ml"","""")
-$H$47: 	=IF(G47<>"""",ROUND(NeoBerInfB!C40/(_Pat_Gewicht/10),0)&"" ml/ kg"","""")
+$H$47: 	=IF(G47<>"""",ROUND(NeoBerInfB!C40/(_Pat_Gewicht),0)&"" ml/ kg"","""")
 $M$47: 	=IF(NeoBerInfB!B40>0,NeoBerInfB!B40&"" ml"","""")
 $A$49: 	=NeoBerInfB!AI39
 $B$49: 	=NeoBerInfB!AJ39
+$A$51: 	=NeoBerInfB!AI42
 $I$51: 	=IF(NeoBerInfB!$D$41=2,NeoBerInfB!C42&"" ml"","""")
 $K$51: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C42&"" ml"","""")
 $M$51: 	=IF(NeoBerInfB!B42>0,NeoBerInfB!B42&"" ml"","""")
+$A$52: 	=NeoBerInfB!AI43
 $I$52: 	=IF(NeoBerInfB!$D$41=2,NeoBerInfB!C43&"" ml"","""")
 $K$52: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C43&"" ml"","""")
 $M$52: 	=IF(NeoBerInfB!B43>0,NeoBerInfB!B43&"" ml"","""")
+$A$53: 	=NeoBerInfB!AI44
 $K$53: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C44&"" ml"","""")
 $M$53: 	=IF(NeoBerInfB!B44>0,NeoBerInfB!B44&"" ml"","""")
+$A$54: 	=NeoBerInfB!AI45
 $K$54: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C45&"" ml"","""")
 $M$54: 	=IF(NeoBerInfB!B45>0,NeoBerInfB!B45&"" ml"","""")
+$A$55: 	=NeoBerInfB!AI46
 $K$55: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C46&"" ml"","""")
 $M$55: 	=IF(NeoBerInfB!B46>0,NeoBerInfB!B46&"" ml"","""")
+$A$56: 	=NeoBerInfB!AI47
 $G$56: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!C47&"" ml"","""")
 $I$56: 	=IF(NeoBerInfB!$D$41=2,NeoBerInfB!C47&"" ml"","""")
 $K$56: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C47&"" ml"","""")
 $M$56: 	=IF(NeoBerInfB!B47>0,NeoBerInfB!B47&"" ml"","""")
+$A$57: 	=NeoBerInfB!AI48
 $G$57: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!C48&"" ml"","""")
-$H$57: 	=IF(G57<>"""",""(""&ROUND(NeoBerInfB!C48/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
+$H$57: 	=IF(G57<>"""",""(""&ROUND(NeoBerInfB!C48/(_Pat_Gewicht),0)&"" ml/kg)"","""")
 $M$57: 	=IF(NeoBerInfB!B48>0,NeoBerInfB!B48&"" ml"","""")
 $I$58: 	=IF(NeoBerInfB!$D$41=2,NeoBerInfB!C49&"" ml"","""")
-$J$58: 	=IF(I58<>"""",""(""&ROUND(NeoBerInfB!C49/(_Pat_Gewicht/10),0)&"" ml/kg)"","""")
+$J$58: 	=IF(I58<>"""",""(""&ROUND(NeoBerInfB!C49/(_Pat_Gewicht),0)&"" ml/kg)"","""")
 $M$58: 	=IF(NeoBerInfB!B49>0,NeoBerInfB!B49&"" ml"","""")
 $G$59: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!AL50,"""")
 $H$59: 	=IF(G59<>"""",""ml"","""")

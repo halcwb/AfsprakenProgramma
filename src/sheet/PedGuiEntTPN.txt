@@ -42,7 +42,6 @@ $L$16: 	=PedBerEnt!B17
 $K$17: 	=PedBerEnt!A18
 $L$17: 	=PedBerEnt!B18
 $B$18: 	=PedBerEnt!$G9
-$C$18: 	=PedBerEnt!$G9
 $F$18: 	=_Ped_Ent_Opm
 $K$18: 	=PedBerEnt!A19
 $L$18: 	=PedBerEnt!B19

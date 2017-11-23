@@ -723,6 +723,7 @@ Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String)
     Dim frmInvoer As FormInvoerNumeriek
     
     Set frmInvoer = New FormInvoerNumeriek
+    frmInvoer.lblText.Caption = "Voer hoeveelheid in voor " & strItem
     frmInvoer.SetValue strRange, strItem, ModRange.GetRangeValue(strRange, 0), "mL", vbNullString
     frmInvoer.Show
     

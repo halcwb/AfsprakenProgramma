@@ -108,7 +108,15 @@ Private Sub cmdOK_Click()
     Me.Hide
     lblButton.Caption = "OK"
     lbxMedicamenten_Click
-    Admin_SetNeoMedCont m_MedCol
+    Admin_SetNeoMedCont m_MedCol, txtVerdunning.Value
+
+End Sub
+
+Private Sub cmdPrint_Click()
+
+    shtNeoTblMedIV.Visible = xlSheetVisible
+    ModSheet.PrintSheetAllPortrait shtNeoTblMedIV
+    shtNeoTblMedIV.Visible = xlSheetVeryHidden
 
 End Sub
 
@@ -117,7 +125,7 @@ Private Sub cmdSave_Click()
     Me.Hide
     lblButton.Caption = "OK"
     lbxMedicamenten_Click
-    Admin_SetNeoMedCont m_MedCol
+    Admin_SetNeoMedCont m_MedCol, txtVerdunning
     Application_SaveNeoMedContConfig
 
 End Sub

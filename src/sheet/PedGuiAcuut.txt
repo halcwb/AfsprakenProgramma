@@ -5,7 +5,7 @@ $C$3: 	=__4_GebDatum
 $E$3: 	=""Geschat gewicht: ""&VLOOKUP(C5+D5/12,PedTblGew!A2:T49,20)&"" kg""
 $C$5: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)
 $D$5: 	=TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)
-$E$5: 	=_Pat_Gewicht/10
+$E$5: 	=_Pat_Gewicht
 $F$5: 	=_Pat_Lengte
 $G$5: 	=ROUND(POWER(E5,0.425)*POWER(((F5/100)*100),0.725)*0.007184,2)
 $D$7: 	=""Maat: ""&VLOOKUP(C5,L2:N20,3)&"", Lengte: ""&IF(C5>1,ROUND((C5/2+15)/2,0)*2,IF(C5=0,12,15))&"" cm""&"" nasaal, ""&ROUND((C5/2+12)/2,0)*2&"" cm oraal""
@@ -47,4 +47,5 @@ $D$36: 	=IF(ROUND((0.5*E5),1)>50,""50 gram iv"",ROUND((0.5*E5),1)&"" gram iv"")
 $E$36: 	=""= ""&IF(ROUND((0.5*E5),1)>50,ROUND(50/0.15,0),ROUND((0.5*E5)/0.15,0))&"" ml van mannitol 15% in 30 min iv""
 $D$38: 	=""AMV ""&ROUND(E5*8*VLOOKUP(C5,L2:M20,2)/1000,1)&"" L/min""
 $D$39: 	=""frequentie ""&VLOOKUP(C5,L2:M20,2)&""/min""
+$C$43: 	=_User_LastName&"", ""&_User_FirstName
 "

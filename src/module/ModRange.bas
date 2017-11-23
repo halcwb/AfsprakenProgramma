@@ -38,6 +38,13 @@ Public Function CopyTempSheetToNamedRanges(ByVal blnShowProgress As Boolean) As 
     Dim strRange As String
     Dim varValue As Variant
     
+    With Application
+        .DisplayAlerts = False
+        .ScreenUpdating = False
+        .EnableEvents = False
+        .Calculation = xlCalculationManual
+    End With
+    
     blnAll = True
     With shtGlobTemp
         intC = .Range("A1").CurrentRegion.Rows.Count
@@ -48,6 +55,13 @@ Public Function CopyTempSheetToNamedRanges(ByVal blnShowProgress As Boolean) As 
             
             If blnShowProgress Then ModProgress.SetJobPercentage "Kopieer Waarden", intC, intN
         Next intN
+    End With
+        
+    With Application
+        .DisplayAlerts = True
+        .ScreenUpdating = True
+        .EnableEvents = True
+        .Calculation = xlCalculationAutomatic
     End With
         
     CopyTempSheetToNamedRanges = blnAll

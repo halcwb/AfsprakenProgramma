@@ -191,5 +191,16 @@ Public Function File_GetTestFile() As String
     
     File_GetTestFile = IIf(IsEmpty(varFile), vbNullString, CStr(varFile))
 
+End Function
+
+Public Function File_GetFolderPath(ByVal strFile As String) As String
+
+    File_GetFolderPath = Left(strFile, InStrRev(strFile, "\"))
 
 End Function
+
+Private Sub Test_File_GetFolderPath()
+
+    MsgBox WbkAfspraken.Path
+    
+End Sub

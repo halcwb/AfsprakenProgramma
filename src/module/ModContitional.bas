@@ -179,3 +179,13 @@ Public Sub SetMedDiscConditionalFormatting()
     SetConditionalFormattingInfo shtGlobGuiMedDisc, "F", strMOWarn, 9, 38, 7
 
 End Sub
+
+Public Sub SetInfBVochtTPNFormatting()
+    
+    Dim strTPNError As String
+    
+    strTPNError = "=NeoBerInfB!AE"
+    
+    SetConditionalFormattingErr shtNeoGuiInfB, "G", strTPNError, 59, 59, 9
+
+End Sub

@@ -4,7 +4,7 @@ $B$4: 	=__1_Bed
 $F$4: 	=Txt_Pat_FullName
 $F$5: 	=Txt_Pat_GeboorteDat
 $F$6: 	=Txt_Pat_Gewicht
-$A$9: 	=IF(_Pat_Gewicht/10<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
+$A$9: 	=IF(_Pat_Gewicht<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
 $C$9: 	=PedBerTPN!G26
 $A$13: 	=PedBerTPN!V5
 $G$13: 	=PedBerTPN!W5
@@ -18,7 +18,7 @@ $G$21: 	=PedBerTPN!$W$17
 $G$22: 	=PedBerTPN!$W$18
 $G$23: 	=PedBerTPN!$W$19
 $G$24: 	=PedBerTPN!$W$16
-$A$27: 	=IF(PedBerTPN!$V$11="""",PedBerTPN!$V$3,PedBerTPN!$V$12)
+$A$27: 	=IF(PedBerTPN!$W$5="""",IF(PedBerTPN!$V$11="""",PedBerTPN!$V$3,PedBerTPN!$V$12),PedBerTPN!$V$11)
 $G$27: 	=PedBerTPN!$W$9
 $G$28: 	=PedBerTPN!$W$10
 $G$29: 	=PedBerTPN!$W$12

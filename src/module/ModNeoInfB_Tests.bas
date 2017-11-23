@@ -26,6 +26,7 @@ Private Const constActInloopTijd As String = "AF"
 Private Const constActMedicamentVolume As String = "AG"
 Private Const constActOplossingVolume As String = "AH"
 
+Private Const constPatNum As String = "__0_PatNum"
 Private Const constGewicht As String = "_Pat_Gewicht"
 Private Const constMedicament As String = "Var_Neo_InfB_Cont_MedKeuze_"
 Private Const constHoeveelheid As String = "Var_Neo_InfB_Cont_MedSterkte_"
@@ -121,11 +122,17 @@ Public Sub Test_NeoInfB_ContMed()
     
     If CStr(varFile) = vbNullString Then Exit Sub
     
-    ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
-    Application.ScreenUpdating = False
-    
     blnDevelop = ModSetting.IsDevelopmentMode()
-    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
+    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    
+    shtGlobGuiFront.Activate
+
+    ModProgress.StartProgress "Neo Infuusbrief Continue Medicatie Tests"
+    
+    With Application
+        .DisplayAlerts = False
+        .ScreenUpdating = False
+    End With
     
     Set wbkTests = Workbooks.Open(varFile)
     Set shtTests = wbkTests.Sheets("NICU_ContMed")
@@ -134,7 +141,7 @@ Public Sub Test_NeoInfB_ContMed()
     intTestCount = shtTests.Range("A1").CurrentRegion.Rows.Count - 3
     shtTests.Range(constTblVerwacht & intTestCount + 2).ClearContents
     shtTests.Range(constTblTekst & intTestCount + 2).ClearContents
-
+    
     blnPass = True
     For intN = constTestStart To intTestCount + 2
         strNo = shtTests.Range(constTestNum & intN).Value2
@@ -142,7 +149,7 @@ Public Sub Test_NeoInfB_ContMed()
         
         ' Gewicht
         dblGew = ModString.StringToDouble(shtTests.Range(constSetupGewicht & intN).Value2)
-        blnPass = blnPass And ModRange.SetRangeValue(constGewicht, dblGew * 10)
+        blnPass = blnPass And ModRange.SetRangeValue(constGewicht, dblGew)
         
         ' Medicament
         varVal = shtTests.Range(constSetupMedicament & intN).Value2
@@ -179,7 +186,7 @@ Public Sub Test_NeoInfB_ContMed()
         Next
         
         ' Schrijf gewicht
-        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(constGewicht, 0) / 10
+        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(constGewicht, 0)
         
         
         ' ================ Check medicament ================
@@ -188,7 +195,7 @@ Public Sub Test_NeoInfB_ContMed()
             'Check werkbrief
             blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("C" & intM * 3 + 24).Value2)
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             blnPass = blnPass And varVal = shtNeoPrtApoth.Range("D5").Value2
             'Check afspraken print
             If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
@@ -210,8 +217,8 @@ Public Sub Test_NeoInfB_ContMed()
             End If
             
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
-            blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("G5").Value2 / 2, shtNeoPrtApoth.Range("G5").Value2))
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("F5").Value2 / 2, shtNeoPrtApoth.Range("F5").Value2))
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
                 blnShowMsg = False
@@ -243,8 +250,8 @@ Public Sub Test_NeoInfB_ContMed()
             End If
             
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
-            blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("H5").Value2)
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("G5").Value2)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
                 blnShowMsg = False
@@ -271,7 +278,7 @@ Public Sub Test_NeoInfB_ContMed()
             'Check werkbrief
             blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("J" & intM * 3 + 25).Value2)
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             blnPass = blnPass And varVal = shtNeoPrtApoth.Range("J6").Value2
             'Check afspraken print
             If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
@@ -289,7 +296,7 @@ Public Sub Test_NeoInfB_ContMed()
             blnPass = blnPass And Equals(varVal, AddNumDenumCells(shtNeoPrtWerkbr.Range("M" & intM * 3 + 26), shtNeoPrtWerkbr.Range("N" & intM * 3 + 26)))
             
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             dblVal = AddNumDenumCells(shtNeoPrtApoth.Range("N7"), shtNeoPrtApoth.Range("O7"))
             dblVal = IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), dblVal / 2, dblVal)
             blnPass = blnPass And Equals(varVal, dblVal)
@@ -313,7 +320,7 @@ Public Sub Test_NeoInfB_ContMed()
                 'Check werkbrief
                 blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("A" & intM * 3 + 24).Value2)
                 ' Check apotheek print
-                shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+                shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
                 blnPass = blnPass And varVal = Replace(shtNeoPrtApoth.Range("D6").Value2, " ml/uur", "")
                 'Check afspraken print
                 If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
@@ -331,7 +338,7 @@ Public Sub Test_NeoInfB_ContMed()
                 'Check werkbrief
                 blnPass = blnPass And Equals(varVal, Replace(shtNeoPrtWerkbr.Range("E" & intM * 3 + 25).Value2, "= ", ""))
                 ' Check apotheek print
-                shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+                shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
                 blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("F6").Value2)
                 'Check afspraken print
                 If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
@@ -351,7 +358,7 @@ Public Sub Test_NeoInfB_ContMed()
                 blnPass = blnPass And Equals(varVal, Replace(shtNeoPrtWerkbr.Range("C" & intM * 3 + 26).Value2, "advies: ", ""))
             End If
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("F7").Value2)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
@@ -381,7 +388,7 @@ Public Sub Test_NeoInfB_ContMed()
             'Check werkbrief
             blnPass = blnPass And Equals(varVal, AddNumDenumCells(shtNeoPrtWerkbr.Range("M" & intM * 3 + 24), shtNeoPrtWerkbr.Range("N" & intM * 3 + 24)))
             'Check apotheek brief
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             dblVal = AddNumDenumCells(shtNeoPrtApoth.Range("N5"), shtNeoPrtApoth.Range("O5"))
             dblVal = IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), dblVal / 2, dblVal)
             blnPass = blnPass And Equals(varVal, dblVal)
@@ -396,7 +403,7 @@ Public Sub Test_NeoInfB_ContMed()
             'Check werkbrief
             blnPass = blnPass And Equals(varVal, AddNumDenumCells(shtNeoPrtWerkbr.Range("M" & intM * 3 + 25), shtNeoPrtWerkbr.Range("N" & intM * 3 + 25)))
             'Check apotheek brief
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             dblVal = AddNumDenumCells(shtNeoPrtApoth.Range("N6"), shtNeoPrtApoth.Range("O6"))
             dblVal = IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), dblVal / 2, dblVal)
             blnPass = blnPass And Equals(varVal, dblVal)
@@ -437,11 +444,10 @@ Public Sub Test_NeoInfB_ContMed()
         
     Next
 
-    ModPatient.ClearPatientData "_Neo", False, True
-    ModProgress.FinishProgress
-    
     blnPass = blnPass And shtTests.Range(constTestResult & intTestCount + 3).Value
 
+    ModProgress.FinishProgress
+    
     If blnPass Then
         ModMessage.ShowMsgBoxInfo "Alle testen geslaagt"
     Else
@@ -449,13 +455,19 @@ Public Sub Test_NeoInfB_ContMed()
     End If
     
     shtTests.Protect ModConst.CONST_PASSWORD
-    wbkTests.SaveAs CreateTestWbkPath(wbkTests)
+    wbkTests.SaveAs CreateTestWbkPathExcel(wbkTests)
     wbkTests.Close
     Set shtTests = Nothing
     Set wbkTests = Nothing
         
-    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
-    Application.ScreenUpdating = True
+    ModPatient.ClearPatientData "_Neo", False, True
+    
+    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    
+    With Application
+        .DisplayAlerts = True
+        .ScreenUpdating = True
+    End With
     
     Exit Sub
     
@@ -463,35 +475,46 @@ Test_NeoInfB_ContMedError:
 
     ModProgress.FinishProgress
     ModMessage.ShowMsgBoxExclam "Kan tests niet uitvoeren: " & Err.Source & " " & Err.Description
+    ModLog.LogError "Test_NeoInfB_ContMedError: " & Err.Description
     
     On Error Resume Next
         
     shtTests.Protect ModConst.CONST_PASSWORD
-    wbkTests.SaveAs CreateTestWbkPath(wbkTests)
+    wbkTests.SaveAs CreateTestWbkPathExcel(wbkTests)
     wbkTests.Close
     Set shtTests = Nothing
     Set wbkTests = Nothing
 
-    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
-    Application.ScreenUpdating = True
+    With Application
+        .DisplayAlerts = True
+        .ScreenUpdating = True
+        .EnableEvents = True
+        .Calculation = xlCalculationAutomatic
+    End With
+    
+    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
 
 End Sub
+
+Private Function CreateTestWbkPathExcel(wbkTest As Workbook) As String
+
+    CreateTestWbkPathExcel = CreateTestWbkPath(wbkTest) & ".xlsx"
+
+End Function
 
 Private Function CreateTestWbkPath(wbkTest As Workbook) As String
 
     Dim strPath As String
     Dim strTs As String
     Dim strName As String
-    Dim strExt As String
     
     strTs = Now()
     strTs = Replace(strTs, ":", " ")
     
     strPath = Replace(wbkTest.FullName, wbkTest.Name, "")
     strName = Split(wbkTest.Name, ".")(0)
-    strExt = Split(wbkTest.Name, ".")(1)
     
-    strPath = strPath & strName & "_" & Application_GetVersion() & "_" & strTs & "." & strExt
+    strPath = strPath & strName & "_" & Application_GetVersion() & "_" & strTs
     
     CreateTestWbkPath = strPath
 
@@ -499,7 +522,7 @@ End Function
 
 Private Sub Test_CreateWbkPath()
 
-    MsgBox CreateTestWbkPath(WbkAfspraken)
+    MsgBox CreateTestWbkPathExcel(WbkAfspraken)
 
 End Sub
 
@@ -654,6 +677,8 @@ Public Sub Test_NeoInfB_Print()
     Dim blnPass As Boolean
     Dim blnShowMsg As Boolean
     Dim blnDevelop As Boolean
+    Dim strPDF As String
+    Dim intPDF As Integer
     
     Dim dlgFile As FileDialog
     Dim varFile As Variant
@@ -675,11 +700,17 @@ Public Sub Test_NeoInfB_Print()
     
     If CStr(varFile) = vbNullString Then Exit Sub
     
-    ModProgress.StartProgress "Neo Infuusbrief Print Tests"
-    Application.ScreenUpdating = False
-    
     blnDevelop = ModSetting.IsDevelopmentMode()
-    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
+    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    
+    ModNeoInfB.NeoInfB_SelectInfB True, True
+
+    ModProgress.StartProgress "Neo Infuusbrief Print Tests"
+    
+    With Application
+        .DisplayAlerts = False
+        .ScreenUpdating = False
+    End With
     
     Set wbkTests = Workbooks.Open(varFile)
     Set shtTests = wbkTests.Sheets("NICU_ContMed")
@@ -700,7 +731,10 @@ Public Sub Test_NeoInfB_Print()
         
         ' Gewicht
         dblGew = ModString.StringToDouble(shtTests.Range(constSetupGewicht & intN).Value2)
-        blnPass = blnPass And ModRange.SetRangeValue(constGewicht, dblGew * 10)
+        blnPass = blnPass And ModRange.SetRangeValue(constGewicht, dblGew)
+        
+        ' Pat No
+        blnPass = blnPass And ModRange.SetRangeValue(constPatNum, "123456")
         
         ' Medicament
         varVal = shtTests.Range(constSetupMedicament & intN).Value2
@@ -735,14 +769,14 @@ Public Sub Test_NeoInfB_Print()
         blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intM, strM, intMed, dblMedQty, intOpl, dblOplHoev, dblStand, dblDose)
         
         ' Schrijf gewicht
-        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(constGewicht, 0) / 10
+        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(constGewicht, 0)
         
         
         ' ================ Check medicament ================
         'Check werkbrief
         varVal = shtNeoPrtWerkbr.Range("C" & (intM - 1) * 3 + 24).Value2
         ' Check apotheek print
-        shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+        shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         blnPass = blnPass And varVal = shtNeoPrtApoth.Range("D5").Value2
         'Check afspraken print
         If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
@@ -756,8 +790,8 @@ Public Sub Test_NeoInfB_Print()
         varVal = shtNeoPrtWerkbr.Range("E" & (intM - 1) * 3 + 24).Value2
         
         ' Check apotheek print
-        shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
-        blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("G5").Value2 / 2, shtNeoPrtApoth.Range("G5").Value2))
+        shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
+        blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("F5").Value2 / 2, shtNeoPrtApoth.Range("F5").Value2))
         
         'Check afspraken print
         If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
@@ -778,8 +812,8 @@ Public Sub Test_NeoInfB_Print()
         varVal = shtNeoPrtWerkbr.Range("F" & (intM - 1) * 3 + 24).Value2
         
         ' Check apotheek print
-        shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
-        blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("H5").Value2)
+        shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
+        blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("G5").Value2)
         If Not blnPass And blnShowMsg Then
             ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM
             blnShowMsg = False
@@ -803,7 +837,7 @@ Public Sub Test_NeoInfB_Print()
         ' ================ Check oplosmiddel ================
         varVal = shtNeoPrtWerkbr.Range("J" & (intM - 1) * 3 + 25).Value2
         ' Check apotheek print
-        shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+        shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         blnPass = blnPass And varVal = shtNeoPrtApoth.Range("J6").Value2
         'Check afspraken print
         If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
@@ -816,7 +850,7 @@ Public Sub Test_NeoInfB_Print()
         varVal = AddNumDenumCells(shtNeoPrtWerkbr.Range("M" & (intM - 1) * 3 + 26), shtNeoPrtWerkbr.Range("N" & (intM - 1) * 3 + 26))
         
         ' Check apotheek print
-        shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+        shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         dblVal = AddNumDenumCells(shtNeoPrtApoth.Range("N7"), shtNeoPrtApoth.Range("O7"))
         dblVal = IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), dblVal / 2, dblVal)
         blnPass = blnPass And Equals(varVal, dblVal)
@@ -837,7 +871,7 @@ Public Sub Test_NeoInfB_Print()
         varVal = shtNeoPrtWerkbr.Range("A" & (intM - 1) * 3 + 24).Value2
         If Not (IsEmpty(varVal) Or varVal = "") Then
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
             blnPass = blnPass And varVal = Replace(shtNeoPrtApoth.Range("D6").Value2, " ml/uur", "")
             'Check afspraken print
             If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
@@ -852,7 +886,7 @@ Public Sub Test_NeoInfB_Print()
         varVal = Trim(Replace(shtNeoPrtWerkbr.Range("E" & (intM - 1) * 3 + 25).Value2, "= ", ""))
         If Not (IsEmpty(varVal) Or varVal = "") Then
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
             blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("F6").Value2)
             'Check afspraken print
             If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
@@ -869,7 +903,7 @@ Public Sub Test_NeoInfB_Print()
         varVal = Replace(shtNeoPrtWerkbr.Range("C" & (intM - 1) * 3 + 26).Value2, "advies: ", "")
         If Not varVal = "DOORVERDUNNEN" Then
             ' Check apotheek print
-            shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+            shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
             blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("F7").Value2)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM
@@ -894,7 +928,7 @@ Public Sub Test_NeoInfB_Print()
         ' ================ Check medicament volume ================
         varVal = AddNumDenumCells(shtNeoPrtWerkbr.Range("M" & (intM - 1) * 3 + 24), shtNeoPrtWerkbr.Range("N" & (intM - 1) * 3 + 24))
         'Check apotheek brief
-        shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+        shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         dblVal = AddNumDenumCells(shtNeoPrtApoth.Range("N5"), shtNeoPrtApoth.Range("O5"))
         dblVal = IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), dblVal / 2, dblVal)
         blnPass = blnPass And Equals(varVal, dblVal)
@@ -906,7 +940,7 @@ Public Sub Test_NeoInfB_Print()
         ' ================ Check oplossing volume ================
         varVal = AddNumDenumCells(shtNeoPrtWerkbr.Range("M" & (intM - 1) * 3 + 25), shtNeoPrtWerkbr.Range("N" & (intM - 1) * 3 + 25))
         'Check apotheek brief
-        shtNeoPrtApoth.Range("Var_Neo_PrintApothNo").Value2 = intM
+        shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         dblVal = AddNumDenumCells(shtNeoPrtApoth.Range("N6"), shtNeoPrtApoth.Range("O6"))
         dblVal = IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), dblVal / 2, dblVal)
         blnPass = blnPass And Equals(varVal, dblVal)
@@ -943,8 +977,13 @@ Public Sub Test_NeoInfB_Print()
         End If
         
         If intM = 10 Then
-            ModNeoPrint.PrintNeoWerkBrief
-            ModNeoPrint.PrintApotheekWerkBrief
+            intPDF = intPDF + 1
+            strPDF = CreateTestWbkPath(wbkTests) & "_" & intPDF & "_"
+            
+            Application.ScreenUpdating = True
+            ModNeoPrint.SaveNeoWerkBrief strPDF
+            ModNeoPrint.SaveApotheekWerkBrief strPDF
+            Application.ScreenUpdating = False
             
             ModPatient.ClearPatientData "Var_Neo_InfB_Cont_", False, True
             intM = 1
@@ -954,8 +993,13 @@ Public Sub Test_NeoInfB_Print()
     Next
     
     If Not intM = 10 Then
-        ModNeoPrint.PrintNeoWerkBrief
-        ModNeoPrint.PrintApotheekWerkBrief
+        intPDF = intPDF + 1
+        strPDF = CreateTestWbkPath(wbkTests) & "_" & intPDF & "_"
+        
+        Application.ScreenUpdating = True
+        ModNeoPrint.SaveNeoWerkBrief strPDF
+        ModNeoPrint.SaveApotheekWerkBrief strPDF
+        Application.ScreenUpdating = False
     
         ModPatient.ClearPatientData "Var_Neo_InfB_Cont_", False, True
     End If
@@ -971,13 +1015,19 @@ Public Sub Test_NeoInfB_Print()
     End If
     
     shtTests.Protect ModConst.CONST_PASSWORD
-    wbkTests.SaveAs CreateTestWbkPath(wbkTests)
+    wbkTests.SaveAs CreateTestWbkPathExcel(wbkTests)
     wbkTests.Close
     Set shtTests = Nothing
     Set wbkTests = Nothing
         
-    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
-    Application.ScreenUpdating = True
+    ModPatient.ClearPatientData "_Neo", False, True
+    
+    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    
+    With Application
+        .DisplayAlerts = True
+        .ScreenUpdating = True
+    End With
     
     Exit Sub
     
@@ -989,14 +1039,20 @@ Test_NeoInfB_Print:
     On Error Resume Next
         
     shtTests.Protect ModConst.CONST_PASSWORD
-    wbkTests.SaveAs CreateTestWbkPath(wbkTests)
+    wbkTests.SaveAs CreateTestWbkPathExcel(wbkTests)
     wbkTests.Close
     Set shtTests = Nothing
     Set wbkTests = Nothing
 
-    If Not blnDevelop Then ModApplication.SetToDevelopmentMode
-    Application.ScreenUpdating = True
+    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
 
+    With Application
+        .DisplayAlerts = True
+        .ScreenUpdating = True
+    End With
+    
 End Sub
+
+
 
 

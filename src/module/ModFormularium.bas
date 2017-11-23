@@ -134,6 +134,7 @@ Public Sub Formularium_GetMedicamenten(objFormularium As ClassFormularium, ByVal
         Set objMed = New ClassMedicatieDisc
         
         With objMed
+            
             .GPK = objFormRange.Cells(intN, constGPKIndx).Value2
             .TherapieGroep = objFormRange.Cells(intN, constHoofdGroepIndx).Value2
             .TherapieSubgroep = objFormRange.Cells(intN, constSubGroepIndx).Value2
@@ -159,12 +160,13 @@ Public Sub Formularium_GetMedicamenten(objFormularium As ClassFormularium, ByVal
             .MaxConc = objFormRange.Cells(intN, constMaxConcIndx).Value2
             .OplVlst = objFormRange.Cells(intN, constOplVlstIndx).Value2
             .MinTijd = objFormRange.Cells(intN, constMinTijdIndx).Value2
-        End With
         
+        End With
+                
         objFormularium.AddMedicament objMed
-        Set objMed = Nothing
         
         If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", intC, intN
+        
     Next intN
     
     Workbooks(strName).Close
@@ -255,11 +257,13 @@ Public Sub Formularium_GetMedDiscConfig(objFormularium As ClassFormConfig, ByVal
             .MaxConc = objFormRange.Cells(intN, constMaxConcIndx).Value2
             .OplVlst = objFormRange.Cells(intN, constOplVlstIndx).Value2
             .MinTijd = objFormRange.Cells(intN, constMinTijdIndx).Value2
+            
         End With
         
         objFormularium.AddMedicament objMed
         
         If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", intC, intN
+        
     Next intN
     
     Workbooks(strName).Close

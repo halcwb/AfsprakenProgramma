@@ -12,7 +12,7 @@ $B$6: 	=ROUND(NOW()-__4_GebDatum,0)&"" dagen""
 $A$7: 	=C7&"".""&D7
 $B$7: 	=IF(_Pat_Geslacht>0,_Pat_Geslacht,"""")
 $A$8: 	=C8&"".""&D8
-$B$8: 	=IF(_Pat_Gewicht>0,_Pat_Gewicht/10&"" kg"","""")
+$B$8: 	=IF(_Pat_Gewicht>0,_Pat_Gewicht&"" kg"","""")
 $A$9: 	=C9&"".""&D9
 $B$9: 	=IF(_Pat_Lengte>0,_Pat_Lengte&"" cm"","""")
 $A$10: 	=C10&"".""&D10
@@ -907,13 +907,14 @@ $H$114: 	=IF(NeoBerInfB!F9>0,NeoBerInfB!F9&"" dd"","""")
 $J$114: 	=NeoBerInfB!O9
 $A$115: 	=C115&"".""&D115
 $B$115: 	=ConcatenateKeyValue(E115:J115,""||"",""^^"")
-$F$115: 	=NeoBerInfB!P11
+$F$115: 	=NeoBerInfB!P9
 $H$115: 	=IF(NeoBerInfB!F10>0,NeoBerInfB!F10&"" dd"","""")
 $J$115: 	=NeoBerInfB!O10
 $A$116: 	=C116&"".""&D116
 $B$116: 	=ConcatenateKeyValue(E116:J116,""||"",""^^"")
+$F$116: 	=IF(H116<>"""",""BMF"","""")
 $H$116: 	=IF(NeoBerInfB!M11>0,NeoBerInfB!M11,"""")
-$J$116: 	=NeoBerInfB!O11
+$J$116: 	=IF(F116<>"""", NeoBerInfB!O11,"""")
 $A$117: 	=C117&"".""&D117
 $B$117: 	=ConcatenateKeyValue(E117:J117,""||"",""^^"")
 $F$117: 	=NeoBerInfB!P12
@@ -956,8 +957,8 @@ $H$124: 	=IF(NeoBerInfB!M19>0,NeoBerInfB!M19,"""")
 $J$124: 	=NeoBerInfB!O19
 $A$125: 	=C125&"".""&D125
 $B$125: 	=ConcatenateKeyValue(E125:J125,""||"",""^^"")
-$F$125: 	=NeoBerInfB!A22
-$H$125: 	=Var_Neo_InfB_Cont_ArtLijn
+$F$125: 	=IF(H125="""","""",NeoBerInfB!A22)
+$H$125: 	=IF(Var_Neo_InfB_Cont_ArtLijn=0,"""", Var_Neo_InfB_Cont_ArtLijn/10&"" ml/uur"")
 $J$125: 	=IF(Var_Neo_InfB_Cont_VochtExtra_01,""Extra"", """")
 $A$126: 	=C126&"".""&D126
 $B$126: 	=ConcatenateKeyValue(E126:X126,""||"",""^^"")
@@ -1103,8 +1104,8 @@ $J$140: 	=NeoBerInfB!AL35&"" mL""
 $L$140: 	=IF(AND(F140<>"""",Var_Neo_InfB_Cont_VochtExtra_12), ""Extra"","""")
 $A$141: 	=C141&"".""&D141
 $B$141: 	=ConcatenateKeyValue(E141:J141,""||"",""^^"")
-$F$141: 	=NeoBerInfB!P40
-$H$141: 	=IF(F141="""","""",NeoBerInfB!Q40)
+$F$141: 	=IF(H141="""","""",NeoBerInfB!P40)
+$H$141: 	=NeoBerInfB!Q40
 $J$141: 	=IF(F141="""","""",NeoBerInfB!AL40&"" ml"")
 $A$142: 	=C142&"".""&D142
 $B$142: 	=ConcatenateKeyValue(E142:J142,""||"",""^^"")
@@ -1136,23 +1137,23 @@ $B$153: 	=NeoBerInfB!AP58
 $A$154: 	=C154&"".""&D154
 $B$154: 	=NeoBerInfB!AQ58
 $A$155: 	=C155&"".""&D155
-$B$155: 	=NeoGuiInfB!F62
+$B$155: 	=IF(NeoGuiInfB!F62="""","""",D155&""::""&NeoGuiInfB!F62)
 $A$156: 	=C156&"".""&D156
-$B$156: 	=NeoGuiInfB!F63
+$B$156: 	=IF(NeoGuiInfB!F63="""","""",D156&""::""&NeoGuiInfB!F63)
 $A$157: 	=C157&"".""&D157
-$B$157: 	=NeoGuiInfB!F64
+$B$157: 	=IF(NeoGuiInfB!F64="""","""",D157&""::""&NeoGuiInfB!F64)
 $A$158: 	=C158&"".""&D158
-$B$158: 	=NeoGuiInfB!F65
+$B$158: 	=IF(NeoGuiInfB!F65="""","""",D158&""::""&NeoGuiInfB!F65)
 $A$159: 	=C159&"".""&D159
-$B$159: 	=NeoGuiInfB!F66
+$B$159: 	=IF(NeoGuiInfB!F66="""","""",D159&""::""&NeoGuiInfB!F66)
 $A$160: 	=C160&"".""&D160
-$B$160: 	=NeoGuiInfB!F67
+$B$160: 	=IF(NeoGuiInfB!F67="""","""",D160&""::""&NeoGuiInfB!F67)
 $A$161: 	=C161&"".""&D161
-$B$161: 	=NeoGuiInfB!F68
+$B$161: 	=IF(NeoGuiInfB!F68="""","""",D161&""::""&NeoGuiInfB!F68)
 $A$162: 	=C162&"".""&D162
-$B$162: 	=NeoGuiInfB!F69
+$B$162: 	=IF(NeoGuiInfB!F69="""","""",D162&""::""&NeoGuiInfB!F69)
 $A$163: 	=C163&"".""&D163
-$B$163: 	=NeoGuiInfB!F70
+$B$163: 	=IF(NeoGuiInfB!F70="""","""",D163&""::""&NeoGuiInfB!F70)
 $A$164: 	=C164&"".""&D164
 $B$164: 	=IF(_Neo_Lab_Opm=0,"""",_Neo_Lab_Opm)
 $A$165: 	=C165&"".""&D165

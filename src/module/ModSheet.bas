@@ -77,7 +77,7 @@ Public Sub UnhideNonUserInterfaceSheets(ByVal blnShowProgress As Boolean)
 End Sub
 
 Public Sub HideAndUnProtectNonUserInterfaceSheets(ByVal blnShowProgress As Boolean)
-
+ 
     Dim colShts As Collection
     Dim shtSheet As Worksheet
     Dim intN As Integer
@@ -224,7 +224,7 @@ Public Sub SelectPedOrNeoAfsprSheet()
         
 End Sub
 
-Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnAsk As Boolean)
+Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnAsk As Boolean, ByVal blnPrev As Boolean)
   
     shtSheet.Unprotect ModConst.CONST_PASSWORD
     shtSheet.PageSetup.LeftHeader = "AfsprakenProgramma " & ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
@@ -232,7 +232,7 @@ Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnA
     If blnAsk Then
         m_blnPrev = ModMessage.ShowMsgBoxYesNo("Eerst preview zien?") = vbYes
     Else
-        m_blnPrev = True
+        m_blnPrev = blnPrev
     End If
     
     If m_blnPrev Then
@@ -244,5 +244,51 @@ Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnA
     
 End Sub
 
+Public Sub SaveSheetAsPDF(shtSheet As Worksheet, ByVal strFile As String)
+    
+    shtSheet.Unprotect ModConst.CONST_PASSWORD
+    shtSheet.PageSetup.LeftHeader = "AfsprakenProgramma " & ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
+
+    shtSheet.ExportAsFixedFormat Type:=xlTypePDF, Filename:=strFile, _
+        Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas _
+        :=False, OpenAfterPublish:=False
+
+    If Not ModSetting.IsDevelopmentMode Then shtSheet.Protect ModConst.CONST_PASSWORD
+
+End Sub
+
+Public Sub PrintSheetAllLandscape(shtSheet As Worksheet)
+'     Application.PrintCommunication = False
+    With shtSheet.PageSetup
+        .Orientation = xlLandscape
+        .Draft = False
+        .FirstPageNumber = xlAutomatic
+        .Order = xlDownThenOver
+        .BlackAndWhite = False
+        .Zoom = False
+        .FitToPagesWide = 1
+        .FitToPagesTall = 1
+    End With
+'     Application.PrintCommunication = True
+    shtSheet.PrintOut Copies:=1, Collate:=True, _
+        IgnorePrintAreas:=False
+End Sub
+
+Public Sub PrintSheetAllPortrait(shtSheet As Worksheet)
+'     Application.PrintCommunication = False
+    With shtSheet.PageSetup
+        .Orientation = xlPortrait
+        .Draft = False
+        .FirstPageNumber = xlAutomatic
+        .Order = xlDownThenOver
+        .BlackAndWhite = False
+        .Zoom = False
+        .FitToPagesWide = 1
+        .FitToPagesTall = 1
+    End With
+'     Application.PrintCommunication = True
+    shtSheet.PrintOut Copies:=1, Collate:=True, _
+        IgnorePrintAreas:=False
+End Sub
 
 

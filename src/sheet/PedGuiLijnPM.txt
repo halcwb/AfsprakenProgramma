@@ -24,10 +24,10 @@ $B$16: 	=PedBerIVenPM!D9
 $E$16: 	=_Ped_Lijn_Opm
 $B$19: 	=PedBerIVenPM!F13
 $B$23: 	=PedBerIVenPM!F14
-$E$23: 	=IF(PedBerIVenPM!A12>1,PedBerIVenPM!D12&"" /min"","""")
-$E$25: 	=IF(PedBerIVenPM!A12>1,(PedBerIVenPM!D13/10)&"" V"","""")
-$E$26: 	=IF(PedBerIVenPM!A12>1,(PedBerIVenPM!D14/10)&"" V"","""")
-$E$28: 	=IF(PedBerIVenPM!A12>1,PedBerIVenPM!D15&"" msec"","""")
-$E$30: 	=IF(PedBerIVenPM!A12>1,PedBerIVenPM!D16/10&"" mV"","""")
-$E$31: 	=IF(PedBerIVenPM!A12>1,(PedBerIVenPM!D17/10)&"" mV"","""")
+$E$23: 	=IF(PedBerIVenPM!A13>1,PedBerIVenPM!D12&"" /min"","""")
+$E$25: 	=IF(PedBerIVenPM!A13>1,(PedBerIVenPM!D13/10)&"" V"","""")
+$E$26: 	=IF(PedBerIVenPM!A13>1,(PedBerIVenPM!D14/10)&"" V"","""")
+$E$28: 	=IF(PedBerIVenPM!A13>1,PedBerIVenPM!D15&"" msec"","""")
+$E$30: 	=IF(PedBerIVenPM!A13>1,PedBerIVenPM!D16/10&"" mV"","""")
+$E$31: 	=IF(PedBerIVenPM!A13>1,(PedBerIVenPM!D17/10)&"" mV"","""")
 "

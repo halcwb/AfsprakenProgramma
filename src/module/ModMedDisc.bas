@@ -16,6 +16,7 @@ Private Const constStandDose As String = "_Glob_MedDisc_StandDose_"     ' Dose s
 Private Const constDoseUnit As String = "_Glob_MedDisc_DoseEenh_"       ' Dose eenheid
 Private Const constRoute As String = "_Glob_MedDisc_Toed_"              ' Toediening route
 Private Const constIndic As String = "_Glob_MedDisc_Ind_"               ' Indicatie
+Private Const constHasDose As String = "_Glob_MedDisc_HasDose_"         ' Prescription has dose
 
 ' --- Voorschrift ---
 Private Const constPRN As String = "_Glob_MedDisc_PRN_"                 ' PRN
@@ -60,6 +61,9 @@ Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal i
     Dim intN As Integer
     Dim strN As String
     Dim strKeuze As String
+    Dim strMsg As String
+    
+    On Error GoTo ShowPickListError
     
     Set frmPickList = New FormMedDiscPickList
     frmPickList.LoadMedicamenten colTbl
@@ -99,6 +103,14 @@ Private Sub ShowPickList(colTbl As Collection, ByVal strRange As String, ByVal i
         Loop
     
     End If
+    
+    Exit Sub
+
+ShowPickListError:
+
+    strMsg = "De ingevoerde lijst bevat medicamenten die niet in MetaVision bekend zijn."
+    strMsg = strMsg & vbNewLine & "Daarom kan deze functie niet worden gebruikt."
+    ModMessage.ShowMsgBoxInfo strMsg
     
 End Sub
 
@@ -385,8 +397,18 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
     Dim intOplVlst As Integer
     Dim strOplVlst As String
     Dim blnLoad As Boolean
+    Dim dblKeer As Double
+    Dim dblWght As Double
+    Dim dblFact As Double
       
     strN = IntNToStrN(intN)
+    
+    dblWght = ModPatient.GetGewichtFromRange()
+    
+    If dblWght = 0 Then
+        ModMessage.ShowMsgBoxExclam "Kan geen medicatie invoeren zonder een gewicht"
+        Exit Sub
+    End If
     
     Set objForm = New FormMedDisc
     With objForm
@@ -407,12 +429,17 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         End If
         
         ' Edited details
-        .SetComboBoxIfNotEmpty .cboDosisEenheid, ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         .SetComboBoxIfNotEmpty .cboRoute, ModRange.GetRangeValue(constRoute & strN, vbNullString)
         .SetComboBoxIfNotEmpty .cboIndicatie, ModRange.GetRangeValue(constIndic & strN, vbNullString)
         .SetComboBoxIfNotEmpty .cboFreq, ModRange.GetRangeValue(constFreqText & strN, vbNullString)
         
+        .chkDose.Value = ModRange.GetRangeValue(constHasDose & strN, True)
         .SetTextBoxIfNotEmpty .txtDeelDose, ModRange.GetRangeValue(constStandDose & strN, vbNullString)
+        .SetComboBoxIfNotEmpty .cboDosisEenheid, ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
+        
+        dblKeer = shtGlobBerMedDisc.Range("H" & intN + 1).Value2
+        .SetTextBoxIfNotEmpty .txtKeerDose, dblKeer
+        
         .SetTextBoxIfNotEmpty .txtNormDose, ModRange.GetRangeValue(constNormDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMinDose, ModRange.GetRangeValue(constMinDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMaxDose, ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
@@ -424,6 +451,8 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         
         .SetTextBoxIfNotEmpty .txtTijd, ModRange.GetRangeValue(constTime & strN, vbNullString)
         
+        dblFact = .GetFactorByFreq(.cboFreq)
+        If Not dblFact = 0 And Not .txtCalcDose.Value = dblKeer * dblFact / dblWght Then .CaclculateWithKeerDose dblKeer
         .Show
         
         If .GetClickedButton = "OK" Then
@@ -472,54 +501,59 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     ModRange.SetRangeValue constConc & strN, objMed.Sterkte
     ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
     ModRange.SetRangeValue constLabel & strN, objMed.Etiket
-    ModRange.SetRangeValue constStandDose & strN, objMed.DeelDose
-    ModRange.SetRangeValue constDoseUnit & strN, objMed.DoseEenheid
+    
     ModRange.SetRangeValue constRoute & strN, objMed.Route
     ModRange.SetRangeValue constIndic & strN, objMed.Indicatie
     
-    ModRange.SetRangeValue constNormDose & strN, objMed.NormDose
-    ModRange.SetRangeValue constMinDose & strN, objMed.MinDose
-    ModRange.SetRangeValue constMaxDose & strN, objMed.MaxDose
-    ModRange.SetRangeValue constAbsDose & strN, objMed.AbsDose
-      
-    ModRange.SetRangeValue constMaxConc & strN, objMed.MaxConc
-    ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst
-    ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
-    
-    If objMed.OplVlst = "NaCl 0,9%" Then
-        ModRange.SetRangeValue constSolNo & strN, 2
-    ElseIf objMed.OplVlst = "glucose 5%" Then
-        ModRange.SetRangeValue constSolNo & strN, 3
-    ElseIf objMed.OplVlst = "glucose 10%" Then
-        ModRange.SetRangeValue constSolNo & strN, 4
-    End If
-    
-    ModRange.SetRangeValue constTime & strN, objMed.MinTijd
-    
-    If Not objMed.Freq = vbNullString Then
-        Set dictFreq = GetMedicationFreqs()
-        intFreq = 2
-        For Each varFreq In dictFreq
-            If varFreq = objMed.Freq Then Exit For
-            intFreq = intFreq + 1
-        Next
-        ModRange.SetRangeValue constFreq & strN, intFreq
-    End If
-    
-    ModRange.SetRangeValue constFreqList & strN, objMed.GetFreqListString
-    
-    If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
-        intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.DeelDose
-        ModRange.SetRangeValue constDoseQty & strN, intDoseQty
+    ModRange.SetRangeValue constHasDose & strN, objMed.HasDose
+    If objMed.HasDose Then
+        ModRange.SetRangeValue constStandDose & strN, objMed.DeelDose
+        ModRange.SetRangeValue constDoseUnit & strN, objMed.DoseEenheid
         
-        dblOplVol = CalculateOplossingVolume(intDoseQty * objMed.DeelDose, objMed.MaxConc)
-    
-        If Not dblOplVol = 0 Then
-            ModRange.SetRangeValue constSolVol & strN, dblOplVol
+        ModRange.SetRangeValue constNormDose & strN, objMed.NormDose
+        ModRange.SetRangeValue constMinDose & strN, objMed.MinDose
+        ModRange.SetRangeValue constMaxDose & strN, objMed.MaxDose
+        ModRange.SetRangeValue constAbsDose & strN, objMed.AbsDose
+          
+        ModRange.SetRangeValue constMaxConc & strN, objMed.MaxConc
+        ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst
+        ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
+        
+        If objMed.OplVlst = "NaCl 0,9%" Then
+            ModRange.SetRangeValue constSolNo & strN, 2
+        ElseIf objMed.OplVlst = "glucose 5%" Then
+            ModRange.SetRangeValue constSolNo & strN, 3
+        ElseIf objMed.OplVlst = "glucose 10%" Then
+            ModRange.SetRangeValue constSolNo & strN, 4
         End If
-    
+        
+        ModRange.SetRangeValue constTime & strN, objMed.MinTijd
+        
+        If Not objMed.Freq = vbNullString Then
+            Set dictFreq = GetMedicationFreqs()
+            intFreq = 2
+            For Each varFreq In dictFreq
+                If varFreq = objMed.Freq Then Exit For
+                intFreq = intFreq + 1
+            Next
+            ModRange.SetRangeValue constFreq & strN, intFreq
+        End If
+        
+        ModRange.SetRangeValue constFreqList & strN, objMed.GetFreqListString
+        
+        If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
+            intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.DeelDose
+            ModRange.SetRangeValue constDoseQty & strN, intDoseQty
+            
+            dblOplVol = CalculateOplossingVolume(intDoseQty * objMed.DeelDose, objMed.MaxConc)
+        
+            If Not dblOplVol = 0 Then
+                ModRange.SetRangeValue constSolVol & strN, dblOplVol
+            End If
+        
+        End If
     End If
-
+    
 End Sub
 
 Public Sub MedDisc_EnterMed_01()

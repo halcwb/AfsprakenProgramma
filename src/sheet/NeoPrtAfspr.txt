@@ -9,6 +9,7 @@ $D$9: 	=Txt_Pat_AfspraakDat
 $I$9: 	=Txt_Pat_Gewicht
 $D$10: 	=Txt_Pat_Bed
 $I$10: 	=Txt_Pat_Leeftijd
+$J$11: 	=_User_LastName&"", ""&_User_FirstName
 $B$13: 	=NeoGuiInfB!D15
 $F$13: 	=NeoBerInfB!AL58
 $J$13: 	=""= ""&NeoBerInfB!AL54&"" ml""

@@ -368,6 +368,7 @@ Private Sub EnterNumeric(ByVal intRegel As Integer, ByVal strRange As String, By
     Dim frmInvoer As FormInvoerNumeriek
     Dim varKeuze As Variant
     Dim strRegel As String
+    Dim strMed As String
     
     On Error GoTo OpenInvoerNumeriekError
     
@@ -375,20 +376,21 @@ Private Sub EnterNumeric(ByVal intRegel As Integer, ByVal strRange As String, By
     
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
     varKeuze = ModRange.GetRangeValue(constMedIVKeuze & strRegel, vbNullString)
+    strMed = ModExcel.Excel_Index(constTblMed, varKeuze, 1)
     
     With frmInvoer
         .Caption = "Medicament " & intRegel
+        .lblText.Caption = "Voer hoeveelheid in voor " & strMed
         .lblParameter = "Oplossing"
         .lblEenheid = strUnit
         If ModRange.GetRangeValue(constMedIVOplVol & strRegel, 0) = 0 Then
-            '.txtWaarde = Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, intColumn)
             .txtWaarde = ModExcel.Excel_Index(constTblMed, varKeuze, intColumn)
         Else
             .txtWaarde = ModRange.GetRangeValue(strRange & strRegel, vbNullString)
         End If
         .Show
         If IsNumeric(.txtWaarde) Then
-            If CDbl(.txtWaarde) = ModExcel.Excel_Index(constTblMed, varKeuze, intColumn) Then 'Application.WorksheetFunction.Index(Range(constTblMed), varKeuze, intColumn) Then
+            If CDbl(.txtWaarde) = ModExcel.Excel_Index(constTblMed, varKeuze, intColumn) Then
                 ModRange.SetRangeValue strRange & strRegel, 0
             Else
                 ModRange.SetRangeValue strRange & strRegel, .txtWaarde
@@ -870,7 +872,7 @@ Private Sub SetStandByDose(ByVal intN As Integer)
     intMed = ModRange.GetRangeValue(constMedIVKeuze & strN, vbNullString)
     strMed = ModExcel.Excel_Index(constTblMed, intMed, 1)
     
-    If ModString.ContainsCaseInsensitive(strMed, "epiduraal") Then Exit Sub
+    If ModString.ContainsCaseInsensitive(strMed, "EPI") Then Exit Sub
     
     strEenheid = ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 38)
     
@@ -880,6 +882,7 @@ Private Sub SetStandByDose(ByVal intN As Integer)
     Set frmDose = New FormInvoerNumeriek
     
     With frmDose
+        .lblText.Caption = "Voer dosering in voor " & strMed
         .SetValue vbNullString, "Dose:", dblDose, strEenheid, vbNullString
         
         .Show

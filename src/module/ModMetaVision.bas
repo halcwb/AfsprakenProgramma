@@ -12,6 +12,8 @@ Private Const constBasePath3 As String = "HKEY_CURRENT_USER\Software\Classes\Vir
 Private Const constSettings As String = "Settings"
 
 Private Const constUserId As String = "UserID"
+Private Const constUserLogin As String = "UserLogin"
+
 Private Const constCurrentPatient As String = "Current Patient"
 Private Const constPatientId As String = "PatientID"
 
@@ -336,6 +338,26 @@ Private Sub Test_MetaVision_GetCurrentPatient()
 
 End Sub
 
+Public Function MetaVision_GetUserLogin() As String
+
+    Dim strKeyPath As String
+    Dim strValue As String
+    Dim strBasePath As String
+    
+    strBasePath = GetBasePath()
+    strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constSettings)
+    strValue = IIf(strBasePath = constBasePath1, constUserLogin, constUserId)
+    
+    MetaVision_GetUserLogin = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+
+End Function
+
+Private Sub Test_MetaVision_GetUserLogin()
+
+    MsgBox MetaVision_GetUserLogin()
+
+End Sub
+
 Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String)
 
     Dim strSecret As String
@@ -654,7 +676,6 @@ Public Sub MetaVision_GetMedicatieOpdrachten()
 
     strServer = MetaVision_GetServer()
     strDatabase = MetaVision_GetDatabase()
-    
     InitConnection strServer, strDatabase
     
     objConn.Open
@@ -698,6 +719,68 @@ GetMedicatieOpdrachtenError:
 
 End Sub
 
+Public Sub MetaVision_SetUser()
+
+    Dim strSql As String
+    Dim strLogin As String
+    
+    Dim objRs As Recordset
+    Dim strServer As String
+    Dim strDatabase As String
+    
+    On Error GoTo SetUser_Error
+    
+    strLogin = MetaVision_GetUserLogin()
+
+    If strLogin = vbNullString Then Exit Sub
+    
+    strSql = strSql & "DECLARE @login AS NVARCHAR(255)" & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SET @login = '" & strLogin & "' " & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SELECT" & vbNewLine
+    strSql = strSql & "u.UserID" & vbNewLine
+    strSql = strSql & ", u.Login" & vbNewLine
+    strSql = strSql & ", u.FirstName" & vbNewLine
+    strSql = strSql & ", u.LastName" & vbNewLine
+    strSql = strSql & ", ut.UserTypeName" & vbNewLine
+    strSql = strSql & "FROM Users u" & vbNewLine
+    strSql = strSql & "INNER JOIN t_UsersType ut ON u.UserTypeID = ut.UserTypeID" & vbNewLine
+    strSql = strSql & "WHERE u.Login = @login" & vbNewLine
+    
+    ModUtils.CopyToClipboard strSql
+    
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    Set objRs = objConn.Execute(strSql)
+
+    ModRange.SetRangeValue "_User_Login", strLogin
+    If Not objRs.EOF Then
+        ModRange.SetRangeValue "_User_FirstName", objRs.Fields("FirstName")
+        ModRange.SetRangeValue "_User_LastName", objRs.Fields("LastName")
+        ModRange.SetRangeValue "_User_Type", objRs.Fields("UserTypeName")
+    End If
+    
+    objConn.Close
+    Set objConn = Nothing
+    
+    Exit Sub
+
+SetUser_Error:
+
+    ModLog.LogError "SetUser Error"
+    
+    On Error Resume Next
+    
+    objConn.Close
+    Set objConn = Nothing
+
+End Sub
+
 Private Sub Test_RangeAdress()
 
     Dim objRange As Range
@@ -717,4 +800,4 @@ GetMedicatieOpdrachtenError:
     
     
     ModMessage.ShowMsgBoxError "Kan medicatie opdrachten niet ophalen"
-    End Sub
+End Sub

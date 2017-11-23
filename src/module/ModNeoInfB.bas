@@ -87,6 +87,13 @@ Private Function Is1700() As Boolean
 
 End Function
 
+Public Function NeoInfB_Is1700() As Boolean
+
+    NeoInfB_Is1700 = Is1700()
+
+End Function
+
+
 Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, ByVal blnShowProgress As Boolean)
 
     Dim objName As Name
@@ -182,8 +189,15 @@ End Sub
 ' ToDo: Add comment
 Public Sub NeoInfB_CopyActTo1700()
 
+    Dim bln1700 As Boolean
+
     ModProgress.StartProgress "Overzetten Actueel naar 17:00 uur"
 
+    bln1700 = Is1700()
+    If bln1700 Then
+        ModNeoInfB.NeoInfB_SelectInfB False, False
+    End If
+    
     CopyCurrentInfVarToData True
 
     ModProgress.SetJobPercentage "Voeding", 3, 1
@@ -192,6 +206,10 @@ Public Sub NeoInfB_CopyActTo1700()
     CopyRangeNamesToRangeNames NeoInfB_GetIVAfsprItems(), ChangeTo1700(NeoInfB_GetIVAfsprItems())
     ModProgress.SetJobPercentage "TPN", 3, 3
     CopyRangeNamesToRangeNames NeoInfB_GetTPNItems(), ChangeTo1700(NeoInfB_GetTPNItems())
+    
+    If bln1700 Then
+        ModNeoInfB.NeoInfB_SelectInfB True, False
+    End If
     
     ModProgress.FinishProgress
     
@@ -445,20 +463,6 @@ Private Sub ChangeMedContIV(ByVal intN As Integer, ByVal blnRemove As Boolean)
     
     If blnRemove Then ModRange.SetRangeValue constMedKeuze & strN, 1
     
-    If blnRemove Then
-        ModRange.SetRangeValue constMedSterkte & strN, 0
-    Else
-        strMedName = ModMedicatie.GetNeoMedContIVName(intMedIndx)
-        If IsEpiduraal(strMedName) Then
-            dblMedQty = ModMedicatie.Medicatie_CalcEpiQty(ModPatient.GetGewichtFromRange())
-        ElseIf strMedName = "doxapram" Then
-            dblMedQty = CalculateMedicamentQtyByDose(strN, intMedIndx, 0)
-        Else
-            dblMedQty = 0
-        End If
-    End If
-    
-    ModRange.SetRangeValue constMedSterkte & strN, dblMedQty * 10
     
     ModRange.SetRangeValue constOplHoev & strN, IIf(blnRemove, 0, dblOplQty)
     ModRange.SetRangeValue constStand & strN, IIf(blnRemove, 0, dblStand)
@@ -469,6 +473,23 @@ Private Sub ChangeMedContIV(ByVal intN As Integer, ByVal blnRemove As Boolean)
         ModRange.SetRangeValue constOplossing & strN, 1
     End If
     
+    If blnRemove Then
+        ModRange.SetRangeValue constMedSterkte & strN, 0
+    Else
+        strMedName = ModMedicatie.GetNeoMedContIVName(intMedIndx)
+        If IsEpiduraal(strMedName) Then
+            dblMedQty = ModMedicatie.Medicatie_CalcEpiQty(ModPatient.GetGewichtFromRange())
+            dblMedQty = CorrectMedQty(strN, intMedIndx, dblMedQty)
+        ElseIf strMedName = "doxapram" Then
+            dblMedQty = CalculateMedicamentQtyByDose(strN, intMedIndx, 0)
+        Else
+            dblMedQty = 0
+        End If
+    End If
+    
+    ModRange.SetRangeValue constMedSterkte & strN, dblMedQty * 10
+
+
 End Sub
 
 Public Sub NeoInfB_ChangeMedContIV_01()
@@ -612,6 +633,7 @@ Public Sub NeoInfB_IntakePerKg()
     
     With frmInvoer
         .Caption = "Vocht per Kg/dag"
+        .lblText = "Voer vocht per Kg/dag in"
         .lblParameter = "Vocht"
         .lblEenheid = "ml/kg/dag"
         .txtWaarde = ModRange.GetRangeValue(constIntakePerKg, 0)
@@ -644,8 +666,8 @@ Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, By
         dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
         ' Corrigeer de hoeveelheid naar min of max concentratie
         dblConc = dblQty / dblOplQty
-        dblQty = IIf(dblConc < dblMinConc, dblMinConc * dblOplQty, dblQty)
-        dblQty = IIf(dblConc > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
+        If dblMinConc > 0 Then dblQty = IIf(dblConc < dblMinConc, dblMinConc * dblOplQty, dblQty)
+        If dblMaxConc > 0 Then dblQty = IIf(dblConc > dblMaxConc, dblMaxConc * dblOplQty, dblQty)
         ' Bepaal of hoevelheid een veelvoud van hele, tiende of honderste milliliters is
         dblMultiple = ModExcel.Excel_Index(constTblMedIV, intMed, 4)
         intFactor = 1                                                   ' >=10ml  hele getallen geen decimalen
@@ -661,14 +683,14 @@ Private Function CorrectMedQty(ByVal strN As String, ByVal intMed As Integer, By
         ' Check opnieuw of de minimale concentratie wordt overschreden
         ' Voeg anders steeds 1 veelvoud van de hoeveelheid toe
         dblConc = dblQty / dblOplQty
-        Do While dblConc < dblMinConc
+        Do While dblConc < dblMinConc And Not dblMinConc = 0
             dblQty = dblQty + dblMultiple
             dblConc = dblQty / dblOplQty
         Loop
         ' Check opnieuw of de maximale concentratie wordt overschreden
         ' Haal anders steeds 1 veelvoud van de hoeveelheid af
         dblConc = dblQty / dblOplQty
-        Do While dblConc > dblMaxConc
+        Do While dblConc > dblMaxConc And Not dblMaxConc = 0
             dblQty = dblQty - dblMultiple
             dblConc = dblQty / dblOplQty
         Loop
@@ -690,7 +712,8 @@ Private Sub MedSterkte(ByVal intN As Integer)
     Dim objTblMed As Range
     
     intMed = ModRange.GetRangeValue(constMedKeuze & IntNToStrN(intN), 1)
-    
+    strMed = ModExcel.Excel_Index(constTblMedIV, intMed, 1)
+
     If intMed <= 1 Then Exit Sub
     
     Set objTblMed = Range(constTblMedIV)
@@ -700,6 +723,7 @@ Private Sub MedSterkte(ByVal intN As Integer)
     
     With frmInvoer
         .Caption = "Medicament " & intN
+        .lblText.Caption = "Voer de medicament sterkte in voor " & strMed
         .lblParameter = "Sterkte"
         .lblEenheid = strUnit
         .txtWaarde = ModRange.GetRangeValue(constMedSterkte & IntNToStrN(intN), 0) / 10
@@ -1007,7 +1031,7 @@ End Sub
 Private Sub ChangeIntakePerKg(ByVal blnRemove As Boolean)
 
     If blnRemove Then
-        ModRange.SetRangeValue constIntakePerKg, 5000
+        ModRange.SetRangeValue constIntakePerKg, 0
         ModRange.SetRangeValue constTPNParEnt, False
     Else
         ModRange.SetRangeValue constTPNParEnt, True
@@ -1048,7 +1072,80 @@ Public Sub NeoInfB_RemoveLipid()
 
 End Sub
 
-' ToDo Implement and assign
+
+
+Public Sub NeoInfB_RemoveTPN_NaCl()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constNaCl, lngNullVal
+
+End Sub
+
+Public Sub NeoInfB_RemoveTPN_KAct()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constKAct, lngNullVal
+
+End Sub
+
+Public Sub NeoInfB_RemoveTPN_CaCl()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constCaCl, lngNullVal
+
+End Sub
+
+Public Sub NeoInfB_RemoveTPN_MgCl()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constMgCl, lngNullVal
+
+End Sub
+
+Public Sub NeoInfB_RemoveTPN_Solu()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constSolu, lngNullVal
+
+End Sub
+
+Public Sub NeoInfB_RemoveTPN_Prim()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constPrim, lngNullVal
+
+End Sub
+
+Public Sub NeoInfB_RemoveTPN_NICUMix()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constNICUMixStand, CalcAdviceNullValue(constNICUMixAdv)
+
+End Sub
+
+Public Sub NeoInfB_RemoveTPN_SSTB()
+
+    Dim lngNullVal As Long
+        
+    lngNullVal = 5000
+    ModRange.SetRangeValue constSSTBStand, CalcAdviceNullValue(constSSTBAdv)
+
+End Sub
+
 Public Sub NeoInfB_RemoveTPN()
 
     Dim lngNullVal As Long
@@ -1065,7 +1162,6 @@ Public Sub NeoInfB_RemoveTPN()
 
 End Sub
 
-' ToDo Implement and assign
 Public Sub NeoInfB_StandardTPN()
 
     Dim lngNullVal As Long
@@ -1121,6 +1217,7 @@ Private Sub ShowMedIVPickList(ByVal strTbl As String, ByVal strRange As String, 
                 If intKeuze <= 1 Then
                     intKeuze = frmPickList.GetFirstSelectedMedicament(True)
                     ModRange.SetRangeValue strRange & strN, intKeuze
+                    ChangeMedContIV intN, False
                     Exit For
                 End If
             Next intN
@@ -1397,12 +1494,16 @@ Private Sub SetDose(ByVal intN As Integer)
     Dim dblDose As Double
     Dim dblQty As Double
     Dim strEenheid As String
+    Dim blnNotSetDose
     
     strN = IntNToStrN(intN)
     intMed = ModRange.GetRangeValue(constMedKeuze & strN, vbNullString)
     strMed = ModExcel.Excel_Index(constTblMedIV, intMed, 1)
     
-    If intMed <= 1 Or ModString.ContainsCaseInsensitive(strMed, "epiduraal") Then Exit Sub
+    blnNotSetDose = intMed <= 1
+    blnNotSetDose = blnNotSetDose Or ModString.ContainsCaseInsensitive(strMed, "epiduraal")
+    blnNotSetDose = blnNotSetDose Or ModString.ContainsCaseInsensitive(strMed, "doxapram")
+    If blnNotSetDose Then Exit Sub
     
     strEenheid = ModExcel.Excel_Index(constTblMedIV, intMed, constDoseEenheidIndx)
     dblDose = ModExcel.Excel_Index("Tbl_Neo_BerMedCont", intN, 7)
@@ -1410,6 +1511,7 @@ Private Sub SetDose(ByVal intN As Integer)
     Set frmDose = New FormInvoerNumeriek
     
     With frmDose
+        .lblText.Caption = "Voer dosering in voor " & strMed
         .SetValue vbNullString, "Dose:", dblDose, strEenheid, vbNullString
         
         .Show
@@ -1491,3 +1593,45 @@ Public Function NeoInfB_GetNeoOplVlst() As Range
     Set NeoInfB_GetNeoOplVlst = objTable
 
 End Function
+
+Public Function NeoInfB_IsValidContMed() As Boolean
+
+    Dim objRange As Range
+    Dim objCell As Range
+    Dim blnValid As Boolean
+    
+    Set objRange = shtNeoBerInfB.Range("Tbl_Neo_ValidContMed")
+    
+    blnValid = True
+    For Each objCell In objRange
+        If objCell.Value2 = True Then
+            blnValid = False
+            Exit For
+        End If
+    Next
+
+    NeoInfB_IsValidContMed = blnValid
+
+End Function
+
+
+Public Function NeoInfB_IsValidTPN() As Boolean
+
+    Dim objRange As Range
+    Dim objCell As Range
+    Dim blnValid As Boolean
+    
+    Set objRange = shtNeoBerInfB.Range("Tbl_NeoInfB_ValidTPN")
+    
+    blnValid = True
+    For Each objCell In objRange
+        If objCell.Value2 = True Then
+            blnValid = False
+            Exit For
+        End If
+    Next
+
+    NeoInfB_IsValidTPN = blnValid
+
+End Function
+

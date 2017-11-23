@@ -24,7 +24,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModProgress.StartProgress "Patient Data Verwijderen"
             ModPatient.PatientClearAll True, True
             ModProgress.FinishProgress
-            ModSheet.SelectPedOrNeoStartSheet True
+'             ModSheet.SelectPedOrNeoStartSheet True
         
         'grpBedden                                          ' -- BEDDEN --
         
@@ -135,7 +135,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpDevelopment                                     ' -- DEVELOPMENT --
         
         Case "btnDevMode"                                   ' -> Development Mode
-            ModApplication.SetToDevelopmentMode
+            ModApplication.ToggleDevelopmentMode
         
         Case "btnToggleLogging"                             ' -> Toggle Logging
             ModSetting.ToggleLogging
@@ -247,13 +247,19 @@ End Sub
 
 Public Sub GetVisibleDevelopment(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
-    blnVisible = ModSetting.IsDevelopmentDir()
+    Dim strUserType As String
+    
+    strUserType = ModRange.GetRangeValue("_User_Type", vbNullString)
+    blnVisible = ModSetting.IsDevelopmentDir() Or strUserType = "Beheerders"
     
 End Sub
 
 Public Sub GetVisibleAdmin(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
 
-    blnVisible = True ' ModSetting.IsDevelopmentDir() Or ModSetting.IsTrainingDir()
+    Dim strUserType As String
+    
+    strUserType = ModRange.GetRangeValue("_User_Type", vbNullString)
+    blnVisible = ModSetting.IsDevelopmentDir() Or strUserType = "Beheerders" Or strUserType = "Apotheek"
     
 End Sub
 

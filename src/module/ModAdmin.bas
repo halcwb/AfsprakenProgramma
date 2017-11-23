@@ -207,7 +207,7 @@ Public Function Admin_GetNeoMedCont() As Collection
 
 End Function
 
-Public Sub Admin_SetNeoMedCont(objNeoMedContCol As Collection)
+Public Sub Admin_SetNeoMedCont(objNeoMedContCol As Collection, ByVal strVerdunning As String)
 
     Dim objMed As ClassNeoMedCont
     Dim objTable As Range
@@ -247,6 +247,8 @@ Public Sub Admin_SetNeoMedCont(objNeoMedContCol As Collection)
         ModProgress.SetJobPercentage objMed.Name & "...", intR, intN
         
     Next
+    
+    ModRange.SetRangeValue constNeoMedVerdunning, strVerdunning
     
     ModProgress.FinishProgress
     
