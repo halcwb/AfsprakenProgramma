@@ -196,7 +196,7 @@ Public Sub Test_NeoInfB_ContMed()
             blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("C" & intM * 3 + 24).Value2)
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
-            blnPass = blnPass And varVal = shtNeoPrtApoth.Range("D5").Value2
+            blnPass = blnPass And ModString.StartsWith(shtNeoPrtApoth.Range("D5").Value2, varVal)
             'Check afspraken print
             If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
         Next
@@ -218,7 +218,7 @@ Public Sub Test_NeoInfB_ContMed()
             
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
-            blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("F5").Value2 / 2, shtNeoPrtApoth.Range("F5").Value2))
+            blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("D4").Value2 / 2, shtNeoPrtApoth.Range("D4").Value2))
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
                 blnShowMsg = False
@@ -251,7 +251,7 @@ Public Sub Test_NeoInfB_ContMed()
             
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
-            blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("G5").Value2)
+            blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("E4").Value2)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
                 blnShowMsg = False
@@ -777,7 +777,7 @@ Public Sub Test_NeoInfB_Print()
         varVal = shtNeoPrtWerkbr.Range("C" & (intM - 1) * 3 + 24).Value2
         ' Check apotheek print
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
-        blnPass = blnPass And varVal = shtNeoPrtApoth.Range("D5").Value2
+        blnPass = blnPass And ModString.StartsWith(shtNeoPrtApoth.Range("D5").Value2, varVal)
         'Check afspraken print
         If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
         
@@ -791,7 +791,7 @@ Public Sub Test_NeoInfB_Print()
         
         ' Check apotheek print
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
-        blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("F5").Value2 / 2, shtNeoPrtApoth.Range("F5").Value2))
+        blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("D4").Value2 / 2, shtNeoPrtApoth.Range("D4").Value2))
         
         'Check afspraken print
         If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
@@ -813,7 +813,7 @@ Public Sub Test_NeoInfB_Print()
         
         ' Check apotheek print
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
-        blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("G5").Value2)
+        blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("E4").Value2)
         If Not blnPass And blnShowMsg Then
             ModMessage.ShowMsgBoxExclam "Apotheek print niet goed voor test " & intN - constTestStart & " no: " & intM
             blnShowMsg = False
