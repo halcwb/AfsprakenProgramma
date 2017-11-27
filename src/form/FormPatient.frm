@@ -209,6 +209,8 @@ Private Sub cmdOK_Click()
     
     Dim dtmBd As Date
     Dim dtmAdm As Date
+    Dim dblActWght As Double
+    Dim dblBthWght As Double
     
     dtmAdm = GetAdmDate()
     dtmBd = GetBirthDate()
@@ -216,13 +218,17 @@ Private Sub cmdOK_Click()
         m_Pat.SetAdmissionAndBirthDate dtmAdm, dtmBd
     End If
     
+    dblActWght = StringToDouble(txtWeight.Value)
+    dblBthWght = StringToDouble(txtBirthWeight.Value)
+    If dblActWght < dblBthWght / 1000 Then dblActWght = dblBthWght / 1000
+    
     m_Pat.PatientId = CStr(txtPatNum.Text)
     m_Pat.AchterNaam = txtLastName.Text
     m_Pat.VoorNaam = txtFirstName.Text
-    m_Pat.Gewicht = ModString.StringToDouble(txtWeight.Value)
+    m_Pat.Gewicht = dblActWght
     m_Pat.Lengte = ModString.StringToDouble(txtLength.Value)
     m_Pat.Geslacht = cboGeslacht.Text
-    m_Pat.GeboorteGewicht = StringToDouble(txtBirthWeight.Value)
+    m_Pat.GeboorteGewicht = dblBthWght
     m_Pat.Weeks = StringToDouble(txtGestWeek.Value)
     m_Pat.Days = StringToDouble(txtGestDay.Value)
     
