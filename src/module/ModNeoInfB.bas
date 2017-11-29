@@ -77,7 +77,7 @@ Private Const constTPNGluc As String = "AL50"
 
 Public Function IsEpiduraal(ByVal strText As String) As Boolean
 
-    IsEpiduraal = ModString.ContainsCaseInsensitive(strText, "epiduraal")
+    IsEpiduraal = ModString.ContainsCaseSensitive(strText, "EPI")
 
 End Function
 
@@ -823,7 +823,7 @@ Private Sub ChangeIV(ByVal intRegel As Integer, ByVal blnRemove As Boolean)
     
     If blnRemove Then ModRange.SetRangeValue constOplossing & intRegel, 1
     ModRange.SetRangeValue strStand, 0
-    ModRange.SetRangeValue strExtra, vbNullString
+    ModRange.SetRangeValue strExtra, False
     
 End Sub
 
@@ -1501,7 +1501,7 @@ Private Sub SetDose(ByVal intN As Integer)
     strMed = ModExcel.Excel_Index(constTblMedIV, intMed, 1)
     
     blnNotSetDose = intMed <= 1
-    blnNotSetDose = blnNotSetDose Or ModString.ContainsCaseInsensitive(strMed, "epiduraal")
+    blnNotSetDose = blnNotSetDose Or ModString.ContainsCaseSensitive(strMed, "EPI")
     blnNotSetDose = blnNotSetDose Or ModString.ContainsCaseInsensitive(strMed, "doxapram")
     If blnNotSetDose Then Exit Sub
     

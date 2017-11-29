@@ -1,4 +1,4 @@
-"$D$1: 	=IF(K59<0,""Te weinig volume voor TPN!"","""")
+"$D$1: 	=IF(G59<0,""Te weinig volume voor TPN!"","""")
 $E$3: 	=NeoBerInfB!$AL$57
 $F$3: 	=NeoBerInfB!$AL$56
 $G$3: 	=NeoBerInfB!$AL$58

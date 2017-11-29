@@ -52,8 +52,8 @@ Private Sub PrintApotheekWerkBriefPrev(ByVal blnPrev As Boolean, ByVal strFile A
     blnPrint = True
     blnPrint = Not ModRange.GetRangeValue(constHospNo, vbNullString) = vbNullString
     If Not NeoInfB_Is1700() And blnPrint Then
-        vbAnswer = ModMessage.ShowMsgBoxYesNo("Huidige infuusbrief is niet de 17:00 versie!" & vbNewLine & "Toch printen?")
-        blnPrint = blnPrint And vbAnswer = vbYes
+        ModMessage.ShowMsgBoxExclam "Huidige infuusbrief is niet de 17:00 versie!" & vbNewLine & "Kan de apotheekbrief niet printen!"
+        Exit Sub
     End If
     
     If Not blnPrint Then Exit Sub
@@ -74,6 +74,11 @@ Private Sub PrintApotheekWerkBriefPrev(ByVal blnPrev As Boolean, ByVal strFile A
 End Sub
 
 Public Sub PrintNeoWerkBrief()
+
+    If Not NeoInfB_Is1700() Then
+        ModMessage.ShowMsgBoxExclam "Huidige infuusbrief is niet de 17:00 versie!" & vbNewLine & "Kan de apotheekbrief niet printen!"
+        Exit Sub
+    End If
 
     If Not ModNeoInfB.NeoInfB_IsValidContMed Then
         ModMessage.ShowMsgBoxExclam "Continue medicatie bevat fouten, kan de werkbrief niet afdrukken"

@@ -336,7 +336,7 @@ $T$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,T$1,FALSE))*$G24
 $V$24: 	=IF(F24>0,ROUND(F24,1)&"" ml/uur"","""")
 $W$24: 	=IF(G24=0,"""",G24&"" ml"")
 $Y$24: 	=IF(G24=0,"""",""verw"")
-$G$26: 	=SUM(G5:G24)-G16
+$G$26: 	=SUM(G5:G24)-G21-G16
 $I$26: 	=SUM(I3:I24)
 $J$26: 	=SUM(J3:J24)
 $K$26: 	=SUM(K3:K24)

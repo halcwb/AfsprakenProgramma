@@ -674,7 +674,7 @@ $AI$37: 	=IF(B37="""","""",""verw"")
 $AI$39: 	=IF(SUM(C42:C49)=0,"""",""verw"")
 $AJ$39: 	=IF(AND(Var_Neo_InfB_TPN_Parenteraal,OR(AND(Var_Neo_InfB_TPN_DagKeuze=1,Var_Neo_InfB_TPN_NICUMix=5000),AND(Var_Neo_InfB_TPN_DagKeuze=2,Var_Neo_InfB_TPN_SSTB=5000))),"""",""stand"")
 $B$40: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,8,$C$4),0)
-$C$40: 	=ROUND(IF(AND(B21,B40+(D40-5000)>0),B40+(D40-5000),0),0)
+$C$40: 	=ROUND(IF(AND(B21,(D40-5000)>0),(D40-5000),0),0)
 $P$40: 	=INDEX(Tbl_Neo_IntralipidSmof,Var_Neo_InfB_TPN_IntralipidSmof)
 $Q$40: 	=IF(C40>0,ROUND(C40/24,1)&"" ml/uur"","""")
 $AI$40: 	=IF(AND(Var_Neo_InfB_TPN_Parenteraal,C40>0),""verw"","""")
@@ -695,7 +695,7 @@ $AX$40: 	=IF($C40>0,VLOOKUP($P40,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL40
 $O$41: 	=IF(Var_Neo_InfB_TPN_Parenteraal,ROUND(SUM(AL42:AL50),1)&"" ml"","""")
 $Q$41: 	=IF(Var_Neo_InfB_TPN_Parenteraal,ROUND(SUM(AL42:AL50)/24,1)&"" ml/uur"","""")
 $B$42: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,2,$C$4),0)
-$C$42: 	=IF(AND($B$21,B42+(D42-5000)/10>0),ROUND(B42+(D42-5000)/10,1),0)
+$C$42: 	=IF(AND($B$21,(D42-5000)/10>0),ROUND((D42-5000)/10,1),0)
 $O$42: 	=IF(AL42>0,AL42&"" ml"","""")
 $P$42: 	=A42
 $AI$42: 	=IF(AL42=0,"""",""verw"")
@@ -713,7 +713,7 @@ $AV$42: 	=IF($C42>0,VLOOKUP($P42,Tbl_Glob_ParEnt,AV$1,FALSE),0)*$AL42
 $AW$42: 	=IF($C42>0,VLOOKUP($P42,Tbl_Glob_ParEnt,AW$1,FALSE),0)*$AL42
 $AX$42: 	=IF($C42>0,VLOOKUP($P42,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL42
 $B$43: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,3,$C$4),0)
-$C$43: 	=IF(AND($B$21,B43+(D43-5000)/10>0),ROUND(B43+(D43-5000)/10,1),0)
+$C$43: 	=IF(AND($B$21,(D43-5000)/10>0),ROUND((D43-5000)/10,1),0)
 $O$43: 	=IF(AL43>0,AL43&"" ml"","""")
 $P$43: 	=A43
 $AI$43: 	=IF(AL43=0,"""",""verw"")
@@ -731,7 +731,7 @@ $AV$43: 	=IF($C43>0,VLOOKUP($P43,Tbl_Glob_ParEnt,AV$1,FALSE),0)*$AL43
 $AW$43: 	=IF($C43>0,VLOOKUP($P43,Tbl_Glob_ParEnt,AW$1,FALSE),0)*$AL43
 $AX$43: 	=IF($C43>0,VLOOKUP($P43,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL43
 $B$44: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,4,$C$4),0)
-$C$44: 	=IF(AND($B$21,B44+(D44-5000)/10>0),ROUND(B44+(D44-5000)/10,1),0)
+$C$44: 	=IF(AND($B$21,(D44-5000)/10>0),ROUND((D44-5000)/10,1),0)
 $O$44: 	=IF(AL44>0,AL44&"" ml"","""")
 $P$44: 	=A44
 $AI$44: 	=IF(AL44=0,"""",""verw"")
@@ -749,7 +749,7 @@ $AV$44: 	=IF($C44>0,VLOOKUP($P44,Tbl_Glob_ParEnt,AV$1,FALSE),0)*$AL44
 $AW$44: 	=IF($C44>0,VLOOKUP($P44,Tbl_Glob_ParEnt,AW$1,FALSE),0)*$AL44
 $AX$44: 	=IF($C44>0,VLOOKUP($P44,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL44
 $B$45: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,5,$C$4),1)
-$C$45: 	=IF(AND($B$21,B45+(D45-5000)/10>0),ROUND(B45+(D45-5000)/10,1),0)
+$C$45: 	=IF(AND($B$21,(D45-5000)/10>0),ROUND((D45-5000)/10,1),0)
 $O$45: 	=IF(AL45>0,AL45&"" ml"","""")
 $P$45: 	=A45
 $AI$45: 	=IF(AL45=0,"""",""verw"")
@@ -767,7 +767,7 @@ $AV$45: 	=IF($C45>0,VLOOKUP($P45,Tbl_Glob_ParEnt,AV$1,FALSE),0)*$AL45
 $AW$45: 	=IF($C45>0,VLOOKUP($P45,Tbl_Glob_ParEnt,AW$1,FALSE),0)*$AL45
 $AX$45: 	=IF($C45>0,VLOOKUP($P45,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL45
 $B$46: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,6,$C$4),1)
-$C$46: 	=IF(AND($B$21,B46+(D46-5000)/10>0),ROUND(B46+(D46-5000)/10,1),0)
+$C$46: 	=IF(AND($B$21,(D46-5000)/10>0),ROUND((D46-5000)/10,1),0)
 $O$46: 	=IF(AL46>0,AL46&"" ml"","""")
 $P$46: 	=A46
 $AI$46: 	=IF(AL46=0,"""",""verw"")
@@ -785,7 +785,7 @@ $AV$46: 	=IF($C46>0,VLOOKUP($P46,Tbl_Glob_ParEnt,AV$1,FALSE),0)*$AL46
 $AW$46: 	=IF($C46>0,VLOOKUP($P46,Tbl_Glob_ParEnt,AW$1,FALSE),0)*$AL46
 $AX$46: 	=IF($C46>0,VLOOKUP($P46,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL46
 $B$47: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,7,$C$4),0)
-$C$47: 	=IF(AND($B$21,B47+(D47-5000)>0),ROUND(B47+(D47-5000),0),0)
+$C$47: 	=IF(AND($B$21,(D47-5000)>0),ROUND((D47-5000),0),0)
 $O$47: 	=IF(AL47>0,AL47&"" ml"","""")
 $P$47: 	=A47
 $AI$47: 	=IF(AL47=0,"""",""verw"")
@@ -803,7 +803,7 @@ $AV$47: 	=IF($C47>0,VLOOKUP($P47,Tbl_Glob_ParEnt,AV$1,FALSE),0)*$AL47
 $AW$47: 	=IF($C47>0,VLOOKUP($P47,Tbl_Glob_ParEnt,AW$1,FALSE),0)*$AL47
 $AX$47: 	=IF($C47>0,VLOOKUP($P47,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL47
 $B$48: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,1,$C$4),1)
-$C$48: 	=ROUND(IF(AND($B$21,B48+(D48-5000)>0),B48+(D48-5000),0),0)
+$C$48: 	=ROUND(IF(AND($B$21,(D48-5000)>0),(D48-5000),0),0)
 $O$48: 	=IF(AL48>0,AL48&"" ml"","""")
 $AI$48: 	=IF(AL48=0,"""",""verw"")
 $AL$48: 	=IF(D41=1,C48,0)
@@ -820,7 +820,7 @@ $AV$48: 	=IF($C48>0,VLOOKUP($P48,Tbl_Glob_ParEnt,AV$1,FALSE),0)*$AL48
 $AW$48: 	=IF($C48>0,VLOOKUP($P48,Tbl_Glob_ParEnt,AW$1,FALSE),0)*$AL48
 $AX$48: 	=IF($C48>0,VLOOKUP($P48,Tbl_Glob_ParEnt,AX$1,FALSE),0)*$AL48
 $B$49: 	=ROUND((_Pat_Gewicht)*INDEX(NeoBerAdvies!$B$8:$G$15,1,$C$4),1)
-$C$49: 	=ROUND(IF(AND($B$21,B49+(D49-5000)>0),B49+(D49-5000),0),0)
+$C$49: 	=ROUND(IF(AND($B$21,(D49-5000)>0),(D49-5000),0),0)
 $O$49: 	=IF(AL49>0,AL49&"" ml"","""")
 $P$49: 	=A49
 $AI$49: 	=IF(AL49=0,"""",""verw"")
