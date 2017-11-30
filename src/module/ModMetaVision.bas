@@ -194,16 +194,17 @@ Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As 
         strSql = strSql & ", lu.Name Department" & vbNewLine
         strSql = strSql & ", b.BedName" & vbNewLine
         strSql = strSql & ", pl.LocationFromTime" & vbNewLine
+        strSql = strSql & ", pl.TimeLog" & vbNewLine
         strSql = strSql & "FROM PatientLogs pl" & vbNewLine
+        strSql = strSql & "INNER JOIN Patients pat ON pat.PatientID = pl.PatientID" & vbNewLine
         strSql = strSql & "LEFT JOIN LogicalUnits lu ON lu.LogicalUnitID = pl.LogicalUnitID" & vbNewLine
         strSql = strSql & "LEFT JOIN Beds b ON b.BedID = pl.BedID" & vbNewLine
         strSql = strSql & "WHERE " & vbNewLine
         strSql = strSql & "(@patId IS NULL OR pl.PatientID = @patId)" & vbNewLine
         strSql = strSql & "AND (@patNum IS NULL OR pl.HospitalNumber = @patNum)" & vbNewLine
         strSql = strSql & "AND (@bed IS NULL OR RTRIM(LTRIM(b.BedName)) = RTRIM(LTRIM(@bed)))" & vbNewLine
-        strSql = strSql & "ORDER BY pl.LocationFromTime DESC" & vbNewLine
+        strSql = strSql & "ORDER BY pl.TimeLog DESC" & vbNewLine
 
-        
     End If
     
     ModUtils.CopyToClipboard strSql
