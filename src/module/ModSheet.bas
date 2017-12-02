@@ -291,4 +291,24 @@ Public Sub PrintSheetAllPortrait(shtSheet As Worksheet)
         IgnorePrintAreas:=False
 End Sub
 
+Public Sub Sheet_CopyRangeFormulaToDst(objSrc As Range, objDst As Range)
+           
+    On Error GoTo CopyRangeFormulaToDstError
+    
+    If Not objSrc.Rows.Count = objDst.Rows.Count Or Not objSrc.Columns.Count = objDst.Columns.Count Then Err.Raise ModConst.CONST_APP_ERROR, , ModConst.CONST_DEFAULTERROR_MSG
+    
+    objSrc.Copy
+    
+    objDst.PasteSpecial Paste:=xlPasteFormulas, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+        
+    Exit Sub
+
+CopyRangeFormulaToDstError:
+
+    ModLog.LogError "Cannot copy " & objSrc.Address & " to " & objDst.Address
+
+End Sub
+
+
 

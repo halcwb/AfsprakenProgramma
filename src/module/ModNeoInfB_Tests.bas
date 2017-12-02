@@ -205,12 +205,12 @@ Public Sub Test_NeoInfB_ContMed()
         
         
         ' ================ Check hoeveelheid medicament ================
-        varVal = shtNeoPrtWerkbr.Range("E24").Value2
+        varVal = shtNeoPrtWerkbr.Range("G24").Value2
         For intM = 0 To 9
             blnShowMsg = True
             
             'Check werkbrief
-            blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("E" & intM * 3 + 24).Value2)
+            blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("G" & intM * 3 + 24).Value2)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Werkbrief print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
                 blnShowMsg = False
@@ -240,10 +240,10 @@ Public Sub Test_NeoInfB_ContMed()
         
         
         ' ================ Check medicament eenheid ================
-        varVal = shtNeoPrtWerkbr.Range("F24").Value2
+        varVal = shtNeoPrtWerkbr.Range("H24").Value2
         For intM = 0 To 9
             'Check werkbrief
-            blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("F" & intM * 3 + 24).Value2)
+            blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("H" & intM * 3 + 24).Value2)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Werkbrief print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
                 blnShowMsg = False
@@ -273,10 +273,10 @@ Public Sub Test_NeoInfB_ContMed()
                 
         
         ' ================ Check oplosmiddel ================
-        varVal = shtNeoPrtWerkbr.Range("J25").Value2
+        varVal = shtNeoPrtWerkbr.Range("K25").Value2
         For intM = 0 To 9
             'Check werkbrief
-            blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("J" & intM * 3 + 25).Value2)
+            blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("K" & intM * 3 + 25).Value2)
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             blnPass = blnPass And varVal = shtNeoPrtApoth.Range("J6").Value2
@@ -787,7 +787,7 @@ Public Sub Test_NeoInfB_Print()
         
         ' ================ Check hoeveelheid medicament ================
         'Check werkbrief
-        varVal = shtNeoPrtWerkbr.Range("E" & (intM - 1) * 3 + 24).Value2
+        varVal = shtNeoPrtWerkbr.Range("G" & (intM - 1) * 3 + 24).Value2
         
         ' Check apotheek print
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
@@ -809,7 +809,7 @@ Public Sub Test_NeoInfB_Print()
         
         
         ' ================ Check medicament eenheid ================
-        varVal = shtNeoPrtWerkbr.Range("F" & (intM - 1) * 3 + 24).Value2
+        varVal = shtNeoPrtWerkbr.Range("H" & (intM - 1) * 3 + 24).Value2
         
         ' Check apotheek print
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
@@ -835,7 +835,7 @@ Public Sub Test_NeoInfB_Print()
                 
         
         ' ================ Check oplosmiddel ================
-        varVal = shtNeoPrtWerkbr.Range("J" & (intM - 1) * 3 + 25).Value2
+        varVal = shtNeoPrtWerkbr.Range("K" & (intM - 1) * 3 + 25).Value2
         ' Check apotheek print
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         blnPass = blnPass And varVal = shtNeoPrtApoth.Range("J6").Value2

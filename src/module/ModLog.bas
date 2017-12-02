@@ -48,6 +48,8 @@ Public Sub LogError(ByVal strError As String)
     strError = " Number: " & Err.Number & " Source: " & Err.Source & " Description: " & strError
     blnLog = ModSetting.GetEnableLogging()
 
+    ModUtils.EMailMessageToBeheer strError
+
     EnableLogging
     LogToFile ModSetting.GetLogFilePath(), Error, strError
     If Not blnLog Then ModLog.DisableLogging

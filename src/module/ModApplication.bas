@@ -489,12 +489,12 @@ Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, B
     Dim objSrc As Range
     Dim objDst As Range
     
-    Dim intR As Integer
-    Dim intC As Integer
-    
-    Dim intN As Integer
-    Dim intJ As Integer
-    Dim intT As Integer
+'    Dim intR As Integer
+'    Dim intC As Integer
+'
+'    Dim intN As Integer
+'    Dim intJ As Integer
+'    Dim intT As Integer
     
     Dim strMsg As String
     
@@ -506,19 +506,21 @@ Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, B
     Set objSrc = objConfigWbk.Sheets(strTable).Range(strConfig)
     Set objDst = ModRange.GetRange(strTable)
         
-    intR = objSrc.Rows.Count
-    intC = objSrc.Columns.Count
+'    intR = objSrc.Rows.Count
+'    intC = objSrc.Columns.Count
+'
+'    If Not intR = objDst.Rows.Count Or Not intC = objDst.Columns.Count Then Err.Raise ModConst.CONST_APP_ERROR, , ModConst.CONST_DEFAULTERROR_MSG
     
-    If Not intR = objDst.Rows.Count Or Not intC = objDst.Columns.Count Then Err.Raise ModConst.CONST_APP_ERROR, , ModConst.CONST_DEFAULTERROR_MSG
-    
-    intT = intR
-    For intN = 1 To intR
-        strMsg = strTable & " " & objDst.Cells(intN, 1).Value2
-        For intJ = 1 To intC
-            objDst.Cells(intN, intJ).Formula = objSrc.Cells(intN, intJ).Formula
-        Next
-        ModProgress.SetJobPercentage strMsg, intT, intN
-    Next
+'    intT = intR
+'    For intN = 1 To intR
+'        strMsg = strTable & " " & objDst.Cells(intN, 1).Value2
+'        For intJ = 1 To intC
+'            objDst.Cells(intN, intJ).Formula = objSrc.Cells(intN, intJ).Formula
+'        Next
+'        ModProgress.SetJobPercentage strMsg, intT, intN
+'    Next
+
+    Sheet_CopyRangeFormulaToDst objSrc, objDst
     
     objConfigWbk.Close False
     
@@ -541,6 +543,7 @@ LoadConfigTableError:
     Set objConfigWbk = Nothing
     
     Application.DisplayAlerts = True
+    
 End Sub
 
 Private Sub SaveConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)

@@ -24,7 +24,6 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModProgress.StartProgress "Patient Data Verwijderen"
             ModPatient.PatientClearAll True, True
             ModProgress.FinishProgress
-'             ModSheet.SelectPedOrNeoStartSheet True
         
         'grpBedden                                          ' -- BEDDEN --
         

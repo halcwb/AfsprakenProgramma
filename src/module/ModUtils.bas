@@ -274,5 +274,38 @@ Public Sub RunTestCmd()
 
 End Sub
 
+Public Sub EMailMessageToBeheer(ByVal strMsg As String)
+
+    Dim objMsg As Object
+    Dim strTo As String
+    Dim strFrom As String
+    Dim strSubject As String
+    Dim strHTML As String
+    
+    On Error Resume Next
+    
+    Err.Clear
+    Set objMsg = CreateObject("CDO.Message")
+    
+    strTo = "c.w.bollen@umcutrecht.nl"
+    strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
+    strSubject = "AfsprakenProgramma fout"
+    strHTML = strMsg
+     
+    With objMsg
+         .To = CStr(strTo)
+         .From = CStr(strFrom)
+         .Subject = CStr(strSubject)
+         .HTMLBody = CStr(strHTML)
+         .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2 'cdoSendUsingPickup=1, cdoSendUsingPort=2, cdoSendUsingExchange=3
+         .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "mail.umcutrecht.nl"
+         .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+         .Configuration.Fields.Update
+         .Send
+    End With
+    
+    Set objMsg = Nothing
+    
+End Sub
 
 

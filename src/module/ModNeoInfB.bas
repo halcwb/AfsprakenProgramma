@@ -34,10 +34,8 @@ Private Const constMgCl As String = "Var_Neo_InfB_TPN_MgCl2"
 Private Const constSolu As String = "Var_Neo_InfB_TPN_Soluvit"
 Private Const constPrim As String = "Var_Neo_InfB_TPN_Primene"
 
-Private Const constNICUMixStand As String = "Var_Neo_InfB_TPN_NICUMix"
-Private Const constNICUMixAdv As String = "Var_Neo_NICUMixAdv"
-Private Const constSSTBStand As String = "Var_Neo_InfB_TPN_SSTB"
-Private Const constSSTBAdv As String = "Var_Neo_SSTBAdv"
+Private Const constNICUmix As String = "Var_Neo_InfB_TPN_NICUMix"
+Private Const constSSTB As String = "Var_Neo_InfB_TPN_SSTB"
 
 Private Const constMedIndex As Integer = 1
 Private Const constUnitIndex As Integer = 2
@@ -74,6 +72,17 @@ Private Const constTblToevoegKV As String = "Tbl_Neo_PoedKV"
 Private Const constToevoegKVCount As Integer = 4
 
 Private Const constTPNGluc As String = "AL50"
+
+Private Const constStandLipid As String = "B40"
+Private Const constStandNaCl As String = "B42"
+Private Const constStandKAcet As String = "B43"
+Private Const constStandCaCl2 As String = "B44"
+Private Const constStandMgCl2 As String = "B45"
+Private Const constStandSoluvit As String = "B46"
+Private Const constStandPrimene As String = "B47"
+Private Const constStandNICUmix As String = "B48"
+Private Const constStandSSTB As String = "B49"
+
 
 Public Function IsEpiduraal(ByVal strText As String) As Boolean
 
@@ -820,10 +829,13 @@ Private Sub ChangeIV(ByVal intRegel As Integer, ByVal blnRemove As Boolean)
 
     strStand = constStand & intRegel
     strExtra = constExtra & intRegel + 1
+    blnRemove = ModRange.GetRangeValue(constOplossing & intRegel, 1) = 1
     
-    If blnRemove Then ModRange.SetRangeValue constOplossing & intRegel, 1
-    ModRange.SetRangeValue strStand, 0
-    ModRange.SetRangeValue strExtra, False
+    If blnRemove Then
+        ModRange.SetRangeValue constOplossing & intRegel, 1
+        ModRange.SetRangeValue strStand, 0
+        ModRange.SetRangeValue strExtra, False
+    End If
     
 End Sub
 
@@ -865,17 +877,8 @@ End Sub
 
 Public Sub NeoInfB_TPNAdvice()
 
-    ModRange.SetRangeValue "_DagKeuze", IIf(ModRange.GetRangeValue("Dag", 0) < 4, 1, 2)
-    ModRange.SetRangeValue "_IntakePerKg", 5000
-    ModRange.SetRangeValue "_IntraLipid", 5000
-    ModRange.SetRangeValue "_NaCl", 5000
-    ModRange.SetRangeValue "_KCl", 5000
-    ModRange.SetRangeValue "_CaCl2", 5000
-    ModRange.SetRangeValue "_MgCl2", 5000
-    ModRange.SetRangeValue "_SoluVit", 5000
-    ModRange.SetRangeValue "_Primene", 5000
-    ModRange.SetRangeValue "_NICUMix", 5000
-    ModRange.SetRangeValue "_SSTB", 5000
+    NeoInfB_StandardTPN
+    NeoInfB_StandardLipid
     
     ModSheet.GoToSheet shtNeoGuiInfB, "A9"
 
@@ -1051,15 +1054,9 @@ Public Sub NeoInfB_RemoveIntakePerKg()
 
 End Sub
 
-Private Function CalcAdviceNullValue(ByVal strRange As String) As Long
-
-    CalcAdviceNullValue = 5000 - ModRange.GetRangeValue(strRange, 0)
-
-End Function
-
 Public Sub NeoInfB_StandardLipid()
 
-    ModRange.SetRangeValue constLipidStand, 5000
+    ModRange.SetRangeValue constLipidStand, shtNeoBerInfB.Range(constStandLipid).Value2 + 5000
 
 End Sub
 
@@ -1067,12 +1064,9 @@ Public Sub NeoInfB_RemoveLipid()
 
     Dim lngNullVal As Long
     
-    lngNullVal = CalcAdviceNullValue(constLipidAdvies)
     ModRange.SetRangeValue constLipidStand, lngNullVal
 
 End Sub
-
-
 
 Public Sub NeoInfB_RemoveTPN_NaCl()
 
@@ -1133,7 +1127,7 @@ Public Sub NeoInfB_RemoveTPN_NICUMix()
     Dim lngNullVal As Long
         
     lngNullVal = 5000
-    ModRange.SetRangeValue constNICUMixStand, CalcAdviceNullValue(constNICUMixAdv)
+    ModRange.SetRangeValue constNICUmix, lngNullVal
 
 End Sub
 
@@ -1142,7 +1136,7 @@ Public Sub NeoInfB_RemoveTPN_SSTB()
     Dim lngNullVal As Long
         
     lngNullVal = 5000
-    ModRange.SetRangeValue constSSTBStand, CalcAdviceNullValue(constSSTBAdv)
+    ModRange.SetRangeValue constSSTB, lngNullVal
 
 End Sub
 
@@ -1157,8 +1151,8 @@ Public Sub NeoInfB_RemoveTPN()
     ModRange.SetRangeValue constMgCl, lngNullVal
     ModRange.SetRangeValue constSolu, lngNullVal
     ModRange.SetRangeValue constPrim, lngNullVal
-    ModRange.SetRangeValue constNICUMixStand, CalcAdviceNullValue(constNICUMixAdv)
-    ModRange.SetRangeValue constSSTBStand, CalcAdviceNullValue(constSSTBAdv)
+    ModRange.SetRangeValue constNICUmix, lngNullVal
+    ModRange.SetRangeValue constSSTB, lngNullVal
 
 End Sub
 
@@ -1167,10 +1161,14 @@ Public Sub NeoInfB_StandardTPN()
     Dim lngNullVal As Long
         
     lngNullVal = 5000
-    ModRange.SetRangeValue constNaCl, lngNullVal
-    ModRange.SetRangeValue constKAct, lngNullVal
-    ModRange.SetRangeValue constNICUMixStand, lngNullVal
-    ModRange.SetRangeValue constSSTBStand, lngNullVal
+    ModRange.SetRangeValue constNaCl, shtNeoBerInfB.Range(constStandNaCl).Value2 * 10 + lngNullVal
+    ModRange.SetRangeValue constKAct, shtNeoBerInfB.Range(constStandKAcet).Value2 * 10 + lngNullVal
+    ModRange.SetRangeValue constCaCl, shtNeoBerInfB.Range(constStandCaCl2).Value2 * 10 + lngNullVal
+    ModRange.SetRangeValue constMgCl, shtNeoBerInfB.Range(constStandMgCl2).Value2 * 10 + lngNullVal
+    ModRange.SetRangeValue constSolu, shtNeoBerInfB.Range(constStandSoluvit).Value2 * 10 + lngNullVal
+    ModRange.SetRangeValue constPrim, shtNeoBerInfB.Range(constStandPrimene).Value2 + lngNullVal
+    ModRange.SetRangeValue constNICUmix, shtNeoBerInfB.Range(constStandNICUmix).Value2 + lngNullVal
+    ModRange.SetRangeValue constSSTB, shtNeoBerInfB.Range(constStandSSTB).Value2 + lngNullVal
 
 End Sub
 

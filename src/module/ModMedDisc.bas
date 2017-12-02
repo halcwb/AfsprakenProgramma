@@ -44,6 +44,8 @@ Private Const constFreqText As String = "Var_MedDisc_FreqText_"
 Private Const constVerw As String = "AL"
 Private Const constMedCount As Integer = 30
 
+Private m_Formularium As ClassFormularium
+
 Public Function MedDisc_CanonGen(ByVal strGeneriek As String) As String
 
     strGeneriek = Trim(LCase(strGeneriek))
@@ -121,7 +123,8 @@ Public Sub MedDisc_ShowPickList()
     Dim objTable As Range
     Dim varGen As Variant
     
-    Set objForm = Formularium_GetFormularium
+    If m_Formularium Is Nothing Then Set m_Formularium = Formularium_GetFormularium
+    
     Set objGenCol = New Collection
     Set objTable = ModRange.GetRange(constTblMedOpdr)
     
@@ -131,7 +134,7 @@ Public Sub MedDisc_ShowPickList()
         If Not varGen = vbNullString Then
             varGen = Split(varGen, " ")(0)
             varGen = LCase(varGen)
-            If CollectionContains(varGen, objForm.GetGenerieken()) Then
+            If CollectionContains(varGen, m_Formularium.GetGenerieken()) Then
                 If Not CollectionContains(varGen, objGenCol) Then objGenCol.Add varGen
             End If
         End If
