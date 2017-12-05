@@ -16,7 +16,7 @@ $F$4: 	=HLOOKUP(A4,PedBerEnt!$L$2:$X$8,7,FALSE)
 $G$4: 	=HLOOKUP(PedBerTot!A4,PedBerTPN!$I$25:$U$26,2,FALSE)
 $H$4: 	=SUM($C4:$G4)
 $I$4: 	=IF(_Pat_Gewicht>0, H4/(_Pat_Gewicht),0)
-$J$4: 	=IF(N3>2,FixPrecision(HLOOKUP(A3,Tbl_Ped_TPN_Advice,N3,FALSE),2),IF(GlobBerNorm!A18=0,"""",GlobBerNorm!A18))&"" ""&B4&""/kg""
+$J$4: 	=IF(N4>2,FixPrecision(HLOOKUP(A4,Tbl_Ped_TPN_Advice,N4,FALSE),2),IF(GlobBerNorm!A18=0,"""",GlobBerNorm!A18))&"" ""&B4&""/kg""
 $L$4: 	=FixPrecision(H4,1)&"" ""&$B4
 $M$4: 	=FixPrecision(I4,1)&"" ""&$B4&""/kg""
 $N$4: 	=IF(E22,3,IF(E23,4,IF(E24,5,IF(E25,6,IF(E26,7,IF(E27,8,1))))))

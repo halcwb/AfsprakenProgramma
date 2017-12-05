@@ -164,7 +164,7 @@ Public Sub InitializeAfspraken()
     Dim strParams() As Variant
     Dim objWind As Window
     
-    On Error GoTo InitializeError
+    On Error Resume Next
     
     shtGlobGuiFront.Select
     Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
@@ -222,6 +222,8 @@ Public Sub InitializeAfspraken()
     
     Application.ScreenUpdating = True
             
+    If Not Err.Number = 0 Then Err.Raise ModConst.CONST_APP_ERROR, "Applicatie niet goed opgestart"
+            
     Exit Sub
     
 InitializeError:
@@ -229,7 +231,7 @@ InitializeError:
     ModProgress.FinishProgress
     Application.Visible = True
 
-    strError = "Kan de applicatie niet opstarten"
+    strError = "De applicatie is mogelijk niet goed opgestart"
     ModMessage.ShowMsgBoxError strError
     
     strError = strError & vbNewLine & strAction

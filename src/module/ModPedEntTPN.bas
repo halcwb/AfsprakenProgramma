@@ -377,7 +377,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
     
     dblGewicht = ModPatient.GetGewichtFromRange()
         
-    If intDag = 0 Then
+    If intDag = 4 Or intDag = 0 Then
             PedEntTPN_ClearTPN
             PedEntTPN_ClearLipid
         Exit Sub
@@ -779,7 +779,16 @@ End Sub
 
 Public Sub PedEntTPN_ChangeTPN()
 
-    TPNAdvies ModRange.GetRangeValue(constTPNDag, 0), ModRange.GetRangeValue(constTPN, 1)
+    Dim intDag As Integer
+    Dim intTPN As Integer
+    
+    intDag = ModRange.GetRangeValue(constTPNDag, 0)
+    intTPN = ModRange.GetRangeValue(constTPN, 1)
+    If intTPN > 1 And intDag = 4 Then
+        ModMessage.ShowMsgBoxInfo "Kies een TPN dag"
+    End If
+    
+    TPNAdvies intDag, intTPN
 
 End Sub
 

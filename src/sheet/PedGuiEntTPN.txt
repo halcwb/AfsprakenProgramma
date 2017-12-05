@@ -47,20 +47,20 @@ $K$18: 	=PedBerEnt!A19
 $L$18: 	=PedBerEnt!B19
 $B$22: 	=PedBerTPN!Y3
 $F$22: 	=PedBerTPN!V3
-$I$22: 	=IF(F22<>"""","" ""&PedBerTPN!G3&"" ml/dag"","""")
+$I$22: 	=PedBerTPN!AB3
 $J$22: 	=PedBerTPN!Y21
 $L$22: 	=PedBerTPN!V21
-$N$22: 	=IF(L22<>"""",PedBerTPN!G21&"" mL/dag"","""")
+$N$22: 	=PedBerTPN!AB21
 $B$23: 	=PedBerTPN!Y5
 $C$23: 	=PedBerTPN!Z5
 $F$23: 	=PedBerTPN!V5
 $G$23: 	=PedBerTPN!W5
-$I$23: 	=IF(F23="""","""","" ""&PedBerTPN!W5&""/dag"")
+$I$23: 	=PedBerTPN!AB5
 $B$24: 	=PedBerTPN!Y6
 $F$24: 	=PedBerTPN!V6
 $G$24: 	=PedBerTPN!W6
 $H$24: 	=IF(PedBerTPN!W7="""","""","" + ""&PedBerTPN!W7&"" gluc 10%"")
-$I$24: 	=IF(F24="""","""","" "" &SUM(PedBerTPN!G6:G7)&"" ml/dag"")
+$I$24: 	=PedBerTPN!AB6
 $L$24: 	=PedBerTPN!W22
 $G$25: 	=PedBerTPN!W8
 $B$26: 	=PedBerTPN!Y9
@@ -75,17 +75,16 @@ $B$29: 	=PedBerTPN!Y12
 $F$29: 	=PedBerTPN!V11
 $G$29: 	=PedBerTPN!W12
 $H$29: 	=IF(PedBerTPN!W11="""","""","" + ""&PedBerTPN!W11&"" gluc 10%"")
-$I$29: 	=IF(F29="""","""","" ""&SUM(PedBerTPN!G12:G13)+PedBerTPN!G11&"" ml/dag"")
+$I$29: 	=PedBerTPN!AB11
 $B$30: 	=PedBerTPN!Y13
 $G$30: 	=PedBerTPN!W13
 $B$32: 	=PedBerTPN!Y15
 $F$32: 	=PedBerTPN!V14
 $G$32: 	=PedBerTPN!W15
 $H$32: 	=IF(PedBerTPN!W14="""","""","" + ""&PedBerTPN!W14&"" gluc 5%"")
-$I$32: 	=IF(PedBerTPN!W15="""","""","" ""&SUM(PedBerTPN!G14:G15)&"" ml/dag"")
 $B$34: 	=PedBerTPN!Y16
 $F$34: 	=PedBerTPN!V16
-$I$34: 	=IF(PedBerTPN!G16<>0,"" ""&PedBerTPN!G16&"" ml/dag"","""")
+$I$34: 	=PedBerTPN!AB16
 $G$35: 	=PedBerTPN!W17
 $B$36: 	=PedBerTPN!Y18
 $G$36: 	=PedBerTPN!W18

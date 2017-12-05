@@ -18,13 +18,12 @@ $G$21: 	=PedBerTPN!$W$17
 $G$22: 	=PedBerTPN!$W$18
 $G$23: 	=PedBerTPN!$W$19
 $G$24: 	=PedBerTPN!$W$16
-$A$27: 	=IF(PedBerTPN!$W$5="""",IF(PedBerTPN!$V$11="""",PedBerTPN!$V$3,PedBerTPN!$V$12),PedBerTPN!$V$11)
+$A$27: 	=PedBerTPN!V3
 $G$27: 	=PedBerTPN!$W$9
 $G$28: 	=PedBerTPN!$W$10
 $G$29: 	=PedBerTPN!$W$12
 $G$30: 	=PedBerTPN!$W$13
-$G$31: 	=IF($G$16="""",PedBerTPN!$W$11,"""")
-$B$32: 	=IF(B18="""",PedBerTPN!$H$8,"""")
-$G$32: 	=IF(G31="""",PedBerTPN!$W$8,"""")
+$B$31: 	=PedBerTPN!H8
+$G$31: 	=PedBerTPN!W8
 $G$33: 	=PedBerTPN!$W$3
 "

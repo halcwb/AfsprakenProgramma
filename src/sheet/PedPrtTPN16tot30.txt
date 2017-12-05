@@ -14,7 +14,7 @@ $G$17: 	=IF(B17=PedBerTPN!$H$8,PedBerTPN!$W$8,"""")
 $G$18: 	=IF(AND(B18=PedBerTPN!$H$8),PedBerTPN!$W$8,"""")
 $G$19: 	=IF(AND(B19=PedBerTPN!$H$8),PedBerTPN!$W$8,"""")
 $B$20: 	=IF($A$13="""","""",PedBerTPN!$H$8)
-$G$20: 	=IF(AND(G$16="""",G$17="""",G$18="""",$G$19="""",$A$13<>""""),PedBerTPN!$W$8,"""")
+$G$20: 	=IF(AND(G$17="""",G$18="""",$G$19="""",$A$13<>""""),PedBerTPN!$W$8,"""")
 $G$21: 	=IF($A$13="""","""",PedBerTPN!$W$3)
 $A$23: 	=PedBerTPN!$V$16
 $G$23: 	=PedBerTPN!$W$17
