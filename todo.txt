@@ -91,6 +91,9 @@ Na 28 november
 - Verkeerde tekst bij blokkade werkbrief printen NICU
 - TPN veranderen blokkeert
 - Format getallen met decimale punt in gui sheets
+- Magnesium in ped continue medicatie in berekeningen meenemen.
+- Soluvit neo infuusbrief en werkbrief naar lipiden infuus??
+- Bij advies juiste glucose sterkte kiezen Ped TPN
 
 
 - Route in tabel continue medicatie opnemen

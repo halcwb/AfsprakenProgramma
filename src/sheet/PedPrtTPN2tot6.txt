@@ -1,32 +1,36 @@
 "$B$3: 	=TODAY()
 $F$3: 	=Txt_Pat_PatNo
 $F$4: 	=Txt_Pat_FullName
+$B$5: 	=__1_Bed
 $F$5: 	=Txt_Pat_GeboorteDat
-$B$6: 	=__1_Bed
+$B$6: 	=_User_LastName&"", ""&_User_FirstName
 $F$6: 	=Txt_Pat_Gewicht
-$A$10: 	=IF(_Pat_Gewicht<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
-$C$10: 	=PedBerTPN!G26
-$A$14: 	=IF(PedBerTPN!G5=0,"""",PedBerTPN!V3)
-$G$14: 	=IF(A14="""","""",PedBerTPN!W9)
-$G$15: 	=IF(A14="""","""",PedBerTPN!W10)
-$G$16: 	=PedBerTPN!W5
-$G$17: 	=IF(B17=PedBerTPN!H8,PedBerTPN!W8,"""")
-$G$18: 	=IF(B17=PedBerTPN!H8,PedBerTPN!W8,"""")
-$G$19: 	=IF(B17=PedBerTPN!H8,PedBerTPN!W8,"""")
-$B$20: 	=IF($A$14="""","""",PedBerTPN!$H$8)
-$G$20: 	=IF(AND(G$17="""",G$18="""",G$19="""",$A$14<>""""),PedBerTPN!$W$8,"""")
-$G$21: 	=IF($A$14="""","""",PedBerTPN!$W$3)
-$A$23: 	=PedBerTPN!$V$16
-$G$23: 	=PedBerTPN!$W$17
-$G$24: 	=PedBerTPN!$W$18
-$G$26: 	=PedBerTPN!$W$16
-$A$29: 	=IF(PedBerTPN!$W$5="""",IF(PedBerTPN!$V$11="""",PedBerTPN!$V$3,PedBerTPN!$V$12),PedBerTPN!$V$11)
-$G$29: 	=IF(G14="""",PedBerTPN!$W$9,"""")
-$G$30: 	=IF($G$15="""",PedBerTPN!$W$10,"""")
-$G$31: 	=PedBerTPN!$W$12
-$G$32: 	=PedBerTPN!$W$13
-$G$33: 	=IF($G$17="""",PedBerTPN!$W$11,"""")
-$B$34: 	=IF(B20="""",PedBerTPN!$H$8,"""")
-$G$34: 	=IF(AND(G18="""",G19="""",G20=""""),PedBerTPN!$W$8,"""")
-$G$35: 	=IF(G21="""",PedBerTPN!$W$3,SUM(PedBerTPN!$G$12:$G$13,PedBerTPN!$G$11)&"" ml"")
+$A$9: 	=IF(_Pat_Gewicht<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
+$C$9: 	=SUM(I22,I27,I36)
+$A$13: 	=IF(G15="""","""",PedBerTPN!V3)
+$G$13: 	=IF(A13="""","""",PedBerTPN!W9)
+$G$14: 	=IF(A13="""","""",PedBerTPN!W10)
+$G$15: 	=PedBerTPN!W5
+$G$16: 	=IF(AND(A13<>"""",B16=PedBerTPN!H8),PedBerTPN!W8,"""")
+$G$17: 	=IF(AND(A13<>"""",B17=PedBerTPN!H8),PedBerTPN!W8,"""")
+$G$18: 	=IF(AND(A13<>"""",B18=PedBerTPN!H8),PedBerTPN!W8,"""")
+$B$21: 	=IF(AND(G15<>"""",G16="""",G17="""",G18=""""),PedBerTPN!H8,"""")
+$G$21: 	=IF(B21="""","""",PedBerTPN!W8)
+$G$22: 	=IF(A13="""","""",PedBerTPN!X3)
+$I$22: 	=StringToDouble(G22)
+$A$24: 	=PedBerTPN!V16
+$G$24: 	=PedBerTPN!W17
+$G$25: 	=PedBerTPN!W18
+$G$27: 	=PedBerTPN!X16
+$I$27: 	=StringToDouble(G27)
+$A$30: 	=IF(A13="""",PedBerTPN!V3,PedBerTPN!V11)
+$G$30: 	=IF(G13="""",PedBerTPN!W9,"""")
+$G$31: 	=IF(G14="""",PedBerTPN!W10,"""")
+$G$32: 	=PedBerTPN!W12
+$G$33: 	=PedBerTPN!W13
+$G$34: 	=IF(PedBerTPN!W11<>"""",PedBerTPN!W11,IF(AND(G16="""",B34=PedBerTPN!H8),PedBerTPN!W8,""""))
+$B$35: 	=IF(AND(G34="""",A13=""""),PedBerTPN!H8,"""")
+$G$35: 	=IF(B35="""","""",PedBerTPN!W8)
+$G$36: 	=IF(G22="""",PedBerTPN!X3,PedBerTPN!X11)
+$I$36: 	=StringToDouble(G36)
 "

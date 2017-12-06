@@ -82,6 +82,7 @@ $B$32: 	=PedBerTPN!Y15
 $F$32: 	=PedBerTPN!V14
 $G$32: 	=PedBerTPN!W15
 $H$32: 	=IF(PedBerTPN!W14="""","""","" + ""&PedBerTPN!W14&"" gluc 5%"")
+$I$32: 	=PedBerTPN!AB14
 $B$34: 	=PedBerTPN!Y16
 $F$34: 	=PedBerTPN!V16
 $I$34: 	=PedBerTPN!AB16
