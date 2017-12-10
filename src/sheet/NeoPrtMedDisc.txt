@@ -1,6 +1,7 @@
 "$B$2: 	=Txt_Pat_FullName
 $E$2: 	=Txt_Pat_GeboorteDat
 $G$2: 	=Txt_Pat_Gewicht
+$Q$2: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 $AA$2: 	=TODAY()
 $B$4: 	=GlobBerMedDisc!AR2
 $C$4: 	=IF(GlobGuiMedDisc!J9<>"""",GlobGuiMedDisc!J9,"""")
@@ -614,6 +615,7 @@ $AD$24: 	=IF($C24="""","""",IF(VLOOKUP($C24,Tbl_Glob_MedFreq,AD$1,FALSE)=0,"""",
 $B$25: 	=Txt_Pat_FullName
 $E$25: 	=Txt_Pat_GeboorteDat
 $G$25: 	=Txt_Pat_Gewicht
+$Q$25: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 $AA$25: 	=TODAY()
 $B$27: 	=GlobBerMedDisc!AR23
 $C$27: 	=IF(GlobGuiMedDisc!J30<>"""",GlobGuiMedDisc!J30,"""")

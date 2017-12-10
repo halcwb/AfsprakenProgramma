@@ -5,7 +5,7 @@ $D$3: 	=Txt_Pat_OpnameDag
 $F$3: 	=Txt_Pat_GeboorteDat
 $H$3: 	=Txt_Pat_Lengte
 $D$4: 	=Txt_Pat_Bed
-$F$4: 	=_User_LastName&"", ""&_User_FirstName
+$F$4: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 $H$4: 	=Txt_Pat_Oppervlak
 $B$5: 	=PedGuiEntTPN!E11
 $D$6: 	=Txt_Ped_Ent_Sonde

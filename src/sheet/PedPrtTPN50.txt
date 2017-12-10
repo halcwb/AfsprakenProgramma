@@ -3,7 +3,7 @@ $F$3: 	=Txt_Pat_PatNo
 $F$4: 	=Txt_Pat_FullName
 $B$5: 	=__1_Bed
 $F$5: 	=Txt_Pat_GeboorteDat
-$B$6: 	=_User_LastName&"", ""&_User_FirstName
+$B$6: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 $F$6: 	=Txt_Pat_Gewicht
 $A$9: 	=IF(_Pat_Gewicht<7,""Tot. hoev. vocht* (150 ml/kg/24 uur):"",""Tot. hoev. vocht* (110-90 ml/kg/24 uur):"")
 $C$9: 	=SUM(I15,I19,I27,I36)

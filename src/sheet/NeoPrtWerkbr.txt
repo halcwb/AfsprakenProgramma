@@ -4,7 +4,7 @@ $I$2: 	=TODAY()
 $M$2: 	=NOW()
 $C$3: 	=Txt_Pat_PatNo
 $C$4: 	=(_Pat_Gewicht)
-$I$4: 	=_User_LastName&"", ""&_User_FirstName
+$I$4: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 $H$5: 	=NeoBerInfB!AL54
 $A$6: 	=IF(M6<>"""",M6/24,"""")
 $C$6: 	=NeoGuiInfB!D26
