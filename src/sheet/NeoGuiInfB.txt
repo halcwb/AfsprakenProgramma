@@ -185,7 +185,7 @@ $D$43: 	=IF(Var_Neo_InfB_Cont_MedTekst_2="""","""",Var_Neo_InfB_Cont_MedTekst_2)
 $A$47: 	=NeoBerInfB!AI40
 $B$47: 	=NeoBerInfB!AJ40
 $G$47: 	=IF(NeoBerInfB!C40>0,NeoBerInfB!C40&"" ml"","""")
-$I$47: 	=IF(NeoBerInfB!B40>0,ROUND(NeoBerInfB!C40/(_Pat_Gewicht),0)&"" ml/ kg (advies ""&ROUND(NeoBerInfB!B40/_Pat_Gewicht,0)&"" ml/kg)"","""")
+$I$47: 	=IF(NeoBerInfB!C40>0,ROUND(NeoBerInfB!C40/(_Pat_Gewicht),0)&"" ml/ kg (advies ""&ROUND(NeoBerInfB!B40/_Pat_Gewicht,0)&"" ml/kg)"","""")
 $A$49: 	=NeoBerInfB!AI39
 $B$49: 	=NeoBerInfB!AJ39
 $A$51: 	=NeoBerInfB!AI42
