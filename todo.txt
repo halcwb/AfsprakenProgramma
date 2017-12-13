@@ -4,36 +4,25 @@ ToDo
 - Db map verplaatsen zodat admin alleen lezen autorisatie heeft op app zelf
 
 ToDo
-- Release notes
 - Gebruikers documentatie
-- Bewerken inschakelen NICU en PICU.xlsx
 - Test scenarios:
 	- Discontinue Medicatie
 	- Ped Voeding
-	- Ped TPN
 	- Neo Voeding
-	- Neo TPN
 
 Fiksen
 Niet testen
 - Fiks formatting ranges in settings
 - Wegschrijven configuratie van de discontinue medicatie lukt nog niet bug!! wordt steeds overschreven met lege waarden?
-- Menu Infuusbrief hernoemen naar Infuusbrief Actueel
 - Medicatie gewicht indien bekend
 - Verwijderen oplosvloeistof in discontinue medicatie -> formulier?
 - Sql queries on error resume next
 
-Wel testen
-- Alle Afspraken verwijderen verwijdert niet de infuus brief afspraken? Niet reproduceerbaar
-
 
 Na 28 november
 
-- Parenteralia neo mix chloor toevoegen
-- Fiks admin parenteralia nummer formatting (geen macht)
 - Voeding bij invoer frequentie automatisch hoeveelheid activeren
 - alprostadil bij 10 kg waarde fout
-- Bij draaien testen voortgangsbalk focus geven
 - Config formulier voor beheerders
 - Config formulier voor pediatrie continue medicamenten
 - Logging configuratie wijzigingen door apotheek
@@ -49,12 +38,10 @@ Na 28 november
 - Elektrolieten in discontinue medicatmenten meetellen
 - Verwijderen per blad
 - In MetaVision programma openen met controle van patient gegevens
-- Openen AfsprakenProgramma met check of deze al geopend is
 - Snel invoer freq en hoeveelheid infuusbrief voeding
 - Afdeling lab overzicht NICU
 - Elektrolieten en kcal in continue medicamenten meenemen in tabel parenteralia
 - Printen configuratie parenteralia 
-- Infuusbrief bescherming tegen negatieve getallen TPN
 - Toevoegen van discontinue medicatie in admin formulier
 - Mogelijkheid voor verandering toedieningsweg en indicatie
 - Test code voor continue ped medicatie
@@ -65,28 +52,21 @@ Na 28 november
 - Lab paketten
 - PDF sturen naar apotheek
 - Regressie tests pdfs vergelijken
-- Fiks doxapram infuusbrief altijd 2 mg/ml
-- Menu's ook activeren/verbergen afhankelijk van de gebruiker
-- Mogelijkheid van versturen printscreen
 - Formulier patient gegevens, geen update indien ongeldige datum waarden
 - Foutmelding gewicht, lengte bij klikken Neo Afspraken en Controles
 - Alles vewijderen -> Patient verwijderen (onder Bedden groep)
 - Ongeldige karakters uit opmerkingen en vrije tekstvelden filteren
 - Patient van bed verwijderen
 - Med disc formulier schoonmaken bij opnieuw openen
-- TPN intralipid 
 - Infuus brief altijd als actueel opslaan
 - MetaVision loopt vast bij te snel doorklikken in formulier
-- Voeding handmatig naar geen voeding zetten via select box geeft waarde fout
 - Refresh MV opdrachten bij openen Medicament snelkeuze lijst of openen disc medicatie tab
-- Peditrace leegmaken indien niet van toepassing
 - Parenteralia Neo bijwerken voor discontinue medicatie
 - Waarschuwing discontinue medicatie formulier aanpassen voor dosering bewaken en blokkeren bij geen indicatie of route
 - Mogelijkheid van verschillende dosering berekeningen: /mg/keer, /mg/dag, /mg/48uur etc..
 - Standaard TPN NICU herstellen
 - OK na opslaan evt. weglaten
 - Kleur balk 17:00 uur brief
-- Zijlijn bij aanpassen niet leegmaken
 - Verwijderen Magnesium lukt niet
 - Verkeerde tekst bij blokkade werkbrief printen NICU
 - TPN veranderen blokkeert
@@ -94,30 +74,19 @@ Na 28 november
 - Magnesium in ped continue medicatie in berekeningen meenemen.
 - Soluvit neo infuusbrief en werkbrief naar lipiden infuus??
 - Bij advies juiste glucose sterkte kiezen Ped TPN
-
-
+- Fiks probleem met medicatie opdrachten niet goed verversen
+- Indicatie bij continue medicatie
+- Help menu item toevoegen
 - Route in tabel continue medicatie opnemen
-- Arst obv. functie weergeven
-- Exp datum met tijd
-- Afkorting bewaar conditie ook op etiket
 - Epiduraal in advies als check, EPI uit de naam halen
-- Glucose sterkte in TPN brief
 - Correctie keer dosring niet bij key press
-- clopidrogel toevoegen
-- ascal iv route
-
-- correct uitprinten met naam en versie, passend op A4 (uitzondering apotheek brief)
-
-- Sterk zout toevoegen in disc medicatie
-
+- Correct uitprinten met naam en versie, passend op A4 (uitzondering apotheek brief)
 
 Planning formulier, laden boodschap op het eind laten verwijderen
 Fiks debug formulieren MetaVision, Err.Number meegegeven.
 
 Known issues
 - Medisch Voorschrijf formulier crashed indien afsluiten terwijl bezig met openen AfsprakenProgramma
-- Medisch Voorschrijf formulier 
-
 
 Form diff script aanpassen check op parameter instellingen (laatste waarde)
 Medische status import scripts aanpassen
