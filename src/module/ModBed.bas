@@ -193,7 +193,10 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
     If varReply = vbYes Then
         ModProgress.StartProgress "Bed Opslaan"
         
-        If blnNeo Then ModNeoInfB.CopyCurrentInfVarToData True ' Make sure that neo data is updated with latest current infuusbrief
+        If blnNeo Then
+            ModNeoInfB.NeoInfB_SelectInfB False, False ' Make sure that the Infuusbrief Actueel is selected
+            ModNeoInfB.CopyCurrentInfVarToData True   ' Make sure that neo data is updated with latest current infuusbrief
+        End If
     
         If SaveBedToFile(strBed, False, True) Then
             ModProgress.FinishProgress

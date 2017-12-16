@@ -32,7 +32,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnSaveBed"                                   ' -> Bed Opslaan
-            ModBed.CloseBed (True)
+            ModBed.CloseBed True
             ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnEnterPatient"                              ' -> Patient Gegevens
