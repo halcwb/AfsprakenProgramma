@@ -112,7 +112,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtPedPrtMedDisc, "A1"
         
         Case "btnPedPrintTPN"                               ' -> TPN Brief
-            ModPedEntTPN.PedEntTPN_SelectTPNPrint
+            ModPedPrint.PedPrint_SendTPN
             
         'grpNeoPrint                                        ' -- PRINT NEO ---
         
@@ -126,7 +126,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
               
         Case "btnNeoPrintApoth"                             ' -> Apotheek
-            ModNeoPrint.PrintApotheekWerkBrief
+            ModBed.CloseBed False
+            ModNeoInfB.NeoInfB_SelectInfB True, True
+            ModNeoPrint.SendApotheekWerkBrief True
         
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
             ModNeoPrint.PrintNeoWerkBrief

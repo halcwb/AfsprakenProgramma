@@ -249,6 +249,17 @@ Public Sub SaveSheetAsPDF(shtSheet As Worksheet, ByVal strFile As String)
     shtSheet.Unprotect ModConst.CONST_PASSWORD
     shtSheet.PageSetup.LeftHeader = "AfsprakenProgramma " & ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
 
+    With shtSheet.PageSetup
+        .Orientation = xlPortrait
+        .Draft = False
+        .FirstPageNumber = xlAutomatic
+        .Order = xlDownThenOver
+        .BlackAndWhite = False
+        .Zoom = False
+        .FitToPagesWide = 1
+        .FitToPagesTall = 1
+    End With
+        
     shtSheet.ExportAsFixedFormat Type:=xlTypePDF, Filename:=strFile, _
         Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas _
         :=False, OpenAfterPublish:=False
