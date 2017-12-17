@@ -103,27 +103,30 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpPedPrint                                        ' -- PRINT PEDIATRIE --
         
         Case "btnPedPrintAcuut"                             ' -> Acute Blad
-            ModSheet.GoToSheet shtPedGuiAcuut, "A1"
+            ModPedPrint.PedPrint_PrintAcuteBlad True
         
         Case "btnPedPrintMedIV"                             ' -> Medicatie IV
-            ModSheet.GoToSheet shtPedPrtAfspr, "A1"
+            ModPedPrint.PedPrint_PrintMedicatieCont True
         
         Case "btnPedPrintMedDisc"                           ' -> Medicatie Discontinu
-            ModSheet.GoToSheet shtPedPrtMedDisc, "A1"
+            ModPedPrint.PedPrint_PrintMedicatieDisc True
         
         Case "btnPedPrintTPN"                               ' -> TPN Brief
-            ModPedPrint.PedPrint_SendTPN
+            ModPedPrint.PedPrint_PrintTPN True
             
+        Case "btnPedSendTPN"                               ' -> TPN Brief
+            ModPedPrint.PedPrint_SendTPN
+        
         'grpNeoPrint                                        ' -- PRINT NEO ---
         
         Case "btnNeoPrintAcuut"                             ' -> Acute Blad
-            ModSheet.GoToSheet shtNeoGuiAcuut, "A1"
+            ModNeoPrint.NeoPrint_PrintAcuteBlad True
         
         Case "btnNeoPrintMedIV"                             ' -> Infuus Brief
-            ModSheet.GoToSheet shtNeoPrtAfspr, "A1"
+            ModNeoPrint.NeoPrint_PrintMedicatieCont True
         
         Case "btnNeoPrintMedDisc"                           ' -> Medicatie Discontinu
-            ModSheet.GoToSheet shtNeoPrtMedDisc, "A1"
+            ModNeoPrint.NeoPrint_PrintMedicatieDisc True
               
         Case "btnNeoPrintApoth"                             ' -> Apotheek
             ModBed.CloseBed False

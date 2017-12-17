@@ -231,11 +231,14 @@ InitializeError:
     ModProgress.FinishProgress
     Application.Visible = True
 
-    strError = "De applicatie is mogelijk niet goed opgestart"
+    strError = "De applicatie is mogelijk niet goed opgestart." & vbNewLine
+    strError = strError & "Sluit evt. andere Excel bestanden en probeer het opnieuw." & vbNewLine
     ModMessage.ShowMsgBoxError strError
     
     strError = strError & vbNewLine & strAction
     ModLog.LogError strError
+    
+    CloseAfspraken
     
 End Sub
 
@@ -373,14 +376,6 @@ End Sub
 
 Private Function GetToDayFormula() As String
     
-'    Dim strToDay As String
-
-'    -- Probably not necessary with Formula instead of FormulaLocal
-'    Select Case GetLanguage()
-'    Case EnumAppLanguage.Dutch: strToDay = "= Vandaag()"
-'    Case Else: strToDay = "= ToDay()"
-'    End Select
-    
     GetToDayFormula = "= ToDay()"
 
 End Function
@@ -490,13 +485,7 @@ Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, B
     Dim objConfigWbk As Workbook
     Dim objSrc As Range
     Dim objDst As Range
-    
-'    Dim intR As Integer
-'    Dim intC As Integer
-'
-'    Dim intN As Integer
-'    Dim intJ As Integer
-'    Dim intT As Integer
+    Dim intErr As Integer
     
     Dim strMsg As String
     
@@ -508,20 +497,6 @@ Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, B
     Set objSrc = objConfigWbk.Sheets(strTable).Range(strConfig)
     Set objDst = ModRange.GetRange(strTable)
         
-'    intR = objSrc.Rows.Count
-'    intC = objSrc.Columns.Count
-'
-'    If Not intR = objDst.Rows.Count Or Not intC = objDst.Columns.Count Then Err.Raise ModConst.CONST_APP_ERROR, , ModConst.CONST_DEFAULTERROR_MSG
-    
-'    intT = intR
-'    For intN = 1 To intR
-'        strMsg = strTable & " " & objDst.Cells(intN, 1).Value2
-'        For intJ = 1 To intC
-'            objDst.Cells(intN, intJ).Formula = objSrc.Cells(intN, intJ).Formula
-'        Next
-'        ModProgress.SetJobPercentage strMsg, intT, intN
-'    Next
-
     Sheet_CopyRangeFormulaToDst objSrc, objDst
     
     objConfigWbk.Close False
@@ -534,6 +509,7 @@ Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, B
     
 LoadConfigTableError:
 
+    intErr = Err.Number
     ModLog.LogError "Kan config table " & strTable & " niet laden"
     
     On Error Resume Next
@@ -545,6 +521,8 @@ LoadConfigTableError:
     Set objConfigWbk = Nothing
     
     Application.DisplayAlerts = True
+    
+    Err.Raise intErr
     
 End Sub
 

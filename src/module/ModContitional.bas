@@ -189,3 +189,14 @@ Public Sub SetInfBVochtTPNFormatting()
     SetConditionalFormattingErr shtNeoGuiInfB, "G", strTPNError, 59, 59, 9
 
 End Sub
+
+Public Sub SetInfB1700Formatting()
+    
+    Dim strTPNError As String
+    
+    strTPNError = "=NeoBerInfB!AE"
+    
+    SetConditionalFormattingErr shtNeoGuiInfB, "C", strTPNError, 9, 9, 6
+
+End Sub
+

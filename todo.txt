@@ -50,7 +50,6 @@ Na 28 november
 - Sterkte kunnen aanpassen in discontinue medicatie configuratie
 - Check of speciale voeding al is ingevoerd
 - Lab paketten
-- PDF sturen naar apotheek
 - Regressie tests pdfs vergelijken
 - Formulier patient gegevens, geen update indien ongeldige datum waarden
 - Foutmelding gewicht, lengte bij klikken Neo Afspraken en Controles
@@ -58,7 +57,6 @@ Na 28 november
 - Ongeldige karakters uit opmerkingen en vrije tekstvelden filteren
 - Patient van bed verwijderen
 - Med disc formulier schoonmaken bij opnieuw openen
-- Infuus brief altijd als actueel opslaan
 - MetaVision loopt vast bij te snel doorklikken in formulier
 - Refresh MV opdrachten bij openen Medicament snelkeuze lijst of openen disc medicatie tab
 - Parenteralia Neo bijwerken voor discontinue medicatie
@@ -66,24 +64,18 @@ Na 28 november
 - Mogelijkheid van verschillende dosering berekeningen: /mg/keer, /mg/dag, /mg/48uur etc..
 - Standaard TPN NICU herstellen
 - OK na opslaan evt. weglaten
-- Kleur balk 17:00 uur brief
-- Verwijderen Magnesium lukt niet
-- Verkeerde tekst bij blokkade werkbrief printen NICU
 - TPN veranderen blokkeert
 - Format getallen met decimale punt in gui sheets
 - Magnesium in ped continue medicatie in berekeningen meenemen.
 - Soluvit neo infuusbrief en werkbrief naar lipiden infuus??
-- Bij advies juiste glucose sterkte kiezen Ped TPN
-- Fiks probleem met medicatie opdrachten niet goed verversen
+- Fiks probleem met medicatie opdrachten uit MetaVision niet goed verversen
 - Indicatie bij continue medicatie
 - Help menu item toevoegen
 - Route in tabel continue medicatie opnemen
 - Epiduraal in advies als check, EPI uit de naam halen
 - Correctie keer dosring niet bij key press
-- Correct uitprinten met naam en versie, passend op A4 (uitzondering apotheek brief)
+- TPN pediatrie herzien.
 
-Planning formulier, laden boodschap op het eind laten verwijderen
-Fiks debug formulieren MetaVision, Err.Number meegegeven.
 
 Known issues
 - Medisch Voorschrijf formulier crashed indien afsluiten terwijl bezig met openen AfsprakenProgramma

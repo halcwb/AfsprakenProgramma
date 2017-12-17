@@ -240,6 +240,7 @@ Public Sub PrintSheet(shtSheet As Worksheet, ByVal intNum As Integer, ByVal blnA
     Else
         shtSheet.PrintOut Copies:=intNum
     End If
+    
     If Not ModSetting.IsDevelopmentMode Then shtSheet.Protect ModConst.CONST_PASSWORD
     
 End Sub
@@ -269,7 +270,7 @@ Public Sub SaveSheetAsPDF(shtSheet As Worksheet, ByVal strFile As String)
 End Sub
 
 Public Sub PrintSheetAllLandscape(shtSheet As Worksheet)
-'     Application.PrintCommunication = False
+    
     With shtSheet.PageSetup
         .Orientation = xlLandscape
         .Draft = False
@@ -280,13 +281,11 @@ Public Sub PrintSheetAllLandscape(shtSheet As Worksheet)
         .FitToPagesWide = 1
         .FitToPagesTall = 1
     End With
-'     Application.PrintCommunication = True
-    shtSheet.PrintOut Copies:=1, Collate:=True, _
-        IgnorePrintAreas:=False
+
 End Sub
 
 Public Sub PrintSheetAllPortrait(shtSheet As Worksheet)
-'     Application.PrintCommunication = False
+    
     With shtSheet.PageSetup
         .Orientation = xlPortrait
         .Draft = False
@@ -297,9 +296,7 @@ Public Sub PrintSheetAllPortrait(shtSheet As Worksheet)
         .FitToPagesWide = 1
         .FitToPagesTall = 1
     End With
-'     Application.PrintCommunication = True
-    shtSheet.PrintOut Copies:=1, Collate:=True, _
-        IgnorePrintAreas:=False
+
 End Sub
 
 Public Sub Sheet_CopyRangeFormulaToDst(objSrc As Range, objDst As Range)

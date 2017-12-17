@@ -17,6 +17,31 @@ Public Sub SaveAndPrintAfspraken()
     
 End Sub
 
+Public Sub PedPrint_PrintMedicatieCont(ByVal blnPrev As Boolean)
+
+    ModSheet.PrintSheet shtPedPrtAfspr, 1, False, True
+
+End Sub
+
+Public Sub PedPrint_PrintMedicatieDisc(ByVal blnPrev As Boolean)
+
+    ModSheet.PrintSheet shtPedPrtMedDisc, 1, False, True
+
+End Sub
+
+Public Sub PedPrint_PrintTPN(ByVal blnPrev As Boolean)
+
+    PrintTPN blnPrev, vbNullString
+
+End Sub
+
+Public Sub PedPrint_PrintAcuteBlad(ByVal blnPrev As Boolean)
+
+    ModSheet.PrintSheetAllPortrait shtPedGuiAcuut
+    ModSheet.PrintSheet shtPedGuiAcuut, 1, False, True
+
+End Sub
+
 Public Sub PedPrint_SendTPN()
     
     Dim objMsg As Object
@@ -128,6 +153,8 @@ Private Function PrintTPN(ByVal blnPrev As Boolean, ByVal strFile As String) As 
     End If
 
     objSheet.Unprotect ModConst.CONST_PASSWORD
+    
+    ModSheet.PrintSheetAllPortrait objSheet
     
     If strFile = vbNullString Then
         PrintSheet objSheet, 1, False, blnPrev

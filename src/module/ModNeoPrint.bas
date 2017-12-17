@@ -68,6 +68,7 @@ Public Sub SendApotheekWerkBrief(ByVal blnProgress As Boolean)
     If blnProgress Then ModProgress.StartProgress "Medicatie naar de apotheek verzenden"
     
     If Not ModNeoInfB.NeoInfB_IsValidContMed Then
+        ModProgress.FinishProgress
         ModMessage.ShowMsgBoxExclam "Continue medicatie bevat fouten, kan de apotheek bereidingsvoorschriften niet afdrukken"
         Exit Sub
     End If
@@ -75,11 +76,15 @@ Public Sub SendApotheekWerkBrief(ByVal blnProgress As Boolean)
     blnPrint = True
     blnPrint = Not ModRange.GetRangeValue(constHospNo, vbNullString) = vbNullString
     If Not NeoInfB_Is1700() And blnPrint Then
+        ModProgress.FinishProgress
         ModMessage.ShowMsgBoxExclam "Huidige infuusbrief is niet de 17:00 versie!" & vbNewLine & "Kan de apotheekbrief niet verzenden!"
         Exit Sub
     End If
     
-    If Not blnPrint Then Exit Sub
+    If Not blnPrint Then
+            ModProgress.FinishProgress
+            Exit Sub
+    End If
     
     strTo = "c.w.bollen@umcutrecht.nl"
     strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
@@ -203,7 +208,7 @@ End Sub
 Public Sub PrintNeoWerkBrief()
 
     If Not NeoInfB_Is1700() Then
-        ModMessage.ShowMsgBoxExclam "Huidige infuusbrief is niet de 17:00 versie!" & vbNewLine & "Kan de apotheekbrief niet printen!"
+        ModMessage.ShowMsgBoxExclam "Huidige infuusbrief is niet de 17:00 versie!" & vbNewLine & "Kan de werkbrief niet printen!"
         Exit Sub
     End If
 
@@ -243,4 +248,24 @@ Private Function PrintNeoWerkBriefPrev(ByVal blnPrev As Boolean, ByVal strFile A
     PrintNeoWerkBriefPrev = strPDF
     
 End Function
+
+Public Sub NeoPrint_PrintMedicatieDisc(ByVal blnPrev As Boolean)
+
+    ModSheet.PrintSheet shtNeoPrtMedDisc, 1, False, True
+
+End Sub
+
+Public Sub NeoPrint_PrintMedicatieCont(ByVal blnPrev As Boolean)
+
+    ModSheet.PrintSheetAllPortrait shtNeoPrtAfspr
+    ModSheet.PrintSheet shtNeoPrtAfspr, 1, False, True
+
+End Sub
+
+Public Sub NeoPrint_PrintAcuteBlad(ByVal blnPrev As Boolean)
+
+    ModSheet.PrintSheetAllPortrait shtNeoGuiAcuut
+    ModSheet.PrintSheet shtNeoGuiAcuut, 1, False, True
+
+End Sub
 

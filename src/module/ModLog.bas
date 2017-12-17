@@ -44,15 +44,18 @@ End Function
 Public Sub LogError(ByVal strError As String)
 
     Dim blnLog As Boolean
+    Dim strFile As String
     
     strError = " Number: " & Err.Number & " Source: " & Err.Source & " Description: " & strError
+    strFile = ModSetting.GetLogFilePath()
+    
     blnLog = ModSetting.GetEnableLogging()
 
-    ModUtils.EMailMessageToBeheer strError
-
     EnableLogging
-    LogToFile ModSetting.GetLogFilePath(), Error, strError
+    LogToFile strFile, Error, strError
     If Not blnLog Then ModLog.DisableLogging
+
+    ModUtils.EMailMessageToBeheer strFile & vbNewLine & strError
 
 End Sub
 

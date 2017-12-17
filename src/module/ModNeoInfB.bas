@@ -21,7 +21,7 @@ Private Const constEnt As String = "_Ent_"
 Private Const constTPN As String = "_TPN_"
 
 Private Const constIntakePerKg As String = "Var_Neo_InfB_TPN_IntakePerKg"
-Private Const constTPNParEnt As String = "Var_Neo_InfB_TPN_ParEnteraal"
+Private Const constTPNParEnt As String = "Var_Neo_InfB_TPN_Parenteraal"
 
 Private Const constLipidKeuze As String = "Var_Neo_InfB_TPN_IntralipidSmof"
 Private Const constLipidStand As String = "Var_Neo_InfB_TPN_IntraLipid"
