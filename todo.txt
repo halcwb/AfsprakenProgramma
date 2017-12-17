@@ -52,7 +52,6 @@ Na 28 november
 - Lab paketten
 - Regressie tests pdfs vergelijken
 - Formulier patient gegevens, geen update indien ongeldige datum waarden
-- Foutmelding gewicht, lengte bij klikken Neo Afspraken en Controles
 - Alles vewijderen -> Patient verwijderen (onder Bedden groep)
 - Ongeldige karakters uit opmerkingen en vrije tekstvelden filteren
 - Patient van bed verwijderen
