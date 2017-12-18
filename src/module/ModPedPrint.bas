@@ -7,6 +7,8 @@ Private Const CONST_TPN_3 As Integer = 16
 Private Const CONST_TPN_4 As Integer = 30
 Private Const CONST_TPN_5 As Integer = 50
 
+Private Const constUserType As String = "_User_Type"
+
 Public Sub SaveAndPrintAfspraken()
 
     Dim frmPrintAfspraken As FormPrintAfspraken
@@ -57,13 +59,28 @@ Public Sub PedPrint_SendTPN()
     Dim intC As Integer
     Dim intN As Integer
     
-    Dim blnProgress As Boolean
+    Dim strMail As String
+    Dim strUser As String
     
     On Error GoTo PedPrint_SendTPNError
     
-    If blnProgress Then ModProgress.StartProgress "TPN naar de apotheek verzenden"
+    strUser = ModRange.GetRangeValue(constUserType, vbNullString)
+    If Not (strUser = "Supervisor" Or strUser = "Artsen") And ModSetting.IsProductionDir() Then
+        ModMessage.ShowMsgBoxExclam "Er is geen arts ingelogd." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+        Exit Sub
+    End If
     
-    strTo = "c.w.bollen@umcutrecht.nl"
+    strMail = "wkz-algemeen@umcutrecht.nl"
+    If Not ModSetting.IsProductionDir() Then strMail = ModMessage.ShowInputBox("Voer een email adres in", vbNullString)
+    
+    If strMail = vbNullString Then
+        ModMessage.ShowMsgBoxExclam "Er moet een email adres worden ingevoerd." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+        Exit Sub
+    End If
+    
+    ModProgress.StartProgress "TPN naar de apotheek verzenden"
+    
+    strTo = strMail
     strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
     strSubject = "TPN brief voor " & ModPatient.PatientHospNum & " " & ModPatient.PatientAchterNaam & ", " & ModPatient.PatientVoorNaam
     strHTML = vbNullString
@@ -98,7 +115,7 @@ Public Sub PedPrint_SendTPN()
     
     Set objMsg = Nothing
     
-    If blnProgress Then ModProgress.FinishProgress
+    ModProgress.FinishProgress
     
     ModMessage.ShowMsgBoxInfo "Medicatie is verstuurd naar de apotheek en de patient is opgeslagen"
     
@@ -121,7 +138,7 @@ PedPrint_SendTPNError:
     
     Set objMsg = Nothing
     
-    If blnProgress Then ModProgress.FinishProgress
+    ModProgress.FinishProgress
 
 
 End Sub
@@ -160,7 +177,7 @@ Private Function PrintTPN(ByVal blnPrev As Boolean, ByVal strFile As String) As 
         PrintSheet objSheet, 1, False, blnPrev
     Else
         strPDF = strFile & ".pdf"
-        SaveSheetAsPDF objSheet, strPDF
+        SaveSheetAsPDF objSheet, strPDF, True
     End If
     
     PrintTPN = strPDF

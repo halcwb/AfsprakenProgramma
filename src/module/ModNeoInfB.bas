@@ -829,7 +829,9 @@ Private Sub ChangeIV(ByVal intRegel As Integer, ByVal blnRemove As Boolean)
 
     strStand = constStand & intRegel
     strExtra = constExtra & intRegel + 1
-    blnRemove = ModRange.GetRangeValue(constOplossing & intRegel, 1) = 1
+    If Not blnRemove Then
+        blnRemove = ModRange.GetRangeValue(constOplossing & intRegel, 1) = 1
+    End If
     
     If blnRemove Then
         ModRange.SetRangeValue constOplossing & intRegel, 1

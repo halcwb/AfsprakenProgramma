@@ -93,6 +93,18 @@ Public Function IsTrainingDir() As Boolean
 
 End Function
 
+Public Function IsProductionDir() As Boolean
+
+    Dim blnProd As Boolean
+    Dim strActDir As String
+    
+    strActDir = WbkAfspraken.Path
+    blnProd = ModString.ContainsCaseInsensitive(strActDir, "Prod")
+    
+    IsProductionDir = blnProd
+
+End Function
+
 Private Sub Test_IsDevelopmentDir()
 
     MsgBox IsDevelopmentDir()

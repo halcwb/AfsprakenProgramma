@@ -4,6 +4,8 @@ Option Explicit
 Private Const constDrugNo As String = "Var_Neo_PrintApothNo"
 Private Const constMedKeuze As String = "Var_Neo_InfB_Cont_MedKeuze_"
 Private Const constHospNo As String = "__0_PatNum"
+Private Const constUserType As String = "_User_Type"
+
 
 Private Function PrintBriefNo(ByVal intNo As Integer, ByVal blnAsk As Boolean, ByVal blnPrev As Boolean, ByVal strFile As String) As String
     
@@ -17,7 +19,7 @@ Private Function PrintBriefNo(ByVal intNo As Integer, ByVal blnAsk As Boolean, B
         PrintSheet shtNeoPrtApoth, 2, blnAsk, blnPrev
     Else
         strPDF = strFile & "_" & IntNToStrN(intNo) & "_" & ".pdf"
-        SaveSheetAsPDF shtNeoPrtApoth, strFile & "_" & IntNToStrN(intNo) & "_" & ".pdf"
+        SaveSheetAsPDF shtNeoPrtApoth, strFile & "_" & IntNToStrN(intNo) & "_" & ".pdf", False
     End If
     
     PrintBriefNo = strPDF
@@ -41,13 +43,14 @@ Public Sub PrintApotheekWerkBrief()
 
 End Sub
 
-Public Sub SendApotheekWerkBrief(ByVal blnProgress As Boolean)
+Public Sub SendApotheekWerkBrief()
 
     Dim intNo As Integer
     Dim intMed As Integer
     Dim strNo As String
     Dim blnAsk As Boolean
     Dim blnPrint As Boolean
+    Dim strUser As String
     Dim vbAnswer As Integer
     
     Dim objMsg As Object
@@ -63,30 +66,43 @@ Public Sub SendApotheekWerkBrief(ByVal blnProgress As Boolean)
     Dim intC As Integer
     Dim intN As Integer
     
+    Dim strMail As String
+    
     On Error GoTo SendApotheekWerkBriefError
-    
-    If blnProgress Then ModProgress.StartProgress "Medicatie naar de apotheek verzenden"
-    
+       
     If Not ModNeoInfB.NeoInfB_IsValidContMed Then
         ModProgress.FinishProgress
-        ModMessage.ShowMsgBoxExclam "Continue medicatie bevat fouten, kan de apotheek bereidingsvoorschriften niet afdrukken"
+        ModMessage.ShowMsgBoxExclam "Continue medicatie bevat fouten." & "Kan de apotheek bereidingsvoorschriften niet verzenden!"
         Exit Sub
     End If
     
-    blnPrint = True
     blnPrint = Not ModRange.GetRangeValue(constHospNo, vbNullString) = vbNullString
-    If Not NeoInfB_Is1700() And blnPrint Then
-        ModProgress.FinishProgress
-        ModMessage.ShowMsgBoxExclam "Huidige infuusbrief is niet de 17:00 versie!" & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+    If Not blnPrint Then
+        ModMessage.ShowMsgBoxExclam "Er is geen ziekenhuis nummer opgegeven." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
         Exit Sub
     End If
     
-    If Not blnPrint Then
-            ModProgress.FinishProgress
-            Exit Sub
+    strUser = ModRange.GetRangeValue(constUserType, vbNullString)
+    If Not (strUser = "Supervisor" Or strUser = "Artsen") And ModSetting.IsProductionDir() Then
+        ModMessage.ShowMsgBoxExclam "Er is geen arts ingelogd." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+        Exit Sub
+    End If
+           
+    strMail = "wkz-algemeen@umcutrecht.nl"
+    If Not ModSetting.IsProductionDir() Then strMail = ModMessage.ShowInputBox("Voer een email adres in", vbNullString)
+    
+    If strMail = vbNullString Then
+        ModMessage.ShowMsgBoxExclam "Er moet een email adres worden ingevoerd." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+        Exit Sub
     End If
     
-    strTo = "c.w.bollen@umcutrecht.nl"
+    ModBed.CloseBed False
+    
+    ModProgress.StartProgress "Medicatie naar de apotheek verzenden"
+
+    ModNeoInfB.NeoInfB_SelectInfB True, False
+    
+    strTo = strMail
     strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
     strSubject = "NICU VTGM protocollen voor " & ModPatient.PatientHospNum & " " & ModPatient.PatientAchterNaam & ", " & ModPatient.PatientVoorNaam
     strHTML = vbNullString
@@ -138,7 +154,7 @@ Public Sub SendApotheekWerkBrief(ByVal blnProgress As Boolean)
     
     Set objMsg = Nothing
     
-    If blnProgress Then ModProgress.FinishProgress
+    ModProgress.FinishProgress
     
     ModMessage.ShowMsgBoxInfo "Medicatie is verstuurd naar de apotheek en de patient is opgeslagen"
     
@@ -161,8 +177,7 @@ SendApotheekWerkBriefError:
     
     Set objMsg = Nothing
     
-    If blnProgress Then ModProgress.FinishProgress
-    
+    ModProgress.FinishProgress
 
 End Sub
 
@@ -242,7 +257,7 @@ Private Function PrintNeoWerkBriefPrev(ByVal blnPrev As Boolean, ByVal strFile A
         PrintSheet shtNeoPrtWerkbr, 1, False, blnPrev
     Else
         strPDF = strFile & ".pdf"
-        SaveSheetAsPDF shtNeoPrtWerkbr, strPDF
+        SaveSheetAsPDF shtNeoPrtWerkbr, strPDF, True
     End If
     
     PrintNeoWerkBriefPrev = strPDF

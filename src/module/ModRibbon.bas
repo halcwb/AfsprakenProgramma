@@ -129,9 +129,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModNeoPrint.NeoPrint_PrintMedicatieDisc True
               
         Case "btnNeoPrintApoth"                             ' -> Apotheek
-            ModBed.CloseBed False
-            ModNeoInfB.NeoInfB_SelectInfB True, True
-            ModNeoPrint.SendApotheekWerkBrief True
+            ModNeoPrint.SendApotheekWerkBrief
         
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
             ModNeoPrint.PrintNeoWerkBrief

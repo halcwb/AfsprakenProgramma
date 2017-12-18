@@ -58,3 +58,23 @@ Public Function ShowPasswordBox(ByVal strText As String) As String
     ShowPasswordBox = strPw
 
 End Function
+
+
+Public Function ShowInputBox(ByVal strText As String, ByVal strDefault As String) As String
+
+    Dim strResult As String
+    
+    strResult = InputBox(strText, ModConst.CONST_APPLICATION_NAME, strDefault)
+    
+    ShowInputBox = strResult
+
+End Function
+
+Private Sub Test_ShowInputBox()
+
+    Dim strResult As String
+    
+    strResult = ShowInputBox("Voer fax email adres in", "afsprakenprogramma@gmail.com")
+    ShowMsgBoxOK strResult
+
+End Sub
