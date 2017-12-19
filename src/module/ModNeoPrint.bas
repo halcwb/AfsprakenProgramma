@@ -124,22 +124,22 @@ Public Sub SendApotheekWerkBrief()
         .AddAttachment strPDF
         strPDFList = strPDFList & strPDF & vbNewLine
         
-        For intNo = 1 To 10
-        
-            strNo = IIf(intNo < 10, "0" & intNo, intNo)
-            intMed = ModRange.GetRangeValue(constMedKeuze & strNo, 0)
-            
-            If intMed > 1 Then
-                strFile = Environ("TEMP") & "\VTGM_" & ModPatient.PatientHospNum
-                strPDF = PrintBriefNo(intNo, False, False, strFile)
-                .AddAttachment strPDF
-                strPDFList = strPDFList & strPDF & vbNewLine
-                
-            End If
-            
-            ModProgress.SetJobPercentage "Verzenden", 10, intNo
-        
-        Next intNo
+'        For intNo = 1 To 10
+'
+'            strNo = IIf(intNo < 10, "0" & intNo, intNo)
+'            intMed = ModRange.GetRangeValue(constMedKeuze & strNo, 0)
+'
+'            If intMed > 1 Then
+'                strFile = Environ("TEMP") & "\VTGM_" & ModPatient.PatientHospNum
+'                strPDF = PrintBriefNo(intNo, False, False, strFile)
+'                .AddAttachment strPDF
+'                strPDFList = strPDFList & strPDF & vbNewLine
+'
+'            End If
+'
+'            ModProgress.SetJobPercentage "Verzenden", 10, intNo
+'
+'        Next intNo
         
         .Send
     

@@ -128,8 +128,11 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnNeoPrintMedDisc"                           ' -> Medicatie Discontinu
             ModNeoPrint.NeoPrint_PrintMedicatieDisc True
               
-        Case "btnNeoPrintApoth"                             ' -> Apotheek
+        Case "btnNeoSendApoth"                              ' -> Apotheek Versturen
             ModNeoPrint.SendApotheekWerkBrief
+        
+        Case "btnNeoPrintApoth"                             ' -> Apotheek Printen
+            ModNeoPrint.PrintApotheekWerkBrief
         
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
             ModNeoPrint.PrintNeoWerkBrief

@@ -66,7 +66,7 @@ Public Sub PedPrint_SendTPN()
     
     strUser = ModRange.GetRangeValue(constUserType, vbNullString)
     If Not (strUser = "Supervisor" Or strUser = "Artsen") And ModSetting.IsProductionDir() Then
-        ModMessage.ShowMsgBoxExclam "Er is geen arts ingelogd." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+        ModMessage.ShowMsgBoxExclam "Er is geen arts ingelogd." & vbNewLine & "Kan de TPN brief niet verzenden!"
         Exit Sub
     End If
     
@@ -74,11 +74,11 @@ Public Sub PedPrint_SendTPN()
     If Not ModSetting.IsProductionDir() Then strMail = ModMessage.ShowInputBox("Voer een email adres in", vbNullString)
     
     If strMail = vbNullString Then
-        ModMessage.ShowMsgBoxExclam "Er moet een email adres worden ingevoerd." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+        ModMessage.ShowMsgBoxExclam "Er moet een email adres worden ingevoerd." & vbNewLine & "Kan de TPN brief niet verzenden!"
         Exit Sub
     End If
     
-    ModProgress.StartProgress "TPN naar de apotheek verzenden"
+    ModProgress.StartProgress "TPN brief naar de apotheek verzenden"
     
     strTo = strMail
     strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
@@ -117,7 +117,7 @@ Public Sub PedPrint_SendTPN()
     
     ModProgress.FinishProgress
     
-    ModMessage.ShowMsgBoxInfo "Medicatie is verstuurd naar de apotheek en de patient is opgeslagen"
+    ModMessage.ShowMsgBoxInfo "TPN brief is verstuurd naar de apotheek."
     
     Exit Sub
     
@@ -127,7 +127,7 @@ PedPrint_SendTPNError:
     
     On Error Resume Next
     
-    ModMessage.ShowMsgBoxError "Medicatie is niet verstuurd naar de apotheek, een foutmelding is verzonden naar functioneel beheer"
+    ModMessage.ShowMsgBoxError "TPN brief is niet verstuurd naar de apotheek, een foutmelding is verzonden naar functioneel beheer"
     
     arrPDF = Split(strPDFList, vbNewLine)
     intC = UBound(arrPDF)

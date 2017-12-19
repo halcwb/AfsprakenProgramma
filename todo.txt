@@ -56,7 +56,6 @@ Na 28 november
 - Ongeldige karakters uit opmerkingen en vrije tekstvelden filteren
 - Patient van bed verwijderen
 - Med disc formulier schoonmaken bij opnieuw openen
-- MetaVision loopt vast bij te snel doorklikken in formulier
 - Refresh MV opdrachten bij openen Medicament snelkeuze lijst of openen disc medicatie tab
 - Parenteralia Neo bijwerken voor discontinue medicatie
 - Waarschuwing discontinue medicatie formulier aanpassen voor dosering bewaken en blokkeren bij geen indicatie of route
