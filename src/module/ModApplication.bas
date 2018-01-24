@@ -164,7 +164,7 @@ Public Sub InitializeAfspraken()
     Dim strParams() As Variant
     Dim objWind As Window
     
-    On Error Resume Next
+    On Error GoTo InitializeError
     
     shtGlobGuiFront.Select
     Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
@@ -201,7 +201,7 @@ Public Sub InitializeAfspraken()
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
     
     ' Load config tables
-    LoadConfigTables
+    If Not LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "InitializeAfspraken", "Kan config tabellen niet laden"
         
     ' Clean everything
     ModRange.SetRangeValue "Var_Glob_Versie", vbNullString
@@ -221,8 +221,6 @@ Public Sub InitializeAfspraken()
     ModLog.LogActionEnd strAction
     
     Application.ScreenUpdating = True
-            
-    If Not Err.Number = 0 Then Err.Raise ModConst.CONST_APP_ERROR, "Applicatie niet goed opgestart"
             
     Exit Sub
     
@@ -402,35 +400,46 @@ Private Function IsNeoDir() As Boolean
 
 End Function
 
-Private Sub LoadConfigTables()
+Private Function LoadConfigTables() As Boolean
 
     Dim strFile As String
     Dim strTable As String
     Dim strSrc As String
+    Dim blnLoaded As Boolean
+    
+    blnLoaded = True
     
     strTable = "Tbl_Admin_NeoMedCont"
     strSrc = "A2:S24"
     strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
     
-    LoadConfigTable strFile, strTable, strSrc
+    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
     
     strTable = "Var_Neo_MedCont_VerdunningTekst"
     strSrc = "A1"
     strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
     
-    LoadConfigTable strFile, strTable, strSrc
+    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
     
     strTable = "Tbl_Admin_PedMedCont"
     strSrc = "A4:R34"
     strFile = WbkAfspraken.Path & "\db\PedMedCont.xlsx"
     
-    LoadConfigTable strFile, strTable, strSrc
+    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
 
     strTable = "Tbl_Admin_ParEnt"
     strSrc = "A5:N45"
     strFile = WbkAfspraken.Path & "\db\GlobParEnt.xlsx"
     
-    LoadConfigTable strFile, strTable, strSrc
+    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
+    
+    LoadConfigTables = blnLoaded
+
+End Function
+
+Private Sub Test_LoadConfigTables()
+
+    MsgBox LoadConfigTables()
 
 End Sub
 
@@ -480,7 +489,7 @@ Public Sub Application_SaveParEntConfig()
 
 End Sub
 
-Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)
+Private Function LoadConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String) As Boolean
     
     Dim objConfigWbk As Workbook
     Dim objSrc As Range
@@ -504,8 +513,9 @@ Private Sub LoadConfigTable(ByVal strFile As String, ByVal strTable As String, B
     Set objConfigWbk = Nothing
     
     Application.DisplayAlerts = True
+    LoadConfigTable = True
     
-    Exit Sub
+    Exit Function
     
 LoadConfigTableError:
 
@@ -514,7 +524,7 @@ LoadConfigTableError:
     
     On Error Resume Next
     
-    objConfigWbk.Close False
+    If Not objConfigWbk Is Nothing Then objConfigWbk.Close False
     
     Set objDst = Nothing
     Set objSrc = Nothing
@@ -522,9 +532,9 @@ LoadConfigTableError:
     
     Application.DisplayAlerts = True
     
-    Err.Raise intErr
+    LoadConfigTable = False
     
-End Sub
+End Function
 
 Private Sub SaveConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)
     

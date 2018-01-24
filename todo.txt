@@ -53,8 +53,8 @@ Na 28 november
 - Regressie tests pdfs vergelijken
 - Formulier patient gegevens, geen update indien ongeldige datum waarden
 - Alles vewijderen -> Patient verwijderen (onder Bedden groep)
-- Ongeldige karakters uit opmerkingen en vrije tekstvelden filteren
-- Patient van bed verwijderen
+- Ongeldige karakters uit opmerkingen en vrije tekstvelden filteren --> PRN kan geen > teken verdragen?
+- Patient van bed verwijderen -> terugkoppeling -> daarna de lijst laten zien
 - Med disc formulier schoonmaken bij opnieuw openen
 - Refresh MV opdrachten bij openen Medicament snelkeuze lijst of openen disc medicatie tab
 - Parenteralia Neo bijwerken voor discontinue medicatie
@@ -73,10 +73,13 @@ Na 28 november
 - Epiduraal in advies als check, EPI uit de naam halen
 - Correctie keer dosring niet bij key press
 - TPN pediatrie herzien.
-
+- Crash bij vrije tekst invoer frequentie in discontinue medicatie formulier
+- Copy paste lukt niet bij PRN met > teken
+- Poeder in voeding komt niet door en moet ook in % worden weergegeven.
 
 Known issues
 - Medisch Voorschrijf formulier crashed indien afsluiten terwijl bezig met openen AfsprakenProgramma
+- Voeding bij GI script status voering
 
 Form diff script aanpassen check op parameter instellingen (laatste waarde)
 Medische status import scripts aanpassen
