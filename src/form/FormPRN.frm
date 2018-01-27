@@ -85,6 +85,16 @@ Private Sub CenterForm()
 
 End Sub
 
+Private Sub txtPRN_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    If Len(Trim(txtPRN.Text)) = 0 And KeyAscii = 61 Then
+        KeyAscii = 0
+    Else
+        KeyAscii = ModUtils.OnlyTextAscii(KeyAscii)
+    End If
+
+End Sub
+
 Private Sub UserForm_Activate()
 
     Dim blnPrn As Boolean

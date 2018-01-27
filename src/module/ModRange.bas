@@ -8,11 +8,12 @@ Private Const constRefreshFormula As String = "=IF(ISBLANK({REFERSTO}),{EMPTY},{
 Private Function GetRow(ByVal sheetName As String, ByVal searchString As String) As Integer
 
     Dim currentRow As Integer
+    Dim objSheet As Worksheet
 
-    WbkAfspraken.Sheets(sheetName).Select
+    Set objSheet = WbkAfspraken.Sheets(sheetName)
     currentRow = 1
     
-    Do While (Strings.LCase(Cells(currentRow, 1).Value) <> Strings.LCase(searchString))
+    Do While (Strings.LCase(objSheet.Cells(currentRow, 1).Value) <> Strings.LCase(searchString))
         currentRow = currentRow + 1
     Loop
     

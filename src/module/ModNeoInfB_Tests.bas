@@ -198,7 +198,7 @@ Public Sub Test_NeoInfB_ContMed()
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             blnPass = blnPass And ModString.StartsWith(shtNeoPrtApoth.Range("D5").Value2, varVal)
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
+            If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
         Next
         ' Schrijf actuele medicament
         shtTests.Range(constActMedicament & intN).Value2 = varVal
@@ -225,7 +225,7 @@ Public Sub Test_NeoInfB_ContMed()
             End If
             
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
+            If Not (IsEmpty(varVal) Or varVal = vbNullString Or varVal = "0") Then
                 blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
                 If Not blnPass And blnShowMsg Then
                     ModMessage.ShowMsgBoxExclam "Afspraken print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
@@ -258,7 +258,7 @@ Public Sub Test_NeoInfB_ContMed()
             End If
             
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
+            If Not (IsEmpty(varVal) Or varVal = vbNullString Or varVal = "0") Then
                 blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
                 If Not blnPass And blnShowMsg Then
                     ModMessage.ShowMsgBoxExclam "Afspraken print niet goed voor test " & intN - constTestStart & " no: " & intM + 1
@@ -281,7 +281,7 @@ Public Sub Test_NeoInfB_ContMed()
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             blnPass = blnPass And varVal = shtNeoPrtApoth.Range("J6").Value2
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
+            If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
         Next
         ' Schrijf oplosmiddel
         shtTests.Range(constActOplosVloeistof & intN).Value2 = varVal
@@ -302,7 +302,7 @@ Public Sub Test_NeoInfB_ContMed()
             blnPass = blnPass And Equals(varVal, dblVal)
             
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
+            If Not (IsEmpty(varVal) Or varVal = vbNullString Or varVal = "0") Then
                 blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
             Else
                 blnPass = blnPass
@@ -315,15 +315,15 @@ Public Sub Test_NeoInfB_ContMed()
         '  ================ Check infuus stand ================
         ' ToDo: fix empty test cases
         varVal = shtNeoPrtWerkbr.Range("A24").Value2
-        If Not (IsEmpty(varVal) Or varVal = "") Then
+        If Not (IsEmpty(varVal) Or varVal = vbNullString) Then
             For intM = 0 To 9
                 'Check werkbrief
                 blnPass = blnPass And Equals(varVal, shtNeoPrtWerkbr.Range("A" & intM * 3 + 24).Value2)
                 ' Check apotheek print
                 shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
-                blnPass = blnPass And varVal = Replace(shtNeoPrtApoth.Range("D6").Value2, " ml/uur", "")
+                blnPass = blnPass And varVal = Replace(shtNeoPrtApoth.Range("D6").Value2, " ml/uur", vbNullString)
                 'Check afspraken print
-                If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
+                If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
             Next
         End If
         ' Schrijf infuus stand
@@ -332,16 +332,16 @@ Public Sub Test_NeoInfB_ContMed()
         
         ' ================ Check dosis ================
         ' ToDo: fix empty test cases
-        varVal = Trim(Replace(shtNeoPrtWerkbr.Range("E25").Value2, "= ", ""))
-        If Not (IsEmpty(varVal) Or varVal = "") Then
+        varVal = Trim(Replace(shtNeoPrtWerkbr.Range("E25").Value2, "= ", vbNullString))
+        If Not (IsEmpty(varVal) Or varVal = vbNullString) Then
             For intM = 0 To 9
                 'Check werkbrief
-                blnPass = blnPass And Equals(varVal, Replace(shtNeoPrtWerkbr.Range("E" & intM * 3 + 25).Value2, "= ", ""))
+                blnPass = blnPass And Equals(varVal, Replace(shtNeoPrtWerkbr.Range("E" & intM * 3 + 25).Value2, "= ", vbNullString))
                 ' Check apotheek print
                 shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
                 blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("F6").Value2)
                 'Check afspraken print
-                If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
+                If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
             Next
         End If
         ' Schrijf dosis
@@ -354,8 +354,8 @@ Public Sub Test_NeoInfB_ContMed()
         varVal = shtNeoGuiInfB.Range("O28").Value2
         For intM = 0 To 9
             'Check werkbrief
-            If Not Replace(shtNeoPrtWerkbr.Range("C" & intM * 3 + 26).Value2, "advies: ", "") = "DOORVERDUNNEN" Then
-                blnPass = blnPass And Equals(varVal, Replace(shtNeoPrtWerkbr.Range("C" & intM * 3 + 26).Value2, "advies: ", ""))
+            If Not Replace(shtNeoPrtWerkbr.Range("C" & intM * 3 + 26).Value2, "advies: ", vbNullString) = "DOORVERDUNNEN" Then
+                blnPass = blnPass And Equals(varVal, Replace(shtNeoPrtWerkbr.Range("C" & intM * 3 + 26).Value2, "advies: ", vbNullString))
             End If
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
@@ -511,7 +511,7 @@ Private Function CreateTestWbkPath(wbkTest As Workbook) As String
     strTs = Now()
     strTs = Replace(strTs, ":", " ")
     
-    strPath = Replace(wbkTest.FullName, wbkTest.Name, "")
+    strPath = Replace(wbkTest.FullName, wbkTest.Name, vbNullString)
     strName = Split(wbkTest.Name, ".")(0)
     
     strPath = strPath & strName & "_" & Application_GetVersion() & "_" & strTs
@@ -526,14 +526,14 @@ Private Sub Test_CreateWbkPath()
 
 End Sub
 
-Private Function Equals(ByVal strVal1 As Variant, ByVal strVal2 As Variant)
+Private Function Equals(ByVal strVal1 As Variant, ByVal strVal2 As Variant) As Boolean
 
     Dim strVal_1 As String
     Dim strVal_2 As String
     Dim blnEqs As Boolean
     
-    strVal_1 = Trim(strVal1)
-    strVal_2 = Trim(strVal2)
+    strVal_1 = StringReplaceEPI(Trim(strVal1))
+    strVal_2 = StringReplaceEPI(Trim(strVal2))
     
     strVal_1 = IIf(strVal_1 = "0", vbNullString, strVal_1)
     strVal_2 = IIf(strVal_2 = "0", vbNullString, strVal_2)
@@ -552,7 +552,7 @@ End Function
 
 Private Sub Test_Equals()
     
-    Dim varVal
+    Dim varVal As Variant
     
     MsgBox Equals("0", varVal)
 
@@ -654,7 +654,7 @@ Private Sub Test_GetEtiketTekst()
 End Sub
 
 Public Sub Test_NeoInfB_Print()
-
+ 
     Dim wbkTests As Workbook
     Dim shtTests As Worksheet
     Dim intTestCount As Integer
@@ -779,7 +779,7 @@ Public Sub Test_NeoInfB_Print()
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         blnPass = blnPass And ModString.StartsWith(shtNeoPrtApoth.Range("D5").Value2, varVal)
         'Check afspraken print
-        If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
+        If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
         
         ' Schrijf actuele medicament
         shtTests.Range(constActMedicament & intN).Value2 = varVal
@@ -794,7 +794,7 @@ Public Sub Test_NeoInfB_Print()
         blnPass = blnPass And Equals(varVal, IIf(ModRange.GetRangeValue("Var_Neo_InfB_Cont_DubbeleHoev", False), shtNeoPrtApoth.Range("D4").Value2 / 2, shtNeoPrtApoth.Range("D4").Value2))
         
         'Check afspraken print
-        If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
+        If Not (IsEmpty(varVal) Or varVal = vbNullString Or varVal = "0") Then
             blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Afspraken print niet goed voor test " & intN - constTestStart & " no: " & intM
@@ -820,7 +820,7 @@ Public Sub Test_NeoInfB_Print()
         End If
         
         'Check afspraken print
-        If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
+        If Not (IsEmpty(varVal) Or varVal = vbNullString Or varVal = "0") Then
             blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
             If Not blnPass And blnShowMsg Then
                 ModMessage.ShowMsgBoxExclam "Afspraken print niet goed voor test " & intN - constTestStart & " no: " & intM
@@ -840,7 +840,7 @@ Public Sub Test_NeoInfB_Print()
         shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
         blnPass = blnPass And varVal = shtNeoPrtApoth.Range("J6").Value2
         'Check afspraken print
-        If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
+        If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
         
         ' Schrijf oplosmiddel
         shtTests.Range(constActOplosVloeistof & intN).Value2 = varVal
@@ -856,7 +856,7 @@ Public Sub Test_NeoInfB_Print()
         blnPass = blnPass And Equals(varVal, dblVal)
         
         'Check afspraken print
-        If Not (IsEmpty(varVal) Or varVal = "" Or varVal = "0") Then
+        If Not (IsEmpty(varVal) Or varVal = vbNullString Or varVal = "0") Then
             blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
         Else
             blnPass = blnPass
@@ -869,12 +869,12 @@ Public Sub Test_NeoInfB_Print()
         '  ================ Check infuus stand ================
         ' ToDo: fix empty test cases
         varVal = shtNeoPrtWerkbr.Range("A" & (intM - 1) * 3 + 24).Value2
-        If Not (IsEmpty(varVal) Or varVal = "") Then
+        If Not (IsEmpty(varVal) Or varVal = vbNullString) Then
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
-            blnPass = blnPass And varVal = Replace(shtNeoPrtApoth.Range("D6").Value2, " ml/uur", "")
+            blnPass = blnPass And varVal = Replace(shtNeoPrtApoth.Range("D6").Value2, " ml/uur", vbNullString)
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
+            If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
         End If
         
         ' Schrijf infuus stand
@@ -883,13 +883,13 @@ Public Sub Test_NeoInfB_Print()
         
         ' ================ Check dosis ================
         ' ToDo: fix empty test cases
-        varVal = Trim(Replace(shtNeoPrtWerkbr.Range("E" & (intM - 1) * 3 + 25).Value2, "= ", ""))
-        If Not (IsEmpty(varVal) Or varVal = "") Then
+        varVal = Trim(Replace(shtNeoPrtWerkbr.Range("E" & (intM - 1) * 3 + 25).Value2, "= ", vbNullString))
+        If Not (IsEmpty(varVal) Or varVal = vbNullString) Then
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM
             blnPass = blnPass And Equals(varVal, shtNeoPrtApoth.Range("F6").Value2)
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = "") Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
+            If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 32).Value2, varVal)
         End If
         
         ' Schrijf dosis
@@ -900,7 +900,7 @@ Public Sub Test_NeoInfB_Print()
         
         ' ================ Check normaal waarde ================
         'Check werkbrief
-        varVal = Replace(shtNeoPrtWerkbr.Range("C" & (intM - 1) * 3 + 26).Value2, "advies: ", "")
+        varVal = Replace(shtNeoPrtWerkbr.Range("C" & (intM - 1) * 3 + 26).Value2, "advies: ", vbNullString)
         If Not varVal = "DOORVERDUNNEN" Then
             ' Check apotheek print
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM

@@ -1,11 +1,11 @@
 Attribute VB_Name = "ModAdmin"
 Option Explicit
 
-Private Const constNeoMedContTbl = "Tbl_Admin_NeoMedCont"
-Private Const constGlobParEntTbl = "Tbl_Admin_ParEnt"
-Private Const constPedMedContTbl = "Tbl_Admin_PedMedCont"
+Private Const constNeoMedContTbl As String = "Tbl_Admin_NeoMedCont"
+Private Const constGlobParEntTbl As String = "Tbl_Admin_ParEnt"
+Private Const constPedMedContTbl As String = "Tbl_Admin_PedMedCont"
 
-Private Const constNeoMedVerdunning = "Var_Neo_MedCont_VerdunningTekst"
+Private Const constNeoMedVerdunning As String = "Var_Neo_MedCont_VerdunningTekst"
 
 Private Function CheckPassword() As Boolean
     

@@ -50,9 +50,6 @@ Private Sub Validate(ByVal strValid As String)
     If strValid = vbNullString Then
     
         If frmDose.Visible Then
-            strValid = IIf(IsDoseControlInValid, "Voer of een advies dosering in en/of een max (en evt. min en abs max) dosering", strValid)
-            strValid = IIf(IsAbsMaxInvalid, "Gewicht boven de 50 kg, voer een absolute maximum dosering in (of een advies dosering of max dosering)", strValid)
-        
             strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering eenheid in", strValid)
             strValid = IIf(txtDeelDose.Value = vbNullString, "Voer een deelbaarheid in", strValid)
         End If
@@ -68,8 +65,15 @@ Private Sub Validate(ByVal strValid As String)
     
     End If
     
+    cmdOK.Enabled = strValid = vbNullString
+    
+    If frmDose.Visible And strValid = vbNullString Then
+        strValid = IIf(IsDoseControlInValid, "Voer of een advies dosering in en/of een max (en evt. min en abs max) dosering", strValid)
+        strValid = IIf(IsAbsMaxInvalid, "Gewicht boven de 50 kg, voer een absolute maximum dosering in (of een advies dosering of max dosering)", strValid)
+    
+    End If
+    
     lblValid.Caption = strValid
-    ' cmdOK.Enabled = strValid = vbNullString
 
 End Sub
 
@@ -129,6 +133,7 @@ End Sub
 
 Private Sub cboFreq_Change()
 
+    SetDoseUnit
     CalculateDose
     Validate vbNullString
 
@@ -187,11 +192,13 @@ End Function
 Private Sub SetDoseUnit()
 
     Dim strUnit As String
+    Dim strTime As String
     
     strUnit = Trim(cboDosisEenheid.Text)
+    strTime = IIf(chkPerDosis.Value, "dosis", GetTimeByFreq(cboFreq.Text))
     
     If Not strUnit = vbNullString Then
-        cboDoseUnit.Text = strUnit & "/kg/dag"
+        If Not strTime = vbNullString Then cboDoseUnit.Text = strUnit & "/kg/" & strTime
         cboKeerUnit.Text = strUnit
         lblDoseUnit.Caption = cboDoseUnit.Value
         lblMinMaxEenheid.Caption = cboDoseUnit.Value
@@ -376,6 +383,16 @@ Private Sub cboRoute_Change()
 
 End Sub
 
+Public Function GetTimeByFreq(ByVal strFreq As String) As String
+
+    If strFreq = vbNullString Then
+        GetTimeByFreq = vbNullString
+    Else
+        GetTimeByFreq = ModExcel.Excel_VLookup(strFreq, "Tbl_Glob_MedFreq", 2)
+    End If
+
+End Function
+
 Public Function GetFactorByFreq(ByVal strFreq As String) As Double
 
     GetFactorByFreq = m_Freq.Item(strFreq)
@@ -392,7 +409,7 @@ Private Sub CalculateDose()
     Dim dblDeel As Double
     Dim dblKeer As Double
     
-    dblFact = GetFactorByFreq(cboFreq.Text)
+    dblFact = IIf(chkPerDosis.Value, 1, GetFactorByFreq(cboFreq.Text))
     dblDose = StringToDouble(txtNormDose.Value)
     dblWght = ModPatient.GetGewichtFromRange()
     dblDeel = StringToDouble(txtDeelDose.Value)
@@ -423,7 +440,7 @@ Private Sub CalculateDose()
     m_Med.Freq = cboFreq.Text
     
     txtCalcDose.Value = ModString.FixPrecision(dblCalc, 2)
-    txtKeerDose.Value = dblKeer
+    If Not m_Keer Then txtKeerDose.Value = dblKeer
         
     CalculateVolume
     
@@ -454,6 +471,13 @@ Private Sub chkDose_Click()
     cboDosisEenheid.Visible = chkDose.Value
 
     Validate vbNullString
+
+End Sub
+
+Private Sub chkPerDosis_Click()
+
+    SetDoseUnit
+    CalculateDose
 
 End Sub
 
@@ -554,6 +578,7 @@ Private Sub cmdOK_Click()
         m_Med.DoseEenheid = cboDosisEenheid.Value
         
         m_Med.Freq = cboFreq.Value
+        m_Med.PerDose = chkPerDosis.Value
         
         m_Med.NormDose = StringToDouble(txtNormDose.Value)
         m_Med.MinDose = StringToDouble(txtMinDose.Value)

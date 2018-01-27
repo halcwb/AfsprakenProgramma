@@ -324,7 +324,7 @@ Private Function GetEnvironment() As String
     Dim strPath As String
     
     strPath = WbkAfspraken.Path
-    strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Test"), "Test", "")
+    strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Test"), "Test", vbNullString)
     strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Training"), "Training", strEnv)
     strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Productie"), "Productie", strEnv)
     
@@ -605,7 +605,7 @@ End Sub
 
 Public Sub Application_SendPrintScreen()
 
-    Dim objClip
+'     Dim objClip
     PrintScreen
     
 End Sub

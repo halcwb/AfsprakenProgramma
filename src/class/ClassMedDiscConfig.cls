@@ -377,11 +377,11 @@ Public Function GetRouteList() As Collection
 
 End Function
 
-Public Function SetIndicatieList(ByVal strIndicaties As String)
+Public Sub SetIndicatieList(ByVal strIndicaties As String)
 
     FillCollection m_IndicatieList, strIndicaties
 
-End Function
+End Sub
 
 Public Function GetIndicatieList() As Collection
 

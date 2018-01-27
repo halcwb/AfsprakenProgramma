@@ -287,3 +287,9 @@ Public Function StringIsZeroOrEmpty(ByVal strString As String) As Boolean
     
 End Function
 
+Public Function StringReplaceEPI(ByVal strString As String) As String
+    
+    StringReplaceEPI = Replace(strString, "EPI", vbNullString)
+
+End Function
+

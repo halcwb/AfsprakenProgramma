@@ -725,7 +725,7 @@ Private Sub MedSterkte(ByVal intN As Integer)
 
     If intMed <= 1 Then Exit Sub
     
-    Set objTblMed = Range(constTblMedIV)
+    Set objTblMed = shtNeoTblMedIV.Range(constTblMedIV)
     strUnit = Application.VLookup(objTblMed.Cells(intMed, 1), objTblMed, constUnitIndex, False)
     
     Set frmInvoer = New FormInvoerNumeriek
@@ -1365,7 +1365,7 @@ NeoInfB_ShowVoedingPickListError:
     
 End Sub
 
-Private Sub ResetOplVlst(ByVal strOpl, ByVal intOpl As Integer, blnShowWarn)
+Private Sub ResetOplVlst(ByVal strOpl As String, ByVal intOpl As Integer, blnShowWarn As Boolean)
 
     If blnShowWarn Then
         ModMessage.ShowMsgBoxInfo "Ongeldige oplossing vloeistof voor dit medicament"
@@ -1494,7 +1494,7 @@ Private Sub SetDose(ByVal intN As Integer)
     Dim dblDose As Double
     Dim dblQty As Double
     Dim strEenheid As String
-    Dim blnNotSetDose
+    Dim blnNotSetDose As Boolean
     
     strN = IntNToStrN(intN)
     intMed = ModRange.GetRangeValue(constMedKeuze & strN, vbNullString)

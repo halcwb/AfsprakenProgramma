@@ -15,7 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private Const constSpecVoed = "_Glob_SpecialeVoeding_"
+Private Const constSpecVoed As String = "_Glob_SpecialeVoeding_"
 
 'energy
 'eiwit

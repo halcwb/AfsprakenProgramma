@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModMedDisc"
 Option Explicit
 
-Private Const constFreqTable = "Tbl_Glob_MedFreq"
+Private Const constFreqTable As String = "Tbl_Glob_MedFreq"
 Private Const constTblMedOpdr As String = "Tbl_Glob_MedOpdr"
 
 ' --- Medicament ---
@@ -34,6 +34,7 @@ Private Const constNormDose As String = "_Glob_MedDisc_NormDose_"       ' Normal
 Private Const constMinDose As String = "_Glob_MedDisc_Onder_"           ' Dagdosering ondergrens
 Private Const constMaxDose As String = "_Glob_MedDisc_Boven_"           ' Dag dosering bovengrens
 Private Const constAbsDose As String = "_Glob_MedDisc_MaxDose_"         ' Maximale dosering
+Private Const constPerDose As String = "_Glob_MedDisc_PerDose_"         ' Bereken per dose
 
 Private Const constMaxConc As String = "_Glob_MedDisc_MaxConc_"         ' Maximale concentratie
 Private Const constOplVlst As String = "_Glob_MedDisc_OplVlst_"         ' Verplichte oplos vloeistof
@@ -176,6 +177,7 @@ Private Sub Clear(ByVal intN As Integer)
     ModRange.SetRangeValue constMinDose & strN, 0
     ModRange.SetRangeValue constMaxDose & strN, 0
     ModRange.SetRangeValue constAbsDose & strN, 0
+    ModRange.SetRangeValue constPerDose & strN, False
     
     ModRange.SetRangeValue constMaxConc & strN, 0
     ModRange.SetRangeValue constOplVlst & strN, vbNullString
@@ -378,7 +380,7 @@ Public Function GetMedicationFreqs() As Dictionary
     intC = objTable.Rows.Count
     For intN = 2 To intC
         strFreq = objTable.Cells(intN, 1).Value2
-        dblFactor = objTable.Cells(intN, 2).Value2
+        dblFactor = objTable.Cells(intN, 3).Value2
         dictFreq.Add strFreq, dblFactor
     Next
     
@@ -447,6 +449,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         .SetTextBoxIfNotEmpty .txtMinDose, ModRange.GetRangeValue(constMinDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMaxDose, ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtAbsMax, ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
+        .chkPerDosis.Value = ModRange.GetRangeValue(constPerDose & strN, False)
         
         intOplVlst = ModRange.GetRangeValue(constSolNo & strN, 1)
         strOplVlst = ModExcel.Excel_Index("Tbl_Glob_MedDisc_OplVl", intOplVlst, 1)
@@ -478,7 +481,7 @@ End Sub
 
 Private Function CalculateOplossingVolume(ByVal dblSterkte As Double, ByVal dblMaxConc As Double) As Double
     
-    Dim dblVolume
+    Dim dblVolume As Double
     
     If dblMaxConc > 0 Then
         ' maxoonc = sterkte / volume -> volume = sterkte / maxconc
@@ -492,6 +495,7 @@ End Function
 Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     
     Dim intFreq As Integer
+    Dim dblFactor As Double
     Dim varFreq As Variant
     Dim dictFreq As Dictionary
     Dim intDoseQty As Integer
@@ -545,7 +549,10 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
         ModRange.SetRangeValue constFreqList & strN, objMed.GetFreqListString
         
         If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
-            intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / ModExcel.Excel_Index(constFreqTable, intFreq, 2) / objMed.DeelDose
+            dblFactor = IIf(objMed.PerDose, 1, ModExcel.Excel_Index(constFreqTable, intFreq, 3))
+            intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / dblFactor / objMed.DeelDose
+            
+            ModRange.SetRangeValue constPerDose & strN, objMed.PerDose
             ModRange.SetRangeValue constDoseQty & strN, intDoseQty
             
             dblOplVol = CalculateOplossingVolume(intDoseQty * objMed.DeelDose, objMed.MaxConc)

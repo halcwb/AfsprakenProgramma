@@ -47,5 +47,5 @@ $D$36: 	=IF(ROUND((0.5*E5),1)>50,""50 gram iv"",ROUND((0.5*E5),1)&"" gram iv"")
 $E$36: 	=""= ""&IF(ROUND((0.5*E5),1)>50,ROUND(50/0.15,0),ROUND((0.5*E5)/0.15,0))&"" ml van mannitol 15% in 30 min iv""
 $D$38: 	=""AMV ""&ROUND(E5*8*VLOOKUP(C5,L2:M20,2)/1000,1)&"" L/min""
 $D$39: 	=""frequentie ""&VLOOKUP(C5,L2:M20,2)&""/min""
-$C$43: 	=_User_LastName&"", ""&_User_FirstName
+$C$43: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 "

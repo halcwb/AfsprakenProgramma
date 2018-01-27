@@ -212,7 +212,7 @@ Private Function CreateTestWbkPath(wbkTest As Workbook) As String
     strTs = Now()
     strTs = Replace(strTs, ":", " ")
     
-    strPath = Replace(wbkTest.FullName, wbkTest.Name, "")
+    strPath = Replace(wbkTest.FullName, wbkTest.Name, vbNullString)
     strName = Split(wbkTest.Name, ".")(0)
     strExt = Split(wbkTest.Name, ".")(1)
     

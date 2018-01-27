@@ -211,7 +211,7 @@ Public Sub RunShell(ByVal strCmd As String, strArgs() As String)
         strCmd = strCmd & " " & strArg
     Next strArg
     
-    Let dblExit = Shell(strPath & "\" & strCmd, vbNormalFocus)
+    dblExit = Shell(strPath & "\" & strCmd, vbNormalFocus)
     
     If dblExit > 0 Then
         MsgBox "Succesfully ran: " & strCmd
@@ -263,6 +263,25 @@ Public Function OnlyNumericAscii(ByVal intKey As Integer) As Integer
 
 End Function
 
+Public Function OnlyTextAscii(ByVal intKey As Integer) As Integer
+
+    Dim strAllowed As String
+    Dim strKey As String
+    
+    strAllowed = " !%()*+,-./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ=?abcdefghijklmnopqrstuvwxyz"
+    strKey = Chr(intKey)
+
+    If Not ModString.ContainsCaseSensitive(strAllowed, strKey) Then intKey = 0
+    
+    OnlyTextAscii = intKey
+
+End Function
+
+Private Sub Test_OnlyTextAscii()
+
+    ModMessage.ShowMsgBoxOK OnlyTextAscii(Asc(">"))
+
+End Sub
 
 Public Sub RunTestCmd()
     Dim strArgs(1) As String

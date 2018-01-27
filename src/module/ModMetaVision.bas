@@ -214,7 +214,7 @@ End Function
 
 Private Sub Test_GetPatientSQL()
 
-    ModUtils.CopyToClipboard GetPatientListSQL("", "", "H3.03.04")
+    ModUtils.CopyToClipboard GetPatientListSQL(vbNullString, vbNullString, "H3.03.04")
 
 End Sub
 
@@ -297,7 +297,7 @@ Private Sub Test_MetaVision_GetPatientDetails()
     ' strId = MetaVision_GetCurrentPatientID()
     strId = vbNullString
     Set objPat = New ClassPatientDetails
-    MetaVision_GetPatientDetails objPat, strId, "1234567", ""
+    MetaVision_GetPatientDetails objPat, strId, "1234567", vbNullString
 
     MsgBox objPat.PatientId & ": " & objPat.AchterNaam
 
@@ -557,7 +557,7 @@ Private Sub GetLab(ByVal strHospNum As String)
     objConn.Open
     
     Set objRs = objConn.Execute(strSql)
-    Set objRange = Range("Tbl_Glob_Lab")
+    Set objRange = shtGlobBerLab.Range("Tbl_Glob_Lab")
     
     If Not (objRs.BOF And objRs.EOF) Then
         For Each objRow In objRange.Rows
@@ -616,7 +616,7 @@ Public Sub GetLeverNierFunctie(ByVal strHospNum As String)
     objConn.Open
     
     Set objRs = objConn.Execute(strSql)
-    Set objRange = Range("Tbl_Glob_Lab")
+    Set objRange = shtGlobBerLab.Range("Tbl_Glob_Lab")
     
     If Not (objRs.BOF And objRs.EOF) Then
         For Each objRow In objRange.Rows
@@ -642,7 +642,7 @@ Public Sub MetaVision_SyncLab()
     Dim objRange As Range
     Dim objRow As Range
     
-    Set objRange = Range("Tbl_Glob_Lab")
+    Set objRange = shtGlobBerLab.Range("Tbl_Glob_Lab")
     
     For Each objRow In objRange
         objRow.Cells(1, 2).Value2 = vbNullString
@@ -736,9 +736,9 @@ Public Sub MetaVision_SetUser()
     If strLogin = vbNullString Then Exit Sub
     
     strSql = strSql & "DECLARE @login AS NVARCHAR(255)" & vbNewLine
-    strSql = strSql & "" & vbNewLine
+    strSql = strSql & vbNullString & vbNewLine
     strSql = strSql & "SET @login = '" & strLogin & "' " & vbNewLine
-    strSql = strSql & "" & vbNewLine
+    strSql = strSql & vbNullString & vbNewLine
     strSql = strSql & "SELECT" & vbNewLine
     strSql = strSql & "u.UserID" & vbNewLine
     strSql = strSql & ", u.Login" & vbNewLine
@@ -802,3 +802,4 @@ GetMedicatieOpdrachtenError:
     
     ModMessage.ShowMsgBoxError "Kan medicatie opdrachten niet ophalen"
 End Sub
+

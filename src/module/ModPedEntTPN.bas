@@ -293,7 +293,12 @@ End Sub
 Private Sub ClearEnt(ByVal intN As Integer)
 
     ModRange.SetRangeValue constVoeding & intN, 1
-
+    If intN = 1 Then
+        PedEntTPN_ChangeEnt_1
+    Else
+        ChangeEnt intN
+    End If
+    
 End Sub
 
 Public Sub PedEntTPN_ClearVoeding_1()
@@ -363,10 +368,10 @@ Public Function GetPedTPNIndexForWeight() As Integer
     
     intTPN = 1
     intTPN = IIf(dblWeight >= CONST_TPN_1, 2, intTPN)
-    intTPN = IIf(dblWeight >= CONST_TPN_2, 3, intTPN)
-    intTPN = IIf(dblWeight >= CONST_TPN_3, 4, intTPN)
-    intTPN = IIf(dblWeight >= CONST_TPN_4, 5, intTPN)
-    intTPN = IIf(dblWeight >= CONST_TPN_5, 6, intTPN)
+    intTPN = IIf(dblWeight > CONST_TPN_2, 3, intTPN)
+    intTPN = IIf(dblWeight > CONST_TPN_3, 4, intTPN)
+    intTPN = IIf(dblWeight > CONST_TPN_4, 5, intTPN)
+    intTPN = IIf(dblWeight > CONST_TPN_5, 6, intTPN)
     
     GetPedTPNIndexForWeight = intTPN
 
@@ -906,49 +911,59 @@ Public Sub PedEntTPN_SpecVoed()
     
 End Sub
 
-Public Sub PedEntTPN_ChangeEnt()
+Private Sub ChangeEnt(ByVal intN As Integer)
+    
+    Dim strKeuze As String
+    Dim strFreq As String
+    Dim strVol As String
+    
+    strKeuze = "_Ped_Ent_Keuze_" & intN
+    strFreq = "_Ped_Ent_Freq_" & intN
+    strVol = "_Ped_Ent_Vol_" & intN
+    
+    If ModRange.GetRangeValue(strKeuze, 0) > 1 Then
+        If ModRange.GetRangeValue(strFreq, 0) > 0 And ModRange.GetRangeValue(strVol, 0) = 0 Then ModRange.SetRangeValue strVol, 1
+        If ModRange.GetRangeValue(strVol, 0) > 0 And ModRange.GetRangeValue(strFreq, 0) = 0 Then ModRange.SetRangeValue strFreq, 1
+    Else
+        ModRange.SetRangeValue strFreq, 0
+        ModRange.SetRangeValue strVol, 0
+    End If
+
+End Sub
+
+Public Sub PedEntTPN_ChangeEnt_1()
 
     If ModRange.GetRangeValue("_Ped_Ent_Keuze_1", 0) = 1 Then
     
-        ModRange.SetRangeValue "_Ped_Ent_Keuze_2", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Keuze_3", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Keuze_4", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Freq_1", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Freq_2", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Freq_3", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Freq_4", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Vol_1", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Vol_2", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Vol_3", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Vol_4", vbNullString
+        ModRange.SetRangeValue "_Ped_Ent_Keuze_2", 1
+        ModRange.SetRangeValue "_Ped_Ent_Keuze_3", 1
+        ModRange.SetRangeValue "_Ped_Ent_Keuze_4", 1
         
-    End If
-
-End Sub
-
-Public Sub PedEntTPN_ChangeEntAdd1()
-
-    If ModRange.GetRangeValue("_Ped_Ent_Keuze_2", 0) = 1 Then
-        ModRange.SetRangeValue "_Ped_Ent_Freq_2", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Vol_2", vbNullString
-    End If
-
-End Sub
-
-Public Sub PedEntTPN_ChangeEntAdd2()
+        ChangeEnt 1
+        ChangeEnt 2
+        ChangeEnt 3
+        ChangeEnt 4
     
-    If ModRange.GetRangeValue("_Ped_Ent_Keuze_3", 0) = 1 Then
-        ModRange.SetRangeValue "_Ped_Ent_Freq_3", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Vol_3", vbNullString
+    Else
+        ChangeEnt 1
     End If
 
 End Sub
 
-Public Sub PedEntTPN_ChangeEntAdd3()
+Public Sub PedEntTPN_ChangeEnt_2()
+
+    ChangeEnt 2
+
+End Sub
+
+Public Sub PedEntTPN_ChangeEnt_3()
     
-    If ModRange.GetRangeValue("_Ped_Ent_Keuze_4", 0) = 1 Then
-        ModRange.SetRangeValue "_Ped_Ent_Freq_4", vbNullString
-        ModRange.SetRangeValue "_Ped_Ent_Vol_4", vbNullString
-    End If
+    ChangeEnt 3
+
+End Sub
+
+Public Sub PedEntTPN_ChangeEnt_4()
+    
+    ChangeEnt 4
 
 End Sub

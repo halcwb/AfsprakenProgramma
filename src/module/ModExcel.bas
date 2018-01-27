@@ -51,7 +51,7 @@ Private Sub Test_Excel_Index()
  
 End Sub
 
-Public Function Excel_RoundBy(ByVal dblValue, dblStep As Double) As Double
+Public Function Excel_RoundBy(ByVal dblValue As Double, dblStep As Double) As Double
 
     Dim dblRound As Double
     

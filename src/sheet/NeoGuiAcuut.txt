@@ -34,5 +34,5 @@ $D$31: 	=CONCATENATE(0.1*(_Pat_Gewicht),"" mg"")
 $E$31: 	=""= ""&0.1*(_Pat_Gewicht)&"" ml van Morfine 1mg/1ml oplossing""
 $D$32: 	=CONCATENATE(0.6*(_Pat_Gewicht),"" mg"")
 $E$32: 	=""= ""&0.06*(_Pat_Gewicht)&"" ml van Rocorium 10mg/1ml oplossing""
-$C$34: 	=_User_LastName&"", ""&_User_FirstName
+$C$34: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 "

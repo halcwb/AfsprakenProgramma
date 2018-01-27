@@ -25,6 +25,7 @@ Private m_Route As String
 Private m_Indicatie As String
 Private m_Freq As String
 Private m_HasDose As Boolean
+Private m_PerDose As Boolean
 Private m_CalcDose As Double
 Private m_NormDose As Double
 Private m_MinDose As Double
@@ -37,6 +38,18 @@ Private m_MinTijd As Integer
 Private m_IndicatieList As Collection
 Private m_RouteList As Collection
 Private m_FreqList As Collection
+
+Public Property Get PerDose() As Boolean
+
+    PerDose = m_PerDose
+
+End Property
+
+Public Property Let PerDose(ByVal blnPerDose As Boolean)
+
+    m_PerDose = blnPerDose
+
+End Property
 
 Public Property Get HasDose() As Boolean
 
@@ -403,11 +416,11 @@ Public Function GetRouteList() As Collection
 
 End Function
 
-Public Function SetIndicatieList(ByVal strIndicaties As String)
+Public Sub SetIndicatieList(ByVal strIndicaties As String)
 
     FillCollection m_IndicatieList, strIndicaties
 
-End Function
+End Sub
 
 Public Function GetIndicatieList() As Collection
 

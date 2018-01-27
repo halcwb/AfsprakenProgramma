@@ -1,6 +1,5 @@
 Attribute VB_Name = "ModCollection"
 Option Explicit
-Option Base 0
 
 'Returns True if the Collection has the key, varKey. Otherwise, returns False
 Public Function CollectionHasKey(varKey As Variant, objCol As Collection) As Boolean

@@ -21,21 +21,20 @@ Niet testen
 
 Na 28 november
 
-- Voeding bij invoer frequentie automatisch hoeveelheid activeren
-- alprostadil bij 10 kg waarde fout
 - Config formulier voor beheerders
 - Config formulier voor pediatrie continue medicamenten
 - Logging configuratie wijzigingen door apotheek
 - Koppeling met Kinderformularium, doseer regels
 - Doseer regels uit de G-Standaard toepassen
 - Naamgeving en conventies medicatie opschonen
-- MetaVision check op voorgeschreven vs. ingeplande medicatie
+
 - Inplannen van continue medicatie
 - Koppeling met VTGM parenteralia apotheek
 - VTGM van continue pediatrie medicatie
 - Pomp kopppeling met vochtbalans (pompstand, volume, natrium, glucose)
 - Configuratie mogelijkheid van voedingen
 - Elektrolieten in discontinue medicatmenten meetellen
+
 - Verwijderen per blad
 - In MetaVision programma openen met controle van patient gegevens
 - Snel invoer freq en hoeveelheid infuusbrief voeding
@@ -43,9 +42,9 @@ Na 28 november
 - Elektrolieten en kcal in continue medicamenten meenemen in tabel parenteralia
 - Printen configuratie parenteralia 
 - Toevoegen van discontinue medicatie in admin formulier
-- Mogelijkheid voor verandering toedieningsweg en indicatie
 - Test code voor continue ped medicatie
 - Test code voor discontinue medicatie
+
 - Mogelijkheid voor start doseringen, dosering schema en aanvullende lab controles
 - Sterkte kunnen aanpassen in discontinue medicatie configuratie
 - Check of speciale voeding al is ingevoerd
@@ -53,29 +52,26 @@ Na 28 november
 - Regressie tests pdfs vergelijken
 - Formulier patient gegevens, geen update indien ongeldige datum waarden
 - Alles vewijderen -> Patient verwijderen (onder Bedden groep)
-- Ongeldige karakters uit opmerkingen en vrije tekstvelden filteren --> PRN kan geen > teken verdragen?
+
 - Patient van bed verwijderen -> terugkoppeling -> daarna de lijst laten zien
 - Med disc formulier schoonmaken bij opnieuw openen
 - Refresh MV opdrachten bij openen Medicament snelkeuze lijst of openen disc medicatie tab
 - Parenteralia Neo bijwerken voor discontinue medicatie
-- Waarschuwing discontinue medicatie formulier aanpassen voor dosering bewaken en blokkeren bij geen indicatie of route
-- Mogelijkheid van verschillende dosering berekeningen: /mg/keer, /mg/dag, /mg/48uur etc..
+
 - Standaard TPN NICU herstellen
-- OK na opslaan evt. weglaten
-- TPN veranderen blokkeert
+
 - Format getallen met decimale punt in gui sheets
-- Magnesium in ped continue medicatie in berekeningen meenemen.
 - Soluvit neo infuusbrief en werkbrief naar lipiden infuus??
 - Fiks probleem met medicatie opdrachten uit MetaVision niet goed verversen
 - Indicatie bij continue medicatie
 - Help menu item toevoegen
-- Route in tabel continue medicatie opnemen
-- Epiduraal in advies als check, EPI uit de naam halen
-- Correctie keer dosring niet bij key press
+
 - TPN pediatrie herzien.
-- Crash bij vrije tekst invoer frequentie in discontinue medicatie formulier
-- Copy paste lukt niet bij PRN met > teken
-- Poeder in voeding komt niet door en moet ook in % worden weergegeven.
+
+- Max dosering midazolam nicu 5 mg/kg/uur??
+- Epiduraal wijzigingen doorvoeren
+
+- Medicatie bestelbonnen doormailen
 
 Known issues
 - Medisch Voorschrijf formulier crashed indien afsluiten terwijl bezig met openen AfsprakenProgramma

@@ -260,7 +260,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
     If intKeuze = 1 Then                         ' No medicament was selected so clear the line
         Clear intN
     Else                                         ' Else find the right standard solution
-        varOplossing = ModExcel.Excel_VLookup(Range(constTblMed).Cells(intKeuze, 1), constTblMed, constStandOplVlst)
+        varOplossing = ModExcel.Excel_VLookup(shtPedTblMedIV.Range(constTblMed).Cells(intKeuze, 1), constTblMed, constStandOplVlst)
         varOplossing = IIf(varOplossing = 0, constStandOplKeuze, varOplossing) ' Use NaCl 0.9% as stand solution if not specified otherwise
         ModRange.SetRangeValue strOplossing, varOplossing
     End If
@@ -415,7 +415,7 @@ Private Sub SetMedConc(ByVal intRegel As Integer)
     On Error GoTo SetMedConcError
 
     strRegel = IIf(intRegel < 10, "0" & intRegel, intRegel)
-    strUnit = Application.WorksheetFunction.Index(Range(constTblMed), Range(constMedIVKeuze & strRegel), constUnitIndx)
+    strUnit = Application.WorksheetFunction.Index(shtPedTblMedIV.Range(constTblMed), ModRange.GetRange(constMedIVKeuze & strRegel), constUnitIndx)
     EnterNumeric intRegel, constMedIVSterkte, strUnit, constStandHoevIndx
     
     Exit Sub
@@ -694,7 +694,7 @@ Public Sub PedContIV_Text()
 End Sub
 
 
-Private Sub ResetOplVlst(ByVal strOpl, ByVal intOpl As Integer)
+Private Sub ResetOplVlst(ByVal strOpl As String, ByVal intOpl As Integer)
 
     ModMessage.ShowMsgBoxInfo "Ongeldige oplossing vloeistof voor dit medicament"
     ModRange.SetRangeValue strOpl, intOpl
@@ -711,7 +711,7 @@ Private Sub CheckOplVlst(ByVal intN As Integer)
     strN = ModString.IntNToStrN(intN)
     intMed = ModRange.GetRangeValue(constMedIVKeuze & strN, 0)
     If intMed > 0 Then
-        intAdvVlst = ModExcel.Excel_VLookup(Range(constTblMed).Cells(intMed, 1), constTblMed, constStandOplVlst)
+        intAdvVlst = ModExcel.Excel_VLookup(shtPedTblMedIV.Range(constTblMed).Cells(intMed, 1), constTblMed, constStandOplVlst)
         'intAdvVlst = GetMedicamentItemWithIndex(intMed, constAdvOplIndex)
         intOplVlst = ModRange.GetRangeValue(constMedIVOplVlst & strN, 0)
         'Geen oplossing vloeistof
@@ -841,7 +841,7 @@ Private Function CalculateStandByDose(ByVal intN As Integer, ByVal intMed As Int
     dblWeight = ModPatient.GetGewichtFromRange()
     strMed = GetMedicamentItemWithIndex(intMed, 1)
     
-    dblStand = dblDose * dblOplQty * dblWeight / (dblQty * dblFactor)
+    If dblQty > 0 Then dblStand = dblDose * dblOplQty * dblWeight / (dblQty * dblFactor)
     
     CalculateStandByDose = dblStand
 
