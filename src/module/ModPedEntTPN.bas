@@ -787,6 +787,9 @@ End Sub
 Public Sub PedEntTPN_TPN()
 
     EnterHoeveelheid constTPNVol, "TPN"
+    If ModRange.GetRangeValue(constTPNVol, 0) = 0 Then
+        ModRange.SetRangeValue constTPN, 1
+    End If
 
 End Sub
 

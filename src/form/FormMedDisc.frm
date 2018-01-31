@@ -133,9 +133,23 @@ End Sub
 
 Private Sub cboFreq_Change()
 
-    SetDoseUnit
-    CalculateDose
-    Validate vbNullString
+    Dim strValid As String
+    
+    strValid = ValidateCombo(cboFreq)
+    
+    If strValid = vbNullString Then
+        SetDoseUnit
+        CalculateDose
+        Validate vbNullString
+    Else
+        Validate strValid
+    End If
+    
+End Sub
+
+Private Sub cboGeneriek_Click()
+
+    cboGeneriek_Change
 
 End Sub
 

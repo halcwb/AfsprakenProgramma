@@ -5,7 +5,13 @@ Private Const constTblNeoMedCont As String = "Tbl_Neo_MedIV"
 
 Public Function Medicatie_CalcEpiQty(ByVal dblWght As Double) As Double
 
-    Medicatie_CalcEpiQty = dblWght
+    Dim dblQty As Double
+    
+    dblQty = IIf(dblWght >= 25, dblWght, 2 * dblWght)
+    dblQty = IIf(dblWght >= 48, 48, dblQty)
+    dblQty = ModString.FixPrecision(dblQty, 1)
+    
+    Medicatie_CalcEpiQty = dblQty
 
 End Function
 
@@ -16,8 +22,19 @@ Public Function Medicatie_CalcEpiVol(ByVal dblWght As Double) As Double
 End Function
 
 Public Function Medicatie_CalcEpiStand(ByVal dblWght As Double) As Double
+    
+    Dim dblStand As Double
 
-    Medicatie_CalcEpiStand = IIf(dblWght < 6, 1, 2)
+    dblStand = IIf(dblWght >= 7, 2, 1)
+    dblStand = IIf(dblWght >= 25, 4, dblStand)
+    
+    Medicatie_CalcEpiStand = dblStand
+
+End Function
+
+Public Function Medicatie_IsEpiduraal(ByVal strMed As String) As Boolean
+
+    Medicatie_IsEpiduraal = ModString.ContainsCaseSensitive(strMed, "EPI ") Or ModString.ContainsCaseSensitive(strMed, "Epi ")
 
 End Function
 
