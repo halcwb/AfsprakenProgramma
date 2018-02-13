@@ -4,9 +4,10 @@ Option Explicit
 Private Const CONST_TPN_1 As Integer = 2
 Private Const CONST_TPN_2 As Integer = 7
 Private Const CONST_TPN_3 As Integer = 16
-Private Const CONST_TPN_4 As Integer = 30
+Private Const CONST_TPN_4 As Integer = 31
 Private Const CONST_TPN_5 As Integer = 50
 
+Private Const constTPN As String = "_Ped_TPN_Keuze"
 Private Const constUserType As String = "_User_Type"
 
 Public Sub SaveAndPrintAfspraken()
@@ -148,27 +149,27 @@ Private Function PrintTPN(ByVal blnPrev As Boolean, ByVal strFile As String) As 
     Dim strPDF As String
     Dim objSheet As Worksheet
     Dim dblGew As Double
+    Dim intTPN As Integer
     
-    dblGew = ModPatient.GetGewichtFromRange
-
-    If dblGew >= CONST_TPN_1 And dblGew <= CONST_TPN_2 Then
-        Set objSheet = shtPedPrtTPN2tot6
+    intTPN = ModRange.GetRangeValue(constTPN, 1)
+    dblGew = ModPatient.GetGewichtFromRange()
+    
+    If intTPN > 1 Then
+        If intTPN = 2 Then Set objSheet = shtPedPrtTPN2tot6
+        If intTPN = 3 Then Set objSheet = shtPedPrtTPN7tot15
+        If intTPN = 4 Then Set objSheet = shtPedPrtTPN16tot30
+        If intTPN = 5 Then Set objSheet = shtPedPrtTPN31tot50
+        If intTPN = 6 Then Set objSheet = shtPedPrtTPN50
+            
     Else
-        If dblGew <= CONST_TPN_3 Then
-            Set objSheet = shtPedPrtTPN7tot15
-        Else
-            If dblGew <= CONST_TPN_4 Then
-                Set objSheet = shtPedPrtTPN16tot30
-            Else
-                If dblGew <= CONST_TPN_5 Then
-                    Set objSheet = shtPedPrtTPN31tot50
-                Else
-                    Set objSheet = shtPedPrtTPN50
-                End If
-            End If
-        End If
+        Set objSheet = shtPedPrtTPN2tot6
+        If dblGew >= CONST_TPN_2 Then Set objSheet = shtPedPrtTPN7tot15
+        If dblGew >= CONST_TPN_3 Then Set objSheet = shtPedPrtTPN16tot30
+        If dblGew >= CONST_TPN_4 Then Set objSheet = shtPedPrtTPN31tot50
+        If dblGew > CONST_TPN_5 Then Set objSheet = shtPedPrtTPN50
+    
     End If
-
+    
     objSheet.Unprotect ModConst.CONST_PASSWORD
     
     ModSheet.PrintSheetAllPortrait objSheet

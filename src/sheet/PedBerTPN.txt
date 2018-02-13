@@ -231,8 +231,9 @@ $X$16: 	=IF(V16="""","""",SUM(G16)&"" ml"")
 $Y$16: 	=IF(G16=0,"""",""verw"")
 $AA$16: 	=IF(F16>0,""in ""&ROUND(G16/IF(F16>10,ROUNDUP(F16,0),ROUNDUP(F16,1)),1)&"" uur"","""")
 $AB$16: 	=IF(X16="""","""",X16&"" ""&AA16)
-$G$17: 	=ROUND(G16-G18-G19-G20,1)
-$H$17: 	=IF(G17=0,"""",A17)
+$D$17: 	=G17<0
+$G$17: 	=ROUND(G16-G18-G19,1)
+$H$17: 	=IF(G17=0,"""",INDEX(Tbl_Ped_Lipid,B17,1))
 $I$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,I$1,FALSE))*$G17
 $J$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,J$1,FALSE))*$G17
 $K$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,K$1,FALSE))*$G17
@@ -285,23 +286,6 @@ $V$19: 	=IF(F19>0,IF(F19>10,ROUNDUP(F19,0),ROUNDUP(F19,1))&"" ml/uur"","""")
 $W$19: 	=IF(G19=0,"""",G19&"" ml"")
 $Y$19: 	=IF(G19=0,"""",""verw"")
 $AB$19: 	=IF(X19="""","""",X19&"" ""&AA19)
-$G$20: 	=ROUND(IF(C$17>0,IF(C20<50,C20/10,C20-45),0),1)
-$I$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,I$1,FALSE))*$G20
-$J$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,J$1,FALSE))*$G20
-$K$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,K$1,FALSE))*$G20
-$L$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,L$1,FALSE))*$G20
-$M$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,M$1,FALSE))*$G20
-$N$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,N$1,FALSE))*$G20
-$O$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,O$1,FALSE))*$G20
-$P$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,P$1,FALSE))*$G20
-$Q$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,Q$1,FALSE))*$G20
-$R$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,R$1,FALSE))*$G20
-$S$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,S$1,FALSE))*$G20
-$T$20: 	=IF($H20="""",0,VLOOKUP($H20,Tbl_Glob_ParEnt,T$1,FALSE))*$G20
-$V$20: 	=IF(F20>0,IF(F20>10,ROUNDUP(F20,0),ROUNDUP(F20,1))&"" ml/uur"","""")
-$W$20: 	=IF(G20=0,"""",G20&"" ml"")
-$Y$20: 	=IF(G20=0,"""",""verw"")
-$AB$20: 	=IF(X20="""","""",X20&"" ""&AA20)
 $F$21: 	=IF(C21<50,C21/10,IF(C21<146,C21-45,(C21-125)*5))
 $G$21: 	=ROUND(F21*24+G23*E23+G24*E24,1)
 $H$21: 	=IF(F21=0,"""",A21)

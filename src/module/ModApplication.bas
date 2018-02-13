@@ -428,7 +428,7 @@ Private Function LoadConfigTables() As Boolean
     blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
 
     strTable = "Tbl_Admin_ParEnt"
-    strSrc = "A5:N45"
+    strSrc = "A6:N47"
     strFile = WbkAfspraken.Path & "\db\GlobParEnt.xlsx"
     
     blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
@@ -479,7 +479,7 @@ Public Sub Application_SaveParEntConfig()
     ModProgress.StartProgress "Parenteralia Configuratie Opslaan"
     
     strTable = "Tbl_Admin_ParEnt"
-    strDst = "A5:N45"
+    strDst = "A5:N47"
     strFile = WbkAfspraken.Path & "\db\GlobParEnt.xlsx"
     
     SaveConfigTable strFile, strTable, strDst
@@ -494,7 +494,7 @@ Private Function LoadConfigTable(ByVal strFile As String, ByVal strTable As Stri
     Dim objConfigWbk As Workbook
     Dim objSrc As Range
     Dim objDst As Range
-    Dim intErr As Integer
+    Dim lngErr As Long
     
     Dim strMsg As String
     
@@ -519,7 +519,7 @@ Private Function LoadConfigTable(ByVal strFile As String, ByVal strTable As Stri
     
 LoadConfigTableError:
 
-    intErr = Err.Number
+    lngErr = Err.Number
     ModLog.LogError "Kan config table " & strTable & " niet laden"
     
     On Error Resume Next

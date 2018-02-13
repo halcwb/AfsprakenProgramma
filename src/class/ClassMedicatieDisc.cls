@@ -33,6 +33,7 @@ Private m_MaxDose As Double
 Private m_AbsDose As Double
 Private m_MaxConc As Double
 Private m_OplVlst As String
+Private m_OplVol As Double
 Private m_MinTijd As Integer
 
 Private m_IndicatieList As Collection
@@ -161,6 +162,18 @@ End Property
 Public Property Let OplVlst(ByVal strVlst As String)
 
     m_OplVlst = strVlst
+
+End Property
+
+Public Property Get OplVol() As Double
+
+    OplVol = m_OplVol
+
+End Property
+
+Public Property Let OplVol(ByVal dblVol As Double)
+
+    m_OplVol = dblVol
 
 End Property
 

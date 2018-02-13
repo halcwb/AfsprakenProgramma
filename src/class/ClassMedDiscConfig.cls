@@ -32,9 +32,15 @@ Private m_PedMaxDose As Double
 
 Private m_AbsDose As Double
 
-Private m_MaxConc As Double
-Private m_OplVlst As String
-Private m_MinTijd As Integer
+Private m_PedMaxConc As Double
+Private m_PedOplVlst As String
+Private m_PedOplVol As Double
+Private m_PedMinTijd As Integer
+
+Private m_NeoMaxConc As Double
+Private m_NeoOplVlst As String
+Private m_NeoOplVol As Double
+Private m_NeoMinTijd As Integer
 
 Private m_IndicatieList As Collection
 Private m_RouteList As Collection
@@ -137,39 +143,99 @@ Public Function GetFreqListString() As String
     
 End Function
 
-Public Property Get MaxConc() As Double
+Public Property Get PedMaxConc() As Double
 
-    MaxConc = m_MaxConc
-
-End Property
-
-Public Property Let MaxConc(ByVal dblConc As Double)
-
-    m_MaxConc = dblConc
+    PedMaxConc = m_PedMaxConc
 
 End Property
 
-Public Property Get OplVlst() As String
+Public Property Let PedMaxConc(ByVal dblConc As Double)
 
-    OplVlst = m_OplVlst
-
-End Property
-
-Public Property Let OplVlst(ByVal strVlst As String)
-
-    m_OplVlst = strVlst
+    m_PedMaxConc = dblConc
 
 End Property
 
-Public Property Get MinTijd() As Integer
+Public Property Get PedOplVlst() As String
 
-    MinTijd = m_MinTijd
+    PedOplVlst = m_PedOplVlst
 
 End Property
 
-Public Property Let MinTijd(ByVal intTime As Integer)
+Public Property Let PedOplVlst(ByVal strVlst As String)
 
-    m_MinTijd = intTime
+    m_PedOplVlst = strVlst
+
+End Property
+
+Public Property Get PedOplVol() As Double
+
+    PedOplVol = m_PedOplVol
+
+End Property
+
+Public Property Let PedOplVol(ByVal dblConc As Double)
+
+    m_PedOplVol = dblConc
+
+End Property
+
+Public Property Get PedMinTijd() As Integer
+
+    PedMinTijd = m_PedMinTijd
+
+End Property
+
+Public Property Let PedMinTijd(ByVal intTime As Integer)
+
+    m_PedMinTijd = intTime
+
+End Property
+
+Public Property Get NeoMaxConc() As Double
+
+    NeoMaxConc = m_NeoMaxConc
+
+End Property
+
+Public Property Let NeoMaxConc(ByVal dblConc As Double)
+
+    m_NeoMaxConc = dblConc
+
+End Property
+
+Public Property Get NeoOplVlst() As String
+
+    NeoOplVlst = m_NeoOplVlst
+
+End Property
+
+Public Property Let NeoOplVlst(ByVal strVlst As String)
+
+    m_NeoOplVlst = strVlst
+
+End Property
+
+Public Property Get NeoOplVol() As Double
+
+    NeoOplVol = m_NeoOplVol
+
+End Property
+
+Public Property Let NeoOplVol(ByVal dblConc As Double)
+
+    m_NeoOplVol = dblConc
+
+End Property
+
+Public Property Get NeoMinTijd() As Integer
+
+    NeoMinTijd = m_NeoMinTijd
+
+End Property
+
+Public Property Let NeoMinTijd(ByVal intTime As Integer)
+
+    m_NeoMinTijd = intTime
 
 End Property
 

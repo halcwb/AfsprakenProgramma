@@ -30,9 +30,14 @@ Private Const constNICU_DoseIndx As Integer = 19
 Private Const constNICU_OnderIndx As Integer = 20
 Private Const constNICU_BovenIndx As Integer = 21
 Private Const constMaxDoseIndx As Integer = 22
-Private Const constMaxConcIndx As Integer = 23
-Private Const constOplVlstIndx As Integer = 24
-Private Const constMinTijdIndx As Integer = 25
+Private Const constPICU_MaxConcIndx As Integer = 23
+Private Const constPICU_OplVlstIndx As Integer = 24
+Private Const constPICU_OplVolIndx As Integer = 25
+Private Const constPICU_MinTijdIndx As Integer = 26
+Private Const constNICU_MaxConcIndx As Integer = 27
+Private Const constNICU_OplVlstIndx As Integer = 28
+Private Const constNICU_OplVolIndx As Integer = 29
+Private Const constNICU_MinTijdIndx As Integer = 30
 
 Public Sub Formularium_Initialize()
 
@@ -157,9 +162,11 @@ Public Sub Formularium_GetMedicamenten(objFormularium As ClassFormularium, ByVal
             .MinDose = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OnderIndx, constNICU_OnderIndx)).Value2
             .MaxDose = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_BovenIndx, constNICU_BovenIndx)).Value2
             .AbsDose = objFormRange.Cells(intN, constMaxDoseIndx).Value2
-            .MaxConc = objFormRange.Cells(intN, constMaxConcIndx).Value2
-            .OplVlst = objFormRange.Cells(intN, constOplVlstIndx).Value2
-            .MinTijd = objFormRange.Cells(intN, constMinTijdIndx).Value2
+            
+            .MaxConc = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_MaxConcIndx, constNICU_MaxConcIndx)).Value2
+            .OplVlst = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OplVlstIndx, constNICU_OplVlstIndx)).Value2
+            .OplVol = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OplVolIndx, constNICU_OplVolIndx)).Value2
+            .MinTijd = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_MinTijdIndx, constNICU_MinTijdIndx)).Value2
         
         End With
                 
@@ -254,9 +261,16 @@ Public Sub Formularium_GetMedDiscConfig(objFormularium As ClassFormConfig, ByVal
             .PedMaxDose = objFormRange.Cells(intN, constPICU_BovenIndx).Value2
             
             .AbsDose = objFormRange.Cells(intN, constMaxDoseIndx).Value2
-            .MaxConc = objFormRange.Cells(intN, constMaxConcIndx).Value2
-            .OplVlst = objFormRange.Cells(intN, constOplVlstIndx).Value2
-            .MinTijd = objFormRange.Cells(intN, constMinTijdIndx).Value2
+            
+            .PedMaxConc = objFormRange.Cells(intN, constPICU_MaxConcIndx).Value2
+            .PedOplVol = objFormRange.Cells(intN, constPICU_OplVolIndx).Value2
+            .PedOplVlst = objFormRange.Cells(intN, constPICU_OplVlstIndx).Value2
+            .PedMinTijd = objFormRange.Cells(intN, constPICU_MinTijdIndx).Value2
+            
+            .NeoMaxConc = objFormRange.Cells(intN, constNICU_MaxConcIndx).Value2
+            .NeoOplVol = objFormRange.Cells(intN, constNICU_OplVolIndx).Value2
+            .NeoOplVlst = objFormRange.Cells(intN, constNICU_OplVlstIndx).Value2
+            .NeoMinTijd = objFormRange.Cells(intN, constNICU_MinTijdIndx).Value2
             
         End With
         
@@ -343,9 +357,16 @@ Public Sub Formularium_SaveMedDiscConfig(ByVal blnShowProgress As Boolean)
             If .PedMaxDose > 0 Then objFormRange.Cells(intN, constPICU_BovenIndx).Value2 = .PedMaxDose
             
             If .AbsDose > 0 Then objFormRange.Cells(intN, constMaxDoseIndx).Value2 = .AbsDose
-            If .MaxConc > 0 Then objFormRange.Cells(intN, constMaxConcIndx).Value2 = .MaxConc
-            If Not .OplVlst = vbNullString Then objFormRange.Cells(intN, constOplVlstIndx).Value2 = .OplVlst
-            If .MinTijd > 0 Then objFormRange.Cells(intN, constMinTijdIndx).Value2 = .MinTijd
+            
+            If .PedMaxConc > 0 Then objFormRange.Cells(intN, constPICU_MaxConcIndx).Value2 = .PedMaxConc
+            If .PedOplVol > 0 Then objFormRange.Cells(intN, constPICU_OplVolIndx).Value2 = .PedOplVol
+            If Not .PedOplVlst = vbNullString Then objFormRange.Cells(intN, constPICU_OplVlstIndx).Value2 = .PedOplVlst
+            If .PedMinTijd > 0 Then objFormRange.Cells(intN, constPICU_MinTijdIndx).Value2 = .PedMinTijd
+        
+            If .NeoMaxConc > 0 Then objFormRange.Cells(intN, constNICU_MaxConcIndx).Value2 = .NeoMaxConc
+            If .NeoOplVol > 0 Then objFormRange.Cells(intN, constNICU_OplVolIndx).Value2 = .NeoOplVol
+            If Not .NeoOplVlst = vbNullString Then objFormRange.Cells(intN, constNICU_OplVlstIndx).Value2 = .NeoOplVlst
+            If .NeoMinTijd > 0 Then objFormRange.Cells(intN, constNICU_MinTijdIndx).Value2 = .NeoMinTijd
         
         End With
         

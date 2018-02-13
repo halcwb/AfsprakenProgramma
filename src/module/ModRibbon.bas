@@ -229,7 +229,7 @@ Public Sub GetVisiblePed(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     If blnIsPed Or blnIsDevelop Then
         blnVisible = True
     Else
-        blnVisible = True ' False
+        blnVisible = False
     End If
     
 End Sub
@@ -245,7 +245,7 @@ Public Sub GetVisibleNeo(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     If blnIsNeo Or blnIsDevelop Then
         blnVisible = True
     Else
-        blnVisible = True ' False
+        blnVisible = False
     End If
     
 End Sub

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   13860
+   ClientHeight    =   14265
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10050
@@ -26,6 +26,13 @@ Private m_LoadGPK As Boolean
 
 Private m_Freq As Dictionary
 Private m_Keer As Boolean
+Private m_Conc As Boolean
+
+Public Sub SetToVolume()
+
+    cmdVol_Click
+
+End Sub
 
 Public Sub SetNoFormMed()
 
@@ -271,9 +278,13 @@ Private Sub LoadMedicament()
         SetTextBoxNumericValue txtAbsMax, .AbsDose
         
         SetTextBoxNumericValue txtMaxConc, .MaxConc
+        If .MaxConc > 0 And Not m_Conc Then cmdConc_Click
+        
+        SetTextBoxNumericValue txtOplVol, .OplVol
         SetTextBoxNumericValue txtTijd, .MinTijd
         
         cboOplVlst.Value = .OplVlst
+        
     End With
 
 End Sub
@@ -470,9 +481,14 @@ Private Sub CalculateVolume()
     
     dblKeer = StringToDouble(txtKeerDose.Value)
     dblConc = StringToDouble(txtMaxConc.Value)
-    If dblConc > 0 Then
+    dblVol = StringToDouble(txtOplVol.Value)
+    If m_Conc And dblConc > 0 Then
         dblVol = dblKeer / dblConc
         txtOplVol.Value = ModExcel.Excel_RoundBy(dblVol, 1)
+    ElseIf Not m_Conc And dblVol > 0 Then
+        dblConc = dblKeer / dblVol
+        dblConc = ModString.FixPrecision(dblConc, 1)
+        txtMaxConc.Value = dblConc
     End If
 
 End Sub
@@ -546,6 +562,7 @@ Private Sub cmdKeerDose_Click()
 End Sub
 
 Private Sub cmdNormDose_Click()
+
     Dim objPic As StdPicture
 
     m_Keer = Not m_Keer
@@ -554,6 +571,36 @@ Private Sub cmdNormDose_Click()
     cmdKeerDose.Picture = objPic
     
     ToggleDoseText
+    
+    CalculateDose
+
+End Sub
+
+Private Sub cmdConc_Click()
+
+    Dim objPic As StdPicture
+
+    m_Conc = Not m_Conc
+    Set objPic = cmdConc.Picture
+    cmdConc.Picture = cmdVol.Picture
+    cmdVol.Picture = objPic
+    
+    ToggleConcText
+
+    CalculateDose
+    
+End Sub
+
+Private Sub cmdVol_Click()
+
+    Dim objPic As StdPicture
+
+    m_Conc = Not m_Conc
+    Set objPic = cmdVol.Picture
+    cmdVol.Picture = cmdConc.Picture
+    cmdConc.Picture = objPic
+    
+    ToggleConcText
     
     CalculateDose
 
@@ -602,6 +649,7 @@ Private Sub cmdOK_Click()
         
         m_Med.OplVlst = cboOplVlst.Value
         m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
+        m_Med.OplVol = StringToDouble(txtOplVol.Value)
         m_Med.MinTijd = StringToDouble(txtTijd.Value)
     
     End If
@@ -614,7 +662,11 @@ Private Sub cmdParEnt_Click()
 
     Dim strUrl As String
     
-    strUrl = "https://kinderen-ic-umcutrecht.parenteralia.nl/"
+    If MetaVision_IsNeonatologie() Then
+        strUrl = "https://neonaten-umcutrecht.parenteralia.nl/"
+    Else
+        strUrl = "https://kinderen-ic-umcutrecht.parenteralia.nl/"
+    End If
     
     ActiveWorkbook.FollowHyperlink strUrl
 
@@ -710,6 +762,12 @@ End Sub
 
 Private Sub txtMaxConc_Change()
 
+    CalculateVolume
+
+End Sub
+
+Private Sub txtOplVol_Change()
+    
     CalculateVolume
 
 End Sub
@@ -868,13 +926,13 @@ Private Sub UserForm_Initialize()
     cmdCancel.TabIndex = 17
     
     cboDoseUnit.TabStop = False
-    txtKeerDose.TabStop = False
     cboKeerUnit.TabStop = False
     txtCalcDose.TabStop = False
        
     cboDoseUnit.Enabled = False
     txtKeerDose.Enabled = False
     cboKeerUnit.Enabled = False
+    txtMaxConc.Enabled = False
     
     chkDose.Value = True
        
@@ -884,6 +942,13 @@ Private Sub ToggleDoseText()
 
     txtKeerDose.Enabled = m_Keer
     txtNormDose.Enabled = Not m_Keer
+
+End Sub
+
+Private Sub ToggleConcText()
+
+    txtMaxConc.Enabled = m_Conc
+    txtOplVol.Enabled = Not m_Conc
 
 End Sub
 

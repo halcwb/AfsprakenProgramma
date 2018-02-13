@@ -6,10 +6,21 @@ Private Const constTblNeoMedCont As String = "Tbl_Neo_MedIV"
 Public Function Medicatie_CalcEpiQty(ByVal dblWght As Double) As Double
 
     Dim dblQty As Double
+    Dim dblMultiple As Double
+    Dim intFactor As Integer
     
     dblQty = IIf(dblWght >= 25, dblWght, 2 * dblWght)
     dblQty = IIf(dblWght >= 48, 48, dblQty)
-    dblQty = ModString.FixPrecision(dblQty, 1)
+    
+    dblMultiple = 0.1 'ModExcel.Excel_Index(constTblMedIV, intMed, 4)
+    intFactor = 1                                                   ' >=10ml  hele getallen geen decimalen
+    intFactor = IIf(dblQty / dblMultiple < 10, 10, intFactor)       ' >=1,0  <10 ml   1 decimaal nauwkeurig 0,1
+    intFactor = IIf(dblQty / dblMultiple < 1, 100, intFactor)       ' >=0,1 < 1,0 ml:     2 decimalen nauwkeurig 0,01
+    intFactor = IIf(dblQty / dblMultiple <= 0.1, 100, intFactor)    ' <0,1ml  2 decimalen nauwkeurig 0,01 + verdunningstekst
+    dblMultiple = dblMultiple / intFactor
+    
+    dblQty = ModExcel.Excel_RoundBy(dblQty, dblMultiple)
+    If dblQty = 0 Then dblQty = dblMultiple
     
     Medicatie_CalcEpiQty = dblQty
 

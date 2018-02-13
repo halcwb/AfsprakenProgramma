@@ -38,6 +38,7 @@ Private Const constPerDose As String = "_Glob_MedDisc_PerDose_"         ' Bereke
 
 Private Const constMaxConc As String = "_Glob_MedDisc_MaxConc_"         ' Maximale concentratie
 Private Const constOplVlst As String = "_Glob_MedDisc_OplVlst_"         ' Verplichte oplos vloeistof
+Private Const constOplVol As String = "_Glob_MedDisc_OplVol_"           ' Minimaal oplos volume
 Private Const constMinTijd As String = "_Glob_MedDisc_MinTijd_"         ' Minimale inloop tijd
 
 Private Const constFreqText As String = "Var_MedDisc_FreqText_"
@@ -181,6 +182,7 @@ Private Sub Clear(ByVal intN As Integer)
     
     ModRange.SetRangeValue constMaxConc & strN, 0
     ModRange.SetRangeValue constOplVlst & strN, vbNullString
+    ModRange.SetRangeValue constOplVol & strN, 0
     ModRange.SetRangeValue constMinTijd & strN, 0
 
 End Sub
@@ -401,6 +403,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
     Dim strN As String
     Dim intOplVlst As Integer
     Dim strOplVlst As String
+    Dim dblOplVol As Double
     Dim blnLoad As Boolean
     Dim dblKeer As Double
     Dim dblWght As Double
@@ -457,6 +460,13 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         
         .SetTextBoxIfNotEmpty .txtTijd, ModRange.GetRangeValue(constTime & strN, vbNullString)
         
+        dblOplVol = ModRange.GetRangeValue(constOplVol & strN, 0)
+        dblOplVol = ModString.FixPrecision(dblOplVol, 1)
+        If dblOplVol > 0 Then
+            .SetToVolume
+            .SetTextBoxIfNotEmpty .txtOplVol, dblOplVol
+        End If
+        
         dblFact = .GetFactorByFreq(.cboFreq)
         If Not dblFact = 0 And Not .txtCalcDose.Value = dblKeer * dblFact / dblWght Then .CaclculateWithKeerDose dblKeer
         .Show
@@ -478,19 +488,6 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
     End With
     
 End Sub
-
-Private Function CalculateOplossingVolume(ByVal dblSterkte As Double, ByVal dblMaxConc As Double) As Double
-    
-    Dim dblVolume As Double
-    
-    If dblMaxConc > 0 Then
-        ' maxoonc = sterkte / volume -> volume = sterkte / maxconc
-        dblVolume = dblSterkte / dblMaxConc
-    End If
-
-    CalculateOplossingVolume = dblVolume
-
-End Function
 
 Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     
@@ -524,6 +521,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
           
         ModRange.SetRangeValue constMaxConc & strN, objMed.MaxConc
         ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst
+        ModRange.SetRangeValue constOplVol & strN, objMed.OplVol
         ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
         
         If objMed.OplVlst = "NaCl 0,9%" Then
@@ -555,12 +553,6 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
             ModRange.SetRangeValue constPerDose & strN, objMed.PerDose
             ModRange.SetRangeValue constDoseQty & strN, intDoseQty
             
-            dblOplVol = CalculateOplossingVolume(intDoseQty * objMed.DeelDose, objMed.MaxConc)
-        
-            If Not dblOplVol = 0 Then
-                ModRange.SetRangeValue constSolVol & strN, dblOplVol
-            End If
-        
         End If
     End If
     

@@ -200,3 +200,12 @@ Public Sub SetInfB1700Formatting()
 
 End Sub
 
+Public Sub SetPedTPNFormatting()
+    
+    Dim strTPNError As String
+    
+    strTPNError = "=PedBerTPN!D"
+    ' 17 - 35
+    SetConditionalFormattingErr shtPedGuiEntTPN, "G", strTPNError, 35, 35, 18
+
+End Sub

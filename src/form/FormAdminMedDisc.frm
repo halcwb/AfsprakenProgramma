@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormAdminMedDisc 
    Caption         =   "Medicament Configuratie"
-   ClientHeight    =   10185
+   ClientHeight    =   12330
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   20115
@@ -215,7 +215,8 @@ Private Sub SetDoseUnit()
         
         cboAbsMaxUnit.Value = strUnit & "/dag"
         
-        lblConcUnit.Caption = strUnit & "/ml"
+        lblNeoConcUnit.Caption = strUnit & "/ml"
+        lblPedConcUnit.Caption = strUnit & "/ml"
     End If
 
 End Sub
@@ -271,9 +272,10 @@ Private Sub LoadMedicament()
         
         SetTextBoxNumericValue txtAbsMax, .AbsDose
         
-        cboOplVlst.Value = .OplVlst
-        SetTextBoxNumericValue txtMaxConc, .MaxConc
-        SetTextBoxNumericValue txtTijd, .MinTijd
+        cboPedOplVlst.Value = .PedOplVlst
+        SetTextBoxNumericValue txtPedConc, .PedMaxConc
+        SetTextBoxNumericValue txtPedVol, .PedOplVol
+        SetTextBoxNumericValue txtPedTijd, .PedMinTijd
         
     End With
 
@@ -518,9 +520,10 @@ Private Sub SetConfig(objConfig As ClassMedDiscConfig)
     
     objConfig.AbsDose = StringToDouble(txtAbsMax.Value)
     
-    objConfig.OplVlst = cboOplVlst.Value
-    objConfig.MaxConc = StringToDouble(txtMaxConc.Value)
-    objConfig.MinTijd = StringToDouble(txtTijd.Value)
+    objConfig.PedOplVlst = cboPedOplVlst.Value
+    objConfig.PedMaxConc = StringToDouble(txtPedConc.Value)
+    objConfig.PedOplVol = StringToDouble(txtPedVol.Value)
+    objConfig.PedMinTijd = StringToDouble(txtPedTijd.Value)
     
     Set objMed = Formularium_GetFormularium.GPK(objConfig.GPK)
     
@@ -535,9 +538,9 @@ Private Sub SetConfig(objConfig As ClassMedDiscConfig)
             
     objMed.AbsDose = objConfig.AbsDose
     
-    objMed.OplVlst = objConfig.OplVlst
-    objMed.MaxConc = objConfig.MaxConc
-    objMed.MinTijd = objConfig.MinTijd
+    objMed.OplVlst = objConfig.PedOplVlst
+    objMed.MaxConc = objConfig.PedMaxConc
+    objMed.MinTijd = objConfig.PedMinTijd
 
 End Sub
 
@@ -765,37 +768,37 @@ Private Sub txtAbsMax_Change()
     
 End Sub
 
-Private Sub txtMaxConc_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+Private Sub txtPedConc_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.CorrectNumberAscii KeyAscii
 
 End Sub
 
-Private Sub txtMaxConc_AfterUpdate()
+Private Sub txtPedConc_AfterUpdate()
 
-    TextBoxStringNumericValue txtMaxConc
+    TextBoxStringNumericValue txtPedConc
     
 End Sub
 
-Private Sub txtMaxConc_Change()
+Private Sub txtPedConc_Change()
 
     Validate vbNullString
     
 End Sub
 
-Private Sub txtTijd_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+Private Sub txtPedTijd_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.CorrectNumberAscii KeyAscii
 
 End Sub
 
-Private Sub txtTijd_AfterUpdate()
+Private Sub txtPedTijd_AfterUpdate()
 
-    TextBoxStringNumericValue txtTijd
+    TextBoxStringNumericValue txtPedTijd
     
 End Sub
 
-Private Sub txtTijd_Change()
+Private Sub txtPedTijd_Change()
 
     Validate vbNullString
     
@@ -856,7 +859,7 @@ Private Sub UserForm_Initialize()
        
     SetTabOrder2 ' GetTabControls()
     
-    FillCombo cboOplVlst, ModMedDisc.MedDisc_GetOplVlstCol
+    FillCombo cboPedOplVlst, ModMedDisc.MedDisc_GetOplVlstCol
        
 End Sub
 
@@ -891,10 +894,10 @@ Private Sub SetTabOrder2()
     frmAbsMax.TabIndex = 4
     txtAbsMax.TabIndex = 0
     
-    frmOpls.TabIndex = 5
-    cboOplVlst.TabIndex = 0
-    txtMaxConc.TabIndex = 1
-    txtTijd.TabIndex = 2
+    frmPedOplossing.TabIndex = 5
+    cboPedOplVlst.TabIndex = 0
+    txtPedConc.TabIndex = 1
+    txtPedTijd.TabIndex = 2
     
     cmdFormularium.TabIndex = 6
     cmdOK.TabIndex = 7

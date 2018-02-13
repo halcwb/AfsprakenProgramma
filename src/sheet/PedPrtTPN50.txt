@@ -17,6 +17,7 @@ $G$18: 	=PedBerTPN!W7
 $G$19: 	=IF(G17="""","""",SUM(PedBerTPN!G6:G7)&"" ml"")
 $I$19: 	=StringToDouble(G19)
 $A$24: 	=PedBerTPN!$V$16
+$B$24: 	=PedBerTPN!H17
 $G$24: 	=PedBerTPN!$W$17
 $G$25: 	=PedBerTPN!$W$18
 $G$26: 	=PedBerTPN!$W$19

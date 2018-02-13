@@ -4,7 +4,7 @@ Option Explicit
 Private Const CONST_TPN_1 As Integer = 2
 Private Const CONST_TPN_2 As Integer = 7
 Private Const CONST_TPN_3 As Integer = 16
-Private Const CONST_TPN_4 As Integer = 30
+Private Const CONST_TPN_4 As Integer = 31
 Private Const CONST_TPN_5 As Integer = 50
 
 Private Const constTblVoeding As String = "Tbl_Ped_Voeding"
@@ -331,33 +331,33 @@ Public Sub PedEntTPN_ClearOpm()
 
 End Sub
 
-Public Sub PedEntTPN_SelectTPNPrint()
-
-    Dim dblGew As Double
-    
-    dblGew = ModPatient.GetGewichtFromRange
-
-    If dblGew >= CONST_TPN_1 And dblGew <= CONST_TPN_2 Then
-        shtPedPrtTPN2tot6.Select
-    Else
-        If dblGew <= CONST_TPN_3 Then
-            shtPedPrtTPN7tot15.Select
-        Else
-            If dblGew <= CONST_TPN_4 Then
-                shtPedPrtTPN16tot30.Select
-            Else
-                If dblGew <= CONST_TPN_5 Then
-                    shtPedPrtTPN31tot50.Select
-                Else
-                    shtPedPrtTPN50.Select
-                End If
-            End If
-        End If
-    End If
-        
-    ActiveSheet.Range("A1").Select
-
-End Sub
+'Public Sub PedEntTPN_SelectTPNPrint()
+'
+'    Dim dblGew As Double
+'
+'    dblGew = ModPatient.GetGewichtFromRange
+'
+'    If dblGew >= CONST_TPN_1 And dblGew <= CONST_TPN_2 Then
+'        shtPedPrtTPN2tot6.Select
+'    Else
+'        If dblGew <= CONST_TPN_3 Then
+'            shtPedPrtTPN7tot15.Select
+'        Else
+'            If dblGew <= CONST_TPN_4 Then
+'                shtPedPrtTPN16tot30.Select
+'            Else
+'                If dblGew <= CONST_TPN_5 Then
+'                    shtPedPrtTPN31tot50.Select
+'                Else
+'                    shtPedPrtTPN50.Select
+'                End If
+'            End If
+'        End If
+'    End If
+'
+'    ActiveSheet.Range("A1").Select
+'
+'End Sub
 
 Public Function GetPedTPNIndexForWeight() As Integer
 
@@ -368,9 +368,9 @@ Public Function GetPedTPNIndexForWeight() As Integer
     
     intTPN = 1
     intTPN = IIf(dblWeight >= CONST_TPN_1, 2, intTPN)
-    intTPN = IIf(dblWeight > CONST_TPN_2, 3, intTPN)
-    intTPN = IIf(dblWeight > CONST_TPN_3, 4, intTPN)
-    intTPN = IIf(dblWeight > CONST_TPN_4, 5, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_2, 3, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_3, 4, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_4, 5, intTPN)
     intTPN = IIf(dblWeight > CONST_TPN_5, 6, intTPN)
     
     GetPedTPNIndexForWeight = intTPN
@@ -793,6 +793,14 @@ Public Sub PedEntTPN_TPN()
 
 End Sub
 
+Public Sub PedEntTPN_ChangeTPNVol()
+
+    If ModRange.GetRangeValue(constTPNVol, 0) = 0 Then
+        ModRange.SetRangeValue constTPN, 1
+    End If
+
+End Sub
+
 Public Sub PedEntTPN_NaCL1()
 
     EnterHoeveelheid constNaCl1Vol, "NaCl"
@@ -842,7 +850,7 @@ Public Sub PedEntTPN_ChangeTPN()
     
     intDag = ModRange.GetRangeValue(constTPNDag, 0)
     intTPN = ModRange.GetRangeValue(constTPN, 1)
-    If intTPN > 1 And intDag = 4 Then
+    If intTPN > 1 And (intDag = 4 Or intDag = 0) Then
         ModMessage.ShowMsgBoxInfo "Kies een TPN dag"
     End If
     
