@@ -86,6 +86,30 @@ Public Function GetGewichtFromRange() As Double
 
 End Function
 
+Public Function GetLengteFromRange() As Double
+
+    GetLengteFromRange = StringToDouble(ModRange.GetRangeValue(constLengte, 0)) ' / 10
+
+End Function
+
+Public Function CalculateBSA() As Double
+    
+    Dim dblW As Double
+    Dim dblH As Double
+    
+    dblW = GetGewichtFromRange()
+    dblH = GetLengteFromRange()
+
+    CalculateBSA = Application.WorksheetFunction.Power(dblW, 0.5378) * Application.WorksheetFunction.Power(dblH, 0.3964) * 0.024265
+
+End Function
+
+Private Sub Test_CalculateBSA()
+
+    MsgBox CalculateBSA()
+
+End Sub
+
 Public Function GetPatientString() As String
 
     Dim strPat As String

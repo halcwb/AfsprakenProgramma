@@ -7,7 +7,7 @@ $C$5: 	=TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0)
 $D$5: 	=TRUNC(((Var_AfspraakDatum-__4_GebDatum)-365*TRUNC((Var_AfspraakDatum-__4_GebDatum)/365,0))/30,0)
 $E$5: 	=_Pat_Gewicht
 $F$5: 	=_Pat_Lengte
-$G$5: 	=ROUND(POWER(E5,0.425)*POWER(((F5/100)*100),0.725)*0.007184,2)
+$G$5: 	=ROUND(POWER(E5,0.5378)*POWER(F5,0.3964)*0.024265,2)
 $D$7: 	=""Maat: ""&VLOOKUP(C5,L2:N20,3)&"", Lengte: ""&IF(C5>1,ROUND((C5/2+15)/2,0)*2,IF(C5=0,12,15))&"" cm""&"" nasaal, ""&ROUND((C5/2+12)/2,0)*2&"" cm oraal""
 $D$8: 	=IF(_Pat_Gewicht>0,IF(ROUND((E5)*4,0)>150,150,VLOOKUP(ROUND(E5*4,0),S2:T362,2))&"" Joules Asynchroon"","""")
 $D$9: 	=IF(OR(ROUND(0.01*(E5),2)>1,C5>=18),""1 mg iv"",ROUND(0.01*(E5),2)&"" mg iv"")

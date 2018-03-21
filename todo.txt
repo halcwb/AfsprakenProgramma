@@ -72,10 +72,21 @@ Na 28 november
 - Epiduraal wijzigingen doorvoeren
 
 - Medicatie bestelbonnen doormailen
+- Discontinue medicatie sorteren op indicatie
+
+- TPN waarschuwing bij keuze zonder TPN dagkeuze
+- TPN formulier markeren dagkeuze
+
+- Neo octreotide toevoegen aan continue medicatie
+- Morfine doserng naar microg/kg/min
+
+- Patient openen in pre-opname resulteerd in een fout
+
 
 Known issues
 - Medisch Voorschrijf formulier crashed indien afsluiten terwijl bezig met openen AfsprakenProgramma
 - Voeding bij GI script status voering
+- TPN formulier waarschuwing bij overschrijding volume grenzen per component
 
 Form diff script aanpassen check op parameter instellingen (laatste waarde)
 Medische status import scripts aanpassen

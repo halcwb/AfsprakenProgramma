@@ -26,6 +26,8 @@ Private m_Indicatie As String
 Private m_Freq As String
 Private m_HasDose As Boolean
 Private m_PerDose As Boolean
+Private m_PerKg As Boolean
+Private m_PerM2 As Boolean
 Private m_CalcDose As Double
 Private m_NormDose As Double
 Private m_MinDose As Double
@@ -39,6 +41,30 @@ Private m_MinTijd As Integer
 Private m_IndicatieList As Collection
 Private m_RouteList As Collection
 Private m_FreqList As Collection
+
+Public Property Get PerKg() As Boolean
+
+    PerKg = m_PerKg
+
+End Property
+
+Public Property Let PerKg(ByVal blnPerKg As Boolean)
+
+    m_PerKg = blnPerKg
+
+End Property
+
+Public Property Get PerM2() As Boolean
+
+    PerM2 = m_PerM2
+
+End Property
+
+Public Property Let PerM2(ByVal blnPerM2 As Boolean)
+
+    m_PerM2 = blnPerM2
+
+End Property
 
 Public Property Get PerDose() As Boolean
 
@@ -430,13 +456,14 @@ Public Function GetRouteList() As Collection
 End Function
 
 Public Sub SetIndicatieList(ByVal strIndicaties As String)
-
+    
+    m_Indicatie = strIndicaties
     FillCollection m_IndicatieList, strIndicaties
-
+    
 End Sub
 
 Public Function GetIndicatieList() As Collection
-
+    
     Set GetIndicatieList = m_IndicatieList
     
 End Function

@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc 
    Caption         =   "Kies een medicament ..."
-   ClientHeight    =   14265
+   ClientHeight    =   14940
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   10050
@@ -27,6 +27,7 @@ Private m_LoadGPK As Boolean
 Private m_Freq As Dictionary
 Private m_Keer As Boolean
 Private m_Conc As Boolean
+Private m_Adjust As String
 
 Public Sub SetToVolume()
 
@@ -219,11 +220,11 @@ Private Sub SetDoseUnit()
     strTime = IIf(chkPerDosis.Value, "dosis", GetTimeByFreq(cboFreq.Text))
     
     If Not strUnit = vbNullString Then
-        If Not strTime = vbNullString Then cboDoseUnit.Text = strUnit & "/kg/" & strTime
+        If Not strTime = vbNullString Then cboDoseUnit.Text = strUnit & (IIf(m_Adjust = "", "/", "/" & m_Adjust & "/")) & strTime
         cboKeerUnit.Text = strUnit
         lblDoseUnit.Caption = cboDoseUnit.Value
         lblMinMaxEenheid.Caption = cboDoseUnit.Value
-        lblAbsMaxEenheid.Caption = strUnit & "/dag"
+        lblAbsMaxEenheid.Caption = strUnit & "/" & strTime
         lblConcUnit.Caption = strUnit & "/ml"
     End If
 
@@ -249,6 +250,9 @@ Private Sub LoadMedicament()
         txtSterkte.Text = .Sterkte
         cboSterkteEenheid.Text = .SterkteEenheid
         
+        FillCombo cboRoute, .GetRouteList()
+        FillCombo cboIndicatie, .GetIndicatieList()
+        
         If .DeelDose = 0 Then
             chkDose.Value = False
             chkDose_Click
@@ -260,9 +264,6 @@ Private Sub LoadMedicament()
         
         FillCombo cboDosisEenheid, GetDosisEenheden()
         cboDosisEenheid.Text = .DoseEenheid
-        
-        FillCombo cboRoute, .GetRouteList()
-        FillCombo cboIndicatie, .GetIndicatieList()
         
         If Not .GetFreqListString = vbNullString Then
             FillCombo cboFreq, .GetFreqList()
@@ -428,6 +429,8 @@ Private Sub CalculateDose()
 
     Dim dblDose As Double
     Dim dblWght As Double
+    Dim dblM2 As Double
+    Dim dblAdjust As Double
     Dim dblVal As Double
     Dim dblCalc As Double
     Dim dblFact As Double
@@ -437,26 +440,30 @@ Private Sub CalculateDose()
     dblFact = IIf(chkPerDosis.Value, 1, GetFactorByFreq(cboFreq.Text))
     dblDose = StringToDouble(txtNormDose.Value)
     dblWght = ModPatient.GetGewichtFromRange()
+    dblM2 = ModPatient.CalculateBSA()
     dblDeel = StringToDouble(txtDeelDose.Value)
     dblKeer = StringToDouble(txtKeerDose.Value)
     dblKeer = IIf(dblDeel > 0, ModExcel.Excel_RoundBy(dblKeer, dblDeel), dblKeer)
     
-    If dblFact = 0 Or (Not m_Keer And dblDose = 0) Or (m_Keer And dblKeer = 0) Or dblWght = 0 Or dblDeel = 0 Then
+    dblAdjust = IIf(optNone.Value, 1, dblWght)
+    dblAdjust = IIf(optM2.Value, dblM2, dblAdjust)
+    
+    If dblFact = 0 Or (Not m_Keer And dblDose = 0) Or (m_Keer And dblKeer = 0) Or dblAdjust = 0 Or dblDeel = 0 Then
         SetTextBoxNumericValue txtCalcDose, 0
         Exit Sub
     End If
     
     If m_Keer Then
         
-        dblCalc = dblKeer * dblFact / dblWght
+        dblCalc = dblKeer * dblFact / dblAdjust
     
     Else
     
-        dblVal = dblDose * dblWght / dblFact
+        dblVal = dblDose * dblAdjust / dblFact
         dblVal = ModExcel.Excel_RoundBy(dblVal, txtDeelDose.Value)
         
-        dblCalc = dblVal * dblFact / dblWght
-        dblKeer = dblCalc * dblWght / dblFact
+        dblCalc = dblVal * dblFact / dblAdjust
+        dblKeer = dblCalc * dblAdjust / dblFact
     
     End If
         
@@ -640,6 +647,8 @@ Private Sub cmdOK_Click()
         
         m_Med.Freq = cboFreq.Value
         m_Med.PerDose = chkPerDosis.Value
+        m_Med.PerKg = optKg.Value
+        m_Med.PerDose = optM2.Value
         
         m_Med.NormDose = StringToDouble(txtNormDose.Value)
         m_Med.MinDose = StringToDouble(txtMinDose.Value)
@@ -669,6 +678,27 @@ Private Sub cmdParEnt_Click()
     End If
     
     ActiveWorkbook.FollowHyperlink strUrl
+
+End Sub
+
+Private Sub optKg_Change()
+
+    m_Adjust = "kg"
+    SetDoseUnit
+
+End Sub
+
+Private Sub optNone_Change()
+
+    m_Adjust = ""
+    SetDoseUnit
+
+End Sub
+
+Private Sub optM2_Change()
+
+    m_Adjust = "m2"
+    SetDoseUnit
 
 End Sub
 
@@ -903,6 +933,8 @@ Private Sub UserForm_Initialize()
     
     LoadFreq
     FillCombo cboOplVlst, MedDisc_GetOplVlstCol()
+    
+    optKg.Value = True
     
     cboGeneriek.TabIndex = 0
     cboVorm.TabIndex = 1

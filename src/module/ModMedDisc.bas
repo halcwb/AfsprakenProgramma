@@ -35,6 +35,8 @@ Private Const constMinDose As String = "_Glob_MedDisc_Onder_"           ' Dagdos
 Private Const constMaxDose As String = "_Glob_MedDisc_Boven_"           ' Dag dosering bovengrens
 Private Const constAbsDose As String = "_Glob_MedDisc_MaxDose_"         ' Maximale dosering
 Private Const constPerDose As String = "_Glob_MedDisc_PerDose_"         ' Bereken per dose
+Private Const constPerKg As String = "_Glob_MedDisc_PerKg_"             ' Bereken per kg
+Private Const constPerM2 As String = "_Glob_MedDisc_PerM2_"             ' Bereken per m2
 
 Private Const constMaxConc As String = "_Glob_MedDisc_MaxConc_"         ' Maximale concentratie
 Private Const constOplVlst As String = "_Glob_MedDisc_OplVlst_"         ' Verplichte oplos vloeistof
@@ -452,7 +454,11 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         .SetTextBoxIfNotEmpty .txtMinDose, ModRange.GetRangeValue(constMinDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMaxDose, ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtAbsMax, ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
+        
         .chkPerDosis.Value = ModRange.GetRangeValue(constPerDose & strN, False)
+        .optKg.Value = ModRange.GetRangeValue(constPerKg & strN, False)
+        .optM2.Value = ModRange.GetRangeValue(constPerM2 & strN, False)
+        .optNone.Value = (Not .optKg.Value) And (Not .optM2.Value)
         
         intOplVlst = ModRange.GetRangeValue(constSolNo & strN, 1)
         strOplVlst = ModExcel.Excel_Index("Tbl_Glob_MedDisc_OplVl", intOplVlst, 1)
@@ -497,6 +503,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     Dim dictFreq As Dictionary
     Dim intDoseQty As Integer
     Dim dblOplVol As Double
+    Dim dblAdjust As Double
     
     ModRange.SetRangeValue constGPK & strN, objMed.GPK
     ModRange.SetRangeValue constATC & strN, objMed.ATC
@@ -524,6 +531,11 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
         ModRange.SetRangeValue constOplVol & strN, objMed.OplVol
         ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
         
+        
+        ModRange.SetRangeValue constPerDose & strN, objMed.PerDose
+        ModRange.SetRangeValue constPerKg & strN, objMed.PerKg
+        ModRange.SetRangeValue constPerM2 & strN, objMed.PerM2
+        
         If objMed.OplVlst = "NaCl 0,9%" Then
             ModRange.SetRangeValue constSolNo & strN, 2
         ElseIf objMed.OplVlst = "glucose 5%" Then
@@ -547,10 +559,13 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
         ModRange.SetRangeValue constFreqList & strN, objMed.GetFreqListString
         
         If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
-            dblFactor = IIf(objMed.PerDose, 1, ModExcel.Excel_Index(constFreqTable, intFreq, 3))
-            intDoseQty = objMed.CalcDose * ModPatient.GetGewichtFromRange() / dblFactor / objMed.DeelDose
+            dblAdjust = 1
+            dblAdjust = IIf(objMed.PerKg, ModPatient.GetGewichtFromRange(), dblAdjust)
+            dblAdjust = IIf(objMed.PerM2, ModPatient.CalculateBSA(), dblAdjust)
             
-            ModRange.SetRangeValue constPerDose & strN, objMed.PerDose
+            dblFactor = IIf(objMed.PerDose, 1, ModExcel.Excel_Index(constFreqTable, intFreq, 3))
+            intDoseQty = objMed.CalcDose * dblAdjust / dblFactor / objMed.DeelDose
+            
             ModRange.SetRangeValue constDoseQty & strN, intDoseQty
             
         End If
