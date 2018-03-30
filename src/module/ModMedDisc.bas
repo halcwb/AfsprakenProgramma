@@ -34,6 +34,7 @@ Private Const constNormDose As String = "_Glob_MedDisc_NormDose_"       ' Normal
 Private Const constMinDose As String = "_Glob_MedDisc_Onder_"           ' Dagdosering ondergrens
 Private Const constMaxDose As String = "_Glob_MedDisc_Boven_"           ' Dag dosering bovengrens
 Private Const constAbsDose As String = "_Glob_MedDisc_MaxDose_"         ' Maximale dosering
+Private Const constMaxKeer As String = "_Glob_MedDisc_MaxKeer_"         ' Maximale dosering per keer
 Private Const constPerDose As String = "_Glob_MedDisc_PerDose_"         ' Bereken per dose
 Private Const constPerKg As String = "_Glob_MedDisc_PerKg_"             ' Bereken per kg
 Private Const constPerM2 As String = "_Glob_MedDisc_PerM2_"             ' Bereken per m2
@@ -180,6 +181,7 @@ Private Sub Clear(ByVal intN As Integer)
     ModRange.SetRangeValue constMinDose & strN, 0
     ModRange.SetRangeValue constMaxDose & strN, 0
     ModRange.SetRangeValue constAbsDose & strN, 0
+    ModRange.SetRangeValue constMaxKeer & strN, 0
     ModRange.SetRangeValue constPerDose & strN, False
     
     ModRange.SetRangeValue constMaxConc & strN, 0
@@ -454,6 +456,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         .SetTextBoxIfNotEmpty .txtMinDose, ModRange.GetRangeValue(constMinDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMaxDose, ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtAbsMax, ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
+        .SetTextBoxIfNotEmpty .txtMaxPerDose, ModRange.GetRangeValue(constMaxKeer & strN, vbNullString)
         
         .chkPerDosis.Value = ModRange.GetRangeValue(constPerDose & strN, False)
         .optKg.Value = ModRange.GetRangeValue(constPerKg & strN, False)
@@ -525,6 +528,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
         ModRange.SetRangeValue constMinDose & strN, objMed.MinDose
         ModRange.SetRangeValue constMaxDose & strN, objMed.MaxDose
         ModRange.SetRangeValue constAbsDose & strN, objMed.AbsDose
+        ModRange.SetRangeValue constMaxKeer & strN, objMed.MaxKeer
           
         ModRange.SetRangeValue constMaxConc & strN, objMed.MaxConc
         ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst

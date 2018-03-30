@@ -19,6 +19,12 @@ Private Const constDateReplace As String = "{DATEFORMAT}"
 Private Const constDateFormula As String = vbNullString
 Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
 
+Public Function Patient_BirthDate() As Date
+
+    Patient_BirthDate = ModRange.GetRangeValue(constGebDatum, DateTime.Now)
+
+End Function
+
 Public Function PatientHospNum() As String
 
     PatientHospNum = ModRange.GetRangeValue(constPatNum, vbNullString)

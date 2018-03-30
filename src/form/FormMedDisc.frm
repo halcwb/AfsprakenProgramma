@@ -174,6 +174,7 @@ Private Sub cboGeneriek_Change()
         ClearForm False
     End If
     
+    SetDoseUnit
     Validate vbNullString
 
 End Sub
@@ -220,12 +221,30 @@ Private Sub SetDoseUnit()
     strTime = IIf(chkPerDosis.Value, "dosis", GetTimeByFreq(cboFreq.Text))
     
     If Not strUnit = vbNullString Then
-        If Not strTime = vbNullString Then cboDoseUnit.Text = strUnit & (IIf(m_Adjust = "", "/", "/" & m_Adjust & "/")) & strTime
+        If Not strTime = vbNullString Then
+            cboDoseUnit.Text = strUnit & (IIf(m_Adjust = "", "/", "/" & m_Adjust & "/")) & strTime
+        Else
+            cboDoseUnit.Text = strUnit & (IIf(m_Adjust = "", "", "/" & m_Adjust))
+        End If
+        
         cboKeerUnit.Text = strUnit
         lblDoseUnit.Caption = cboDoseUnit.Value
         lblMinMaxEenheid.Caption = cboDoseUnit.Value
-        lblAbsMaxEenheid.Caption = strUnit & "/" & strTime
+        
+        If Not strTime = vbNullString Then
+            lblAbsMaxEenheid.Caption = strUnit & "/" & strTime
+        Else
+            lblAbsMaxEenheid.Caption = strUnit
+        End If
+        
+        lblMaxKeerUnit.Caption = strUnit
         lblConcUnit.Caption = strUnit & "/ml"
+    Else
+        lblDoseUnit.Caption = ""
+        lblMinMaxEenheid.Caption = ""
+        lblAbsMaxEenheid.Caption = ""
+        lblMaxKeerUnit.Caption = ""
+        lblConcUnit.Caption = ""
     End If
 
 End Sub
@@ -273,10 +292,17 @@ Private Sub LoadMedicament()
         
         If Not .Freq = vbNullString Then cboFreq.Value = .Freq
         
+        optNone = True
+        optKg = .PerKg
+        optM2 = .PerM2
+        
+        chkPerDosis = .PerDose
+        
         SetTextBoxNumericValue txtNormDose, .NormDose
         SetTextBoxNumericValue txtMinDose, .MinDose
         SetTextBoxNumericValue txtMaxDose, .MaxDose
         SetTextBoxNumericValue txtAbsMax, .AbsDose
+        SetTextBoxNumericValue txtMaxPerDose, .MaxKeer
         
         SetTextBoxNumericValue txtMaxConc, .MaxConc
         If .MaxConc > 0 And Not m_Conc Then cmdConc_Click
@@ -366,6 +392,7 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     txtMinDose.Value = vbNullString
     txtMaxDose.Value = vbNullString
     txtAbsMax.Value = vbNullString
+    txtMaxPerDose.Value = vbNullString
     txtCalcDose.Value = vbNullString
     cboDoseUnit.Value = vbNullString
     lblCalcDose.Caption = vbNullString
@@ -421,7 +448,11 @@ End Function
 
 Public Function GetFactorByFreq(ByVal strFreq As String) As Double
 
-    GetFactorByFreq = m_Freq.Item(strFreq)
+    If Not m_Freq Is Nothing Then
+        GetFactorByFreq = m_Freq.Item(strFreq)
+    Else
+        GetFactorByFreq = 0
+    End If
 
 End Function
 
@@ -449,6 +480,7 @@ Private Sub CalculateDose()
     dblAdjust = IIf(optM2.Value, dblM2, dblAdjust)
     
     If dblFact = 0 Or (Not m_Keer And dblDose = 0) Or (m_Keer And dblKeer = 0) Or dblAdjust = 0 Or dblDeel = 0 Then
+        SetTextBoxNumericValue txtKeerDose, 0
         SetTextBoxNumericValue txtCalcDose, 0
         Exit Sub
     End If
@@ -502,6 +534,8 @@ End Sub
 
 Private Sub chkDose_Click()
     
+    If Not frmDose.Visible Then ClearDose
+    
     frmDose.Visible = chkDose.Value
     frmOpl.Visible = chkDose.Value
     txtDeelDose.Visible = chkDose.Value
@@ -509,6 +543,29 @@ Private Sub chkDose_Click()
 
     Validate vbNullString
 
+End Sub
+
+Private Sub ClearDose()
+
+        Set m_Freq = Nothing
+        LoadFreq
+        
+        chkPerDosis.Value = False
+        optKg.Value = True
+        optM2.Value = False
+        
+        txtNormDose.Value = ""
+        txtMinDose.Value = ""
+        txtMaxDose.Value = ""
+        txtAbsMax.Value = ""
+        
+        cboOplVlst.Value = ""
+        txtOplVol.Value = ""
+        txtTijd.Value = ""
+        
+        txtKeerDose.Value = ""
+        txtCalcDose.Value = ""
+        
 End Sub
 
 Private Sub chkPerDosis_Click()
@@ -596,6 +653,16 @@ Private Sub cmdConc_Click()
 
     CalculateDose
     
+End Sub
+
+Private Sub cmdQuery_Click()
+
+    If Not m_Med.GPK = "" Then
+        m_Med.Route = cboRoute.Text
+        ModWeb.Web_RetrieveMedicationRules m_Med
+        LoadMedicament
+    End If
+
 End Sub
 
 Private Sub cmdVol_Click()

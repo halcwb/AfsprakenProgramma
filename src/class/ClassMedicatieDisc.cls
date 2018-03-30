@@ -29,10 +29,12 @@ Private m_PerDose As Boolean
 Private m_PerKg As Boolean
 Private m_PerM2 As Boolean
 Private m_CalcDose As Double
+Private m_KeerDose As Double
 Private m_NormDose As Double
 Private m_MinDose As Double
 Private m_MaxDose As Double
 Private m_AbsDose As Double
+Private m_MaxKeer As Double
 Private m_MaxConc As Double
 Private m_OplVlst As String
 Private m_OplVol As Double
@@ -111,6 +113,18 @@ End Property
 Public Property Let NormDose(ByVal dblDose As Double)
 
     m_NormDose = dblDose
+
+End Property
+
+Public Property Get MaxKeer() As Double
+
+    MaxKeer = m_MaxKeer
+
+End Property
+
+Public Property Let MaxKeer(ByVal dblDose As Double)
+
+    m_MaxKeer = dblDose
 
 End Property
 

@@ -1,6 +1,55 @@
 Attribute VB_Name = "ModWeb"
 Option Explicit
 
+Private Const constUrl As String = "/request?bty=BTY&btm=BTM&btd=BTD&wth=WTH&hgt=HGT&gpk=GPK&rte=RTE&unt=UNT"
+
+Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
+
+    If objMed.GPK = "" Then Exit Sub
+
+    Dim strBTY As String
+    Dim strBTM As String
+    Dim strBTD As String
+    Dim strWTH As String
+    Dim strHGT As String
+    Dim strGPK As String
+    Dim strRTE As String
+    Dim strUNT As String
+    
+    Dim strUrl As String
+    
+    Dim objClient As New WebClient
+    Dim objResponse As WebResponse
+    
+    objClient.BaseUrl = "http://localhost:8080"
+        
+    strBTY = ModDate.DateYear(ModPatient.Patient_BirthDate())
+    strBTM = ModDate.DateMonth(ModPatient.Patient_BirthDate())
+    strBTD = ModDate.DateDay(ModPatient.Patient_BirthDate())
+    
+    strWTH = ModPatient.GetGewichtFromRange()
+    strHGT = ModPatient.GetLengteFromRange()
+    
+    strGPK = objMed.GPK
+    strRTE = objMed.Route
+    strUNT = objMed.DoseEenheid
+    
+    strUrl = constUrl
+    strUrl = Replace(strUrl, "BTY", strBTY)
+    strUrl = Replace(strUrl, "BTM", strBTM)
+    strUrl = Replace(strUrl, "BTD", strBTD)
+    strUrl = Replace(strUrl, "WTH", strWTH)
+    strUrl = Replace(strUrl, "HGT", strHGT)
+    strUrl = Replace(strUrl, "GPK", strGPK)
+    strUrl = Replace(strUrl, "RTE", strRTE)
+    strUrl = Replace(strUrl, "UNT", strUNT)
+    
+    Set objResponse = objClient.GetJson(strUrl)
+    ProcessJson objResponse, objMed
+
+End Sub
+
+
 Private Sub Test_GetJson()
 
     Dim objClient As New WebClient
@@ -9,68 +58,99 @@ Private Sub Test_GetJson()
     
     objClient.BaseUrl = "http://localhost:8080"
     
-    Set objResponse = objClient.GetJson("/")
+    Set objResponse = objClient.GetJson("/request?bty=2017&btm=1&btd=1&wth=10&hgt=70&gpk=9504&rte=or")
     
     ProcessJson objResponse, objMed
     ModMessage.ShowMsgBoxInfo objMed.Etiket
 
 End Sub
 
-'{BirthYear = 2017;
-' BirthMonth = 3;
-' BirthDay = 2;
-' WeightKg = 10.0;
-' BirthWeightGram = 0.0;
-' LengthCm = 70.0;
-' Gender = "";
-' GestAgeWeeks = 0;
-' GestAgeDays = 0;
-' GPK = "100331";
-' ATC = "A04AA01 ";
-' TherapyGroup = "ANTI-EMETICA";
-' TherapySubGroup = "ANTI-EMETICA";
-' Generic = "ONDANSETRON";
-' TradeProduct = "";
-' Shape = "STROOP";
-' Label = "ONDANSETRON 0,8MG/ML STROOP";
-' Concentration = 0.0;
-' ConcentrationUnit = "";
-' Multiple = 0.0;
-' MultipleUnit = "mg";
-' Route = "or";
-' Indication = "";
-' Frequency = "antenoctum||1 x / dag||2 x / dag||3 x / dag";
-' PerDose = false;
-' PerKg = false;
-' PerM2 = true;
-' NormDose = 0.0;
-' MinDose = 0.0;
-' MaxDose = 24.0;
-' AbsMaxTotal = 3.0;
-' AbsMaxPerDose = 1.0;
-' Rules =
-'  "287597, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 5. Complicatie(s) medische behandeling, Leeftijd: tot 36 maanden, Freq: 1 per dag, Norm: tot 1.25 ml||287598, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 5. Complicatie(s) medische behandeling, Leeftijd: tot 36 maanden, Freq: 2 per dag, Norm: tot 1.25 ml||287599, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 5. Complicatie(s) medische behandeling, Leeftijd: tot 36 maanden, Freq: 3 per dag, Norm: tot 1.25 ml||287612, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 8. Infectieuze diarree, dysenterie, Leeftijd: 1 - 216 maanden, Gewicht: tot 80 kg, Freq: 1 per dag, Norm/Kg: tot 0.125 ml||287613, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 8. Infectieuze diarree, dysenterie, Leeftijd: 1 - 216 maanden, Gewicht: tot 80 kg, Freq: 2 per dag,
-'orm/Kg: tot 0.125 ml||287614, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 8. Infectieuze diarree, dysenterie, Leeftijd: 1 - 216 maanden, Gewicht: tot 80 kg, Freq: 3 per dag, Norm/Kg: tot 0.125 ml||287618, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 4. Algemeen, Leeftijd: 1 - 216 maanden, BSA: tot 1 m2, Freq: 1 per dag, Norm/m2: tot 10 ml||287619, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 4. Algemeen, Leeftijd: 1 - 216 maanden, BSA: tot 1 m2, Freq: 2 per dag, Norm/m2: tot 10 ml||287620, ONDANSETRON STROOP 0,8MG/ML, Groep: intensieve, Type: Standaard, Route: ORAAL, Indicatie: 4. Algemeen, Leeftijd: 1 - 216 maanden, BSA: tot 1 m2, Freq: 3 per dag, Norm/m2: tot 10 ml";}
-'
-
+'birthYear 2017
+'birthMonth 1
+'birthDay 1
+'weightKg 10
+'birthWeightGram 0
+'lengthCm 0
+'gender ""
+'gestAgeWeeks 0
+'gestAgeDays 0
+'GPK "9504"
+'ATC "N02BE01 "
+'therapyGroup "ANALGETICA"
+'therapySubGroup "OVERIGE ANALGETICA EN ANTIPYRETICA"
+'generic "PARACETAMOL"
+'tradeProduct ""
+'Shape "STROOP"
+'Label "PARACETAMOL 24MG/ML STROOP"
+'concentration 0
+'concentrationUnit ""
+'multiple 0
+'multipleUnit ""
+'Route "or"
+'indication ""
+'Frequency "3 x / dag||antenoctum||1 x / dag||2 x / dag||4 x / dag"
+'PerDose False
+'PerKg True
+'PerM2 False
+'NormDose 0
+'MinDose 0
+'MaxDose 90.048
+'absMaxTotal 480
+'absMaxPerDose 120
 
 Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc)
 
     Dim objDict As Dictionary
     Dim strJson As String
     
+'    ModMessage.ShowMsgBoxInfo objResponse.Content
+    
     strJson = objResponse.Content
-    strJson = Replace(strJson, "=", ":")
-    strJson = Replace(strJson, ";", ",")
-    strJson = Replace(strJson, ",}", "}")
-    
-    JsonConverter.JsonOptions.AllowUnquotedKeys = True
     Set objDict = JsonConverter.ParseJson(strJson)
+        
+    objMed.ATC = NotEmpty(objMed.ATC, objDict("atc"))
+    objMed.TherapieGroep = NotEmpty(objMed.TherapieGroep, objDict("therapyGroup"))
+    objMed.TherapieSubgroep = NotEmpty(objMed.TherapieSubgroep, objDict("therapySubGroup"))
+    objMed.Generiek = NotEmpty(objMed.Generiek, objDict("generic"))
+    objMed.Product = NotEmpty(objMed.Product, objDict("tradeProduct"))
+    objMed.Vorm = NotEmpty(objMed.Vorm, objDict("shape"))
+    objMed.Etiket = NotEmpty(objMed.Etiket, objDict("label"))
+    objMed.Sterkte = NotEmpty(objMed.Sterkte, objDict("concentration"))
+    objMed.SterkteEenheid = NotEmpty(objMed.SterkteEenheid, objDict("concentrationUnit"))
+    objMed.DeelDose = NotEmpty(objMed.DeelDose, objDict("multiple"))
+    objMed.DoseEenheid = NotEmpty(objMed.DoseEenheid, objDict("multipleUnit"))
+    objMed.Route = NotEmpty(objMed.Route, objDict("route"))
+    objMed.Indicatie = NotEmpty(objMed.Indicatie, objDict("indication"))
+    If objMed.Freq = "" Then objMed.SetFreqList objDict("frequency")
+    objMed.PerDose = NotEmpty(objMed.PerDose, objDict("perDose"))
+    objMed.PerKg = NotEmpty(objMed.PerKg, objDict("perKg"))
+    objMed.PerM2 = NotEmpty(objMed.PerM2, objDict("perM2"))
+    objMed.NormDose = NotEmpty(objMed.NormDose, objDict("normDose"))
+    objMed.MinDose = NotEmpty(objMed.MinDose, objDict("minDose"))
+    objMed.MaxDose = NotEmpty(objMed.MaxDose, objDict("maxDose"))
+    objMed.AbsDose = NotEmpty(objMed.AbsDose, objDict("absMaxTotal"))
+    objMed.MaxKeer = NotEmpty(objMed.MaxKeer, objDict("absMaxPerDose"))
+
+End Sub
+
+Private Function NotEmpty(ByVal varVal1, ByVal varVal2) As Variant
+
+    If varVal1 = "" Or varVal1 = 0 Then
+        NotEmpty = varVal2
+    Else
+        NotEmpty = varVal1
+    End If
+
+End Function
+
+Private Sub Test_NotEmpty()
+
+    ModMessage.ShowMsgBoxInfo NotEmpty("", "test2")
+    ModMessage.ShowMsgBoxInfo NotEmpty("test1", "test2")
+    ModMessage.ShowMsgBoxInfo NotEmpty("test1", "")
+    ModMessage.ShowMsgBoxInfo NotEmpty(0, 2)
+    ModMessage.ShowMsgBoxInfo NotEmpty(1, 2)
+    ModMessage.ShowMsgBoxInfo NotEmpty(1, 0)
     
-    objMed.GPK = objDict("GPK")
-    objMed.ATC = objDict("ATC")
-    objMed.Generiek = objDict("Generic")
-    objMed.Etiket = objDict("Label")
-    objMed.AbsDose = objDict("MaxDose")
 
 End Sub
