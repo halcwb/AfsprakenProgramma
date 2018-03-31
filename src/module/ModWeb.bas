@@ -21,18 +21,23 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     Dim objClient As New WebClient
     Dim objResponse As WebResponse
     
-    objClient.BaseUrl = "http://localhost:8080"
+    objClient.BaseUrl = "http://iis2503.ds.umcutrecht.nl/genform"
         
     strBTY = ModDate.DateYear(ModPatient.Patient_BirthDate())
     strBTM = ModDate.DateMonth(ModPatient.Patient_BirthDate())
     strBTD = ModDate.DateDay(ModPatient.Patient_BirthDate())
     
-    strWTH = ModPatient.GetGewichtFromRange()
-    strHGT = ModPatient.GetLengteFromRange()
+    strWTH = Val(ModPatient.GetGewichtFromRange())
+    strHGT = Val(ModPatient.GetLengteFromRange())
     
     strGPK = objMed.GPK
     strRTE = objMed.Route
     strUNT = objMed.DoseEenheid
+    
+    If strRTE = vbNullString Then
+        ModMessage.ShowMsgBoxInfo "Geef de route op"
+        Exit Sub
+    End If
     
     strUrl = constUrl
     strUrl = Replace(strUrl, "BTY", strBTY)
@@ -44,8 +49,16 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     strUrl = Replace(strUrl, "RTE", strRTE)
     strUrl = Replace(strUrl, "UNT", strUNT)
     
+    ModUtils.CopyToClipboard objClient.BaseUrl & strUrl
+    
     Set objResponse = objClient.GetJson(strUrl)
-    ProcessJson objResponse, objMed
+    
+    If objResponse.StatusCode = Ok Then
+        ProcessJson objResponse, objMed
+    Else
+        ModMessage.ShowMsgBoxExclam "Kan de doseer informatie niet ophalen!. Probeer het nog een keer of neem anders contact op met de helpdesk"
+        ModLog.LogError "Fout bij ophalen van doseer informatie: " & objResponse.StatusDescription
+    End If
 
 End Sub
 
@@ -102,6 +115,8 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
 
     Dim objDict As Dictionary
     Dim strJson As String
+    Dim dblVal As Double
+    Dim blnChange As Boolean
     
 '    ModMessage.ShowMsgBoxInfo objResponse.Content
     
@@ -119,17 +134,31 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
     objMed.SterkteEenheid = NotEmpty(objMed.SterkteEenheid, objDict("concentrationUnit"))
     objMed.DeelDose = NotEmpty(objMed.DeelDose, objDict("multiple"))
     objMed.DoseEenheid = NotEmpty(objMed.DoseEenheid, objDict("multipleUnit"))
-    objMed.Route = NotEmpty(objMed.Route, objDict("route"))
     objMed.Indicatie = NotEmpty(objMed.Indicatie, objDict("indication"))
-    If objMed.Freq = "" Then objMed.SetFreqList objDict("frequency")
-    objMed.PerDose = NotEmpty(objMed.PerDose, objDict("perDose"))
-    objMed.PerKg = NotEmpty(objMed.PerKg, objDict("perKg"))
-    objMed.PerM2 = NotEmpty(objMed.PerM2, objDict("perM2"))
+        
+    dblVal = objMed.NormDose
     objMed.NormDose = NotEmpty(objMed.NormDose, objDict("normDose"))
+    blnChange = Not objMed.NormDose = dblVal
+    
+    dblVal = objMed.MinDose
     objMed.MinDose = NotEmpty(objMed.MinDose, objDict("minDose"))
+    blnChange = blnChange Or (Not dblVal = objMed.MinDose)
+    
+    dblVal = objMed.MaxDose
     objMed.MaxDose = NotEmpty(objMed.MaxDose, objDict("maxDose"))
+    blnChange = blnChange Or (Not dblVal = objMed.MaxDose)
+
+    If blnChange Then
+        objMed.PerDose = objDict("perDose")
+        objMed.PerKg = objDict("perKg")
+        objMed.PerM2 = objDict("perM2")
+    End If
+    
     objMed.AbsDose = NotEmpty(objMed.AbsDose, objDict("absMaxTotal"))
     objMed.MaxKeer = NotEmpty(objMed.MaxKeer, objDict("absMaxPerDose"))
+
+    If objMed.Freq = "" Then objMed.SetFreqList objDict("frequency")
+    If objMed.Route = "" Then objMed.SetRouteList objDict("route")
 
 End Sub
 

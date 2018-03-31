@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc
    ClientHeight    =   14940
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   10050
+   ClientWidth     =   10545
    OleObjectBlob   =   "FormMedDisc.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -168,7 +168,7 @@ Private Sub cboGeneriek_Change()
     If cboGeneriek.ListIndex > -1 Then
         SetToGPKMode True
         Set m_Med = Formularium_GetFormularium.Item(cboGeneriek.ListIndex + 1)
-        LoadMedicament
+        LoadMedicament True
     Else
         SetToGPKMode False
         ClearForm False
@@ -202,7 +202,7 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
         blnLoad = False
     Else
         SetToGPKMode True
-        LoadMedicament
+        LoadMedicament True
         m_LoadGPK = True
         cboGeneriek.Text = m_Med.Generiek
         m_LoadGPK = False
@@ -229,7 +229,8 @@ Private Sub SetDoseUnit()
         
         cboKeerUnit.Text = strUnit
         lblDoseUnit.Caption = cboDoseUnit.Value
-        lblMinMaxEenheid.Caption = cboDoseUnit.Value
+        lblMinEenheid.Caption = cboDoseUnit.Value
+        lblMaxEenheid.Caption = cboDoseUnit.Value
         
         If Not strTime = vbNullString Then
             lblAbsMaxEenheid.Caption = strUnit & "/" & strTime
@@ -241,7 +242,8 @@ Private Sub SetDoseUnit()
         lblConcUnit.Caption = strUnit & "/ml"
     Else
         lblDoseUnit.Caption = ""
-        lblMinMaxEenheid.Caption = ""
+        lblMinEenheid.Caption = ""
+        lblMaxEenheid.Caption = ""
         lblAbsMaxEenheid.Caption = ""
         lblMaxKeerUnit.Caption = ""
         lblConcUnit.Caption = ""
@@ -249,7 +251,7 @@ Private Sub SetDoseUnit()
 
 End Sub
 
-Private Sub LoadMedicament()
+Private Sub LoadMedicament(ByVal blnReload As Boolean)
     
     Dim intN As Integer
     Dim arrFreq() As String
@@ -269,8 +271,8 @@ Private Sub LoadMedicament()
         txtSterkte.Text = .Sterkte
         cboSterkteEenheid.Text = .SterkteEenheid
         
-        FillCombo cboRoute, .GetRouteList()
-        FillCombo cboIndicatie, .GetIndicatieList()
+        If blnReload Or cboRoute.Text = "" Then FillCombo cboRoute, .GetRouteList()
+        If blnReload Or cboIndicatie.Text = "" Then FillCombo cboIndicatie, .GetIndicatieList()
         
         If .DeelDose = 0 Then
             chkDose.Value = False
@@ -547,17 +549,29 @@ End Sub
 
 Private Sub ClearDose()
 
+        m_Med.SetFreqList ""
         Set m_Freq = Nothing
         LoadFreq
+        
+        m_Med.PerDose = False
+        m_Med.PerKg = True
+        m_Med.PerM2 = True
         
         chkPerDosis.Value = False
         optKg.Value = True
         optM2.Value = False
         
+        m_Med.NormDose = 0
+        m_Med.MinDose = 0
+        m_Med.MaxDose = 0
+        m_Med.AbsDose = 0
+        m_Med.MaxKeer = 0
+        
         txtNormDose.Value = ""
         txtMinDose.Value = ""
         txtMaxDose.Value = ""
         txtAbsMax.Value = ""
+        txtMaxPerDose = ""
         
         cboOplVlst.Value = ""
         txtOplVol.Value = ""
@@ -659,8 +673,10 @@ Private Sub cmdQuery_Click()
 
     If Not m_Med.GPK = "" Then
         m_Med.Route = cboRoute.Text
+        m_Med.DoseEenheid = cboDosisEenheid.Text
+        
         ModWeb.Web_RetrieveMedicationRules m_Med
-        LoadMedicament
+        LoadMedicament False
     End If
 
 End Sub
@@ -784,6 +800,18 @@ End Sub
 Private Sub txtAbsMax_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     
     ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtCalcDose_Change()
+
+    If txtCalcDose.Value = 0 Then
+        txtCalcDose.ForeColor = vbRed
+        lblCalcDose.ForeColor = vbRed
+    Else
+        txtCalcDose.ForeColor = vbBlack
+        lblCalcDose.ForeColor = vbBlack
+    End If
 
 End Sub
 
