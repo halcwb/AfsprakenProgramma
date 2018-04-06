@@ -218,7 +218,7 @@ Private Sub SetDoseUnit()
     Dim strTime As String
     
     strUnit = Trim(cboDosisEenheid.Text)
-    strTime = IIf(chkPerDosis.Value, "dosis", GetTimeByFreq(cboFreq.Text))
+    strTime = IIf(chkPerDosis.Value, "dosis", GetTimeByFreq())
     
     If Not strUnit = vbNullString Then
         If Not strTime = vbNullString Then
@@ -438,13 +438,26 @@ Private Sub cboRoute_Change()
 
 End Sub
 
-Public Function GetTimeByFreq(ByVal strFreq As String) As String
+Public Function GetTimeByFreq() As String
 
-    If strFreq = vbNullString Then
-        GetTimeByFreq = vbNullString
+    Dim varFreq As Variant
+    Dim strFreq As String
+    Dim strPrev As String
+    
+    If cboFreq.Text = vbNullString Then
+        For Each varFreq In cboFreq.List
+            strPrev = strFreq
+            strFreq = IIf(Not IsNull(varFreq), ModExcel.Excel_VLookup(varFreq, "Tbl_Glob_MedFreq", 2), strFreq)
+            If strPrev <> vbNullString And strFreq <> strPrev Then
+                GetTimeByFreq = vbNullString
+                Exit Function
+            End If
+        Next
     Else
-        GetTimeByFreq = ModExcel.Excel_VLookup(strFreq, "Tbl_Glob_MedFreq", 2)
+        strFreq = ModExcel.Excel_VLookup(cboFreq.Text, "Tbl_Glob_MedFreq", 2)
     End If
+    
+    GetTimeByFreq = strFreq
 
 End Function
 

@@ -52,6 +52,7 @@ End Property
 
 Public Property Let PerKg(ByVal blnPerKg As Boolean)
 
+    If blnPerKg Then m_PerM2 = False
     m_PerKg = blnPerKg
 
 End Property
@@ -64,6 +65,7 @@ End Property
 
 Public Property Let PerM2(ByVal blnPerM2 As Boolean)
 
+    If blnPerM2 Then m_PerKg = False
     m_PerM2 = blnPerM2
 
 End Property
