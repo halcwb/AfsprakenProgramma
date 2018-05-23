@@ -90,3 +90,8 @@ Known issues
 
 Form diff script aanpassen check op parameter instellingen (laatste waarde)
 Medische status import scripts aanpassen
+
+Planning formulier:
+- Fix vastlopen probleem met Scripts.CloseForm
+- Check op max knopnaam lengte van 60 tekens bij aanmaken nieuwe knopnaam
+

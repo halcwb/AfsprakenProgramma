@@ -1635,3 +1635,99 @@ Public Function NeoInfB_IsValidTPN() As Boolean
 
 End Function
 
+Private Sub CheckOplVolume(ByVal intN)
+
+    Dim strN As String
+    Dim intMed As Integer
+    Dim strMed As String
+    Dim dblVol As Double
+    Dim dblMax As Double
+    
+    strN = IntNToStrN(intN)
+    intMed = ModRange.GetRangeValue(constMedKeuze & strN, 1)
+    dblVol = ModRange.GetRangeValue(constOplHoev & strN, 0)
+    
+    strMed = GetMedicamentItemWithIndex(intMed, 1)
+    dblMax = 24
+    dblMax = IIf(ModString.ContainsCaseInsensitive(strMed, "lidocaine"), 48, dblMax)
+    
+    If IsEpiduraal(strMed) Then
+        If Not dblVol = 24 Then
+            ModMessage.ShowMsgBoxInfo "Epiduraal volume is altijd 24 ml"
+            ModRange.SetRangeValue constOplHoev & strN, 24
+        End If
+    ElseIf ModString.ContainsCaseInsensitive(strMed, "doxapram") Then
+        If Not dblVol = 12 Then
+            ModMessage.ShowMsgBoxInfo "Doxapram volume is altijd 12 ml"
+            ModRange.SetRangeValue constOplHoev & strN, 12
+        End If
+    Else
+        If dblVol > dblMax Then
+            ModMessage.ShowMsgBoxInfo "Maximale volume is " & dblMax & " ml"
+            ModRange.SetRangeValue constOplHoev & strN, dblMax
+        End If
+    End If
+
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_01()
+
+    CheckOplVolume 1
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_02()
+
+    CheckOplVolume 2
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_03()
+
+    CheckOplVolume 3
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_04()
+
+    CheckOplVolume 4
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_05()
+
+    CheckOplVolume 5
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_06()
+
+    CheckOplVolume 6
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_07()
+
+    CheckOplVolume 7
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_08()
+
+    CheckOplVolume 8
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_09()
+
+    CheckOplVolume 9
+    
+End Sub
+
+Public Sub NeoInfB_ChangeOplVol_10()
+
+    CheckOplVolume 10
+    
+End Sub
+
+
