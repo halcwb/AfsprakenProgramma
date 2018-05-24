@@ -465,3 +465,72 @@ CollectionFromRangeError:
 End Function
 
 
+Public Function RangeToString(objRange As Range) As String
+
+    Dim arrRange() As Variant
+    
+    arrRange = objRange.Value2
+    RangeToString = Join(WorksheetFunction.Transpose(arrRange), vbNewLine)
+
+End Function
+
+Public Sub StringToRange(ByVal strData As String, ByVal strMsg, ByVal blnShowProgress)
+    
+    Dim arrData() As String
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim arrRec() As String
+    Dim blnSucc As Boolean
+    
+    arrData = Split(strData, vbNewLine)
+    intC = UBound(arrData)
+    
+    blnSucc = True
+    For intN = 0 To intC
+        arrRec = Split(strData, "##")
+        If UBound(arrRec) = 1 Then
+            blnSucc = blnSucc And ModRange.SetRangeValue(arrRec(0), arrRec(1))
+        End If
+    
+        If blnShowProgress Then ModProgress.SetJobPercentage "Kopieer Waarden", intC, intN
+    Next
+    
+    If Not blnSucc Then
+        ModMessage.ShowMsgBoxExclam strMsg
+    End If
+
+End Sub
+
+Private Sub Test_RangeToString()
+
+    Dim intC As Integer
+    Dim strData As String
+    
+    intC = shtPatData.Range("A1").CurrentRegion.Rows.Count
+    strData = RangeToString(shtPatData.Range("d2:d" & intC))
+    
+    ModMessage.ShowMsgBoxInfo strData
+
+    ModProgress.StartProgress "Data inlezen"
+    StringToRange strData, "Niet alle patient data kon worden gelezen, check de afspraken goed!", True
+    ModProgress.FinishProgress
+    
+    strData = RangeToString(shtPatData.Range("d2:d" & intC))
+    
+    ModMessage.ShowMsgBoxInfo strData
+
+End Sub
+
+Private Sub Test_RangeToString2()
+
+    Dim intC As Integer
+    Dim strData As String
+    
+    intC = shtPatText.Range("A1").CurrentRegion.Rows.Count
+    strData = RangeToString(shtPatText.Range("c2:c" & intC))
+    
+    ModMessage.ShowMsgBoxInfo strData
+
+
+End Sub
+
