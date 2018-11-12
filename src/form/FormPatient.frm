@@ -207,15 +207,15 @@ End Sub
 
 Private Sub cmdOK_Click()
     
-    Dim dtmBd As Date
+    Dim dtmBD As Date
     Dim dtmAdm As Date
     Dim dblActWght As Double
     Dim dblBthWght As Double
     
     dtmAdm = GetAdmDate()
-    dtmBd = GetBirthDate()
-    If Not ModDate.IsEmptyDate(dtmAdm) And Not ModDate.IsEmptyDate(dtmBd) Then
-        m_Pat.SetAdmissionAndBirthDate dtmAdm, dtmBd
+    dtmBD = GetBirthDate()
+    If Not ModDate.IsEmptyDate(dtmAdm) And Not ModDate.IsEmptyDate(dtmBD) Then
+        m_Pat.SetAdmissionAndBirthDate dtmAdm, dtmBD
     End If
     
     dblActWght = StringToDouble(txtWeight.Value)
@@ -301,19 +301,19 @@ Private Function ValidateBirthDate() As Boolean
 
     Dim strValid As String
     Dim dtmAdm As Date
-    Dim dtmBd As Date
+    Dim dtmBD As Date
     
     dtmAdm = GetAdmDate()
-    dtmBd = GetBirthDate()
+    dtmBD = GetBirthDate()
     
-    If ModDate.IsEmptyDate(dtmBd) Then Exit Function
+    If ModDate.IsEmptyDate(dtmBD) Then Exit Function
     
     If ModDate.IsEmptyDate(dtmAdm) Then
         dtmAdm = DateTime.Date
         SetAdmDate (dtmAdm)
     End If
 
-    If Not ModPatient.ValidBirthDate(dtmBd, dtmAdm) Then
+    If Not ModPatient.ValidBirthDate(dtmBD, dtmAdm) Then
         strValid = "Geboortedatum na opname datum"
         Validate strValid
         
@@ -443,7 +443,7 @@ Private Function ValidateAdmDate() As Boolean
     Dim strValid As String
 
     Dim dtmAdm As Date
-    Dim dtmBd As Date
+    Dim dtmBD As Date
       
     dtmAdm = GetAdmDate()
         
@@ -455,8 +455,8 @@ Private Function ValidateAdmDate() As Boolean
         ValidateAdmDate = False
     Else
         If BirthDateComplete() Then
-            dtmBd = GetBirthDate()
-            If Not ModPatient.ValidBirthDate(dtmBd, dtmAdm) Then
+            dtmBD = GetBirthDate()
+            If Not ModPatient.ValidBirthDate(dtmBD, dtmAdm) Then
                 strValid = "Opname datum voor geboorte datum"
                 Validate strValid
                 

@@ -223,7 +223,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     Dim objRs As Recordset
     Dim strServer As String
     Dim strDatabase As String
-    Dim dtmBd As Date
+    Dim dtmBD As Date
     Dim dtmAdm As Date
     Dim strDep As String
     Dim strSql As String
@@ -251,7 +251,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     Set objRs = objConn.Execute(strSql)
     
     If Not objRs.EOF Then
-        If Not IsNull(objRs.Fields("BirthDate")) Then dtmBd = ModString.StringToDate(objRs.Fields("BirthDate"))
+        If Not IsNull(objRs.Fields("BirthDate")) Then dtmBD = ModString.StringToDate(objRs.Fields("BirthDate"))
         objPat.PatientId = objRs.Fields("HospitalNumber")
         If Not IsNull(objRs.Fields("BedName")) Then objPat.Bed = Trim(objRs.Fields("BedName"))
         objPat.AchterNaam = objRs.Fields("LastName")
@@ -278,7 +278,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
             objRs.MoveNext
         Loop
         
-        objPat.SetAdmissionAndBirthDate dtmAdm, dtmBd
+        objPat.SetAdmissionAndBirthDate dtmAdm, dtmBD
         
         If objPat.Gewicht * 1000 < objPat.GeboorteGewicht Then objPat.Gewicht = objPat.GeboorteGewicht / 1000
         
@@ -356,45 +356,6 @@ End Function
 Private Sub Test_MetaVision_GetUserLogin()
 
     MsgBox MetaVision_GetUserLogin()
-
-End Sub
-
-Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String)
-
-    Dim strSecret As String
-    Dim strUser As String
-    Dim strPw As String
-    
-    On Error GoTo InitConnectionError
-    
-    strSecret = ModFile.ReadFile(WbkAfspraken.Path & "/" & constSecret)
-    
-    If strSecret <> vbNullString Then
-        strUser = Split(strSecret, vbLf)(0)
-        strPw = Split(strSecret, vbLf)(1)
-    
-        Set objConn = New ADODB.Connection
-        
-        objConn.ConnectionString = "Provider=SQLOLEDB.1;" _
-                 & "Server=" & strServer & ";" _
-                 & "Database=" & strDatabase & ";" _
-                 & "User ID=" & strUser & ";" _
-                 & "Password=" & strPw & ";" _
-                 & "DataTypeCompatibility=80;" _
-                 & "MARS Connection=True;"
-        ' Test de connectie
-        objConn.Open
-        objConn.Close
-    Else
-        MsgBox "Geen toegang tot de database!"
-        ModLog.LogError "Bestand secret niet aanwezig"
-    End If
-    
-    Exit Sub
-    
-InitConnectionError:
-    MsgBox "Geen toegang tot de database!"
-    ModLog.LogError "InitConnection Failed"
 
 End Sub
 
@@ -801,5 +762,45 @@ GetMedicatieOpdrachtenError:
     
     
     ModMessage.ShowMsgBoxError "Kan medicatie opdrachten niet ophalen"
+End Sub
+
+
+Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String)
+
+    Dim strSecret As String
+    Dim strUser As String
+    Dim strPw As String
+    
+    On Error GoTo InitConnectionError
+    
+    strSecret = ModFile.ReadFile(WbkAfspraken.Path & "/" & constSecret)
+    
+    If strSecret <> vbNullString Then
+        strUser = Split(strSecret, vbLf)(0)
+        strPw = Split(strSecret, vbLf)(1)
+    
+        Set objConn = New ADODB.Connection
+        
+        objConn.ConnectionString = "Provider=SQLOLEDB.1;" _
+                 & "Server=" & strServer & ";" _
+                 & "Database=" & strDatabase & ";" _
+                 & "User ID=" & strUser & ";" _
+                 & "Password=" & strPw & ";" _
+                 & "DataTypeCompatibility=80;" _
+                 & "MARS Connection=True;"
+        ' Test de connectie
+        objConn.Open
+        objConn.Close
+    Else
+        MsgBox "Geen toegang tot de database!"
+        ModLog.LogError "Bestand secret niet aanwezig"
+    End If
+    
+    Exit Sub
+    
+InitConnectionError:
+    MsgBox "Geen toegang tot de database!"
+    ModLog.LogError "InitConnection Failed"
+
 End Sub
 

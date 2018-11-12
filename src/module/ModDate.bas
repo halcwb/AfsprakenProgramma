@@ -19,7 +19,6 @@ Private Sub TestEmptyDate()
 
 End Sub
 
-
 Public Function DateYear(ByVal dtmDate As Date) As Integer
 
     DateYear = DatePart("yyyy", dtmDate)
@@ -39,9 +38,27 @@ Public Function DateDay(ByVal dtmDate As Date) As Integer
 
 End Function
 
-
 Private Sub Test_DateYear()
 
     ModMessage.ShowMsgBoxInfo DateYear(DateTime.Now)
 
 End Sub
+
+Public Function FormatDateTimeSeconds(dtmDateTime As Date) As String
+
+    FormatDateTimeSeconds = Format(dtmDateTime, "yyyy-mm-dd hh:mm:ss")
+
+End Function
+
+Public Function FormatDateYearMonthDay(dtmDateTime As Date) As String
+
+    FormatDateYearMonthDay = Format(dtmDateTime, "yyyy-mm-dd")
+
+End Function
+
+Private Sub Test_FormatDateTimeSeconds()
+
+    ModMessage.ShowMsgBoxInfo FormatDateTimeSeconds(Now())
+
+End Sub
+

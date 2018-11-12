@@ -205,7 +205,7 @@ End Function
 
 Public Sub GetPatientDetails(objPat As ClassPatientDetails)
 
-    Dim dtmBd As Date
+    Dim dtmBD As Date
     Dim dtmAdm As Date
     
     objPat.PatientId = ModRange.GetRangeValue(constPatNum, vbNullString)
@@ -220,8 +220,8 @@ Public Sub GetPatientDetails(objPat As ClassPatientDetails)
     objPat.Days = ModRange.GetRangeValue(constDagen, 0)
     
     dtmAdm = ModRange.GetRangeValue(constOpnDat, ModDate.EmptyDate)
-    dtmBd = ModRange.GetRangeValue(constGebDatum, ModDate.EmptyDate)
-    objPat.SetAdmissionAndBirthDate dtmAdm, dtmBd
+    dtmBD = ModRange.GetRangeValue(constGebDatum, ModDate.EmptyDate)
+    objPat.SetAdmissionAndBirthDate dtmAdm, dtmBD
     
 End Sub
 
@@ -410,13 +410,13 @@ Public Function ValidLengthCm(ByVal dblLen As Double) As Boolean
 
 End Function
 
-Public Function ValidBirthDate(ByVal dtmBd As Date, ByVal dtmAdm As Date) As Boolean
+Public Function ValidBirthDate(ByVal dtmBD As Date, ByVal dtmAdm As Date) As Boolean
 
     Dim dtmMin As Date
     
     dtmMin = DateAdd("yyyy", -100, DateTime.Date)
     
-    ValidBirthDate = dtmBd <= DateTime.Date And dtmBd > dtmMin And dtmBd <= dtmAdm
+    ValidBirthDate = dtmBD <= DateTime.Date And dtmBD > dtmMin And dtmBD <= dtmAdm
 
 End Function
 

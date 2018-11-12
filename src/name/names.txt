@@ -2025,6 +2025,7 @@ PedPrtTPN2tot6!Afdrukbereik:	=PedPrtTPN2tot6!$A$1:$H$44
 PedPrtTPN31tot50!Afdrukbereik:	=PedPrtTPN31tot50!$A$1:$H$43
 PedPrtTPN50!Afdrukbereik:	=PedPrtTPN50!$A$1:$H$43
 PedPrtTPN7tot15!Afdrukbereik:	=PedPrtTPN7tot15!$A$1:$H$44
+DB_DatabaseBusy:	=GlobSettings!$T$2
 Setting_MVMed:	=GlobSettings!#REF!
 SettingDataDir:	=GlobSettings!$B$9
 SettingDbDir:	=GlobSettings!$B$10

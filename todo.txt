@@ -79,6 +79,7 @@ Na 28 november
 
 - Neo octreotide toevoegen aan continue medicatie
 - Morfine doserng naar microg/kg/min
+- Neo insuline in glucose?
 
 - Patient openen in pre-opname resulteerd in een fout
 

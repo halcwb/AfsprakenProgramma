@@ -2,6 +2,8 @@ Attribute VB_Name = "ModBed"
 Option Explicit
 
 Private Const constVersie As String = "Var_Glob_Versie"
+Private Const constBusy As String = "DB_DatabaseBusy"
+
 Private Const constBed As String = "__1_Bed"
 
 Public Sub SetBed(ByVal strBed As String)
@@ -21,6 +23,30 @@ Public Function GetFileVersie() As Date
     GetFileVersie = ModRange.GetRangeValue(constVersie, Now())
 
 End Function
+
+Public Function GetDatabaseVersie() As String
+
+    Dim strVer As String
+    
+    strVer = ModRange.GetRangeValue(constVersie, "")
+    strVer = ModDate.FormatDateTimeSeconds(CDate(strVer))
+    
+    GetDatabaseVersie = strVer
+
+End Function
+
+Private Sub Test_GetDatabaseVersie()
+
+    ModMessage.ShowMsgBoxOK GetDatabaseVersie()
+
+End Sub
+
+
+Public Sub SetDatabaseVersie(strVersie As String)
+
+    ModRange.SetRangeValue constVersie, strVersie
+
+End Sub
 
 Public Function GetBed() As String
 
@@ -356,3 +382,91 @@ SaveBedToFileError:
     SaveBedToFile = False
 
 End Function
+
+Private Function SaveBedToDatabase(ByVal strBed As String, ByVal blnShowProgress As Boolean) As Boolean
+
+    Dim strVersion As String
+    Dim strCurrent As String
+    Dim strPrescriber As String
+    Dim strMsg As String
+    Dim intC As Integer
+    Dim intR As Integer
+    Dim varReply As VbMsgBoxResult
+        
+    Dim strProg As String
+        
+    On Error GoTo SaveBedToDatabaseError
+    
+    ' Guard for invalid bed name
+    ' If Not IsValidBed(strBed) Then GoTo SaveBedToDatabaseError
+    
+    strCurrent = ModBed.GetDatabaseVersie()
+    strVersion = ModDatabase.Database_GetLatestVersion(ModPatient.PatientHospNum())
+    If Not strVersion = vbNullString Then
+        strVersion = ModDate.FormatDateTimeSeconds(CDate(strVersion))
+    End If
+    
+    ModDatabase.InitDatabase
+    If ModRange.GetRangeValue(constBusy, True) Then
+        strMsg = "De database is nog bezig met het wegschrijven van de patient."
+        strMsg = strMsg & "Probeer het over een aantal seconden nog eens."
+        strMsg = strMsg & "Lukt het dan nog niet, herstart het programma."
+        
+        ModMessage.ShowMsgBoxInfo strMsg
+        
+        Exit Function
+    End If
+        
+    If strVersion = vbNullString Or Not strVersion = strCurrent Then
+        If blnShowProgress Then
+            strProg = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+    
+    
+        strMsg = strMsg & "De afspraken zijn inmiddels gewijzig!" & vbNewLine
+        strMsg = strMsg & "De huidige versie is van: " & strCurrent & vbNewLine
+        strMsg = strMsg & "De nieuwste versie is van: " & strVersion & "." & vbNewLine
+        strMsg = strMsg & "Wilt u toch de afspraken opslaan?"
+        varReply = ModMessage.ShowMsgBoxYesNo(strMsg)
+        
+        If blnShowProgress Then ModProgress.StartProgress strProg
+
+        If varReply = vbNo Then Exit Function
+    End If
+    
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
+
+    ModDatabase.Database_SavePatient
+    ModDatabase.Database_SavePrescriber
+    
+    strVersion = ModDate.FormatDateTimeSeconds(Now())
+    strPrescriber = ModMetaVision.MetaVision_GetUserLogin()
+    
+    ModDatabase.Database_SaveData strVersion, ModPatient.PatientHospNum(), strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
+        
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+        
+    SaveBedToDatabase = True
+        
+    Exit Function
+    
+SaveBedToDatabaseError:
+    
+    ModMessage.ShowMsgBoxError "Kan patient niet opslaan"
+    ModLog.LogError "Could not save bed to database with: "
+
+    Application.DisplayAlerts = True
+    SaveBedToDatabase = False
+
+End Function
+
+Private Sub Test_SaveBedToDatabase()
+
+    ModProgress.StartProgress "Testing"
+    SaveBedToDatabase "", True
+    ModProgress.FinishProgress
+
+End Sub

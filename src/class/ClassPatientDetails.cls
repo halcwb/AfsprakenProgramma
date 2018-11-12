@@ -175,11 +175,11 @@ Public Property Get OpnameDatum() As Date
 
 End Property
 
-Public Function SetAdmissionAndBirthDate(ByVal dtmAdm As Date, ByVal dtmBd As Date) As Boolean
+Public Function SetAdmissionAndBirthDate(ByVal dtmAdm As Date, ByVal dtmBD As Date) As Boolean
 
-    If ModPatient.ValidBirthDate(dtmBd, dtmAdm) Then
+    If ModPatient.ValidBirthDate(dtmBD, dtmAdm) Then
         m_AD = dtmAdm
-        m_BD = dtmBd
+        m_BD = dtmBD
         
         SetAdmissionAndBirthDate = True
     Else

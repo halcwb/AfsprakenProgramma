@@ -475,7 +475,7 @@ Private Sub ChangeMedContIV(ByVal intN As Integer, ByVal blnRemove As Boolean)
     
     ModRange.SetRangeValue constOplHoev & strN, IIf(blnRemove, 0, dblOplQty)
     ModRange.SetRangeValue constStand & strN, IIf(blnRemove, 0, dblStand)
-    ModRange.SetRangeValue constExtra & strN, False
+    ModRange.SetRangeValue constExtra & (IntNToStrN(intN + 1)), False
     
     ModRange.SetRangeValue constOplossing & strN, Application.VLookup(objTblMed.Cells(intMedIndx, 1), objTblMed, constAdvOplIndex, False)
     If Not IsNumeric(ModRange.GetRangeValue(constOplossing & strN, vbNullString)) Then

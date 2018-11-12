@@ -505,16 +505,16 @@ End Function
 Private Function CreateTestWbkPath(wbkTest As Workbook) As String
 
     Dim strPath As String
-    Dim strTs As String
+    Dim strTS As String
     Dim strName As String
     
-    strTs = Now()
-    strTs = Replace(strTs, ":", " ")
+    strTS = Now()
+    strTS = Replace(strTS, ":", " ")
     
     strPath = Replace(wbkTest.FullName, wbkTest.Name, vbNullString)
     strName = Split(wbkTest.Name, ".")(0)
     
-    strPath = strPath & strName & "_" & Application_GetVersion() & "_" & strTs
+    strPath = strPath & strName & "_" & Application_GetVersion() & "_" & strTS
     
     CreateTestWbkPath = strPath
 
