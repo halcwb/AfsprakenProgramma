@@ -103,7 +103,7 @@ Public Sub LoadPatients2(ByVal colPats As Collection)
     
     For Each objPat In colPats
         If m_onlyAdmitted Then
-            If Not objPat.Bed = vbNullString Then
+            If Not objPat.Bed = vbNullString And objPat.Afdeling = ModMetaVision.MetaVision_GetDepartment() Then
                 ModArray.AddItemToVariantArray arrSort, PatToSortString(objPat)
             End If
         Else

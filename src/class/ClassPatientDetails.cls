@@ -21,7 +21,7 @@ Private m_GS As String
 Private m_GW As Integer
 Private m_GD As Integer
 Private m_LU As String
-
+Private m_DP As String
 
 Public Property Get AchterNaam() As String
 
@@ -144,6 +144,18 @@ Public Property Let Bed(ByVal strBed As String)
 
 End Property
 
+Public Property Get Afdeling() As String
+
+    Afdeling = m_DP
+
+End Property
+
+Public Property Let Afdeling(ByVal strAfd As String)
+
+    m_DP = strAfd
+
+End Property
+
 Public Property Get Geslacht() As String
 
     Geslacht = m_GS
@@ -212,7 +224,7 @@ Public Function ToString() As String
 
     Dim strString As String
     
-    strString = Me.PatientId & ": "
+    strString = Me.PatientId & " : "
     
     If Me.AchterNaam() <> vbNullString And Me.VoorNaam() <> vbNullString Then
         strString = Strings.Trim(strString) & " " & Me.AchterNaam & ", " & Me.VoorNaam()

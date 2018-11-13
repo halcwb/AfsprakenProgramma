@@ -250,7 +250,7 @@ Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As
     
     strSql = strSql & "SELECT DISTINCT" & vbNewLine
     strSql = strSql & "pl.PatientID" & vbNewLine
-    strSql = strSql & ", pl.HospitalNumber" & vbNewLine
+    strSql = strSql & ", pat.HospitalNumber" & vbNewLine
     strSql = strSql & ", pl.LastName" & vbNewLine
     strSql = strSql & ", pl.FirstName" & vbNewLine
     strSql = strSql & ", (SELECT TOP 1 dts.Value" & vbNewLine
@@ -296,9 +296,9 @@ Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As
     strSql = strSql & "WHERE " & vbNewLine
     strSql = strSql & "(@patId IS NULL OR pl.PatientID = @patId)" & vbNewLine
     strSql = strSql & "AND (@patNum IS NULL OR pl.HospitalNumber = @patNum)" & vbNewLine
-    strSql = strSql & "AND (@dep IS NULL OR lu.Name = @dep)" & vbNewLine
+    strSql = strSql & "-- AND (@dep IS NULL OR lu.Name = @dep)" & vbNewLine
     strSql = strSql & "AND (@bed IS NULL OR RTRIM(LTRIM(b.BedName)) = RTRIM(LTRIM(@bed)))" & vbNewLine
-    strSql = strSql & "ORDER BY pl.HospitalNumber, pl.LocationFromTime DESC" & vbNewLine
+    strSql = strSql & "ORDER BY pat.HospitalNumber, pl.TimeLog DESC" & vbNewLine
     
     ModUtils.CopyToClipboard strSql
     GetPatientListSQL2 = strSql
@@ -406,6 +406,7 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
     Dim dtmAdm As Date
     Dim strSql As String
     Dim intN As Integer
+    Dim blnDep As Boolean
     
     On Error GoTo HandleError:
     
@@ -425,13 +426,10 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
     Do While Not objRs.EOF
         Set objPat = New ClassPatientDetails
         intN = intN + 1
+        blnDep = False
                 
         objPat.PatientId = objRs.Fields("HospitalNumber")
-        
-        If intN = 82 Then
-            intN = 82
-        End If
-    
+            
         If Not IsNull(objRs.Fields("BirthDate")) Then dtmBD = ModString.StringToDate(objRs.Fields("BirthDate"))
         If Not IsNull(objRs.Fields("BedName")) Then objPat.Bed = Trim(objRs.Fields("BedName"))
         objPat.AchterNaam = objRs.Fields("LastName")
@@ -445,7 +443,8 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
         If Not IsNull(objRs.Fields("PregnWeeks")) Then objPat.Weeks = objRs.Fields("PregnWeeks")
     
         dtmAdm = ModString.StringToDate(objRs.Fields("LocationFromTime"))
-        If Not IsNull(objRs.Fields("Department")) Then strDep = objRs.Fields("Department")
+        
+        If Not IsNull(objRs.Fields("Department")) Then objPat.Afdeling = objRs.Fields("Department")
         
         objPat.SetAdmissionAndBirthDate dtmAdm, dtmBD
         
@@ -453,13 +452,14 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
         
         Do While Not objRs.EOF
             If objRs.Fields("HospitalNumber") = objPat.PatientId Then
+                If Not IsNull(objRs.Fields("Department")) Then blnDep = blnDep Or strDep = objRs.Fields("Department")
                 objRs.MoveNext
             Else
                 Exit Do
             End If
         Loop
         
-        objCol.Add objPat
+        If blnDep Then objCol.Add objPat
     Loop
     
     objConn.Close
