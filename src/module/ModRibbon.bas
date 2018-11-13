@@ -28,11 +28,19 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpBedden                                          ' -- BEDDEN --
         
         Case "btnOpenBed"                                   ' -> Bed Openen
-            ModBed.OpenBed
+            If ModSetting.UseDatabase Then
+                ModBed.OpenBed2
+            Else
+                ModBed.OpenBed
+            End If
             ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnSaveBed"                                   ' -> Bed Opslaan
-            ModBed.CloseBed True
+            If ModSetting.UseDatabase Then
+                ModBed.CloseBed2
+            Else
+                ModBed.CloseBed True
+            End If
             ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnEnterPatient"                              ' -> Patient Gegevens

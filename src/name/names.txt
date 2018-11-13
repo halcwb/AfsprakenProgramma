@@ -2036,6 +2036,7 @@ SettingLogging:	=GlobSettings!$B$3
 SettingNeoDir:	=GlobSettings!$B$4
 SettingPedDir:	=GlobSettings!$B$5
 SettingTestLogDir:	=GlobSettings!$B$7
+SettingUseDatabase:	=GlobSettings!$B$11
 Tbl_Admin_NeoMedCont:	=NeoTblMedIV!$B$4:$T$26
 Tbl_Admin_ParEnt:	=GlobTblParEnt!$A$6:$N$47
 Tbl_Admin_PedMedCont:	=PedTblMedIV!$B$5:$S$35

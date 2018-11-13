@@ -77,7 +77,7 @@ Public Property Let BirthDate(ByVal strBD As String)
 
 End Property
 
-Public Function toString() As String
+Public Function ToString() As String
 
     Dim strString As String
     
@@ -92,6 +92,6 @@ Public Function toString() As String
     
     strString = IIf(Me.AchterNaam = vbNullString, strString, Strings.Trim(strString) & " " & Me.BirthDate())
 
-    toString = strString
+    ToString = strString
 
 End Function

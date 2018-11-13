@@ -153,6 +153,37 @@ OpenPatientListError:
     
 End Sub
 
+Public Sub OpenPatientLijst2(ByVal strCaption As String)
+    
+    Dim frmPats As FormPatLijst
+    Dim colPats As Collection
+    
+    On Error GoTo OpenPatientListError
+    
+    Set colPats = GetMetaVisionPatients()
+    Set frmPats = New FormPatLijst
+    
+    With frmPats
+        .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
+        .LoadPatients2 colPats
+        .Show
+    End With
+    
+    Exit Sub
+    
+OpenPatientListError:
+
+    ModMessage.ShowMsgBoxError "Kan patient lijst niet openen"
+    ModLog.LogError "Cannot OpenPatientLijst2(" & strCaption & ")" & ": " & Err.Number
+    
+End Sub
+
+Private Sub Test_OpenPatientLijst2()
+
+    OpenPatientLijst2 "Test"
+    
+End Sub
+
 Public Function CreatePatientInfo(ByVal strId As String, ByVal strBed As String, ByVal strAN As String, ByVal strVN As String, ByVal strBD As String) As ClassPatientInfo
 
     Dim objInfo As ClassPatientInfo
@@ -200,6 +231,21 @@ Public Function GetPatients() As Collection
     End If
 
     Set GetPatients = colPatienten
+
+End Function
+
+Public Function GetMetaVisionPatients() As Collection
+
+    Dim colPats As Collection
+    Dim objPat As ClassPatientDetails
+    Dim strDep As String
+    
+    strDep = ModMetaVision.MetaVision_GetDepartment()
+    Set colPats = New Collection
+    
+    ModMetaVision.MetaVision_GetPatientsForDepartment colPats, strDep
+    
+    Set GetMetaVisionPatients = colPats
 
 End Function
 

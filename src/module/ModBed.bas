@@ -5,6 +5,13 @@ Private Const constVersie As String = "Var_Glob_Versie"
 Private Const constBusy As String = "DB_DatabaseBusy"
 
 Private Const constBed As String = "__1_Bed"
+Private Const constHospNum As String = "__0_PatNum"
+Public Sub SetPatientHospitalNumber(ByVal strHospNum As String)
+
+    ModRange.SetRangeValue constHospNum, strHospNum
+
+End Sub
+
 
 Public Sub SetBed(ByVal strBed As String)
 
@@ -29,7 +36,7 @@ Public Function GetDatabaseVersie() As String
     Dim strVer As String
     
     strVer = ModRange.GetRangeValue(constVersie, "")
-    strVer = ModDate.FormatDateTimeSeconds(CDate(strVer))
+    If Not strVer = vbNullString Then strVer = ModDate.FormatDateTimeSeconds(CDate(strVer))
     
     GetDatabaseVersie = strVer
 
@@ -58,6 +65,14 @@ Public Sub OpenBed()
 
     ModProgress.StartProgress "Open Bed"
     OpenBedAsk True, True
+    ModProgress.FinishProgress
+
+End Sub
+
+Public Sub OpenBed2()
+
+    ModProgress.StartProgress "Open Bed"
+    OpenBedAsk2 True, True
     ModProgress.FinishProgress
 
 End Sub
@@ -173,6 +188,108 @@ End Sub
 Private Sub TestOpenBed()
 
     OpenBed
+
+End Sub
+
+Public Sub OpenBedAsk2(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
+    
+    Dim strHospNum As String
+    Dim strTitle As String
+    Dim strAction As String
+    Dim strParams() As Variant
+    Dim strFileName As String
+    Dim strBookName As String
+    Dim strRange As String
+    Dim blnAll As Boolean
+    Dim blnNeo As Boolean
+    
+    On Error GoTo ErrorOpenBed
+    
+    strHospNum = ModRange.GetRangeValue(constHospNum, vbNullString)
+    blnNeo = MetaVision_IsNeonatologie()
+    
+    If blnAsk Then
+        If blnShowProgress Then
+            strTitle = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+    
+        ModPatient.OpenPatientLijst2 "Selecteer een patient"
+        If ModRange.GetRangeValue(constHospNum, vbNullString) = vbNullString Then  ' No patient was selected
+            SetPatientHospitalNumber strHospNum                                    ' Put back the old hospital number
+            Exit Sub                                                               ' And exit sub
+        Else
+            strHospNum = ModRange.GetRangeValue(constHospNum, vbNullString)
+            
+            If blnShowProgress Then ModProgress.StartProgress strTitle
+        End If
+    End If
+    
+    GetPatientDataFromDatabase strHospNum
+    If Not strHospNum = vbNullString Then SetPatientHospitalNumber strHospNum
+    
+    Exit Sub
+
+ErrorOpenBed:
+
+    ModMessage.ShowMsgBoxError "Kan bed " & strHospNum & " niet openenen"
+    ModLog.LogError Err.Description
+    
+End Sub
+
+Private Sub Test_OpenBedAsk2()
+    
+    ModProgress.StartProgress "Testing select patient"
+    OpenBedAsk2 True, True
+    ModProgress.FinishProgress
+
+End Sub
+
+Public Sub GetPatientDataFromDatabase(ByVal strHospNum As String)
+    
+    On Error GoTo GetPatientDataFromDatabaseError
+
+    Dim strTitle As String
+    Dim strAction As String
+    Dim strParams() As Variant
+    Dim blnNeo As Boolean
+    
+    ModProgress.StartProgress "Patient data ophalen voor " & strHospNum
+    
+    blnNeo = MetaVision_IsNeonatologie()
+    
+    strAction = "ModBed.GetPatientDataFromDatabase"
+    
+    ModLog.LogActionStart strAction, strParams
+            
+    ModPatient.ClearPatientData vbNullString, False, True
+    
+    ModDatabase.Database_GetPatientData strHospNum
+    
+    If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True       ' Make sure that infuusbrief data is updated
+            
+    ModApplication.SetApplicationTitle
+
+    If Not blnNeo Then ModPedEntTPN.PedEntTPN_SelectStandardTPN
+    ModMetaVision.MetaVision_SyncLab
+    ModSheet.SelectPedOrNeoStartSheet True
+    
+    ModProgress.FinishProgress
+    ModLog.LogActionEnd strAction
+    
+    Exit Sub
+
+GetPatientDataFromDatabaseError:
+
+    ModProgress.FinishProgress
+    ModMessage.ShowMsgBoxError "Kan patient " & strHospNum & " niet openenen"
+    ModLog.LogError Err.Description
+    
+End Sub
+
+Private Sub Test_GetPatientDataFromDatabase()
+
+    GetPatientDataFromDatabase "0250574"
 
 End Sub
 
@@ -383,7 +500,57 @@ SaveBedToFileError:
 
 End Function
 
-Private Function SaveBedToDatabase(ByVal strBed As String, ByVal blnShowProgress As Boolean) As Boolean
+Public Sub CloseBed2()
+
+    Dim strBed As String
+    Dim strNew As String
+    
+    Dim strPrompt As String
+    Dim strAction As String
+    Dim strParams() As Variant
+    
+    Dim varReply As VbMsgBoxResult
+    
+    Dim blnNeo As Boolean
+
+    On Error GoTo CloseBedError
+    
+    blnNeo = MetaVision_IsNeonatologie()
+    
+    strAction = "ModBed.CloseBed2"
+    strParams = Array()
+    LogActionStart strAction, strParams
+        
+    
+    ModProgress.StartProgress "Bed Opslaan"
+    
+    If blnNeo Then
+        ModNeoInfB.NeoInfB_SelectInfB False, False ' Make sure that the Infuusbrief Actueel is selected
+        ModNeoInfB.CopyCurrentInfVarToData True   ' Make sure that neo data is updated with latest current infuusbrief
+    End If
+
+    If SaveBedToDatabase(True) Then
+        ModProgress.FinishProgress
+        ModMessage.ShowMsgBoxInfo "Patient is opgeslagen"
+    Else
+        ModProgress.FinishProgress
+        ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
+    End If
+
+    LogActionEnd strAction
+    
+    Exit Sub
+    
+CloseBedError:
+
+    ModProgress.FinishProgress
+    
+    ModMessage.ShowMsgBoxError "Kan patient niet opslaan op bed: " & strBed
+    ModLog.LogError strAction
+
+End Sub
+
+Private Function SaveBedToDatabase(ByVal blnShowProgress As Boolean) As Boolean
 
     Dim strVersion As String
     Dim strCurrent As String
@@ -406,13 +573,14 @@ Private Function SaveBedToDatabase(ByVal strBed As String, ByVal blnShowProgress
         strVersion = ModDate.FormatDateTimeSeconds(CDate(strVersion))
     End If
     
-    ModDatabase.InitDatabase
     If ModRange.GetRangeValue(constBusy, True) Then
         strMsg = "De database is nog bezig met het wegschrijven van de patient."
         strMsg = strMsg & "Probeer het over een aantal seconden nog eens."
         strMsg = strMsg & "Lukt het dan nog niet, herstart het programma."
         
         ModMessage.ShowMsgBoxInfo strMsg
+        
+        ModRange.SetRangeValue "DB_DatabaseBusy", False
         
         Exit Function
     End If
@@ -444,6 +612,7 @@ Private Function SaveBedToDatabase(ByVal strBed As String, ByVal blnShowProgress
     strVersion = ModDate.FormatDateTimeSeconds(Now())
     strPrescriber = ModMetaVision.MetaVision_GetUserLogin()
     
+    ModDatabase.InitDatabase
     ModDatabase.Database_SaveData strVersion, ModPatient.PatientHospNum(), strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
         
     Application.DisplayAlerts = True
@@ -466,7 +635,7 @@ End Function
 Private Sub Test_SaveBedToDatabase()
 
     ModProgress.StartProgress "Testing"
-    SaveBedToDatabase "", True
+    SaveBedToDatabase True
     ModProgress.FinishProgress
 
 End Sub

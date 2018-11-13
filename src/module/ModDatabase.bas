@@ -370,3 +370,55 @@ Public Sub Database_SaveData(strTimeStamp As String, strHospNum, strPrescriber A
     
 End Sub
 
+Public Sub Database_GetPatientData(strHospNum As String)
+
+    Dim strSql As String
+    Dim intC As Long
+    Dim intN As Integer
+    Dim strPar As String
+    Dim varVal As Variant
+    Dim varEmp As Variant
+    Dim objRs As Recordset
+    
+    On Error GoTo Database_GetPatientDataError
+    
+    strSql = strSql & "SELECT * FROM dbo.GetLatestPrescriptionData('" & strHospNum & "')"
+    
+    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    
+    objConn.Open
+    
+    Set objRs = objConn.Execute(strSql)
+    
+    intC = shtPatData.Range("A1").Rows.Count
+    Do While Not objRs.EOF
+        strPar = Trim(objRs.Fields("Parameter").Value)
+        varVal = objRs.Fields("Data").Value
+        ModRange.SetRangeValue strPar, varVal
+        
+        intN = intN + 1
+        ModProgress.SetJobPercentage "Patient data laden", intC, intN
+        
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+    
+    Exit Sub
+
+Database_GetPatientDataError:
+    
+    ModMessage.ShowMsgBoxError "Kan patient met ziekenhuis nummer " & strHospNum & " niet laden."
+    
+    ModLog.LogError "Could not get patient data with hospitalnumber " & strHospNum & " with SQL: " & vbNewLine & strSql
+    objConn.Close
+    
+End Sub
+
+Private Sub Test_DatabaseGetPatientData()
+
+    ModProgress.StartProgress "Patient data ophalen"
+    Database_GetPatientData "0250574"
+    ModProgress.FinishProgress
+
+End Sub

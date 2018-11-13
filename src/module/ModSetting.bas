@@ -20,6 +20,8 @@ Private Const constTestLogDir As String = "SettingTestLogDir"
 Private Const constLogDir As String = "SettingLogDir"
 Private Const constDataDir As String = "SettingDataDir"
 Private Const constDbDir As String = "SettingDbDir"
+Private Const constUseDB As String = "SettingUseDatabase"
+
 Private Const constPreData As String = vbNullString
 Private Const constPostData As String = "_Data"
 Private Const constPreText As String = vbNullString
@@ -62,6 +64,19 @@ SetSettingError:
     ModMessage.ShowMsgBoxError strMsg
     
 End Sub
+
+Public Function UseDatabase() As Boolean
+
+    UseDatabase = GetSetting(constUseDB)
+
+End Function
+
+Private Sub Test_UseDatabase()
+
+    ModMessage.ShowMsgBoxInfo UseDatabase
+
+End Sub
+
 
 Public Function IsDevelopmentMode() As Boolean
 

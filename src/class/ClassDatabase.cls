@@ -83,6 +83,9 @@ Public Sub SaveData(strTimeStamp As String, strHospNum, strPrescriber As String,
     Dim intC As Integer
     Dim intN As Integer
         
+    strTS = strTimeStamp
+    strPrev = ModBed.GetDatabaseVersie()
+            
     On Error GoTo SaveDataError
        
     intC = objData.Rows.Count
@@ -115,11 +118,14 @@ Public Sub SaveData(strTimeStamp As String, strHospNum, strPrescriber As String,
     strSql = ModDatabase.WrapTransaction(strSql, "save_data")
     
     ModRange.SetRangeValue constBusy, True
-    objConn.Open
-    objConn.Execute strSql, adExecuteNoRecords, adAsyncExecute
     
-    strTS = strTimeStamp
-    strPrev = ModBed.GetDatabaseVersie()
+    objConn.Open
+    objConn.Execute strSql, adExecuteNoRecords
+    
+    ModRange.SetRangeValue constBusy, False
+    objConn.Close
+    
+    ModBed.SetDatabaseVersie strTS
     
     Exit Sub
 
@@ -149,27 +155,27 @@ Private Function GetErrorMsg(objErr As ADODB.Error) As String
     GetErrorMsg = strMsg
 
 End Function
-
-Private Sub objConn_ExecuteComplete(ByVal lngAffected As Long, ByVal objErr As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal objComm As ADODB.Command, ByVal objRs As ADODB.Recordset, ByVal objConn As ADODB.Connection)
-    
-    If Not objErr Is Nothing Then
-        If objErr.Number <> 0 Then
-            ModMessage.ShowMsgBoxError "Kan data niet wegschrijven in de database"
-            ModLog.LogError "Could finish transaction to save data with error: " & vbNewLine & GetErrorMsg(objErr)
-            
-            ModBed.SetDatabaseVersie strPrev
-        Else
-            ModLog.LogInfo "Saved patient to database: " & strTS
-            ModBed.SetDatabaseVersie strTS
-        End If
-        
-    Else
-        ModLog.LogInfo "Saved patient to database: " & strTS
-        ModBed.SetDatabaseVersie strTS
-    
-    End If
-    
-    ModRange.SetRangeValue constBusy, False
-    objConn.Close
-
-End Sub
+'
+'Private Sub objConn_ExecuteComplete(ByVal lngAffected As Long, ByVal objErr As ADODB.Error, adStatus As ADODB.EventStatusEnum, ByVal objComm As ADODB.Command, ByVal objRs As ADODB.Recordset, ByVal objConn As ADODB.Connection)
+'
+'    If Not objErr Is Nothing Then
+'        If objErr.Number <> 0 Then
+'            ModMessage.ShowMsgBoxError "Kan data niet wegschrijven in de database"
+'            ModLog.LogError "Could finish transaction to save data with error: " & vbNewLine & GetErrorMsg(objErr)
+'
+'            ModBed.SetDatabaseVersie strPrev
+'        Else
+'            ModLog.LogInfo "Saved patient to database: " & strTS
+'            ModBed.SetDatabaseVersie strTS
+'        End If
+'
+'    Else
+'        ModLog.LogInfo "Saved patient to database: " & strTS
+'        ModBed.SetDatabaseVersie strTS
+'
+'    End If
+'
+'    ModRange.SetRangeValue constBusy, False
+'    objConn.Close
+'
+'End Sub

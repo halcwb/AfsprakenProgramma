@@ -208,4 +208,20 @@ Public Sub Clear()
 
 End Sub
 
+Public Function ToString() As String
 
+    Dim strString As String
+    
+    strString = Me.PatientId & ": "
+    
+    If Me.AchterNaam() <> vbNullString And Me.VoorNaam() <> vbNullString Then
+        strString = Strings.Trim(strString) & " " & Me.AchterNaam & ", " & Me.VoorNaam()
+    Else
+        strString = Strings.Trim(strString) & Me.AchterNaam() & Me.VoorNaam()
+    End If
+    
+    strString = IIf(Me.AchterNaam = vbNullString, strString, Strings.Trim(strString) & " " & Me.GeboorteDatum)
+
+    ToString = strString
+
+End Function
