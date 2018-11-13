@@ -306,3 +306,16 @@ Private Sub TestByValVsByRef()
     MsgBox strValue
 
 End Sub
+
+
+Private Sub TestTypes()
+
+'    ModMessage.ShowMsgBoxInfo CDbl("1.3")
+'    ModMessage.ShowMsgBoxInfo IsNumeric("1")
+'    ModMessage.ShowMsgBoxInfo IsNumeric("a")
+'    ModMessage.ShowMsgBoxInfo IsNumeric(Null)
+
+    ModMessage.ShowMsgBoxInfo Application.IsLogical(True)
+    ModMessage.ShowMsgBoxInfo CBool("waar")
+
+End Sub

@@ -6,6 +6,7 @@ Private Const constBusy As String = "DB_DatabaseBusy"
 
 Private Const constBed As String = "__1_Bed"
 Private Const constHospNum As String = "__0_PatNum"
+
 Public Sub SetPatientHospitalNumber(ByVal strHospNum As String)
 
     ModRange.SetRangeValue constHospNum, strHospNum
@@ -170,7 +171,6 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
         End If
     End If
 
-    If Not blnNeo Then ModPedEntTPN.PedEntTPN_SelectStandardTPN
     ModMetaVision.MetaVision_SyncLab
     ModSheet.SelectPedOrNeoStartSheet (Not blnShowProgress)
     
@@ -270,7 +270,6 @@ Public Sub GetPatientDataFromDatabase(ByVal strHospNum As String)
             
     ModApplication.SetApplicationTitle
 
-    If Not blnNeo Then ModPedEntTPN.PedEntTPN_SelectStandardTPN
     ModMetaVision.MetaVision_SyncLab
     ModSheet.SelectPedOrNeoStartSheet True
     

@@ -166,6 +166,7 @@ Public Function SetRangeValue(ByVal strRange As String, ByVal varValue As Varian
     If NameExists(strRange) Then
         blnSet = True
         WbkAfspraken.Names(strRange).RefersToRange.Value2 = varValue
+        
     Else
         blnLog = ModSetting.GetEnableLogging()
         blnSet = False

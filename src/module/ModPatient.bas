@@ -165,6 +165,7 @@ Public Sub OpenPatientLijst2(ByVal strCaption As String)
     
     With frmPats
         .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
+        .SetOnlyAdmittedTrue
         .LoadPatients2 colPats
         .Show
     End With

@@ -370,6 +370,13 @@ Public Sub Database_SaveData(strTimeStamp As String, strHospNum, strPrescriber A
     
 End Sub
 
+Private Function IsLogical(ByVal varVal As Variant) As Boolean
+
+    IsLogical = LCase(varVal) = "waar" Or LCase(varVal) = "onwaar"
+    
+End Function
+
+
 Public Sub Database_GetPatientData(strHospNum As String)
 
     Dim strSql As String
@@ -393,7 +400,11 @@ Public Sub Database_GetPatientData(strHospNum As String)
     intC = shtPatData.Range("A1").Rows.Count
     Do While Not objRs.EOF
         strPar = Trim(objRs.Fields("Parameter").Value)
-        varVal = objRs.Fields("Data").Value
+        varVal = Trim(objRs.Fields("Data").Value)
+        
+        If IsNumeric(varVal) Then varVal = CDbl(varVal)
+        If IsLogical(varVal) Then varVal = CBool(varVal)
+        
         ModRange.SetRangeValue strPar, varVal
         
         intN = intN + 1

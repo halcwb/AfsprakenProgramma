@@ -298,7 +298,7 @@ Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As
     strSql = strSql & "AND (@patNum IS NULL OR pl.HospitalNumber = @patNum)" & vbNewLine
     strSql = strSql & "AND (@dep IS NULL OR lu.Name = @dep)" & vbNewLine
     strSql = strSql & "AND (@bed IS NULL OR RTRIM(LTRIM(b.BedName)) = RTRIM(LTRIM(@bed)))" & vbNewLine
-    strSql = strSql & "ORDER BY pl.HospitalNumber, pl.TimeLog DESC" & vbNewLine
+    strSql = strSql & "ORDER BY pl.HospitalNumber, pl.LocationFromTime DESC" & vbNewLine
     
     ModUtils.CopyToClipboard strSql
     GetPatientListSQL2 = strSql
