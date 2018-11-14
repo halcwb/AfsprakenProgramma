@@ -15,8 +15,6 @@ Attribute objConn.VB_VarHelpID = -1
 Private strTS As String
 Private strPrev As String
 
-Private Const constBusy As String = "DB_DatabaseBusy"
-
 Private Const constSecret As String = "secret"
 
 Public Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String)
@@ -31,9 +29,7 @@ Public Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String
     If (Not objConn Is Nothing) Then Exit Sub
     
     strSecret = ModFile.ReadFile(WbkAfspraken.Path & "/" & constSecret)
-    
-    ModRange.SetRangeValue constBusy, False
-    
+        
     If strSecret <> vbNullString Then
         strUser = Split(strSecret, vbLf)(0)
         strPw = Split(strSecret, vbLf)(1)
@@ -98,7 +94,7 @@ Public Sub SaveData(strTimeStamp As String, strHospNum, strPrescriber As String,
             strSql = strSql & vbNewLine & "EXEC dbo.InsertPrescriptionData '" & strHospNum & "', {ts' " & strTimeStamp & " '}, '" & strPrescriber & "', 0, ' " & strParam & " ', '" & varVal & " '"
         End If
         
-        If blnProgress Then ModProgress.SetJobPercentage "Data wegschrijven naar de database", intC, intN
+        If blnProgress Then ModProgress.SetJobPercentage "Data wegschrijven", intC, intN
     Next intN
     
     strSql = strSql & vbNewLine
@@ -116,13 +112,9 @@ Public Sub SaveData(strTimeStamp As String, strHospNum, strPrescriber As String,
     Next intN
     
     strSql = ModDatabase.WrapTransaction(strSql, "save_data")
-    
-    ModRange.SetRangeValue constBusy, True
-    
+        
     objConn.Open
     objConn.Execute strSql, adExecuteNoRecords
-    
-    ModRange.SetRangeValue constBusy, False
     objConn.Close
     
     ModBed.SetDatabaseVersie strTS
@@ -138,7 +130,6 @@ SaveDataError:
     objConn.Close
     
     ModBed.SetDatabaseVersie strPrev
-    ModRange.SetRangeValue constBusy, False
 
 End Sub
 

@@ -213,8 +213,13 @@ Public Sub InitializeAfspraken()
             
     strBed = ModMetaVision.MetaVision_GetCurrentBedName()
     If strBed <> vbNullString Then
-        ModBed.SetBed strBed
-        ModBed.OpenBedAsk False, True
+        If ModSetting.UseDatabase Then
+            ModBed.SetBed strBed
+            ModBed.OpenBedAsk2 False, True
+        Else
+            ModBed.SetBed strBed
+            ModBed.OpenBedAsk False, True
+        End If
     Else
         ModPatient.PatientClearAll False, True ' Default start with no patient
     End If

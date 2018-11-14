@@ -25,9 +25,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             ModPatient.PatientClearAll True, True
             ModProgress.FinishProgress
         
-        'grpBedden                                          ' -- BEDDEN --
+        'grpBedden                                          ' -- PATIENTEN --
         
-        Case "btnOpenBed"                                   ' -> Bed Openen
+        Case "btnPatientList"                                   ' -> Open patient lijst
             If ModSetting.UseDatabase Then
                 ModBed.OpenBed2
             Else
@@ -35,9 +35,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             End If
             ModSheet.SelectPedOrNeoStartSheet True
         
-        Case "btnSaveBed"                                   ' -> Bed Opslaan
+        Case "btnSavePatient"                               ' -> Patient opslaan
             If ModSetting.UseDatabase Then
-                ModBed.CloseBed2
+                ModPatient.Patient_SavePatient
             Else
                 ModBed.CloseBed True
             End If

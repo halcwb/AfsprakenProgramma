@@ -494,5 +494,146 @@ Public Function ValidBirthWeight(ByVal intBw As Integer) As Boolean
 
 End Function
 
+Public Sub Patient_SavePatient()
 
+    Dim strBed As String
+    Dim strNew As String
+    
+    Dim strPrompt As String
+    Dim strAction As String
+    Dim strParams() As Variant
+    
+    Dim varReply As VbMsgBoxResult
+    
+    Dim blnNeo As Boolean
 
+    On Error GoTo CloseBedError
+    
+    If ModString.StringIsZeroOrEmpty(ModPatient.PatientHospNum()) Then
+        ModMessage.ShowMsgBoxExclam "Kan patient zonder ziekenhuis nummer niet opslaan!"
+        Exit Sub
+    End If
+    
+    blnNeo = MetaVision_IsNeonatologie()
+    
+    strAction = "ModPatient.Patient_SavePatient"
+    strParams = Array()
+    LogActionStart strAction, strParams
+        
+    
+    ModProgress.StartProgress "Patient " & ModPatient.GetPatientString & " opslaan"
+    
+    If blnNeo Then
+        ModNeoInfB.NeoInfB_SelectInfB False, False ' Make sure that the Infuusbrief Actueel is selected
+        ModNeoInfB.CopyCurrentInfVarToData True    ' Make sure that neo data is updated with latest current infuusbrief
+    End If
+
+    If SavePatientToDatabase(True) Then
+        ModProgress.FinishProgress
+        ModMessage.ShowMsgBoxInfo "Patient is opgeslagen"
+    Else
+        ModProgress.FinishProgress
+        ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
+    End If
+
+    LogActionEnd strAction
+    
+    Exit Sub
+    
+CloseBedError:
+
+    ModProgress.FinishProgress
+    
+    ModMessage.ShowMsgBoxError "Kan patient niet opslaan op bed: " & strBed
+    ModLog.LogError strAction
+
+End Sub
+
+Private Function GetDateWarningMsg(ByVal strCurrent, ByVal strLatest) As String
+
+    Dim strMsg As String
+
+    strMsg = strMsg & "De afspraken zijn inmiddels gewijzig!" & vbNewLine
+    strMsg = strMsg & vbNewLine
+    strMsg = strMsg & ModDate.FormatDateHoursMinutes(CDate(strCurrent)) & " (huidige versie) " & vbNewLine
+    strMsg = strMsg & ModDate.FormatDateHoursMinutes(CDate(strLatest)) & " (laatst opgeslagen versie)" & vbNewLine
+    strMsg = strMsg & vbNewLine
+    strMsg = strMsg & "Wilt u toch de afspraken opslaan?" & vbNewLine
+    strMsg = strMsg & vbNewLine
+    strMsg = strMsg & "U OVERSCHRIJFT DAN RECENTER OPGESLAGEN AFSPRAKEN!!"
+
+    GetDateWarningMsg = strMsg
+
+End Function
+
+Private Sub Test_GetDateWarningMsg()
+
+    ModMessage.ShowMsgBoxYesNo GetDateWarningMsg(FormatDateTimeSeconds(Now()), FormatDateTimeSeconds(Now()))
+
+End Sub
+
+Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Boolean
+
+    Dim strLatest As String
+    Dim strCurrent As String
+    Dim strPrescriber As String
+    Dim strMsg As String
+    Dim intC As Integer
+    Dim intR As Integer
+    Dim varReply As VbMsgBoxResult
+        
+    Dim strProg As String
+        
+    On Error GoTo SaveBedToDatabaseError
+    
+    ' Guard for invalid bed name
+    ' If Not IsValidBed(strBed) Then GoTo SaveBedToDatabaseError
+    
+    strCurrent = Trim(ModBed.GetDatabaseVersie())
+    strLatest = Trim(ModDatabase.Database_GetLatestVersion(ModPatient.PatientHospNum()))
+    If Not strLatest = vbNullString Then
+        strLatest = ModDate.FormatDateTimeSeconds(CDate(strLatest))
+    End If
+            
+    If Not strLatest = vbNullString And Not strLatest = strCurrent Then
+        If blnShowProgress Then
+            strProg = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+    
+        strMsg = GetDateWarningMsg(strCurrent, strLatest)
+        varReply = ModMessage.ShowMsgBoxYesNo(strMsg)
+        
+        If blnShowProgress Then ModProgress.StartProgress strProg
+
+        If varReply = vbNo Then Exit Function
+    End If
+    
+    Application.DisplayAlerts = False
+    Application.ScreenUpdating = False
+
+    ModDatabase.Database_SavePatient
+    ModDatabase.Database_SavePrescriber
+    
+    strLatest = ModDate.FormatDateTimeSeconds(Now())
+    strPrescriber = ModMetaVision.MetaVision_GetUserLogin()
+    
+    ModDatabase.InitDatabase
+    ModDatabase.Database_SaveData strLatest, ModPatient.PatientHospNum(), strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
+        
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+        
+    SavePatientToDatabase = True
+        
+    Exit Function
+    
+SaveBedToDatabaseError:
+    
+    ModMessage.ShowMsgBoxError "Kan patient niet opslaan"
+    ModLog.LogError "Could not save patient to database with: "
+
+    Application.DisplayAlerts = True
+    SavePatientToDatabase = False
+
+End Function

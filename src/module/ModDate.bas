@@ -62,3 +62,15 @@ Private Sub Test_FormatDateTimeSeconds()
 
 End Sub
 
+Public Function FormatDateHoursMinutes(dtmDate As Date) As String
+
+    FormatDateHoursMinutes = Format(dtmDate, "hh:mm:ss")
+
+End Function
+
+Private Sub Test_FormatHoursMinutes()
+
+    ModMessage.ShowMsgBoxInfo FormatDateHoursMinutes(Now())
+
+End Sub
+

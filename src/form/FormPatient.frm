@@ -75,7 +75,7 @@ Private Sub btnRefresh_Click()
     
     strId = IIf(txtPatNum.Text = vbNullString, MetaVision_GetCurrentPatientID(), vbNullString)
     If Not (strId = vbNullString And txtPatNum.Text = vbNullString) Then
-        MetaVision_GetPatientDetails m_Pat, strId, txtPatNum.Text, m_Pat.Bed
+        MetaVision_GetPatientDetails m_Pat, strId, txtPatNum.Text
         Me.txtAdmDay = DateTime.Day(m_Pat.OpnameDatum)
         Me.txtAdmMonth = DateTime.Month(m_Pat.OpnameDatum)
         Me.txtAdmYear = DateTime.Year(m_Pat.OpnameDatum)

@@ -25,7 +25,7 @@ Public Sub InitDatabase()
 
     If objDatabase Is Nothing Then
         Set objDatabase = New ClassDatabase
-        objDatabase.InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+        objDatabase.InitConnection ModSetting.Setting_GetServer(), ModSetting.Setting_GetDatabase()
     End If
 
 End Sub
@@ -36,13 +36,19 @@ Private Sub Test_InitDatabase()
 
 End Sub
 
-Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String)
+Private Sub InitConnection()
 
     Dim strSecret As String
     Dim strUser As String
     Dim strPw As String
     
+    Dim strServer As String
+    Dim strDatabase As String
+    
     On Error GoTo InitConnectionError
+    
+    strServer = ModSetting.Setting_GetServer()
+    strDatabase = ModSetting.Setting_GetDatabase()
     
     strSecret = ModFile.ReadFile(WbkAfspraken.Path & "/" & constSecret)
     
@@ -77,7 +83,7 @@ End Sub
 
 Private Sub Test_InitConnectionWithAPDB()
 
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
 
 End Sub
 
@@ -95,7 +101,7 @@ Public Function Database_GetPatients() As Collection
     
     Set colPatienten = New Collection
 
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     
@@ -132,7 +138,7 @@ Private Function PatientExists(strHospN As String) As Boolean
     
     strSql = "SELECT * FROM dbo.GetPatients('" & strHospN & "')"
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
 
@@ -152,7 +158,7 @@ Private Function PrescriberExists(strUser As String) As Boolean
     
     strSql = "SELECT * FROM dbo.GetPrescribers('" & strUser & "')"
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
 
@@ -216,7 +222,7 @@ Public Sub Database_SavePatient()
         
     arrSql = Array(strHN, strBD, strAN, strVN, strGN, intGW, intGD, dblBW)
         
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     
@@ -264,7 +270,7 @@ Public Sub Database_SavePrescriber()
         
     arrSql = Array(WrapString(strUser), strLN, strFN, strRole, 0)
         
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     
@@ -300,7 +306,7 @@ Private Sub ClearTestDatabase()
     
     strSql = "EXEC dbo.ClearDatabase 'UMCU_WKZ_AP_Test'"
 
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -334,7 +340,7 @@ Public Function Database_GetLatestVersion(strHospNum) As String
     
     strSql = "SELECT dbo.GetLatestPrescriptionDateForHospitalNumber('" & strHospNum & "')"
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     
@@ -378,7 +384,6 @@ Private Function IsLogical(ByVal varVal As Variant) As Boolean
     
 End Function
 
-
 Public Sub Database_GetPatientData(strHospNum As String)
 
     Dim strSql As String
@@ -394,7 +399,7 @@ Public Sub Database_GetPatientData(strHospNum As String)
     
     strSql = strSql & "SELECT * FROM dbo.GetLatestPrescriptionData('" & strHospNum & "')"
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     
@@ -653,7 +658,7 @@ Public Sub Database_SaveNeoConfigMedCont()
     
     strSql = ModDatabase.WrapTransaction(strSql, "insert_neoconfigmedcont")
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -719,7 +724,7 @@ Public Sub Database_LoadNeoConfigMedCont()
     
     Set objSrc = ModRange.GetRange("Tbl_Admin_NeoMedCont")
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     strSql = "SELECT * FROM [dbo].[GetLatestConfigMedContForDepartment] ('Neonatologie')"
 
@@ -1000,7 +1005,7 @@ Public Sub Database_SavePediatrieConfigMedCont()
     
     strSql = ModDatabase.WrapTransaction(strSql, "insert_pedconfigmedcont")
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -1066,7 +1071,7 @@ Public Sub Database_LoadPedConfigMedCont()
     
     Set objSrc = ModRange.GetRange("Tbl_Admin_PedMedCont")
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     strSql = "SELECT * FROM [dbo].[GetLatestConfigMedContForDepartment] ('Pediatrie')"
 
@@ -1230,7 +1235,7 @@ Public Sub Database_SaveConfigParEnt()
     
     strSql = WrapTransaction(strSql, "insert_configparent")
     
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -1281,7 +1286,7 @@ Public Sub Database_LoadConfigParEnt()
     
     strSql = "SELECT * FROM [dbo].[GetLatestConfigParEnt] ()"
 
-    InitConnection "mvtst_wkz", "UMCU_WKZ_AP_Test"
+    InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)

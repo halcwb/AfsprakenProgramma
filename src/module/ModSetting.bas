@@ -11,6 +11,25 @@ Public Const CONST_BEDS_SHEET As String = "Beds"
 Private Const constPatientsFile As String = "Patienten.xlsx"
 
 Private Const constExt As String = ".xlsx"
+
+'DB_DatabaseBusy
+'Setting_MVMed
+'SettingDataDir
+'SettingDbDir
+'SettingDevDir
+'SettingDevMode
+'SettingLogDir
+'SettingLogging
+'SettingNeoDir
+'SettingPedDir
+'SettingProdDB
+'SettingProdServer
+'SettingServer
+'SettingTestDB
+'SettingTestLogDir
+'SettingTestServer
+'SettingUseDatabase
+
 Private Const constDevMode As String = "SettingDevMode"
 Private Const constLogging As String = "SettingLogging"
 Private Const constNeoDir As String = "SettingNeoDir"
@@ -21,6 +40,10 @@ Private Const constLogDir As String = "SettingLogDir"
 Private Const constDataDir As String = "SettingDataDir"
 Private Const constDbDir As String = "SettingDbDir"
 Private Const constUseDB As String = "SettingUseDatabase"
+Private Const constTestServer As String = "SettingTestServer"
+Private Const constTestDatabase As String = "SettingTestDB"
+Private Const constProdServer As String = "SettingProdServer"
+Private Const constProdDatabase As String = "SettingProdDB"
 
 Private Const constPreData As String = vbNullString
 Private Const constPostData As String = "_Data"
@@ -77,6 +100,25 @@ Private Sub Test_UseDatabase()
 
 End Sub
 
+Public Function Setting_GetServer() As String
+
+    If IsDevelopmentDir() Then
+        Setting_GetServer = GetSetting(constTestServer)
+    Else
+        Setting_GetServer = GetSetting(constProdServer)
+    End If
+
+End Function
+
+Public Function Setting_GetDatabase() As String
+
+    If IsDevelopmentDir() Then
+        Setting_GetDatabase = GetSetting(constTestDatabase)
+    Else
+        Setting_GetDatabase = GetSetting(constProdDatabase)
+    End If
+
+End Function
 
 Public Function IsDevelopmentMode() As Boolean
 

@@ -1,10 +1,4 @@
-Voor 28 november
-
 ToDo
-- Db map verplaatsen zodat admin alleen lezen autorisatie heeft op app zelf
-
-ToDo
-- Gebruikers documentatie
 - Test scenarios:
 	- Discontinue Medicatie
 	- Ped Voeding
@@ -13,13 +7,7 @@ ToDo
 Fiksen
 Niet testen
 - Fiks formatting ranges in settings
-- Wegschrijven configuratie van de discontinue medicatie lukt nog niet bug!! wordt steeds overschreven met lege waarden?
-- Medicatie gewicht indien bekend
-- Verwijderen oplosvloeistof in discontinue medicatie -> formulier?
-- Sql queries on error resume next
 
-
-Na 28 november
 
 - Config formulier voor beheerders
 - Config formulier voor pediatrie continue medicamenten
@@ -52,8 +40,8 @@ Na 28 november
 - Regressie tests pdfs vergelijken
 - Formulier patient gegevens, geen update indien ongeldige datum waarden
 - Alles vewijderen -> Patient verwijderen (onder Bedden groep)
+- Hernoemen patient opslaan openen
 
-- Patient van bed verwijderen -> terugkoppeling -> daarna de lijst laten zien
 - Med disc formulier schoonmaken bij opnieuw openen
 - Refresh MV opdrachten bij openen Medicament snelkeuze lijst of openen disc medicatie tab
 - Parenteralia Neo bijwerken voor discontinue medicatie
@@ -81,11 +69,16 @@ Na 28 november
 - Morfine doserng naar microg/kg/min
 - Neo insuline in glucose?
 
-- Patient openen in pre-opname resulteerd in een fout
+- Naam SettingServer weghalen
+- Schoonmaken van de database met wegschrijven van configuratie
+- NaBic inhalatie toevoegen
+- Fiks patientlijst cancel en OK logica
 
+- Refactoring
+	- Code in Engels
+	- Publieke functies in modules met module naam als prefix
 
 Known issues
-- Medisch Voorschrijf formulier crashed indien afsluiten terwijl bezig met openen AfsprakenProgramma
 - Voeding bij GI script status voering
 - TPN formulier waarschuwing bij overschrijding volume grenzen per component
 
@@ -93,6 +86,5 @@ Form diff script aanpassen check op parameter instellingen (laatste waarde)
 Medische status import scripts aanpassen
 
 Planning formulier:
-- Fix vastlopen probleem met Scripts.CloseForm
 - Check op max knopnaam lengte van 60 tekens bij aanmaken nieuwe knopnaam
 

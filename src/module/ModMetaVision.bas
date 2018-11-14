@@ -70,7 +70,7 @@ Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As Stri
     
     strServer = MetaVision_GetServer()
     strDb = MetaVision_GetDatabase()
-    strSql = GetPatientListSQL(strPatId, strPatNum, vbNullString)
+    strSql = GetPatientListSQL2(strPatId, strPatNum)
     
     If strServer = vbNullString Or strDb = vbNullString Or strSql = vbNullString Then
         strBed = vbNullString
@@ -118,101 +118,8 @@ Private Function GetDatabaseNameSQL(ByVal strDepartment As String) As String
 
 End Function
 
-Private Function GetPatientListSQL(ByVal strPatId As String, ByVal strPatNum As String, ByVal strBed As String) As String
 
-    Dim strSql As String
-    
-    If strPatId = vbNullString And strPatNum = vbNullString And strBed = vbNullString Then
-        strSql = vbNullString
-    Else
-        strSql = strSql & "DECLARE @patId AS int" & vbNewLine
-        strSql = strSql & "DECLARE @bed AS nvarchar(100)" & vbNewLine
-        strSql = strSql & "DECLARE @patNum AS nvarchar(40)" & vbNewLine
-        strSql = strSql & "DECLARE @bd AS int" & vbNewLine
-        strSql = strSql & "DECLARE @weightKg AS int" & vbNewLine
-        strSql = strSql & "DECLARE @weightGr AS int" & vbNewLine
-        strSql = strSql & "DECLARE @bwGr AS int" & vbNewLine
-        strSql = strSql & "DECLARE @length AS int" & vbNewLine
-        strSql = strSql & "DECLARE @gesl AS int" & vbNewLine
-        strSql = strSql & "DECLARE @adD AS int" & vbNewLine
-        strSql = strSql & "DECLARE @adW AS int" & vbNewLine
-        
-        strSql = strSql & "SET @bd = 5372" & vbNewLine
-        strSql = strSql & "SET @weightKg = 8365" & vbNewLine
-        strSql = strSql & "SET @weightGr = 8456" & vbNewLine
-        strSql = strSql & "SET @bwGr = 7734" & vbNewLine
-        strSql = strSql & "SET @adD = 10213" & vbNewLine
-        strSql = strSql & "SET @adW = 10214" & vbNewLine
-        strSql = strSql & "SET @length = 9505" & vbNewLine
-        strSql = strSql & "SET @gesl = 5373" & vbNewLine
-        
-        If Not strBed = vbNullString Then
-            strSql = strSql & "SET @Bed = '" & strBed & "'" & vbNewLine
-        ElseIf Not strPatNum = vbNullString Then
-            strSql = strSql & "SET @patNum = '" & strPatNum & "'" & vbNewLine
-        ElseIf Not strPatId = vbNullString And Not strPatId = "-1" Then
-            strSql = strSql & "SET @patId = " & strPatId & vbNewLine
-        End If
-        
-        strSql = strSql & "SELECT DISTINCT" & vbNewLine
-        strSql = strSql & "pl.PatientID" & vbNewLine
-        strSql = strSql & ", pl.HospitalNumber" & vbNewLine
-        strSql = strSql & ", pl.LastName" & vbNewLine
-        strSql = strSql & ", pl.FirstName" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 dts.Value" & vbNewLine
-        strSql = strSql & "   FROM DateTimeSignals dts" & vbNewLine
-        strSql = strSql & "   WHERE dts.PatientID = pl.PatientID AND dts.ParameterID = @bd" & vbNewLine
-        strSql = strSql & "   ORDER BY dts.[Time] DESC)" & vbNewLine
-        strSql = strSql & "   BirthDate" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 s.value / 1000 " & vbNewLine
-        strSql = strSql & "   FROM Signals s " & vbNewLine
-        strSql = strSql & "   WHERE s.PatientID = pl.PatientID AND s.ParameterID = @weightKg " & vbNewLine
-        strSql = strSql & "   ORDER BY s.Time DESC) WeightKg" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 s.Value " & vbNewLine
-        strSql = strSql & "   FROM Signals s " & vbNewLine
-        strSql = strSql & "   WHERE s.PatientID = pl.PatientID AND s.ParameterID = @weightGr " & vbNewLine
-        strSql = strSql & "   ORDER BY s.Time DESC) WeightGr" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 s.value * 100 " & vbNewLine
-        strSql = strSql & "   FROM Signals s " & vbNewLine
-        strSql = strSql & "   WHERE s.PatientID = pl.PatientID AND s.ParameterID = @length " & vbNewLine
-        strSql = strSql & "   ORDER BY s.Time DESC) LengthCm" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 s.Value " & vbNewLine
-        strSql = strSql & "   FROM Signals s " & vbNewLine
-        strSql = strSql & "   WHERE s.PatientID = pl.PatientID AND s.ParameterID = @bwGr " & vbNewLine
-        strSql = strSql & "   ORDER BY s.Time DESC) BirthWeightGr" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 s.value / (60 * 24) " & vbNewLine
-        strSql = strSql & "   FROM Signals s " & vbNewLine
-        strSql = strSql & "   WHERE s.PatientID = pl.PatientID AND s.ParameterID = @adD ORDER BY s.Time DESC) PregnDays" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 s.value / (7 * 60 * 24) FROM Signals s WHERE s.PatientID = pl.PatientID AND s.ParameterID = @adW " & vbNewLine
-        strSql = strSql & "   ORDER BY s.Time DESC) PregnWeeks" & vbNewLine
-        strSql = strSql & ", (SELECT TOP 1 pt.Text " & vbNewLine
-        strSql = strSql & "   FROM ParametersText pt " & vbNewLine
-        strSql = strSql & "   INNER JOIN TextSignals ts ON pt.ParameterID = ts.ParameterID AND pt.TextID = ts.TextID " & vbNewLine
-        strSql = strSql & "   INNER JOIN Parameters p ON p.ParameterID = ts.ParameterID" & vbNewLine
-        strSql = strSql & "   WHERE ts.PatientID = pl.PatientID AND p.ParameterID = @Gesl" & vbNewLine
-        strSql = strSql & "   ORDER BY ts.Time DESC) Geslacht" & vbNewLine
-        strSql = strSql & ", lu.Name Department" & vbNewLine
-        strSql = strSql & ", b.BedName" & vbNewLine
-        strSql = strSql & ", pl.LocationFromTime" & vbNewLine
-        strSql = strSql & ", pl.TimeLog" & vbNewLine
-        strSql = strSql & "FROM PatientLogs pl" & vbNewLine
-        strSql = strSql & "INNER JOIN Patients pat ON pat.PatientID = pl.PatientID" & vbNewLine
-        strSql = strSql & "LEFT JOIN LogicalUnits lu ON lu.LogicalUnitID = pl.LogicalUnitID" & vbNewLine
-        strSql = strSql & "LEFT JOIN Beds b ON b.BedID = pl.BedID" & vbNewLine
-        strSql = strSql & "WHERE " & vbNewLine
-        strSql = strSql & "(@patId IS NULL OR pl.PatientID = @patId)" & vbNewLine
-        strSql = strSql & "AND (@patNum IS NULL OR pl.HospitalNumber = @patNum)" & vbNewLine
-        strSql = strSql & "AND (@bed IS NULL OR RTRIM(LTRIM(b.BedName)) = RTRIM(LTRIM(@bed)))" & vbNewLine
-        strSql = strSql & "ORDER BY pl.TimeLog DESC" & vbNewLine
-
-    End If
-    
-    ModUtils.CopyToClipboard strSql
-    GetPatientListSQL = strSql
-
-End Function
-
-Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As String, ByVal strBed As String, ByVal strDep) As String
+Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As String) As String
 
     Dim strSql As String
     
@@ -238,14 +145,10 @@ Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As
     strSql = strSql & "SET @length = 9505" & vbNewLine
     strSql = strSql & "SET @gesl = 5373" & vbNewLine
     
-    If Not strBed = vbNullString Then
-        strSql = strSql & "SET @Bed = '" & strBed & "'" & vbNewLine
-    ElseIf Not strPatNum = vbNullString Then
+    If Not strPatNum = vbNullString Then
         strSql = strSql & "SET @patNum = '" & strPatNum & "'" & vbNewLine
     ElseIf Not strPatId = vbNullString And Not strPatId = "-1" Then
         strSql = strSql & "SET @patId = " & strPatId & vbNewLine
-    ElseIf Not strDep = vbNullString Then
-        strSql = strSql & "SET @dep = '" & strDep & "'" & vbNewLine
     End If
     
     strSql = strSql & "SELECT DISTINCT" & vbNewLine
@@ -296,7 +199,6 @@ Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As
     strSql = strSql & "WHERE " & vbNewLine
     strSql = strSql & "(@patId IS NULL OR pl.PatientID = @patId)" & vbNewLine
     strSql = strSql & "AND (@patNum IS NULL OR pl.HospitalNumber = @patNum)" & vbNewLine
-    strSql = strSql & "-- AND (@dep IS NULL OR lu.Name = @dep)" & vbNewLine
     strSql = strSql & "AND (@bed IS NULL OR RTRIM(LTRIM(b.BedName)) = RTRIM(LTRIM(@bed)))" & vbNewLine
     strSql = strSql & "ORDER BY pat.HospitalNumber, pl.TimeLog DESC" & vbNewLine
     
@@ -307,11 +209,11 @@ End Function
 
 Private Sub Test_GetPatientSQL()
 
-    ModUtils.CopyToClipboard GetPatientListSQL2(vbNullString, vbNullString, vbNullString, "Pediatrie")
+    ModUtils.CopyToClipboard GetPatientListSQL2(vbNullString, vbNullString)
 
 End Sub
 
-Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal strPatId As String, ByVal strPatNum As String, ByVal strBed As String)
+Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal strPatId As String, ByVal strPatNum As String)
 
     Dim objRs As Recordset
     Dim strServer As String
@@ -326,12 +228,11 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     
     If Not strPatNum = vbNullString Then
         strPatId = vbNullString
-        strBed = vbNullString
-    ElseIf Not strBed = vbNullString Then
-        strPatId = vbNullString
+    ElseIf Not strPatId = vbNullString Then
+        strPatNum = vbNullString
     End If
     
-    strSql = GetPatientListSQL(strPatId, strPatNum, strBed)
+    strSql = GetPatientListSQL2(strPatId, strPatNum)
     
     If strServer = vbNullString Or strDatabase = vbNullString Or strSql = vbNullString Then Exit Sub
     
@@ -390,7 +291,7 @@ Private Sub Test_MetaVision_GetPatientDetails()
     ' strId = MetaVision_GetCurrentPatientID()
     strId = vbNullString
     Set objPat = New ClassPatientDetails
-    MetaVision_GetPatientDetails objPat, strId, "1234567", vbNullString
+    MetaVision_GetPatientDetails objPat, strId, "1234567"
 
     MsgBox objPat.PatientId & ": " & objPat.AchterNaam
 
@@ -413,7 +314,7 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
     strServer = MetaVision_GetServer()
     strDatabase = MetaVision_GetDatabase()
         
-    strSql = GetPatientListSQL2(vbNullString, vbNullString, vbNullString, strDep)
+    strSql = GetPatientListSQL2(vbNullString, vbNullString)
     
     If strServer = vbNullString Or strDatabase = vbNullString Or strSql = vbNullString Then Exit Sub
         

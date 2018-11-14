@@ -193,7 +193,6 @@ End Sub
 
 Public Sub OpenBedAsk2(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     
-    Dim strHospNum As String
     Dim strTitle As String
     Dim strAction As String
     Dim strParams() As Variant
@@ -202,13 +201,18 @@ Public Sub OpenBedAsk2(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean
     Dim strRange As String
     Dim blnAll As Boolean
     Dim blnNeo As Boolean
+    Dim strHospNum As String
+    
+    Dim objPat As ClassPatientDetails
     
     On Error GoTo ErrorOpenBed
     
-    strHospNum = ModRange.GetRangeValue(constHospNum, vbNullString)
+    Set objPat = New ClassPatientDetails
+    ModMetaVision.MetaVision_GetPatientDetails objPat, ModMetaVision.MetaVision_GetCurrentPatientID, vbNullString
     blnNeo = MetaVision_IsNeonatologie()
     
-    If blnAsk Then
+    strHospNum = objPat.PatientId
+    If blnAsk And strHospNum = vbNullString Then
         If blnShowProgress Then
             strTitle = FormProgress.Caption
             ModProgress.FinishProgress
@@ -499,142 +503,3 @@ SaveBedToFileError:
 
 End Function
 
-Public Sub CloseBed2()
-
-    Dim strBed As String
-    Dim strNew As String
-    
-    Dim strPrompt As String
-    Dim strAction As String
-    Dim strParams() As Variant
-    
-    Dim varReply As VbMsgBoxResult
-    
-    Dim blnNeo As Boolean
-
-    On Error GoTo CloseBedError
-    
-    blnNeo = MetaVision_IsNeonatologie()
-    
-    strAction = "ModBed.CloseBed2"
-    strParams = Array()
-    LogActionStart strAction, strParams
-        
-    
-    ModProgress.StartProgress "Bed Opslaan"
-    
-    If blnNeo Then
-        ModNeoInfB.NeoInfB_SelectInfB False, False ' Make sure that the Infuusbrief Actueel is selected
-        ModNeoInfB.CopyCurrentInfVarToData True   ' Make sure that neo data is updated with latest current infuusbrief
-    End If
-
-    If SaveBedToDatabase(True) Then
-        ModProgress.FinishProgress
-        ModMessage.ShowMsgBoxInfo "Patient is opgeslagen"
-    Else
-        ModProgress.FinishProgress
-        ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
-    End If
-
-    LogActionEnd strAction
-    
-    Exit Sub
-    
-CloseBedError:
-
-    ModProgress.FinishProgress
-    
-    ModMessage.ShowMsgBoxError "Kan patient niet opslaan op bed: " & strBed
-    ModLog.LogError strAction
-
-End Sub
-
-Private Function SaveBedToDatabase(ByVal blnShowProgress As Boolean) As Boolean
-
-    Dim strVersion As String
-    Dim strCurrent As String
-    Dim strPrescriber As String
-    Dim strMsg As String
-    Dim intC As Integer
-    Dim intR As Integer
-    Dim varReply As VbMsgBoxResult
-        
-    Dim strProg As String
-        
-    On Error GoTo SaveBedToDatabaseError
-    
-    ' Guard for invalid bed name
-    ' If Not IsValidBed(strBed) Then GoTo SaveBedToDatabaseError
-    
-    strCurrent = ModBed.GetDatabaseVersie()
-    strVersion = ModDatabase.Database_GetLatestVersion(ModPatient.PatientHospNum())
-    If Not strVersion = vbNullString Then
-        strVersion = ModDate.FormatDateTimeSeconds(CDate(strVersion))
-    End If
-    
-    If ModRange.GetRangeValue(constBusy, True) Then
-        strMsg = "De database is nog bezig met het wegschrijven van de patient."
-        strMsg = strMsg & "Probeer het over een aantal seconden nog eens."
-        strMsg = strMsg & "Lukt het dan nog niet, herstart het programma."
-        
-        ModMessage.ShowMsgBoxInfo strMsg
-        
-        ModRange.SetRangeValue "DB_DatabaseBusy", False
-        
-        Exit Function
-    End If
-        
-    If strVersion = vbNullString Or Not strVersion = strCurrent Then
-        If blnShowProgress Then
-            strProg = FormProgress.Caption
-            ModProgress.FinishProgress
-        End If
-    
-    
-        strMsg = strMsg & "De afspraken zijn inmiddels gewijzig!" & vbNewLine
-        strMsg = strMsg & "De huidige versie is van: " & strCurrent & vbNewLine
-        strMsg = strMsg & "De nieuwste versie is van: " & strVersion & "." & vbNewLine
-        strMsg = strMsg & "Wilt u toch de afspraken opslaan?"
-        varReply = ModMessage.ShowMsgBoxYesNo(strMsg)
-        
-        If blnShowProgress Then ModProgress.StartProgress strProg
-
-        If varReply = vbNo Then Exit Function
-    End If
-    
-    Application.DisplayAlerts = False
-    Application.ScreenUpdating = False
-
-    ModDatabase.Database_SavePatient
-    ModDatabase.Database_SavePrescriber
-    
-    strVersion = ModDate.FormatDateTimeSeconds(Now())
-    strPrescriber = ModMetaVision.MetaVision_GetUserLogin()
-    
-    ModDatabase.InitDatabase
-    ModDatabase.Database_SaveData strVersion, ModPatient.PatientHospNum(), strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
-        
-    Application.DisplayAlerts = True
-    Application.ScreenUpdating = True
-        
-    SaveBedToDatabase = True
-        
-    Exit Function
-    
-SaveBedToDatabaseError:
-    
-    ModMessage.ShowMsgBoxError "Kan patient niet opslaan"
-    ModLog.LogError "Could not save bed to database with: "
-
-    Application.DisplayAlerts = True
-    SaveBedToDatabase = False
-
-End Function
-
-Private Sub Test_SaveBedToDatabase()
-
-    ModProgress.StartProgress "Testing"
-    SaveBedToDatabase True
-    ModProgress.FinishProgress
-
-End Sub
