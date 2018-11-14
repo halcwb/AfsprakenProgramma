@@ -110,7 +110,7 @@ Public Sub SendApotheekWerkBrief()
     Set objMsg = CreateObject("CDO.Message")
     With objMsg
          
-        .To = CStr(strTo)
+        .to = CStr(strTo)
         .From = CStr(strFrom)
         .Subject = CStr(strSubject)
         .HTMLBody = CStr(strHTML)

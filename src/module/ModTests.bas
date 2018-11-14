@@ -319,3 +319,9 @@ Private Sub TestTypes()
     ModMessage.ShowMsgBoxInfo CBool("waar")
 
 End Sub
+
+Private Sub DoubleToString()
+
+    ModMessage.ShowMsgBoxInfo CStr(CDec(0.5))
+
+End Sub

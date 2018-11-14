@@ -89,7 +89,7 @@ Public Sub PedPrint_SendTPN()
     Set objMsg = CreateObject("CDO.Message")
     With objMsg
          
-        .To = CStr(strTo)
+        .to = CStr(strTo)
         .From = CStr(strFrom)
         .Subject = CStr(strSubject)
         .HTMLBody = CStr(strHTML)

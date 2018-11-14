@@ -293,3 +293,8 @@ Public Function StringReplaceEPI(ByVal strString As String) As String
 
 End Function
 
+Public Function DoubleToString(dblDouble As Double) As String
+
+    DoubleToString = Replace(CStr(dblDouble), ",", ".")
+
+End Function

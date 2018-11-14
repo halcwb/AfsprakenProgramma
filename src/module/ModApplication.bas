@@ -201,8 +201,12 @@ Public Sub InitializeAfspraken()
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
     
     ' Load config tables
-    If Not LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "InitializeAfspraken", "Kan config tabellen niet laden"
-        
+    If ModSetting.UseDatabase Then
+        If Not LoadConfigTablesFromDatabase() Then Err.Raise ModConst.CONST_APP_ERROR, "InitializeAfspraken", "Kan config tabellen niet laden"
+    Else
+        If Not LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "InitializeAfspraken", "Kan config tabellen niet laden"
+    End If
+    
     ' Clean everything
     ModRange.SetRangeValue "Var_Glob_Versie", vbNullString
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
@@ -443,6 +447,24 @@ Private Sub Test_LoadConfigTables()
 
 End Sub
 
+Private Function LoadConfigTablesFromDatabase() As Boolean
+
+    On Error GoTo ErrorHandler
+
+    ModDatabase.Database_LoadNeoConfigMedCont
+    ModDatabase.Database_LoadPedConfigMedCont
+    ModDatabase.Database_LoadConfigParEnt
+    
+    LoadConfigTablesFromDatabase = True
+    
+    Exit Function
+    
+ErrorHandler:
+
+    ModLog.LogError "LoadConfigTablesFromDatabase"
+
+End Function
+
 Public Sub Application_SaveNeoMedContConfig()
 
     Dim strFile As String
@@ -535,6 +557,7 @@ LoadConfigTableError:
     LoadConfigTable = False
     
 End Function
+
 
 Private Sub SaveConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)
     
