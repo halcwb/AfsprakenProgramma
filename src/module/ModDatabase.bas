@@ -70,14 +70,14 @@ Private Sub InitConnection()
         objConn.Close
     Else
         MsgBox "Geen toegang tot de database!"
-        ModLog.LogError "Bestand secret niet aanwezig"
+        ModLog.LogError Err, "Bestand secret niet aanwezig"
     End If
     
     Exit Sub
     
 InitConnectionError:
     MsgBox "Geen toegang tot de database!"
-    ModLog.LogError "InitConnection Failed"
+    ModLog.LogError Err, "InitConnection Failed"
 
 End Sub
 
@@ -178,6 +178,12 @@ Private Function WrapString(varItem As Variant) As Variant
 
 End Function
 
+Private Function WrapDateTime(strDateTime As String) As String
+
+    WrapDateTime = "{ts'" & strDateTime & "'}"
+
+End Function
+
 Public Function WrapTransaction(ByVal strSql As String, ByVal strName As String) As String
 
     Dim strTrans As String
@@ -211,10 +217,10 @@ Public Sub Database_SavePatient()
     
     On Error GoTo SavePatientError
     
-    strHN = WrapString(ModPatient.PatientHospNum)
+    strHN = WrapString(ModPatient.Patient_GetHospitalNumber)
     strBD = WrapString(ModDate.FormatDateYearMonthDay(ModPatient.Patient_BirthDate))
-    strAN = WrapString(ModPatient.PatientAchterNaam)
-    strVN = WrapString(ModPatient.PatientVoorNaam)
+    strAN = WrapString(ModPatient.Patient_GetLastName)
+    strVN = WrapString(ModPatient.Patient_GetFirstName)
     strGN = WrapString(ModRange.GetRangeValue(constGeslacht, Null))
     intGW = ModRange.GetRangeValue(constWeken, Null)
     intGD = ModRange.GetRangeValue(constDagen, Null)
@@ -226,7 +232,7 @@ Public Sub Database_SavePatient()
     
     objConn.Open
     
-    If PatientExists(ModPatient.PatientHospNum()) Then
+    If PatientExists(ModPatient.Patient_GetHospitalNumber()) Then
         strSql = "EXEC UpdatePatient "
     Else
         strSql = "EXEC InsertPatient "
@@ -246,7 +252,7 @@ SavePatientError:
     objConn.Close
     
     ModUtils.CopyToClipboard strSql
-    ModLog.LogError "Could not save patient details to database: " & strSql
+    ModLog.LogError Err, "Could not save patient details to database: " & strSql
     
 End Sub
 
@@ -296,7 +302,7 @@ SavePrescriberError:
     objConn.Close
     
     ModUtils.CopyToClipboard strSql
-    ModLog.LogError "Could not save prescriber details to the database: " & strSql
+    ModLog.LogError Err, "Could not save prescriber details to the database: " & strSql
     
 End Sub
 
@@ -319,7 +325,7 @@ ClearTestDatabaseError:
     objConn.Close
     
     ModUtils.CopyToClipboard strSql
-    ModLog.LogError "Could not clear the database: " & strSql
+    ModLog.LogError Err, "Could not clear the database: " & strSql
 
 End Sub
 
@@ -361,7 +367,7 @@ Public Function Database_GetLatestVersion(strHospNum) As String
     
 Database_GetLatestVersionError:
 
-    ModLog.LogError "Could not get latest version for patient: " & strHospNum
+    ModLog.LogError Err, "Could not get latest version for patient: " & strHospNum
 
 End Function
 
@@ -384,7 +390,7 @@ Private Function IsLogical(ByVal varVal As Variant) As Boolean
     
 End Function
 
-Public Sub Database_GetPatientData(strHospNum As String)
+Private Sub GetPatientData(ByVal strHospNum, Optional ByVal strVersion As String = "")
 
     Dim strSql As String
     Dim intC As Long
@@ -397,7 +403,13 @@ Public Sub Database_GetPatientData(strHospNum As String)
     
     On Error GoTo Database_GetPatientDataError
     
-    strSql = strSql & "SELECT * FROM dbo.GetLatestPrescriptionData('" & strHospNum & "')"
+    strSql = strSql & "SELECT * FROM "
+    If strVersion = vbNullString Then
+        strSql = strSql & "dbo.GetLatestPrescriptionData('" & strHospNum & "')"
+    Else
+        strVersion = "{ts'" & strVersion & "'}"
+        strSql = strSql & "dbo.GetLatestPrescriptionDataForVersion('" & strHospNum & "', " & strVersion & ")"
+    End If
     
     InitConnection
     
@@ -434,8 +446,22 @@ Database_GetPatientDataError:
     
     ModMessage.ShowMsgBoxError "Kan patient met ziekenhuis nummer " & strHospNum & " niet laden."
     
-    ModLog.LogError "Could not get patient data with hospitalnumber " & strHospNum & " with SQL: " & vbNewLine & strSql
+    ModLog.LogError Err, "Could not get patient data with hospitalnumber " & strHospNum & " with SQL: " & vbNewLine & strSql
     objConn.Close
+    
+
+End Sub
+
+
+Public Sub Database_GetPatientDataForVersion(strHospNum As String, strVersion)
+
+    GetPatientData strHospNum, strVersion
+    
+End Sub
+
+Public Sub Database_GetPatientData(strHospNum As String)
+
+    GetPatientData strHospNum
     
 End Sub
 
@@ -447,39 +473,7 @@ Private Sub Test_DatabaseGetPatientData()
 
 End Sub
 
-'ALTER PROCEDURE [dbo].[InsertConfigMedCont]
-'    -- Add the parameters for the stored procedure here
-'             @version DATETIME
-'           , @department NVARCHAR(60)
-'           , @generic NVARCHAR(300)
-'           , @genericUnit NVARCHAR(50)
-'           , @genericQuantity FLOAT
-'           , @genericVolume FLOAT
-'           , @solutionVolume FLOAT
-'           , @solution_2_6_Quantity FLOAT
-'           , @solution_2_6_Volume FLOAT
-'           , @solution_6_11_Quantity FLOAT
-'           , @solution_6_11_Volume FLOAT
-'           , @solution_11_40_Quantity FLOAT
-'           , @solution_11_40_Volume FLOAT
-'           , @solution_40_Quantity FLOAT
-'           , @solution_40_Volume FLOAT
-'           , @minConcentration FLOAT
-'           , @maxConcentration FLOAT
-'           , @solution NVARCHAR(300)
-'           , @dripQuantity FLOAT
-'           , @doseUnit NVARCHAR(50)
-'           , @minDose FLOAT
-'           , @maxDose FLOAT
-'           , @absMaxDose FLOAT
-'           , @doseAdvice NVARCHAR(MAX)
-'           , @product NVARCHAR(MAX)
-'           , @shelfLife FLOAT
-'           , @shelfCondition NVARCHAR(50)
-'           , @preparationText NVARCHAR(MAX)
-'           , @signed BIT
-'           , @dilutionText NVARCHAR(MAX)
-Public Sub Database_SaveNeoConfigMedCont()
+Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
 
     Dim strTable As String
     
@@ -519,12 +513,7 @@ Public Sub Database_SaveNeoConfigMedCont()
     
     Dim objSrc As Range
     Dim strSql
-    
-    On Error GoTo ErrorHandler
-     
-    Application.ScreenUpdating = False
-    ModProgress.StartProgress "Neo Continue Medicatie Configuratie Opslaan"
-    
+        
     strTable = "Tbl_Admin_NeoMedCont"
     strVersion = ModDate.FormatDateTimeSeconds(Now())
     strVersion = "{ts'" & strVersion & "'}"
@@ -532,38 +521,42 @@ Public Sub Database_SaveNeoConfigMedCont()
     strDilutionText = ModRange.GetRangeValue("Var_Neo_MedCont_VerdunningTekst", vbNullString)
     
     Set objSrc = ModRange.GetRange(strTable)
-    strSql = strSql & "DECLARE @RC int" & vbNewLine
-    strSql = strSql & "DECLARE @version datetime" & vbNewLine
-    strSql = strSql & "DECLARE @department nvarchar(60)" & vbNewLine
-    strSql = strSql & "DECLARE @generic nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @genericUnit nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @genericQuantity float" & vbNewLine
-    strSql = strSql & "DECLARE @genericVolume float" & vbNewLine
-    strSql = strSql & "DECLARE @solutionVolume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_2_6_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_2_6_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_6_11_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_6_11_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_11_40_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_11_40_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_40_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_40_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @minConcentration float" & vbNewLine
-    strSql = strSql & "DECLARE @maxConcentration float" & vbNewLine
-    strSql = strSql & "DECLARE @solution nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @dripQuantity float" & vbNewLine
-    strSql = strSql & "DECLARE @doseUnit nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @minDose float" & vbNewLine
-    strSql = strSql & "DECLARE @maxDose float" & vbNewLine
-    strSql = strSql & "DECLARE @absMaxDose float" & vbNewLine
-    strSql = strSql & "DECLARE @doseAdvice nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @product nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @shelfLife float" & vbNewLine
-    strSql = strSql & "DECLARE @shelfCondition nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @preparationText nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @signed bit" & vbNewLine
-    strSql = strSql & "DECLARE @dilutionText nvarchar(max)" & vbNewLine
-    strSql = strSql & "" & vbNewLine
+    If Not blnIsBatch Then
+    
+        strSql = strSql & "DECLARE @RC int" & vbNewLine
+        strSql = strSql & "DECLARE @version datetime" & vbNewLine
+        strSql = strSql & "DECLARE @department nvarchar(60)" & vbNewLine
+        strSql = strSql & "DECLARE @generic nvarchar(300)" & vbNewLine
+        strSql = strSql & "DECLARE @genericUnit nvarchar(50)" & vbNewLine
+        strSql = strSql & "DECLARE @genericQuantity float" & vbNewLine
+        strSql = strSql & "DECLARE @genericVolume float" & vbNewLine
+        strSql = strSql & "DECLARE @solutionVolume float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_2_6_Quantity float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_2_6_Volume float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_6_11_Quantity float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_6_11_Volume float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_11_40_Quantity float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_11_40_Volume float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_40_Quantity float" & vbNewLine
+        strSql = strSql & "DECLARE @solution_40_Volume float" & vbNewLine
+        strSql = strSql & "DECLARE @minConcentration float" & vbNewLine
+        strSql = strSql & "DECLARE @maxConcentration float" & vbNewLine
+        strSql = strSql & "DECLARE @solution nvarchar(300)" & vbNewLine
+        strSql = strSql & "DECLARE @dripQuantity float" & vbNewLine
+        strSql = strSql & "DECLARE @doseUnit nvarchar(50)" & vbNewLine
+        strSql = strSql & "DECLARE @minDose float" & vbNewLine
+        strSql = strSql & "DECLARE @maxDose float" & vbNewLine
+        strSql = strSql & "DECLARE @absMaxDose float" & vbNewLine
+        strSql = strSql & "DECLARE @doseAdvice nvarchar(max)" & vbNewLine
+        strSql = strSql & "DECLARE @product nvarchar(max)" & vbNewLine
+        strSql = strSql & "DECLARE @shelfLife float" & vbNewLine
+        strSql = strSql & "DECLARE @shelfCondition nvarchar(50)" & vbNewLine
+        strSql = strSql & "DECLARE @preparationText nvarchar(max)" & vbNewLine
+        strSql = strSql & "DECLARE @signed bit" & vbNewLine
+        strSql = strSql & "DECLARE @dilutionText nvarchar(max)" & vbNewLine
+        strSql = strSql & "" & vbNewLine
+    
+    End If
         
     intC = objSrc.Rows.Count
     For intR = 1 To intC
@@ -656,6 +649,53 @@ Public Sub Database_SaveNeoConfigMedCont()
     
     Next
     
+
+    GetSaveNeoConfigMedContSql = strSql
+    
+End Function
+
+'ALTER PROCEDURE [dbo].[InsertConfigMedCont]
+'    -- Add the parameters for the stored procedure here
+'             @version DATETIME
+'           , @department NVARCHAR(60)
+'           , @generic NVARCHAR(300)
+'           , @genericUnit NVARCHAR(50)
+'           , @genericQuantity FLOAT
+'           , @genericVolume FLOAT
+'           , @solutionVolume FLOAT
+'           , @solution_2_6_Quantity FLOAT
+'           , @solution_2_6_Volume FLOAT
+'           , @solution_6_11_Quantity FLOAT
+'           , @solution_6_11_Volume FLOAT
+'           , @solution_11_40_Quantity FLOAT
+'           , @solution_11_40_Volume FLOAT
+'           , @solution_40_Quantity FLOAT
+'           , @solution_40_Volume FLOAT
+'           , @minConcentration FLOAT
+'           , @maxConcentration FLOAT
+'           , @solution NVARCHAR(300)
+'           , @dripQuantity FLOAT
+'           , @doseUnit NVARCHAR(50)
+'           , @minDose FLOAT
+'           , @maxDose FLOAT
+'           , @absMaxDose FLOAT
+'           , @doseAdvice NVARCHAR(MAX)
+'           , @product NVARCHAR(MAX)
+'           , @shelfLife FLOAT
+'           , @shelfCondition NVARCHAR(50)
+'           , @preparationText NVARCHAR(MAX)
+'           , @signed BIT
+'           , @dilutionText NVARCHAR(MAX)
+Public Sub Database_SaveNeoConfigMedCont()
+
+    Dim strSql As String
+    
+    On Error GoTo ErrorHandler
+     
+    Application.ScreenUpdating = False
+    ModProgress.StartProgress "Neo Continue Medicatie Configuratie Opslaan"
+
+    strSql = GetSaveNeoConfigMedContSql(False)
     strSql = ModDatabase.WrapTransaction(strSql, "insert_neoconfigmedcont")
     
     InitConnection
@@ -676,7 +716,7 @@ ErrorHandler:
 
     ModUtils.CopyToClipboard strSql
     ModMessage.ShowMsgBoxError "Kon de configuratie voor de neonatologie continue medicatie niet opslaan"
-    ModLog.LogError "Database_SaveNeoConfigMedCont with sql: " & vbNewLine & strSql
+    ModLog.LogError Err, "Database_SaveNeoConfigMedCont with sql: " & vbNewLine & strSql
     
 End Sub
 
@@ -774,44 +814,13 @@ ErrorHandler:
 
     ModUtils.CopyToClipboard strSql
     ModMessage.ShowMsgBoxError "Kon de configuratie voor de neonatologie continue medicatie niet laden"
-    ModLog.LogError "Database_LoadNeoConfigMedCont with sql: " & vbNewLine & strSql
+    ModLog.LogError Err, "Database_LoadNeoConfigMedCont with sql: " & vbNewLine & strSql
 
 End Sub
 
-'ALTER PROCEDURE [dbo].[InsertConfigMedCont]
-'    -- Add the parameters for the stored procedure here
-'             @version DATETIME
-'           , @department NVARCHAR(60)
-'           , @generic NVARCHAR(300)
-'           , @genericUnit NVARCHAR(50)
-'           , @genericQuantity FLOAT
-'           , @genericVolume FLOAT
-'           , @solutionVolume FLOAT
-'           , @solution_2_6_Quantity FLOAT
-'           , @solution_2_6_Volume FLOAT
-'           , @solution_6_11_Quantity FLOAT
-'           , @solution_6_11_Volume FLOAT
-'           , @solution_11_40_Quantity FLOAT
-'           , @solution_11_40_Volume FLOAT
-'           , @solution_40_Quantity FLOAT
-'           , @solution_40_Volume FLOAT
-'           , @minConcentration FLOAT
-'           , @maxConcentration FLOAT
-'           , @solution NVARCHAR(300)
-'           , @dripQuantity FLOAT
-'           , @doseUnit NVARCHAR(50)
-'           , @minDose FLOAT
-'           , @maxDose FLOAT
-'           , @absMaxDose FLOAT
-'           , @doseAdvice NVARCHAR(MAX)
-'           , @product NVARCHAR(MAX)
-'           , @shelfLife FLOAT
-'           , @shelfCondition NVARCHAR(50)
-'           , @preparationText NVARCHAR(MAX)
-'           , @signed BIT
-'           , @dilutionText NVARCHAR(MAX)
-Public Sub Database_SavePediatrieConfigMedCont()
+Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) As String
 
+    Dim strSql As String
     Dim strTable As String
     
     Dim strVersion As String
@@ -849,12 +858,6 @@ Public Sub Database_SavePediatrieConfigMedCont()
     Dim intC As Integer
     
     Dim objSrc As Range
-    Dim strSql
-    
-    On Error GoTo ErrorHandler
-     
-    Application.ScreenUpdating = False
-    ModProgress.StartProgress "Pediatrie Continue Medicatie Configuratie Opslaan"
     
     strTable = "Tbl_Admin_PedMedCont"
     strVersion = ModDate.FormatDateTimeSeconds(Now())
@@ -863,8 +866,8 @@ Public Sub Database_SavePediatrieConfigMedCont()
     strDilutionText = ""
     
     Set objSrc = ModRange.GetRange(strTable)
-    strSql = strSql & "DECLARE @RC int" & vbNewLine
-    strSql = strSql & "DECLARE @version datetime" & vbNewLine
+    If Not blnIsBatch Then strSql = strSql & "DECLARE @RC int" & vbNewLine
+    If Not blnIsBatch Then strSql = strSql & "DECLARE @version datetime" & vbNewLine
     strSql = strSql & "DECLARE @department nvarchar(60)" & vbNewLine
     strSql = strSql & "DECLARE @generic nvarchar(300)" & vbNewLine
     strSql = strSql & "DECLARE @genericUnit nvarchar(50)" & vbNewLine
@@ -888,11 +891,11 @@ Public Sub Database_SavePediatrieConfigMedCont()
     strSql = strSql & "DECLARE @maxDose float" & vbNewLine
     strSql = strSql & "DECLARE @absMaxDose float" & vbNewLine
     strSql = strSql & "DECLARE @doseAdvice nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @product nvarchar(max)" & vbNewLine
+    If Not blnIsBatch Then strSql = strSql & "DECLARE @product nvarchar(max)" & vbNewLine
     strSql = strSql & "DECLARE @shelfLife float" & vbNewLine
     strSql = strSql & "DECLARE @shelfCondition nvarchar(50)" & vbNewLine
     strSql = strSql & "DECLARE @preparationText nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @signed bit" & vbNewLine
+    If Not blnIsBatch Then strSql = strSql & "DECLARE @signed bit" & vbNewLine
     strSql = strSql & "DECLARE @dilutionText nvarchar(max)" & vbNewLine
     strSql = strSql & "" & vbNewLine
         
@@ -1003,6 +1006,52 @@ Public Sub Database_SavePediatrieConfigMedCont()
     
     Next
     
+    GetSavePediatrieConfigMedContSql = strSql
+
+End Function
+
+'ALTER PROCEDURE [dbo].[InsertConfigMedCont]
+'    -- Add the parameters for the stored procedure here
+'             @version DATETIME
+'           , @department NVARCHAR(60)
+'           , @generic NVARCHAR(300)
+'           , @genericUnit NVARCHAR(50)
+'           , @genericQuantity FLOAT
+'           , @genericVolume FLOAT
+'           , @solutionVolume FLOAT
+'           , @solution_2_6_Quantity FLOAT
+'           , @solution_2_6_Volume FLOAT
+'           , @solution_6_11_Quantity FLOAT
+'           , @solution_6_11_Volume FLOAT
+'           , @solution_11_40_Quantity FLOAT
+'           , @solution_11_40_Volume FLOAT
+'           , @solution_40_Quantity FLOAT
+'           , @solution_40_Volume FLOAT
+'           , @minConcentration FLOAT
+'           , @maxConcentration FLOAT
+'           , @solution NVARCHAR(300)
+'           , @dripQuantity FLOAT
+'           , @doseUnit NVARCHAR(50)
+'           , @minDose FLOAT
+'           , @maxDose FLOAT
+'           , @absMaxDose FLOAT
+'           , @doseAdvice NVARCHAR(MAX)
+'           , @product NVARCHAR(MAX)
+'           , @shelfLife FLOAT
+'           , @shelfCondition NVARCHAR(50)
+'           , @preparationText NVARCHAR(MAX)
+'           , @signed BIT
+'           , @dilutionText NVARCHAR(MAX)
+Public Sub Database_SavePediatrieConfigMedCont()
+
+    Dim strSql As String
+    
+
+    On Error GoTo ErrorHandler
+     
+    ModProgress.StartProgress "Pediatrie Continue Medicatie Configuratie Opslaan"
+    
+    strSql = GetSavePediatrieConfigMedContSql(False)
     strSql = ModDatabase.WrapTransaction(strSql, "insert_pedconfigmedcont")
     
     InitConnection
@@ -1012,7 +1061,6 @@ Public Sub Database_SavePediatrieConfigMedCont()
     objConn.Close
     
     ModProgress.FinishProgress
-    Application.ScreenUpdating = True
     
     Exit Sub
     
@@ -1023,7 +1071,7 @@ ErrorHandler:
 
     ModUtils.CopyToClipboard strSql
     ModMessage.ShowMsgBoxError "Kon de configuratie voor de pediatrie continue medicatie niet opslaan"
-    ModLog.LogError "Database_SavePedConfigMedCont with sql: " & vbNewLine & strSql
+    ModLog.LogError Err, "Database_SavePedConfigMedCont with sql: " & vbNewLine & strSql
     
 End Sub
 
@@ -1118,11 +1166,11 @@ ErrorHandler:
 
     ModUtils.CopyToClipboard strSql
     ModMessage.ShowMsgBoxError "Kon de configuratie voor de neonatologie continue medicatie niet laden"
-    ModLog.LogError "Database_LoadPedConfigMedCont with sql: " & vbNewLine & strSql
+    ModLog.LogError Err, "Database_LoadPedConfigMedCont with sql: " & vbNewLine & strSql
 
 End Sub
 
-Public Sub Database_SaveConfigParEnt()
+Private Function GetSaveConfigParentSql() As String
 
     Dim strSql As String
     Dim objTable As Range
@@ -1145,10 +1193,6 @@ Public Sub Database_SaveConfigParEnt()
     Dim dblChloride As Double
     Dim strProduct As String
     Dim intSigned As Integer
-    
-    On Error GoTo ErrorHandler
-    
-    ModProgress.StartProgress "Configuratie voor parenteralia"
     
     Set objTable = ModRange.GetRange("Tbl_Admin_ParEnt")
     intC = objTable.Rows.Count
@@ -1232,7 +1276,20 @@ Public Sub Database_SaveConfigParEnt()
         ModProgress.SetJobPercentage "Opslaan", intC, intR
     
     Next
+ 
+    GetSaveConfigParentSql = strSql
     
+End Function
+
+Public Sub Database_SaveConfigParEnt()
+
+    Dim strSql As String
+    
+    On Error GoTo ErrorHandler
+    
+    ModProgress.StartProgress "Configuratie voor parenteralia"
+    
+    strSql = GetSaveConfigParentSql()
     strSql = WrapTransaction(strSql, "insert_configparent")
     
     InitConnection
@@ -1251,7 +1308,7 @@ ErrorHandler:
     
     ModUtils.CopyToClipboard strSql
     ModProgress.FinishProgress
-    ModLog.LogError "Database_SaveConfigParEnt"
+    ModLog.LogError Err, "Database_SaveConfigParEnt"
     
 
 End Sub
@@ -1326,5 +1383,127 @@ ErrorHandler:
 
     ModProgress.FinishProgress
     objConn.Close
-    ModLog.LogError "Database_LoadConfigParEnt"
+    ModLog.LogError Err, "Database_LoadConfigParEnt"
 End Sub
+
+
+Public Function Database_GetVersions(ByVal strHospNum As String) As String()
+
+    Dim arrVersions() As String
+    Dim strSql As String
+    Dim objRs As Recordset
+    
+    On Error GoTo ErrorHandler
+    
+    strSql = "SELECT * FROM [dbo].[GetPrescriptionVersionsForHospitalNumber] ('" & strHospNum & "')"
+    strSql = strSql & "ORDER BY [DateTime] Desc"
+
+    InitConnection
+    
+    objConn.Open
+    Set objRs = objConn.Execute(strSql)
+    
+    Do While Not objRs.EOF
+        ModArray.AddItemToStringArray arrVersions, objRs.Fields("DateTime").Value
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+
+    Database_GetVersions = arrVersions
+
+    Exit Function
+    
+ErrorHandler:
+
+    ModUtils.CopyToClipboard strSql
+
+    ModLog.LogError Err, "Database_GetVersions"
+    objConn.Close
+    
+End Function
+
+Private Sub Test_Database_GetVersions()
+
+    Dim intN As Integer
+    Dim arrVersions() As String
+    
+    arrVersions = Database_GetVersions("0239080")
+    
+    For intN = 0 To UBound(arrVersions)
+        ModMessage.ShowMsgBoxInfo arrVersions(intN)
+    Next
+    
+End Sub
+
+Public Sub Database_ClearDatabase()
+
+    Dim strDatabase As String
+    Dim strSql As String
+    
+    On Error GoTo ErrorHandler
+    
+    strDatabase = ModSetting.Setting_GetDatabase()
+    If ModMessage.ShowMsgBoxYesNo("Database " & strDatabase & " leeg maken?") = vbYes Then
+        If ModMessage.ShowMsgBoxYesNo("Weet u het zeker dat " & strDatabase & " leeggemaakt moet worden?") Then
+            ModProgress.StartProgress "Clear Database"
+            
+            strSql = "EXEC dbo.ClearDatabase  " & WrapString(strDatabase)
+            strSql = strSql & vbNewLine & GetSaveConfigParentSql()
+            strSql = strSql & vbNewLine & GetSavePediatrieConfigMedContSql(True)
+            strSql = strSql & vbNewLine & GetSaveNeoConfigMedContSql(True)
+            strSql = WrapTransaction(strSql, "cleardatabase_trans")
+            
+            InitConnection
+            objConn.Open
+            objConn.Execute strSql
+            objConn.Close
+            
+            ModProgress.FinishProgress
+        End If
+    End If
+
+    Exit Sub
+
+ErrorHandler:
+
+    ModUtils.CopyToClipboard strSql
+    ModLog.LogError Err, "Could not clear database with SQL: " & vbNewLine & strSql
+End Sub
+
+Public Sub Database_LogAction(ByVal strText As String, Optional strPrescriber As String, Optional ByVal strHospNum As String = "", Optional ByVal strVersion As String = "")
+
+    Dim strSql As String
+    
+    On Error GoTo ErrorHandler
+    
+    If Not Setting_UseDatabase Then Exit Sub
+    
+    strHospNum = IIf(strHospNum = vbNullString, ModPatient.Patient_GetHospitalNumber(), strHospNum)
+    strVersion = IIf(strVersion = vbNullString, ModDate.FormatDateTimeSeconds(Now()), strVersion)
+    strPrescriber = IIf(strPrescriber = vbNullString, ModMetaVision.MetaVision_GetUserLogin(), strPrescriber)
+
+    strSql = "EXEC dbo.InsertLog "
+    strSql = strSql & WrapString(strPrescriber) & ", " & WrapString(strHospNum) & ", " & WrapDateTime(strVersion) & ", " & WrapString(strText)
+    
+    InitConnection
+    objConn.Open
+    objConn.Execute strSql
+    objConn.Close
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    ModUtils.CopyToClipboard strSql
+    ModLog.LogError Err, "Could not log action to database"
+    objConn.Close
+
+End Sub
+
+Private Sub Test_Database_LogAction()
+
+    Database_LogAction "Test"
+
+End Sub
+

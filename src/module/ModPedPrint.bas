@@ -83,13 +83,13 @@ Public Sub PedPrint_SendTPN()
     
     strTo = strMail
     strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
-    strSubject = "TPN brief voor " & ModPatient.PatientHospNum & " " & ModPatient.PatientAchterNaam & ", " & ModPatient.PatientVoorNaam
+    strSubject = "TPN brief voor " & ModPatient.Patient_GetHospitalNumber & " " & ModPatient.Patient_GetLastName & ", " & ModPatient.Patient_GetFirstName
     strHTML = vbNullString
     
     Set objMsg = CreateObject("CDO.Message")
     With objMsg
          
-        .to = CStr(strTo)
+        .To = CStr(strTo)
         .From = CStr(strFrom)
         .Subject = CStr(strSubject)
         .HTMLBody = CStr(strHTML)
@@ -98,7 +98,7 @@ Public Sub PedPrint_SendTPN()
         .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
         .Configuration.Fields.Update
         
-        strFile = Environ("TEMP") & "\TPNbrief_" & ModPatient.PatientHospNum
+        strFile = Environ("TEMP") & "\TPNbrief_" & ModPatient.Patient_GetHospitalNumber
         strPDF = PrintTPN(False, strFile)
         .AddAttachment strPDF
         strPDFList = strPDFList & strPDF & vbNewLine
@@ -124,7 +124,7 @@ Public Sub PedPrint_SendTPN()
     
 PedPrint_SendTPNError:
     
-    ModLog.LogError "PedPrint_SendTPNError"
+    ModLog.LogError Err, "PedPrint_SendTPNError"
     
     On Error Resume Next
     
@@ -152,7 +152,7 @@ Private Function PrintTPN(ByVal blnPrev As Boolean, ByVal strFile As String) As 
     Dim intTPN As Integer
     
     intTPN = ModRange.GetRangeValue(constTPN, 1)
-    dblGew = ModPatient.GetGewichtFromRange()
+    dblGew = ModPatient.Patient_GetWeight()
     
     If intTPN > 1 Then
         If intTPN = 2 Then Set objSheet = shtPedPrtTPN2tot6

@@ -9,8 +9,8 @@ Private Const constNeoAfsprD As String = "_Neo_AfsprD_"
 Public Sub NeoAfspr_Clear()
 
     ModProgress.StartProgress "Verwijder Neo Afspraken"
-    ModPatient.ClearPatientData constNeoAfsprB, False, True
-    ModPatient.ClearPatientData constNeoAfsprD, False, True
+    ModPatient.Patient_ClearData constNeoAfsprB, False, True
+    ModPatient.Patient_ClearData constNeoAfsprD, False, True
     ModProgress.FinishProgress
 
 End Sub

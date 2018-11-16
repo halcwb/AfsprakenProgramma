@@ -55,12 +55,12 @@ Public Sub ToggleDevelopmentMode()
         ModMessage.ShowMsgBoxInfo "Weer terug zetten in Gebruikers Modus"
         ModSetting.SetDevelopmentMode False
         
-        InitializeAfspraken
+        Application_Initialize
     End If
 
 End Sub
 
-Public Sub CloseAfspraken()
+Public Sub Application_CloseApplication()
 
     Dim strAction As String
     Dim strParams() As Variant
@@ -70,7 +70,9 @@ Public Sub CloseAfspraken()
     
     Dim objWindow As Window
     
-    If blnCloseHaseRun Then ' Second CloseAfspraken triggert by WbkAfspraken.Workbook_BeforeClose
+    On Error GoTo ErrorHandler
+    
+    If blnCloseHaseRun Then ' Second Application_CloseApplication triggert by WbkAfspraken.Workbook_BeforeClose
         Exit Sub
     End If
     
@@ -81,7 +83,7 @@ Public Sub CloseAfspraken()
     End If
     
     shtGlobGuiFront.Select
-    strAction = "ModApplication.CloseAfspraken"
+    strAction = "Application_CloseApplication"
     
     ModLog.LogActionStart strAction, strParams
     
@@ -114,14 +116,21 @@ Public Sub CloseAfspraken()
         Application.StatusBar = vbNullString
         Application.DisplayAlerts = False
         WbkAfspraken.blnCancelAfsprakenClose = False
+        Database_LogAction "Close application"
         Application.Quit
     End If
+        
+    Exit Sub
+    
+ErrorHandler:
+
+    ModLog.LogError Err, "Application_CloseApplication"
 
 End Sub
 
 Private Sub TestCloseAfspraken()
     blnDontClose = True
-    CloseAfspraken
+    Application_CloseApplication
     MsgBox Application.DisplayAlerts
 End Sub
 
@@ -155,7 +164,7 @@ Public Sub SetWindowToOpenApp(objWindow As Window)
 
 End Sub
 
-Public Sub InitializeAfspraken()
+Public Sub Application_Initialize()
 
     Dim strError As String
     Dim strAction As String
@@ -164,12 +173,12 @@ Public Sub InitializeAfspraken()
     Dim strParams() As Variant
     Dim objWind As Window
     
-    On Error GoTo InitializeError
+    On Error GoTo ErrorHandler
     
     shtGlobGuiFront.Select
     Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
     
-    strAction = "ModApplication.InitializeAfspraken"
+    strAction = "ModApplication.Application_Initialize"
     
     ModLog.LogActionStart strAction, strParams
           
@@ -201,10 +210,10 @@ Public Sub InitializeAfspraken()
     ModSheet.HideAndUnProtectNonUserInterfaceSheets True
     
     ' Load config tables
-    If ModSetting.UseDatabase Then
-        If Not LoadConfigTablesFromDatabase() Then Err.Raise ModConst.CONST_APP_ERROR, "InitializeAfspraken", "Kan config tabellen niet laden"
+    If Setting_UseDatabase Then
+        If Not LoadConfigTablesFromDatabase() Then Err.Raise ModConst.CONST_APP_ERROR, "Application_Initialize", "Kan config tabellen niet laden"
     Else
-        If Not LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "InitializeAfspraken", "Kan config tabellen niet laden"
+        If Not LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "Application_Initialize", "Kan config tabellen niet laden"
     End If
     
     ' Clean everything
@@ -213,27 +222,29 @@ Public Sub InitializeAfspraken()
             
     strBed = ModMetaVision.MetaVision_GetCurrentBedName()
     If strBed <> vbNullString Then
-        If ModSetting.UseDatabase Then
+        If Setting_UseDatabase Then
             ModBed.SetBed strBed
-            ModBed.OpenBedAsk2 False, True
+            Patient_OpenPatient
         Else
             ModBed.SetBed strBed
             ModBed.OpenBedAsk False, True
         End If
     Else
-        ModPatient.PatientClearAll False, True ' Default start with no patient
+        Patient_ClearAll False, True ' Default start with no patient
     End If
     
     ModSheet.SelectPedOrNeoStartSheet False  ' Select the first GUI sheet
     
     ModProgress.FinishProgress
+    
     ModLog.LogActionEnd strAction
+    Database_LogAction "Initialize Application"
     
     Application.ScreenUpdating = True
-            
+    
     Exit Sub
     
-InitializeError:
+ErrorHandler:
     
     ModProgress.FinishProgress
     Application.Visible = True
@@ -243,9 +254,9 @@ InitializeError:
     ModMessage.ShowMsgBoxError strError
     
     strError = strError & vbNewLine & strAction
-    ModLog.LogError strError
+    ModLog.LogError Err, strError
     
-    CloseAfspraken
+    Application_CloseApplication
     
 End Sub
 
@@ -323,7 +334,7 @@ Private Sub SetCaptionAndHideBars()
     
 SetCaptionAndHideBarsError:
 
-    ModLog.LogError "SetCaptionAndHideBarsError"
+    ModLog.LogError Err, "SetCaptionAndHideBarsError"
     
 End Sub
 
@@ -350,8 +361,8 @@ Public Sub SetApplicationTitle()
     
     strTitle = ModConst.CONST_APPLICATION_NAME
     strBed = ModBed.GetBed()
-    strVN = ModPatient.PatientVoorNaam()
-    strAN = ModPatient.PatientAchterNaam()
+    strVN = ModPatient.Patient_GetFirstName()
+    strAN = ModPatient.Patient_GetLastName()
     
     strTitle = IIf(strAN = vbNullString, strTitle, strTitle & " Patient: " & strAN)
     strTitle = IIf(strVN = vbNullString, strTitle, strTitle & ", " & strVN)
@@ -466,7 +477,7 @@ Private Function LoadConfigTablesFromDatabase() As Boolean
     
 ErrorHandler:
 
-    ModLog.LogError "LoadConfigTablesFromDatabase"
+    ModLog.LogError Err, "LoadConfigTablesFromDatabase"
 
 End Function
 
@@ -547,7 +558,7 @@ Private Function LoadConfigTable(ByVal strFile As String, ByVal strTable As Stri
 LoadConfigTableError:
 
     lngErr = Err.Number
-    ModLog.LogError "Kan config table " & strTable & " niet laden"
+    ModLog.LogError Err, "Kan config table " & strTable & " niet laden"
     
     On Error Resume Next
     
@@ -611,7 +622,7 @@ Private Sub SaveConfigTable(ByVal strFile As String, ByVal strTable As String, B
     
 SaveConfigTableError:
 
-    ModLog.LogError "Kan config table " & strTable & " niet opslaan"
+    ModLog.LogError Err, "Kan config table " & strTable & " niet opslaan"
     
     On Error Resume Next
     

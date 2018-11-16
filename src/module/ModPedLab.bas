@@ -83,7 +83,7 @@ End Sub
 Public Sub PedLab_Clear()
     
     ModProgress.StartProgress "Verwijder Ped Lab"
-    ModPatient.ClearPatientData constPedLab, False, True
+    ModPatient.Patient_ClearData constPedLab, False, True
     ModProgress.FinishProgress
 
 End Sub

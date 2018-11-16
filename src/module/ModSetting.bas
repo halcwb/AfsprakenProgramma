@@ -88,15 +88,15 @@ SetSettingError:
     
 End Sub
 
-Public Function UseDatabase() As Boolean
+Public Function Setting_UseDatabase() As Boolean
 
-    UseDatabase = GetSetting(constUseDB)
+    Setting_UseDatabase = GetSetting(constUseDB)
 
 End Function
 
-Private Sub Test_UseDatabase()
+Private Sub Test_Setting_UseDatabase()
 
-    ModMessage.ShowMsgBoxInfo UseDatabase
+    ModMessage.ShowMsgBoxInfo Setting_UseDatabase
 
 End Sub
 

@@ -5,6 +5,7 @@ $K$2: 	=Txt_Pat_Bed
 $D$3: 	=Txt_Pat_FullName
 $H$3: 	=Txt_Pat_GeboorteDat
 $J$3: 	=Txt_Pat_Lengte
+$K$3: 	=""Versie: "" & FormatDateTimeSeconds(Var_Glob_Versie)
 $D$4: 	=Txt_Pat_PatNo
 $H$4: 	=Txt_Pat_Leeftijd
 $J$4: 	=IF(Txt_Pat_GebGew="""","""",""Geb Gew: ""&Txt_Pat_GebGew)

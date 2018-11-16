@@ -466,3 +466,22 @@ Private Sub TestStringArrayItem()
     MsgBox StringArrayItem(strArr, 3)
 
 End Sub
+
+
+Public Function ArrayIsEmpty(arrArray) As Boolean
+    
+    Dim lngTemp As Long
+    
+    On Error GoTo ErrorHandler
+    
+    lngTemp = UBound(arrArray)
+    
+    ArrayIsEmpty = False
+    
+    Exit Function
+
+ErrorHandler:
+
+    ArrayIsEmpty = True
+
+End Function

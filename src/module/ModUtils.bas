@@ -312,7 +312,7 @@ Public Sub EMailMessageToBeheer(ByVal strMsg As String)
     strHTML = strMsg
      
     With objMsg
-         .to = CStr(strTo)
+         .To = CStr(strTo)
          .From = CStr(strFrom)
          .Subject = CStr(strSubject)
          .HTMLBody = CStr(strHTML)

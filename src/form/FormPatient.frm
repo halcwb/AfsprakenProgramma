@@ -79,7 +79,7 @@ Private Sub btnRefresh_Click()
         Me.txtAdmDay = DateTime.Day(m_Pat.OpnameDatum)
         Me.txtAdmMonth = DateTime.Month(m_Pat.OpnameDatum)
         Me.txtAdmYear = DateTime.Year(m_Pat.OpnameDatum)
-        Me.txtPatNum = m_Pat.PatientId
+        Me.txtPatNum = m_Pat.HospitalNumber
         Me.txtLastName = m_Pat.AchterNaam
         Me.txtFirstName = m_Pat.VoorNaam
         Me.txtBirthDay = DateTime.Day(m_Pat.GeboorteDatum)
@@ -222,7 +222,7 @@ Private Sub cmdOK_Click()
     dblBthWght = StringToDouble(txtBirthWeight.Value)
     If dblActWght < dblBthWght / 1000 Then dblActWght = dblBthWght / 1000
     
-    m_Pat.PatientId = CStr(txtPatNum.Text)
+    m_Pat.HospitalNumber = CStr(txtPatNum.Text)
     m_Pat.AchterNaam = txtLastName.Text
     m_Pat.VoorNaam = txtFirstName.Text
     m_Pat.Gewicht = dblActWght
@@ -338,7 +338,7 @@ Public Sub SetPatient(objPat As ClassPatientDetails)
     End If
     If Not ModDate.IsEmptyDate(m_Pat.GeboorteDatum) Then SetBirthDate m_Pat.GeboorteDatum
     
-    txtPatNum.Text = m_Pat.PatientId
+    txtPatNum.Text = objPat.HospitalNumber
     txtLastName.Value = m_Pat.AchterNaam
     txtFirstName.Value = m_Pat.VoorNaam
     txtWeight.Value = IIf(m_Pat.Gewicht = 0, vbNullString, m_Pat.Gewicht)

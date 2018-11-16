@@ -9,8 +9,8 @@ Private Const constPedAfsprD As String = "_Ped_AfsprD_"
 Public Sub PedAfspr_Clear()
 
     ModProgress.StartProgress "Verwijder Ped Afspraken"
-    ModPatient.ClearPatientData constPedAfsprB, False, True
-    ModPatient.ClearPatientData constPedAfsprD, False, True
+    ModPatient.Patient_ClearData constPedAfsprB, False, True
+    ModPatient.Patient_ClearData constPedAfsprD, False, True
     ModProgress.FinishProgress
 
 End Sub

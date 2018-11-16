@@ -104,13 +104,13 @@ Public Sub SendApotheekWerkBrief()
     
     strTo = strMail
     strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
-    strSubject = "NICU VTGM protocollen voor " & ModPatient.PatientHospNum & " " & ModPatient.PatientAchterNaam & ", " & ModPatient.PatientVoorNaam
+    strSubject = "NICU VTGM protocollen voor " & ModPatient.Patient_GetHospitalNumber & " " & ModPatient.Patient_GetLastName & ", " & ModPatient.Patient_GetFirstName
     strHTML = vbNullString
     
     Set objMsg = CreateObject("CDO.Message")
     With objMsg
          
-        .to = CStr(strTo)
+        .To = CStr(strTo)
         .From = CStr(strFrom)
         .Subject = CStr(strSubject)
         .HTMLBody = CStr(strHTML)
@@ -119,7 +119,7 @@ Public Sub SendApotheekWerkBrief()
         .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
         .Configuration.Fields.Update
         
-        strFile = Environ("TEMP") & "\Werkbrief_" & ModPatient.PatientHospNum
+        strFile = Environ("TEMP") & "\Werkbrief_" & ModPatient.Patient_GetHospitalNumber
         strPDF = PrintNeoWerkBriefPrev(False, strFile)
         .AddAttachment strPDF
         strPDFList = strPDFList & strPDF & vbNewLine
@@ -130,7 +130,7 @@ Public Sub SendApotheekWerkBrief()
             intMed = ModRange.GetRangeValue(constMedKeuze & strNo, 0)
 
             If intMed > 1 Then
-                strFile = Environ("TEMP") & "\VTGM_" & ModPatient.PatientHospNum
+                strFile = Environ("TEMP") & "\VTGM_" & ModPatient.Patient_GetHospitalNumber
                 strPDF = PrintBriefNo(intNo, False, False, strFile)
                 .AddAttachment strPDF
                 strPDFList = strPDFList & strPDF & vbNewLine
@@ -162,7 +162,7 @@ Public Sub SendApotheekWerkBrief()
 
 SendApotheekWerkBriefError:
 
-    ModLog.LogError "SendApotheekWerkBriefError"
+    ModLog.LogError Err, "SendApotheekWerkBriefError"
     
     On Error Resume Next
     

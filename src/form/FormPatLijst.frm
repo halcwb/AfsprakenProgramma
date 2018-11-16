@@ -18,24 +18,64 @@ Option Explicit
 Private m_Pats As Collection
 Private m_OriginalPats As Collection
 
-Private m_onlyAdmitted As Boolean
-Private m_useDatabase As Boolean
+Private m_OnlyAdmitted As Boolean
+Private m_LatestVersion As Boolean
+Private m_Setting_UseDatabase As Boolean
+Private m_Cancel As Boolean
 
-Private Sub chkAdmitted_Click()
+Public Function GetCancel() As Boolean
 
-    m_onlyAdmitted = chkAdmitted.Value
-    If Not m_OriginalPats Is Nothing Then LoadPatients2 m_OriginalPats
+    GetCancel = m_Cancel
+
+End Function
+
+Private Sub SetSelectedHospNumAndVerson()
+
+    If Not m_LatestVersion Then
+        If cboVersions.Value = vbNullString Then
+            ModMessage.ShowMsgBoxExclam "Selecteer eerst een afspraken versie"
+            Exit Sub
+        Else
+            ModBed.SetDatabaseVersie cboVersions.Value
+        End If
+    End If
+    
+    If m_Setting_UseDatabase Then
+        SetSelectedHospNum
+    Else
+        SetSelectedBed
+    End If
+
+
+End Sub
+
+Private Sub cmdCancel_Click()
+
+    m_Cancel = True
+    Me.Hide
+
+End Sub
+
+Private Sub cmdOK_Click()
+
+    SetSelectedHospNumAndVerson
+    m_Cancel = False
+    Me.Hide
+
+End Sub
+
+Private Sub lstPatienten_Click()
+
+    If Not m_LatestVersion Then
+        LoadVersions
+    End If
 
 End Sub
 
 Private Sub lstPatienten_DblClick(ByVal blnCancel As MSForms.ReturnBoolean)
-    
-    If m_useDatabase Then
-        Me.SetSelectedHospNum
-    Else
-        Me.SetSelectedBed
-    End If
-    
+        
+    SetSelectedVersion
+    If m_Setting_UseDatabase Then SetSelectedHospNum
     Me.Hide
 
 End Sub
@@ -80,21 +120,29 @@ Private Function PatToSortString(objPat As ClassPatientDetails) As String
 
     Dim strSort As String
     
-    strSort = objPat.AchterNaam & objPat.VoorNaam & objPat.PatientId
-    strSort = IIf(m_onlyAdmitted, objPat.Bed & strSort, strSort)
+    strSort = objPat.AchterNaam & objPat.VoorNaam & objPat.HospitalNumber
+    strSort = IIf(m_OnlyAdmitted, objPat.Bed & strSort, strSort)
     
     PatToSortString = strSort
 
 End Function
 
-Public Sub LoadPatients2(ByVal colPats As Collection)
+Private Sub Setting_UseDatabase()
+
+    m_Setting_UseDatabase = True
+    frmPatSel.Visible = True
+    frmVersion.Visible = True
+
+End Sub
+
+Public Sub LoadDbPatients(ByVal colPats As Collection)
 
     Dim objPat As ClassPatientDetails
     Dim arrSort() As Variant
     Dim varSort As Variant
     Dim strPat As String
     
-    m_useDatabase = True
+    Setting_UseDatabase
     
     Set m_Pats = New Collection
     Set m_OriginalPats = colPats
@@ -102,7 +150,7 @@ Public Sub LoadPatients2(ByVal colPats As Collection)
     Me.lstPatienten.Clear
     
     For Each objPat In colPats
-        If m_onlyAdmitted Then
+        If m_OnlyAdmitted Then
             If Not objPat.Bed = vbNullString And objPat.Afdeling = ModMetaVision.MetaVision_GetDepartment() Then
                 ModArray.AddItemToVariantArray arrSort, PatToSortString(objPat)
             End If
@@ -118,7 +166,7 @@ Public Sub LoadPatients2(ByVal colPats As Collection)
             If PatToSortString(objPat) = varSort Then
                 m_Pats.Add objPat
                 strPat = objPat.ToString
-                strPat = IIf(m_onlyAdmitted, objPat.Bed & " - " & strPat, strPat)
+                strPat = IIf(m_OnlyAdmitted, objPat.Bed & " - " & strPat, strPat)
                 
                 Me.lstPatienten.AddItem strPat
             End If
@@ -127,17 +175,35 @@ Public Sub LoadPatients2(ByVal colPats As Collection)
 
 End Sub
 
-Public Sub SetSelectedHospNum()
+Private Function GetSelectedHospNum() As String
+
     
     Dim objPat As ClassPatientDetails
     Dim strId As String
 
     If Me.lstPatienten.ListIndex > -1 Then
         Set objPat = m_Pats(Me.lstPatienten.ListIndex + 1)
-        strId = objPat.PatientId
+        strId = objPat.HospitalNumber
     End If
+
+    GetSelectedHospNum = strId
+
+End Function
+
+Private Sub SetSelectedHospNum()
     
-    ModBed.SetPatientHospitalNumber strId
+    Dim objPat As ClassPatientDetails
+    Dim strId As String
+
+    strId = GetSelectedHospNum()
+    
+    Patient_SetHospitalNumber strId
+
+End Sub
+
+Private Sub SetSelectedVersion()
+
+    ModBed.SetDatabaseVersie cboVersions.Value
 
 End Sub
 
@@ -163,25 +229,102 @@ Private Sub CenterForm()
 
 End Sub
 
+Private Sub ToggleAdmitted(ByVal blnAdmitted As Boolean)
+
+    m_OnlyAdmitted = blnAdmitted
+    If Not m_OriginalPats Is Nothing Then LoadDbPatients m_OriginalPats
+
+End Sub
+
+Private Sub optAdmitted_Click()
+
+    ToggleAdmitted optAdmitted.Value
+
+End Sub
+
+Private Sub optAllPatients_Click()
+
+    ToggleAdmitted Not optAllPatients.Value
+
+End Sub
+
+Private Sub optLatest_Click()
+    
+    SetLatestVersionTrue
+
+End Sub
+
+Private Sub optSpecific_Click()
+
+    SetSpecificVersionTrue
+
+End Sub
+
 Private Sub UserForm_Activate()
 
     CenterForm
 
 End Sub
 
-Private Sub UserForm_Terminate()
+Private Sub SetCboVersionsVisible(ByVal blnVisible As Boolean)
+
+    lblCboVersions.Visible = blnVisible
+    cboVersions.Visible = blnVisible
+
+End Sub
+
+
+Private Sub UserForm_Initialize()
+
+    SetOnlyAdmittedTrue
+    SetLatestVersionTrue
     
-    If m_useDatabase Then
-        Me.SetSelectedHospNum
-    Else
-        Me.SetSelectedBed
-    End If
+    frmPatSel.Visible = False
+    frmVersion.Visible = False
 
 End Sub
 
 Public Sub SetOnlyAdmittedTrue()
 
-    m_onlyAdmitted = True
-    chkAdmitted = m_onlyAdmitted
+    m_OnlyAdmitted = True
+    optAdmitted.Value = True
+
+End Sub
+
+Public Sub SetLatestVersionTrue()
+
+    m_LatestVersion = True
+    optLatest.Value = True
+    SetCboVersionsVisible False
+    cboVersions.Clear
+    
+End Sub
+
+Public Sub SetSpecificVersionTrue()
+
+    m_LatestVersion = False
+    optSpecific.Value = True
+    SetCboVersionsVisible True
+    LoadVersions
+
+End Sub
+
+Private Sub LoadVersions()
+
+    Dim strHospNum
+    Dim arrVersions() As String
+    Dim intN As Integer
+    
+    cboVersions.Clear
+    strHospNum = GetSelectedHospNum()
+    If Not strHospNum = vbNullString Then
+        arrVersions = ModDatabase.Database_GetVersions(strHospNum)
+        
+        If Not ModArray.ArrayIsEmpty(arrVersions) Then
+            For intN = 0 To UBound(arrVersions) - 1
+                cboVersions.AddItem arrVersions(intN)
+            Next
+        End If
+    End If
 
 End Sub

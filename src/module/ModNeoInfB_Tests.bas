@@ -460,7 +460,7 @@ Public Sub Test_NeoInfB_ContMed()
     Set shtTests = Nothing
     Set wbkTests = Nothing
         
-    ModPatient.ClearPatientData "_Neo", False, True
+    ModPatient.Patient_ClearData "_Neo", False, True
     
     If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
     
@@ -475,7 +475,7 @@ Test_NeoInfB_ContMedError:
 
     ModProgress.FinishProgress
     ModMessage.ShowMsgBoxExclam "Kan tests niet uitvoeren: " & Err.Source & " " & Err.Description
-    ModLog.LogError "Test_NeoInfB_ContMedError: " & Err.Description
+    ModLog.LogError Err, "Test_NeoInfB_ContMedError: " & Err.Description
     
     On Error Resume Next
         
@@ -720,7 +720,7 @@ Public Sub Test_NeoInfB_Print()
     shtTests.Range(constTblVerwacht & intTestCount + 2).ClearContents
     shtTests.Range(constTblTekst & intTestCount + 2).ClearContents
 
-    ModPatient.ClearPatientData "Var_Neo_InfB_Cont_", False, True
+    ModPatient.Patient_ClearData "Var_Neo_InfB_Cont_", False, True
 
     blnPass = True
     intM = 1
@@ -985,7 +985,7 @@ Public Sub Test_NeoInfB_Print()
             ModNeoPrint.SaveApotheekWerkBrief strPDF
             Application.ScreenUpdating = False
             
-            ModPatient.ClearPatientData "Var_Neo_InfB_Cont_", False, True
+            ModPatient.Patient_ClearData "Var_Neo_InfB_Cont_", False, True
             intM = 1
         Else
             intM = intM + 1
@@ -1001,7 +1001,7 @@ Public Sub Test_NeoInfB_Print()
         ModNeoPrint.SaveApotheekWerkBrief strPDF
         Application.ScreenUpdating = False
     
-        ModPatient.ClearPatientData "Var_Neo_InfB_Cont_", False, True
+        ModPatient.Patient_ClearData "Var_Neo_InfB_Cont_", False, True
     End If
     
     ModProgress.FinishProgress
@@ -1020,7 +1020,7 @@ Public Sub Test_NeoInfB_Print()
     Set shtTests = Nothing
     Set wbkTests = Nothing
         
-    ModPatient.ClearPatientData "_Neo", False, True
+    ModPatient.Patient_ClearData "_Neo", False, True
     
     If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
     

@@ -185,7 +185,7 @@ Public Sub Formularium_GetMedicamenten(objFormularium As ClassFormularium, ByVal
     
 GetMedicamentenError:
     
-    ModLog.LogError "Could not retrieve medicament from: " & strFileName
+    ModLog.LogError Err, "Could not retrieve medicament from: " & strFileName
     
     On Error Resume Next
     
@@ -289,7 +289,7 @@ Public Sub Formularium_GetMedDiscConfig(objFormularium As ClassFormConfig, ByVal
     
 GetMedicamentenError:
     
-    ModLog.LogError "Could not retrieve medicament from: " & strFileName
+    ModLog.LogError Err, "Could not retrieve medicament from: " & strFileName
     
     On Error Resume Next
     
@@ -387,7 +387,7 @@ Public Sub Formularium_SaveMedDiscConfig(ByVal blnShowProgress As Boolean)
     
 GetMedicamentenError:
     
-    ModLog.LogError "Could not retrieve medicament from: " & strFileName
+    ModLog.LogError Err, "Could not retrieve medicament from: " & strFileName
     
     On Error Resume Next
     

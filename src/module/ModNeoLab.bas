@@ -7,7 +7,7 @@ Private Const constNeoLabOpm As String = "_Neo_Lab_Opm"
 Public Sub NeoLab_Clear()
 
     ModProgress.StartProgress "Verwijder Neo Lab"
-    ModPatient.ClearPatientData constNeoLab, False, True
+    ModPatient.Patient_ClearData constNeoLab, False, True
     ModProgress.FinishProgress
 
 End Sub

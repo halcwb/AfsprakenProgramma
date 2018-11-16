@@ -134,7 +134,7 @@ End Sub
 Public Sub PedLijnPM_ClearPM()
 
     ModProgress.StartProgress "Verwijder PM"
-    ModPatient.ClearPatientData constPM, False, True
+    ModPatient.Patient_ClearData constPM, False, True
     ModProgress.FinishProgress
 
 End Sub

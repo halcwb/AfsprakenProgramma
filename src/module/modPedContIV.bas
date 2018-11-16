@@ -269,7 +269,7 @@ Private Sub SetToStandard(ByVal intN As Integer)
     
 SetToStandardError:
 
-    ModLog.LogError "SetMedContIVToStandard: " & " Error for regel " & strN
+    ModLog.LogError Err, "SetMedContIVToStandard: " & " Error for regel " & strN
 
 End Sub
 
@@ -402,7 +402,7 @@ Private Sub EnterNumeric(ByVal intRegel As Integer, ByVal strRange As String, By
     
 OpenInvoerNumeriekError:
 
-    ModLog.LogError "EnterNumeric(" & Join(Array(strRegel, strRange, strUnit, intColumn), ", ") & ")"
+    ModLog.LogError Err, "EnterNumeric(" & Join(Array(strRegel, strRange, strUnit, intColumn), ", ") & ")"
     Set frmInvoer = Nothing
 
 End Sub
@@ -422,7 +422,7 @@ Private Sub SetMedConc(ByVal intRegel As Integer)
     
 SetMedConcError:
 
-    ModLog.LogError "SetMedConc(" & intRegel & ")"
+    ModLog.LogError Err, "SetMedConc(" & intRegel & ")"
 
 End Sub
 
@@ -838,7 +838,7 @@ Private Function CalculateStandByDose(ByVal intN As Integer, ByVal intMed As Int
     dblOplQty = IIf(dblOplQty = 0, ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 9), dblOplQty)
     dblQty = ModRange.GetRangeValue(constMedIVSterkte & strN, 0)
     dblQty = IIf(dblQty = 0, ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 8), dblQty)
-    dblWeight = ModPatient.GetGewichtFromRange()
+    dblWeight = ModPatient.Patient_GetWeight()
     strMed = GetMedicamentItemWithIndex(intMed, 1)
     
     If dblQty > 0 Then dblStand = dblDose * dblOplQty * dblWeight / (dblQty * dblFactor)

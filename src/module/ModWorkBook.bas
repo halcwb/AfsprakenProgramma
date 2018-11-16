@@ -119,7 +119,7 @@ Public Sub CreateDataWorkBooks(ByVal strBedsFilePath As String, arrBeds() As Var
 CreatePatientsWorkBookError:
 
     ModMessage.ShowMsgBoxError "Kan patient data file niet aanmaken"
-    ModLog.LogError "Cannot create patients workbook: " & Join(Array(strDataFile, strTextFile, strFormula), ", ")
+    ModLog.LogError Err, "Cannot create patients workbook: " & Join(Array(strDataFile, strTextFile, strFormula), ", ")
 
 End Sub
 
@@ -179,7 +179,7 @@ CopyWorkbookRangeToSheetError:
 
     If Workbooks.Count = 2 Then Workbooks.Item(2).Close ' To Do Improve by che
 
-    ModLog.LogError "CopyWorkbookRangeToSheet " & strFile & ", " & strBook & ", " & strRange & ", " & shtTarget.Name
+    ModLog.LogError Err, "CopyWorkbookRangeToSheet " & strFile & ", " & strBook & ", " & strRange & ", " & shtTarget.Name
     
     Application.DisplayAlerts = True
     CopyWorkbookRangeToSheet = False

@@ -45,22 +45,30 @@ Private Sub Test_DateYear()
 End Sub
 
 Public Function FormatDateTimeSeconds(dtmDateTime As Date) As String
+    
+    Dim strFormat As String
 
-    FormatDateTimeSeconds = Format(dtmDateTime, "yyyy-mm-dd hh:mm:ss")
+    If IsEmptyDate(dtmDateTime) Then
+    strFormat = vbNullString
+    Else
+    strFormat = Format(dtmDateTime, "yyyy-mm-dd hh:mm:ss")
+    End If
+    
+    FormatDateTimeSeconds = strFormat
 
 End Function
+
+Private Sub Test_FormatDateTimeSeconds()
+
+    ModMessage.ShowMsgBoxInfo ModRange.GetRangeValue("Var_Glob_Versie", vbNullString)
+
+End Sub
 
 Public Function FormatDateYearMonthDay(dtmDateTime As Date) As String
 
     FormatDateYearMonthDay = Format(dtmDateTime, "yyyy-mm-dd")
 
 End Function
-
-Private Sub Test_FormatDateTimeSeconds()
-
-    ModMessage.ShowMsgBoxInfo FormatDateTimeSeconds(Now())
-
-End Sub
 
 Public Function FormatDateHoursMinutes(dtmDate As Date) As String
 

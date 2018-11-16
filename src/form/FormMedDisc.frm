@@ -43,7 +43,7 @@ End Sub
 
 Private Function IsAbsMaxInvalid() As Boolean
     
-    IsAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.GetGewichtFromRange() > 50 And txtNormDose.Value = vbNullString And txtMaxDose.Value = vbNullString
+    IsAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.Patient_GetWeight() > 50 And txtNormDose.Value = vbNullString And txtMaxDose.Value = vbNullString
 
 End Function
 
@@ -485,7 +485,7 @@ Private Sub CalculateDose()
     
     dblFact = IIf(chkPerDosis.Value, 1, GetFactorByFreq(cboFreq.Text))
     dblDose = StringToDouble(txtNormDose.Value)
-    dblWght = ModPatient.GetGewichtFromRange()
+    dblWght = ModPatient.Patient_GetWeight()
     dblM2 = ModPatient.CalculateBSA()
     dblDeel = StringToDouble(txtDeelDose.Value)
     dblKeer = StringToDouble(txtKeerDose.Value)

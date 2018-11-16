@@ -8,7 +8,6 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
 '
 ' Code for onAction callback. Ribbon control button
 '
-    Application.ScreenUpdating = False
     
     Select Case ctrlMenuItem.Id
     
@@ -18,33 +17,33 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             shtGlobGuiFront.Select
         
         Case "btnClose"                                     ' -> Programma Afsluiten
-            ModApplication.CloseAfspraken
+            Application_CloseApplication
         
         Case "btnClear"                                     ' -> Alles Verwijderen
             ModProgress.StartProgress "Patient Data Verwijderen"
-            ModPatient.PatientClearAll True, True
+            Patient_ClearAll True, True
             ModProgress.FinishProgress
         
         'grpBedden                                          ' -- PATIENTEN --
         
         Case "btnPatientList"                                   ' -> Open patient lijst
-            If ModSetting.UseDatabase Then
-                ModBed.OpenBed2
+            If Setting_UseDatabase Then
+                Patient_OpenPatientAndAsk
             Else
                 ModBed.OpenBed
             End If
             ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnSavePatient"                               ' -> Patient opslaan
-            If ModSetting.UseDatabase Then
-                ModPatient.Patient_SavePatient
+            If Setting_UseDatabase Then
+                Patient_SavePatient
             Else
                 ModBed.CloseBed True
             End If
             ModSheet.SelectPedOrNeoStartSheet True
         
         Case "btnEnterPatient"                              ' -> Patient Gegevens
-            ModPatient.EnterPatientDetails
+            ModPatient.Patient_EnterDetails
             
         'grpPediatrie                                       ' -- PEDIATRIE --
         
@@ -213,10 +212,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
             
-        
     End Select
-
-    Application.ScreenUpdating = True
     
 End Sub
 
@@ -279,11 +275,11 @@ End Sub
 Private Sub ClearAll()
 
     If ModSetting.IsDevelopmentDir Then
-        ModPatient.PatientClearNeo
-        ModPatient.PatientClearPed
+        ModPatient.Patient_ClearNeoData
+        ModPatient.Patient_ClearPedData
     Else
-        If MetaVision_IsNeonatologie() Then ModPatient.PatientClearNeo
-        If MetaVision_IsPediatrie() Then ModPatient.PatientClearPed
+        If MetaVision_IsNeonatologie() Then ModPatient.Patient_ClearNeoData
+        If MetaVision_IsPediatrie() Then ModPatient.Patient_ClearPedData
     End If
     
 End Sub

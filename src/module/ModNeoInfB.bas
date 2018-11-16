@@ -294,7 +294,7 @@ Private Sub Copy1700ToAct(ByVal blnAlles As Boolean, ByVal blnVoeding As Boolean
     Dim dblGluc As Double
     Dim dblVocht As Double
     
-    If ModPatient.GetGewichtFromRange() = 0 Then Exit Sub
+    If ModPatient.Patient_GetWeight() = 0 Then Exit Sub
     
     dblGluc = shtNeoBerInfB.Range(constTPNGluc).Value2
     
@@ -326,7 +326,7 @@ Private Sub Copy1700ToAct(ByVal blnAlles As Boolean, ByVal blnVoeding As Boolean
         ' Correct for increase or decrease in TPN glucose
         ' Increase or decrease vocht intake
         dblVocht = ModRange.GetRangeValue(constIntakePerKg, 0)
-        dblVocht = dblVocht + ((dblGluc - shtNeoBerInfB.Range(constTPNGluc)) / ModPatient.GetGewichtFromRange())
+        dblVocht = dblVocht + ((dblGluc - shtNeoBerInfB.Range(constTPNGluc)) / ModPatient.Patient_GetWeight())
         ModRange.SetRangeValue constIntakePerKg, dblVocht
     End If
     
@@ -432,7 +432,7 @@ Private Function CalculateMedicamentQtyByDose(ByVal strN As String, ByVal intMed
     dblFactor = GetMedicamentItemWithIndex(intMed, constFactorIndex)
     dblOplQty = ModRange.GetRangeValue(constOplHoev & strN, 0)
     dblStand = ModRange.GetRangeValue(constStand & strN, 0) / 10
-    dblWeight = ModPatient.GetGewichtFromRange()
+    dblWeight = ModPatient.Patient_GetWeight()
     dblMaxConc = GetMedicamentItemWithIndex(intMed, 10)
     strMed = GetMedicamentItemWithIndex(intMed, 1)
     
@@ -487,7 +487,7 @@ Private Sub ChangeMedContIV(ByVal intN As Integer, ByVal blnRemove As Boolean)
     Else
         strMedName = ModMedicatie.GetNeoMedContIVName(intMedIndx)
         If IsEpiduraal(strMedName) Then
-            dblMedQty = ModMedicatie.Medicatie_CalcEpiQty(ModPatient.GetGewichtFromRange())
+            dblMedQty = ModMedicatie.Medicatie_CalcEpiQty(ModPatient.Patient_GetWeight())
             dblMedQty = CorrectMedQty(strN, intMedIndx, dblMedQty)
         ElseIf strMedName = "doxapram" Then
             dblMedQty = CalculateMedicamentQtyByDose(strN, intMedIndx, 0)
@@ -1359,7 +1359,7 @@ Public Sub NeoInfB_ShowVoedingPickList()
 NeoInfB_ShowVoedingPickListError:
 
     ModMessage.ShowMsgBoxError "Zit in een loop"
-    ModLog.LogError "Loop error for NeoInfB_ShowVoedingPickList"
+    ModLog.LogError Err, "Loop error for NeoInfB_ShowVoedingPickList"
     
     Set frmPickList = Nothing
     

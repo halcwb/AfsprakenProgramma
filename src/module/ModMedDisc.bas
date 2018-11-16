@@ -415,7 +415,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
       
     strN = IntNToStrN(intN)
     
-    dblWght = ModPatient.GetGewichtFromRange()
+    dblWght = ModPatient.Patient_GetWeight()
     
     If dblWght = 0 Then
         ModMessage.ShowMsgBoxExclam "Kan geen medicatie invoeren zonder een gewicht"
@@ -564,7 +564,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
         
         If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
             dblAdjust = 1
-            dblAdjust = IIf(objMed.PerKg, ModPatient.GetGewichtFromRange(), dblAdjust)
+            dblAdjust = IIf(objMed.PerKg, ModPatient.Patient_GetWeight(), dblAdjust)
             dblAdjust = IIf(objMed.PerM2, ModPatient.CalculateBSA(), dblAdjust)
             
             dblFactor = IIf(objMed.PerDose, 1, ModExcel.Excel_Index(constFreqTable, intFreq, 3))

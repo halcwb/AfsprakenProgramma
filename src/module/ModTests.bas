@@ -30,7 +30,7 @@ Public Sub RunTests()
     MsgBox "All tests ran!", vbExclamation
     
     ' Set the program to the initial state
-    ModApplication.InitializeAfspraken
+    ModApplication.Application_Initialize
     
     ' Set program to close and messages to display again
     ModApplication.SetDontClose False
@@ -51,7 +51,7 @@ Private Sub Test_Open()
 
     On Error GoTo Assert:
     
-    InitializeAfspraken
+    Application_Initialize
     
     Exit Sub
     
@@ -65,7 +65,7 @@ End Sub
 Private Sub Test_Sluit()
 
     On Error GoTo Assert:
-    CloseAfspraken
+    Application_CloseApplication
     
     Exit Sub
 
@@ -78,7 +78,7 @@ End Sub
 Private Sub Test_ClearPatient()
 
     On Error GoTo Assert:
-    ModPatient.PatientClearAll True, True
+    Patient_ClearAll True, True
     
     Exit Sub
 
@@ -282,7 +282,7 @@ Private Sub TestTakenMetaVision()
 End Sub
 
 Private Sub TestVerwijderen()
-    ModPatient.PatientClearAll True, True
+    Patient_ClearAll True, True
 End Sub
 
 Private Sub TestWorkBookName()

@@ -335,7 +335,7 @@ End Sub
 '
 '    Dim dblGew As Double
 '
-'    dblGew = ModPatient.GetGewichtFromRange
+'    dblGew = ModPatient.Patient_GetWeight
 '
 '    If dblGew >= CONST_TPN_1 And dblGew <= CONST_TPN_2 Then
 '        shtPedPrtTPN2tot6.Select
@@ -364,7 +364,7 @@ Public Function GetPedTPNIndexForWeight() As Integer
     Dim dblWeight As Double
     Dim intTPN As Integer
     
-    dblWeight = ModPatient.GetGewichtFromRange()
+    dblWeight = ModPatient.Patient_GetWeight()
     
     intTPN = 1
     intTPN = IIf(dblWeight >= CONST_TPN_1, 2, intTPN)
@@ -399,7 +399,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
     Dim dblSolu As Double
     Dim dblGewicht As Double
     
-    dblGewicht = ModPatient.GetGewichtFromRange()
+    dblGewicht = ModPatient.Patient_GetWeight()
         
     If intDag = 4 Or intDag = 0 Then
             PedEntTPN_ClearTPN
@@ -652,7 +652,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     dblLipid = (10 * dblGewicht + dblVitIntra + dblSolu) / 24
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                     
-                    ModRange.SetRangeValue constGlucSol, IIf(ModPatient.GetGewichtFromRange >= 40, constGluc40, constGluc25)
+                    ModRange.SetRangeValue constGlucSol, IIf(ModPatient.Patient_GetWeight >= 40, constGluc40, constGluc25)
                     
             
             End Select

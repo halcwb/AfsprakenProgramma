@@ -52,14 +52,14 @@ Public Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String
         
     Else
         MsgBox "Geen toegang tot de database!"
-        ModLog.LogError "Bestand secret niet aanwezig"
+        ModLog.LogError Err, "Bestand secret niet aanwezig"
     End If
     
     Exit Sub
     
 InitConnectionError:
     MsgBox "Geen toegang tot de database!"
-    ModLog.LogError "InitConnection Failed"
+    ModLog.LogError Err, "InitConnection Failed"
 
 End Sub
 
@@ -125,7 +125,7 @@ SaveDataError:
     
     ModMessage.ShowMsgBoxError "Kan patient data niet opslaan"
     ModUtils.CopyToClipboard strSql
-    ModLog.LogError "Could not save patient data to the database"
+    ModLog.LogError Err, "Could not save patient data to the database"
     
     objConn.Close
     
@@ -152,7 +152,7 @@ End Function
 '    If Not objErr Is Nothing Then
 '        If objErr.Number <> 0 Then
 '            ModMessage.ShowMsgBoxError "Kan data niet wegschrijven in de database"
-'            ModLog.LogError "Could finish transaction to save data with error: " & vbNewLine & GetErrorMsg(objErr)
+'            ModLog.LogError Err,  "Could finish transaction to save data with error: " & vbNewLine & GetErrorMsg(objErr)
 '
 '            ModBed.SetDatabaseVersie strPrev
 '        Else

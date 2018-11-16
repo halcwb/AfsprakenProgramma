@@ -95,7 +95,7 @@ Public Function StringToDate(ByVal strValue As String) As Date
     
 StringToDateError:
 
-    ModLog.LogError "Cannot convert " & strValue & " to a date time"
+    ModLog.LogError Err, "Cannot convert " & strValue & " to a date time"
 
 End Function
 
@@ -298,3 +298,27 @@ Public Function DoubleToString(dblDouble As Double) As String
     DoubleToString = Replace(CStr(dblDouble), ",", ".")
 
 End Function
+
+Public Function ErrorToString(objErr As ErrObject) As String
+
+    Dim strError As String
+    
+    strError = " Number: " & objErr.Number & " Source: " & objErr.Source & " Description: " & objErr.Description
+    
+    ErrorToString = strError
+
+End Function
+
+Private Sub Test_ErrorToString()
+
+    On Error GoTo ErrorHandler
+    
+    Err.Raise 234, "Test", "Testing"
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    ModMessage.ShowMsgBoxExclam ErrorToString(Err)
+
+End Sub

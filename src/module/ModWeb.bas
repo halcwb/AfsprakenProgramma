@@ -27,8 +27,8 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     strBTM = ModDate.DateMonth(ModPatient.Patient_BirthDate())
     strBTD = ModDate.DateDay(ModPatient.Patient_BirthDate())
     
-    strWTH = Val(ModPatient.GetGewichtFromRange())
-    strHGT = Val(ModPatient.GetLengteFromRange())
+    strWTH = Val(ModPatient.Patient_GetWeight())
+    strHGT = Val(ModPatient.Patient_GetHeight())
     
     strGPK = objMed.GPK
     strRTE = objMed.Route
@@ -57,7 +57,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
         ProcessJson objResponse, objMed
     Else
         ModMessage.ShowMsgBoxExclam "Kan de doseer informatie niet ophalen!. Probeer het nog een keer of neem anders contact op met de helpdesk"
-        ModLog.LogError "Fout bij ophalen van doseer informatie: " & objResponse.StatusDescription
+        ModLog.LogError Err, "Fout bij ophalen van doseer informatie: " & objResponse.StatusDescription
     End If
 
 End Sub

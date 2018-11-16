@@ -41,13 +41,13 @@ Public Function LogLevelToString(ByVal enmLevel As LogLevel) As String
     
 End Function
 
-Public Sub LogError(ByVal strError As String)
+Public Sub LogError(objErr As ErrObject, ByVal strError As String)
 
     Dim blnLog As Boolean
     Dim strFile As String
     
-    strError = " Number: " & Err.Number & " Source: " & Err.Source & " Description: " & strError
     strFile = ModSetting.GetLogFilePath()
+    strError = strError & vbNewLine & ErrorToString(objErr)
     
     blnLog = ModSetting.GetEnableLogging()
 

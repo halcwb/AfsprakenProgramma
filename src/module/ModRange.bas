@@ -180,7 +180,7 @@ Public Function SetRangeValue(ByVal strRange As String, ByVal varValue As Varian
     
 SetRangeValueError:
 
-    ModLog.LogError "Could not set " & varValue & " to range " & strRange & " Err: " & Err.Number
+    ModLog.LogError Err, "Could not set " & varValue & " to range " & strRange & " Err: " & Err.Number
 
 End Function
 
@@ -458,7 +458,7 @@ Public Function CollectionFromRange(ByVal strRange As String, ByVal intStart As 
 
 CollectionFromRangeError:
 
-    ModLog.LogError "Could not get values from range: " & strRange
+    ModLog.LogError Err, "Could not get values from range: " & strRange
     ModMessage.ShowMsgBoxError "Kan waarden niet ophalen"
 
     Set CollectionFromRange = colCol

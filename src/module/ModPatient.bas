@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModPatient"
 Option Explicit
 
-Private Const constPatNum As String = "__0_PatNum"
+Private Const constHospNum As String = "__0_PatNum"
 Private Const constAN As String = "__2_AchterNaam"
 Private Const constVN As String = "__3_VoorNaam"
 Private Const constGebDatum As String = "__4_GebDatum"
@@ -19,27 +19,33 @@ Private Const constDateReplace As String = "{DATEFORMAT}"
 Private Const constDateFormula As String = vbNullString
 Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
 
+Public Sub Patient_SetHospitalNumber(ByVal strHospNum As String)
+
+    ModRange.SetRangeValue constHospNum, strHospNum
+
+End Sub
+
 Public Function Patient_BirthDate() As Date
 
     Patient_BirthDate = ModRange.GetRangeValue(constGebDatum, DateTime.Now)
 
 End Function
 
-Public Function PatientHospNum() As String
+Public Function Patient_GetHospitalNumber() As String
 
-    PatientHospNum = ModRange.GetRangeValue(constPatNum, vbNullString)
-
-End Function
-
-Public Function PatientAchterNaam() As String
-
-    PatientAchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
+    Patient_GetHospitalNumber = ModRange.GetRangeValue(constHospNum, vbNullString)
 
 End Function
 
-Public Function PatientVoorNaam() As String
+Public Function Patient_GetLastName() As String
 
-    PatientVoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
+    Patient_GetLastName = ModRange.GetRangeValue(constAN, vbNullString)
+
+End Function
+
+Public Function Patient_GetFirstName() As String
+
+    Patient_GetFirstName = ModRange.GetRangeValue(constVN, vbNullString)
 
 End Function
 
@@ -48,7 +54,7 @@ Public Sub Patient_EnterWeight()
     Dim frmInvoer As FormInvoerNumeriek
     Dim dblWeight As Double
     
-    dblWeight = GetGewichtFromRange()
+    dblWeight = Patient_GetWeight()
     Set frmInvoer = New FormInvoerNumeriek
     
     With frmInvoer
@@ -86,15 +92,15 @@ Public Sub Patient_EnterLength()
     
 End Sub
 
-Public Function GetGewichtFromRange() As Double
+Public Function Patient_GetWeight() As Double
 
-    GetGewichtFromRange = StringToDouble(ModRange.GetRangeValue(constGewicht, 0)) ' / 10
+    Patient_GetWeight = StringToDouble(ModRange.GetRangeValue(constGewicht, 0)) ' / 10
 
 End Function
 
-Public Function GetLengteFromRange() As Double
+Public Function Patient_GetHeight() As Double
 
-    GetLengteFromRange = StringToDouble(ModRange.GetRangeValue(constLengte, 0)) ' / 10
+    Patient_GetHeight = StringToDouble(ModRange.GetRangeValue(constLengte, 0)) ' / 10
 
 End Function
 
@@ -103,8 +109,8 @@ Public Function CalculateBSA() As Double
     Dim dblW As Double
     Dim dblH As Double
     
-    dblW = GetGewichtFromRange()
-    dblH = GetLengteFromRange()
+    dblW = Patient_GetWeight()
+    dblH = Patient_GetHeight()
 
     CalculateBSA = Application.WorksheetFunction.Power(dblW, 0.5378) * Application.WorksheetFunction.Power(dblH, 0.3964) * 0.024265
 
@@ -120,7 +126,7 @@ Public Function GetPatientString() As String
 
     Dim strPat As String
     
-    strPat = "Num: " & ModRange.GetRangeValue(constPatNum, vbNullString)
+    strPat = "Num: " & ModRange.GetRangeValue(constHospNum, vbNullString)
     strPat = "Naam: " & ModRange.GetRangeValue(constAN, vbNullString)
     strPat = ", " & ModRange.GetRangeValue(constVN, vbNullString)
     
@@ -128,7 +134,7 @@ Public Function GetPatientString() As String
 
 End Function
 
-Public Sub OpenPatientLijst(ByVal strCaption As String)
+Public Sub Patient_OpenFileList(ByVal strCaption As String)
     
     Dim frmPats As FormPatLijst
     Dim colPats As Collection
@@ -149,14 +155,15 @@ Public Sub OpenPatientLijst(ByVal strCaption As String)
 OpenPatientListError:
 
     ModMessage.ShowMsgBoxError "Kan patient lijst niet openen"
-    ModLog.LogError "Cannot OpenPatientLijst(" & strCaption & ")" & ": " & Err.Number
+    ModLog.LogError Err, "Cannot Patient_OpenFileList(" & strCaption & ")" & ": " & Err.Number
     
 End Sub
 
-Public Sub OpenPatientLijst2(ByVal strCaption As String)
+Public Function Patient_OpenDatabaseList(ByVal strCaption As String) As Boolean
     
     Dim frmPats As FormPatLijst
     Dim colPats As Collection
+    Dim blnCancel As Boolean
     
     On Error GoTo OpenPatientListError
     
@@ -166,22 +173,29 @@ Public Sub OpenPatientLijst2(ByVal strCaption As String)
     With frmPats
         .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
         .SetOnlyAdmittedTrue
-        .LoadPatients2 colPats
+        .LoadDbPatients colPats
         .Show
     End With
     
-    Exit Sub
+    If Not frmPats Is Nothing Then
+        blnCancel = frmPats.GetCancel()
+        Set frmPats = Nothing
+    End If
+    
+    Patient_OpenDatabaseList = Not blnCancel
+    
+    Exit Function
     
 OpenPatientListError:
 
-    ModMessage.ShowMsgBoxError "Kan patient lijst niet openen"
-    ModLog.LogError "Cannot OpenPatientLijst2(" & strCaption & ")" & ": " & Err.Number
+    Set frmPats = Nothing
+    Patient_OpenDatabaseList = False
     
-End Sub
+End Function
 
-Private Sub Test_OpenPatientLijst2()
+Private Sub Test_Patient_OpenDatabaseList()
 
-    OpenPatientLijst2 "Test"
+    Patient_OpenDatabaseList "Test"
     
 End Sub
 
@@ -200,7 +214,7 @@ Public Function CreatePatientInfo(ByVal strId As String, ByVal strBed As String,
 
 End Function
 
-Public Function GetPatients() As Collection
+Private Function GetPatients() As Collection
 
     Dim colPatienten As Collection
     Dim strPatientsName As String
@@ -235,7 +249,7 @@ Public Function GetPatients() As Collection
 
 End Function
 
-Public Function GetMetaVisionPatients() As Collection
+Private Function GetMetaVisionPatients() As Collection
 
     Dim colPats As Collection
     Dim objPat As ClassPatientDetails
@@ -250,12 +264,12 @@ Public Function GetMetaVisionPatients() As Collection
 
 End Function
 
-Public Sub GetPatientDetails(objPat As ClassPatientDetails)
+Private Sub GetPatientDetails(objPat As ClassPatientDetails)
 
     Dim dtmBD As Date
     Dim dtmAdm As Date
     
-    objPat.PatientId = ModRange.GetRangeValue(constPatNum, vbNullString)
+    objPat.HospitalNumber = ModRange.GetRangeValue(constHospNum, vbNullString)
     objPat.Bed = ModBed.GetBed()
     objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
     objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
@@ -272,9 +286,9 @@ Public Sub GetPatientDetails(objPat As ClassPatientDetails)
     
 End Sub
 
-Public Sub WritePatientDetails(objPat As ClassPatientDetails)
+Private Sub WritePatientDetails(objPat As ClassPatientDetails)
 
-    ModRange.SetRangeValue constPatNum, objPat.PatientId
+    ModRange.SetRangeValue constHospNum, objPat.HospitalNumber
     ModRange.SetRangeValue constAN, objPat.AchterNaam
     ModRange.SetRangeValue constVN, objPat.VoorNaam
         
@@ -297,7 +311,7 @@ Public Sub WritePatientDetails(objPat As ClassPatientDetails)
 
 End Sub
 
-Public Sub EnterPatientDetails()
+Public Sub Patient_EnterDetails()
 
     Dim frmPat As FormPatient
     Dim objPat As ClassPatientDetails
@@ -313,7 +327,7 @@ Public Sub EnterPatientDetails()
 
 End Sub
 
-Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
+Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer
     Dim intC As Integer
@@ -321,6 +335,7 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
     Dim strRange As String
     Dim varValue As Variant
     Dim strJob As String
+    Dim strHospNum As String
     Dim objResult As VbMsgBoxResult
             
     Dim blnInfB As Boolean
@@ -348,6 +363,8 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
     End If
     
     If objResult = vbYes Then
+        strHospNum = Patient_GetHospitalNumber()
+        
         If blnShowProgress And blnShowWarn Then
             DoEvents
             ModProgress.StartProgress strTitle
@@ -390,14 +407,17 @@ Public Sub ClearPatientData(ByVal strStartWith As String, ByVal blnShowWarn As B
         .EnableEvents = True
         .Calculation = xlCalculationAutomatic
     End With
+    
+    Database_LogAction "Clear patient data", , strHospNum
+
 
 End Sub
 
-Public Sub PatientClearPed()
+Public Sub Patient_ClearPedData()
 
     ModProgress.StartProgress "Verwijder Pediatrie Data"
-    ClearPatientData "_Ped", False, True
-    ClearPatientData "_Glob", False, True
+    Patient_ClearData "_Ped", False, True
+    Patient_ClearData "_Glob", False, True
     ModProgress.FinishProgress
     
     ModApplication.SetDateToDayFormula
@@ -405,17 +425,17 @@ Public Sub PatientClearPed()
 
 End Sub
 
-Private Sub Test_PatientClearPed()
+Private Sub Test_Patient_ClearPedData()
 
-    PatientClearPed
+    Patient_ClearPedData
 
 End Sub
 
-Public Sub PatientClearNeo()
+Public Sub Patient_ClearNeoData()
 
     ModProgress.StartProgress "Verwijder Neo Data"
-    ClearPatientData "_Neo", False, True
-    ClearPatientData "_Glob", False, True
+    Patient_ClearData "_Neo", False, True
+    Patient_ClearData "_Glob", False, True
     ModProgress.FinishProgress
     
     ModApplication.SetDateToDayFormula
@@ -423,24 +443,25 @@ Public Sub PatientClearNeo()
 
 End Sub
 
-Private Sub Test_PatientClearNeo()
+Private Sub Test_Patient_ClearNeoData()
 
-    PatientClearNeo
+    Patient_ClearNeoData
 
 End Sub
-Public Sub PatientClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
+
+Public Sub Patient_ClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress As Boolean)
     
-    ClearPatientData vbNullString, blnShowWarn, blnShowProgress
+    Patient_ClearData vbNullString, blnShowWarn, blnShowProgress
     
     ModApplication.SetDateToDayFormula
     ModApplication.SetApplicationTitle
-    
+        
 End Sub
 
 Private Sub TestClearPatient()
     
     ModProgress.StartProgress "Test Patient Gegevens Verwijderen"
-    PatientClearAll False, True
+    Patient_ClearAll False, True
     ModProgress.FinishProgress
 
 End Sub
@@ -507,19 +528,18 @@ Public Sub Patient_SavePatient()
     
     Dim blnNeo As Boolean
 
-    On Error GoTo CloseBedError
+    On Error GoTo ErrorHandler
     
-    If ModString.StringIsZeroOrEmpty(ModPatient.PatientHospNum()) Then
+    If ModString.StringIsZeroOrEmpty(ModPatient.Patient_GetHospitalNumber()) Then
         ModMessage.ShowMsgBoxExclam "Kan patient zonder ziekenhuis nummer niet opslaan!"
         Exit Sub
     End If
     
     blnNeo = MetaVision_IsNeonatologie()
     
-    strAction = "ModPatient.Patient_SavePatient"
+    strAction = "Patient_SavePatient"
     strParams = Array()
     LogActionStart strAction, strParams
-        
     
     ModProgress.StartProgress "Patient " & ModPatient.GetPatientString & " opslaan"
     
@@ -537,15 +557,16 @@ Public Sub Patient_SavePatient()
     End If
 
     LogActionEnd strAction
+    Database_LogAction "Save patient"
     
     Exit Sub
     
-CloseBedError:
+ErrorHandler:
 
     ModProgress.FinishProgress
     
-    ModMessage.ShowMsgBoxError "Kan patient niet opslaan op bed: " & strBed
-    ModLog.LogError strAction
+    ModMessage.ShowMsgBoxError "Kan patient niet opslaan in de database"
+    ModLog.LogError Err, strAction
 
 End Sub
 
@@ -590,7 +611,7 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     ' If Not IsValidBed(strBed) Then GoTo SaveBedToDatabaseError
     
     strCurrent = Trim(ModBed.GetDatabaseVersie())
-    strLatest = Trim(ModDatabase.Database_GetLatestVersion(ModPatient.PatientHospNum()))
+    strLatest = Trim(ModDatabase.Database_GetLatestVersion(ModPatient.Patient_GetHospitalNumber()))
     If Not strLatest = vbNullString Then
         strLatest = ModDate.FormatDateTimeSeconds(CDate(strLatest))
     End If
@@ -619,7 +640,7 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     strPrescriber = ModMetaVision.MetaVision_GetUserLogin()
     
     ModDatabase.InitDatabase
-    ModDatabase.Database_SaveData strLatest, ModPatient.PatientHospNum(), strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
+    ModDatabase.Database_SaveData strLatest, ModPatient.Patient_GetHospitalNumber(), strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
         
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
@@ -631,9 +652,146 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
 SaveBedToDatabaseError:
     
     ModMessage.ShowMsgBoxError "Kan patient niet opslaan"
-    ModLog.LogError "Could not save patient to database with: "
+    ModLog.LogError Err, "Could not save patient to database with: "
 
     Application.DisplayAlerts = True
     SavePatientToDatabase = False
 
 End Function
+
+Public Sub Patient_OpenPatient()
+
+    ModProgress.StartProgress "Open Patient"
+    OpenPatient False, True
+    ModProgress.FinishProgress
+
+End Sub
+
+Public Sub Patient_OpenPatientAndAsk()
+
+    ModProgress.StartProgress "Open Patient"
+    OpenPatient True, True
+    ModProgress.FinishProgress
+
+End Sub
+
+Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
+    
+    Dim strTitle As String
+    Dim strAction As String
+    Dim strParams() As Variant
+    Dim strFileName As String
+    Dim strBookName As String
+    Dim strRange As String
+    Dim blnAll As Boolean
+    Dim blnNeo As Boolean
+    Dim strHospNum As String
+    Dim strVersion As String
+    
+    Dim objPat As ClassPatientDetails
+    
+    On Error GoTo ErrorOpenBed
+    
+    Set objPat = New ClassPatientDetails
+    ModMetaVision.MetaVision_GetPatientDetails objPat, ModMetaVision.MetaVision_GetCurrentPatientID, vbNullString
+    blnNeo = MetaVision_IsNeonatologie()
+    
+    strHospNum = Patient_GetHospitalNumber()
+    strHospNum = IIf(strHospNum = vbNullString, objPat.HospitalNumber, strHospNum)
+    strVersion = ModBed.GetDatabaseVersie()
+    ModBed.SetDatabaseVersie vbNullString
+    If blnAsk Then
+        If blnShowProgress Then
+            strTitle = FormProgress.Caption
+            ModProgress.FinishProgress
+        End If
+    
+        If Patient_OpenDatabaseList("Selecteer een patient") Then
+            If Patient_GetHospitalNumber() = vbNullString Then  ' No patient was selected
+                Patient_SetHospitalNumber strHospNum  ' Put back the old hospital number
+                SetDatabaseVersie strVersion         ' Put back current version
+                Exit Sub                             ' And exit sub
+            Else
+                strHospNum = Patient_GetHospitalNumber()
+                strVersion = ModBed.GetDatabaseVersie()
+                
+                If blnShowProgress Then ModProgress.StartProgress strTitle
+            End If
+        Else                                      ' Patientlist has been canceled so do nothing
+            Patient_SetHospitalNumber strHospNum   ' Put back the old hospital number
+            SetDatabaseVersie strVersion          ' Put back current version
+            
+            If blnShowProgress Then ModProgress.FinishProgress
+            Exit Sub
+        End If
+    End If
+    
+    If Not strHospNum = vbNullString Then
+        Patient_SetHospitalNumber strHospNum
+        GetPatientDataFromDatabase strHospNum, strVersion
+    End If
+        
+    ModDatabase.Database_LogAction "Open Patient"
+    
+    Exit Sub
+
+ErrorOpenBed:
+
+    ModMessage.ShowMsgBoxError "Kan bed " & strHospNum & " niet openenen"
+    ModLog.LogError Err, Err.Description
+    
+End Sub
+
+Private Sub Test_OpenPatient()
+    
+    ModProgress.StartProgress "Testing select patient"
+    OpenPatient True, True
+    ModProgress.FinishProgress
+
+End Sub
+
+Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVal strVersion As String = "")
+    
+    On Error GoTo GetPatientDataFromDatabaseError
+
+    Dim strTitle As String
+    Dim strAction As String
+    Dim strParams() As Variant
+    Dim blnNeo As Boolean
+    
+    ModProgress.StartProgress "Patient data ophalen voor " & strHospNum
+    
+    blnNeo = MetaVision_IsNeonatologie()
+    
+    strAction = "ModBed.GetPatientDataFromDatabase"
+    
+    ModLog.LogActionStart strAction, strParams
+            
+    ModPatient.Patient_ClearData vbNullString, False, True
+    
+    If strVersion = vbNullString Then
+        ModDatabase.Database_GetPatientData strHospNum
+    Else
+        ModDatabase.Database_GetPatientDataForVersion strHospNum, strVersion
+    End If
+    ModRange.SetRangeValue constHospNum, strHospNum 'Have to set hospitalnumber if leading zero got lost from transfer from database
+    
+    If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True ' Make sure that infuusbrief data is updated
+            
+    ModApplication.SetApplicationTitle
+
+    ModMetaVision.MetaVision_SyncLab
+    ModSheet.SelectPedOrNeoStartSheet True
+    
+    ModProgress.FinishProgress
+    ModLog.LogActionEnd strAction
+    
+    Exit Sub
+
+GetPatientDataFromDatabaseError:
+
+    ModProgress.FinishProgress
+    ModMessage.ShowMsgBoxError "Kan patient " & strHospNum & " niet openenen"
+    ModLog.LogError Err, Err.Description
+    
+End Sub

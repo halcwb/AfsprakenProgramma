@@ -185,7 +185,7 @@ Private Sub WriteTestResults(shtTests As Worksheet, ByVal intC As Integer, ByVal
     
     shtTests.Range("A" & intT).Value2 = intC
     
-    shtTests.Range(constSetupGewicht & intT).Value2 = ModPatient.GetGewichtFromRange()
+    shtTests.Range(constSetupGewicht & intT).Value2 = ModPatient.Patient_GetWeight()
     shtTests.Range(constSetupGeneriek & intT).Value2 = ModRange.GetRangeValue(constGeneric & strN, vbNullString)
     shtTests.Range(constSetupMedicament & intT).Value2 = shtGlobBerMedDisc.Range(constMedicament & intB).Value2
     shtTests.Range(constSetupAfronding & intT).Value2 = ModRange.GetRangeValue(constStandDose & strN, vbNullString)

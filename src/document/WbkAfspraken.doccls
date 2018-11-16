@@ -16,14 +16,14 @@ Private Sub Workbook_BeforeClose(ByRef blnCancel As Boolean)
     blnCancelAfsprakenClose = False
     Me.Saved = True ' DisplayAlerts = False doesn' prevent save dialog
                     ' http://www.microsofttraining.net/post-34753-applicationdisplayalerts--false.html
-    ModApplication.CloseAfspraken
+    Application_CloseApplication
     blnCancel = blnCancelAfsprakenClose
 
 End Sub
 
 Private Sub Workbook_Open()
     
-    ModApplication.InitializeAfspraken
+    ModApplication.Application_Initialize
     
 End Sub
 

@@ -316,7 +316,7 @@ Public Sub Sheet_CopyRangeFormulaToDst(objSrc As Range, objDst As Range)
 
 CopyRangeFormulaToDstError:
 
-    ModLog.LogError "Cannot copy " & objSrc.Address & " to " & objDst.Address
+    ModLog.LogError Err, "Cannot copy " & objSrc.Address & " to " & objDst.Address
     Err.Raise ModConst.CONST_APP_ERROR, , ModConst.CONST_DEFAULTERROR_MSG
 
 End Sub

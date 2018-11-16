@@ -34,13 +34,13 @@ End Sub
 
 Private Function IsNeoAbsMaxInvalid() As Boolean
     
-    IsNeoAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.GetGewichtFromRange() > 50 And txtNeoNormDose.Value = vbNullString And txtNeoMaxDose.Value = vbNullString
+    IsNeoAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.Patient_GetWeight() > 50 And txtNeoNormDose.Value = vbNullString And txtNeoMaxDose.Value = vbNullString
 
 End Function
 
 Private Function IsPedAbsMaxInvalid() As Boolean
     
-    IsPedAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.GetGewichtFromRange() > 50 And txtPedNormDose.Value = vbNullString And txtPedMaxDose.Value = vbNullString
+    IsPedAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.Patient_GetWeight() > 50 And txtPedNormDose.Value = vbNullString And txtPedMaxDose.Value = vbNullString
 
 End Function
 

@@ -70,7 +70,7 @@ Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As Stri
     
     strServer = MetaVision_GetServer()
     strDb = MetaVision_GetDatabase()
-    strSql = GetPatientListSQL2(strPatId, strPatNum)
+    strSql = GetPatientListSql(strPatId, strPatNum)
     
     If strServer = vbNullString Or strDb = vbNullString Or strSql = vbNullString Then
         strBed = vbNullString
@@ -119,7 +119,7 @@ Private Function GetDatabaseNameSQL(ByVal strDepartment As String) As String
 End Function
 
 
-Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As String) As String
+Private Function GetPatientListSql(ByVal strPatId As String, ByVal strPatNum As String) As String
 
     Dim strSql As String
     
@@ -202,14 +202,13 @@ Private Function GetPatientListSQL2(ByVal strPatId As String, ByVal strPatNum As
     strSql = strSql & "AND (@bed IS NULL OR RTRIM(LTRIM(b.BedName)) = RTRIM(LTRIM(@bed)))" & vbNewLine
     strSql = strSql & "ORDER BY pat.HospitalNumber, pl.TimeLog DESC" & vbNewLine
     
-    ModUtils.CopyToClipboard strSql
-    GetPatientListSQL2 = strSql
+    GetPatientListSql = strSql
 
 End Function
 
 Private Sub Test_GetPatientSQL()
 
-    ModUtils.CopyToClipboard GetPatientListSQL2(vbNullString, vbNullString)
+    ModUtils.CopyToClipboard GetPatientListSql(vbNullString, vbNullString)
 
 End Sub
 
@@ -223,6 +222,8 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     Dim strDep As String
     Dim strSql As String
     
+    On Error GoTo ErrorHandler
+    
     strServer = MetaVision_GetServer()
     strDatabase = MetaVision_GetDatabase()
     
@@ -232,7 +233,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
         strPatNum = vbNullString
     End If
     
-    strSql = GetPatientListSQL2(strPatId, strPatNum)
+    strSql = GetPatientListSql(strPatId, strPatNum)
     
     If strServer = vbNullString Or strDatabase = vbNullString Or strSql = vbNullString Then Exit Sub
     
@@ -246,7 +247,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     
     If Not objRs.EOF Then
         If Not IsNull(objRs.Fields("BirthDate")) Then dtmBD = ModString.StringToDate(objRs.Fields("BirthDate"))
-        objPat.PatientId = objRs.Fields("HospitalNumber")
+        objPat.HospitalNumber = objRs.Fields("HospitalNumber")
         If Not IsNull(objRs.Fields("BedName")) Then objPat.Bed = Trim(objRs.Fields("BedName"))
         objPat.AchterNaam = objRs.Fields("LastName")
         objPat.VoorNaam = objRs.Fields("FirstName")
@@ -278,8 +279,18 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
         
     End If
     
+    objConn.Close
+    
+    Database_LogAction "Get MetaVision patient details"
+    
+    Exit Sub
+
+ErrorHandler:
     
     objConn.Close
+    
+    ModUtils.CopyToClipboard strSql
+    ModLog.LogError Err, "MetaVision_GetPatientDetails with Sql: " & strSql
     
 End Sub
 
@@ -293,7 +304,7 @@ Private Sub Test_MetaVision_GetPatientDetails()
     Set objPat = New ClassPatientDetails
     MetaVision_GetPatientDetails objPat, strId, "1234567"
 
-    MsgBox objPat.PatientId & ": " & objPat.AchterNaam
+    MsgBox objPat.HospitalNumber & ": " & objPat.AchterNaam
 
 End Sub
 
@@ -314,7 +325,7 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
     strServer = MetaVision_GetServer()
     strDatabase = MetaVision_GetDatabase()
         
-    strSql = GetPatientListSQL2(vbNullString, vbNullString)
+    strSql = GetPatientListSql(vbNullString, vbNullString)
     
     If strServer = vbNullString Or strDatabase = vbNullString Or strSql = vbNullString Then Exit Sub
         
@@ -329,7 +340,7 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
         intN = intN + 1
         blnDep = False
                 
-        objPat.PatientId = objRs.Fields("HospitalNumber")
+        objPat.HospitalNumber = objRs.Fields("HospitalNumber")
             
         If Not IsNull(objRs.Fields("BirthDate")) Then dtmBD = ModString.StringToDate(objRs.Fields("BirthDate"))
         If Not IsNull(objRs.Fields("BedName")) Then objPat.Bed = Trim(objRs.Fields("BedName"))
@@ -352,7 +363,7 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
         If objPat.Gewicht * 1000 < objPat.GeboorteGewicht Then objPat.Gewicht = objPat.GeboorteGewicht / 1000
         
         Do While Not objRs.EOF
-            If objRs.Fields("HospitalNumber") = objPat.PatientId Then
+            If objRs.Fields("HospitalNumber") = objPat.HospitalNumber Then
                 If Not IsNull(objRs.Fields("Department")) Then blnDep = blnDep Or strDep = objRs.Fields("Department")
                 objRs.MoveNext
             Else
@@ -370,7 +381,7 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
 HandleError:
 
     ModUtils.CopyToClipboard strSql
-    ModLog.LogError "Could not get patient no: " & intN & " with SQL : " & vbNewLine & strSql
+    ModLog.LogError Err, "Could not get patient no: " & intN & " with SQL : " & vbNewLine & strSql
     objConn.Close
     
 End Sub
@@ -385,7 +396,7 @@ Private Sub Test_MetaVision_GetPatientsForDepartment()
     
     For Each objPat In objCol
         If Not objPat.Bed = vbNullString Then
-            ModMessage.ShowMsgBoxInfo objPat.PatientId & ": " & objPat.AchterNaam & ", " & objPat.VoorNaam
+            ModMessage.ShowMsgBoxInfo objPat.HospitalNumber & ": " & objPat.AchterNaam & ", " & objPat.VoorNaam
         End If
     Next
     
@@ -457,7 +468,7 @@ Private Function GetBasePath() As String
     strBasePath = IIf(RegistryKeyExists(constBasePath1, vbNullString), constBasePath1, constBasePath2)
     
     If strBasePath = vbNullString Then
-        ModLog.LogError "No Valid Registry BasePath"
+        ModLog.LogError Err, "No Valid Registry BasePath"
     End If
     
     GetBasePath = strBasePath
@@ -700,7 +711,7 @@ Public Sub MetaVision_SyncLab()
         objRow.Cells(1, 2).Value2 = vbNullString
     Next
     
-    strHospNum = ModPatient.PatientHospNum()
+    strHospNum = ModPatient.Patient_GetHospitalNumber()
     GetLab strHospNum
     GetLeverNierFunctie strHospNum
     
@@ -825,7 +836,7 @@ Public Sub MetaVision_SetUser()
 
 SetUser_Error:
 
-    ModLog.LogError "SetUser Error"
+    ModLog.LogError Err, "SetUser Error"
     
     On Error Resume Next
     
@@ -884,14 +895,14 @@ Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As Strin
         objConn.Close
     Else
         MsgBox "Geen toegang tot de database!"
-        ModLog.LogError "Bestand secret niet aanwezig"
+        ModLog.LogError Err, "Bestand secret niet aanwezig"
     End If
     
     Exit Sub
     
 InitConnectionError:
     MsgBox "Geen toegang tot de database!"
-    ModLog.LogError "InitConnection Failed"
+    ModLog.LogError Err, "InitConnection Failed"
 
 End Sub
 

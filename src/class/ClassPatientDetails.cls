@@ -120,13 +120,13 @@ Public Property Let Days(ByVal intDays As Integer)
 
 End Property
 
-Public Property Get PatientId() As String
+Public Property Get HospitalNumber() As String
 
-    PatientId = m_ID
+    HospitalNumber = m_ID
 
 End Property
 
-Public Property Let PatientId(ByVal strId As String)
+Public Property Let HospitalNumber(ByVal strId As String)
 
     m_ID = strId
 
@@ -224,7 +224,7 @@ Public Function ToString() As String
 
     Dim strString As String
     
-    strString = Me.PatientId & " : "
+    strString = Me.HospitalNumber & " : "
     
     If Me.AchterNaam() <> vbNullString And Me.VoorNaam() <> vbNullString Then
         strString = Strings.Trim(strString) & " " & Me.AchterNaam & ", " & Me.VoorNaam()

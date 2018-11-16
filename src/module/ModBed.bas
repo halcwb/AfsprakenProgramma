@@ -5,14 +5,6 @@ Private Const constVersie As String = "Var_Glob_Versie"
 Private Const constBusy As String = "DB_DatabaseBusy"
 
 Private Const constBed As String = "__1_Bed"
-Private Const constHospNum As String = "__0_PatNum"
-
-Public Sub SetPatientHospitalNumber(ByVal strHospNum As String)
-
-    ModRange.SetRangeValue constHospNum, strHospNum
-
-End Sub
-
 
 Public Sub SetBed(ByVal strBed As String)
 
@@ -49,7 +41,6 @@ Private Sub Test_GetDatabaseVersie()
 
 End Sub
 
-
 Public Sub SetDatabaseVersie(strVersie As String)
 
     ModRange.SetRangeValue constVersie, strVersie
@@ -70,13 +61,6 @@ Public Sub OpenBed()
 
 End Sub
 
-Public Sub OpenBed2()
-
-    ModProgress.StartProgress "Open Bed"
-    OpenBedAsk2 True, True
-    ModProgress.FinishProgress
-
-End Sub
 
 Private Function IsValidBed(ByVal strBed As String) As Boolean
 
@@ -123,7 +107,7 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
             ModProgress.FinishProgress
         End If
     
-        ModPatient.OpenPatientLijst "Selecteer een patient"
+        ModPatient.Patient_OpenFileList "Selecteer een patient"
         If GetBed() = vbNullString Then ' No bed was selected
             SetBed strBed               ' Put back the old bed
             Exit Sub                    ' And exit sub
@@ -150,7 +134,7 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
         SetBed strBed
         
         If shtGlobTemp.Range("A1").CurrentRegion.Rows.Count <= 1 Then
-            ModPatient.ClearPatientData vbNullString, False, True               ' Patient data was empty so clean all current data
+            ModPatient.Patient_ClearData vbNullString, False, True               ' Patient data was empty so clean all current data
             SetBed strBed
         End If
         
@@ -181,118 +165,13 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
 ErrorOpenBed:
 
     ModMessage.ShowMsgBoxError "Kan bed " & strBed & " niet openenen"
-    ModLog.LogError Err.Description
+    ModLog.LogError Err, Err.Description
     
 End Sub
 
 Private Sub TestOpenBed()
 
     OpenBed
-
-End Sub
-
-Public Sub OpenBedAsk2(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
-    
-    Dim strTitle As String
-    Dim strAction As String
-    Dim strParams() As Variant
-    Dim strFileName As String
-    Dim strBookName As String
-    Dim strRange As String
-    Dim blnAll As Boolean
-    Dim blnNeo As Boolean
-    Dim strHospNum As String
-    
-    Dim objPat As ClassPatientDetails
-    
-    On Error GoTo ErrorOpenBed
-    
-    Set objPat = New ClassPatientDetails
-    ModMetaVision.MetaVision_GetPatientDetails objPat, ModMetaVision.MetaVision_GetCurrentPatientID, vbNullString
-    blnNeo = MetaVision_IsNeonatologie()
-    
-    strHospNum = objPat.PatientId
-    If blnAsk And strHospNum = vbNullString Then
-        If blnShowProgress Then
-            strTitle = FormProgress.Caption
-            ModProgress.FinishProgress
-        End If
-    
-        ModPatient.OpenPatientLijst2 "Selecteer een patient"
-        If ModRange.GetRangeValue(constHospNum, vbNullString) = vbNullString Then  ' No patient was selected
-            SetPatientHospitalNumber strHospNum                                    ' Put back the old hospital number
-            Exit Sub                                                               ' And exit sub
-        Else
-            strHospNum = ModRange.GetRangeValue(constHospNum, vbNullString)
-            
-            If blnShowProgress Then ModProgress.StartProgress strTitle
-        End If
-    End If
-    
-    GetPatientDataFromDatabase strHospNum
-    If Not strHospNum = vbNullString Then SetPatientHospitalNumber strHospNum
-    
-    Exit Sub
-
-ErrorOpenBed:
-
-    ModMessage.ShowMsgBoxError "Kan bed " & strHospNum & " niet openenen"
-    ModLog.LogError Err.Description
-    
-End Sub
-
-Private Sub Test_OpenBedAsk2()
-    
-    ModProgress.StartProgress "Testing select patient"
-    OpenBedAsk2 True, True
-    ModProgress.FinishProgress
-
-End Sub
-
-Public Sub GetPatientDataFromDatabase(ByVal strHospNum As String)
-    
-    On Error GoTo GetPatientDataFromDatabaseError
-
-    Dim strTitle As String
-    Dim strAction As String
-    Dim strParams() As Variant
-    Dim blnNeo As Boolean
-    
-    ModProgress.StartProgress "Patient data ophalen voor " & strHospNum
-    
-    blnNeo = MetaVision_IsNeonatologie()
-    
-    strAction = "ModBed.GetPatientDataFromDatabase"
-    
-    ModLog.LogActionStart strAction, strParams
-            
-    ModPatient.ClearPatientData vbNullString, False, True
-    
-    ModDatabase.Database_GetPatientData strHospNum
-    
-    If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True       ' Make sure that infuusbrief data is updated
-            
-    ModApplication.SetApplicationTitle
-
-    ModMetaVision.MetaVision_SyncLab
-    ModSheet.SelectPedOrNeoStartSheet True
-    
-    ModProgress.FinishProgress
-    ModLog.LogActionEnd strAction
-    
-    Exit Sub
-
-GetPatientDataFromDatabaseError:
-
-    ModProgress.FinishProgress
-    ModMessage.ShowMsgBoxError "Kan patient " & strHospNum & " niet openenen"
-    ModLog.LogError Err.Description
-    
-End Sub
-
-Private Sub Test_GetPatientDataFromDatabase()
-
-    GetPatientDataFromDatabase "0250574"
 
 End Sub
 
@@ -320,7 +199,7 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
     
     If strBed = vbNullString Then
         If blnAsk Then     ' No bed selected so ask for a bed
-            ModPatient.OpenPatientLijst "Selecteer een bed"
+            ModPatient.Patient_OpenFileList "Selecteer een bed"
             CloseBed False ' And try again, but do not ask again
             Exit Sub
         Else               ' No bed selected do not ask, so exit
@@ -355,7 +234,7 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
         varReply = ModMessage.ShowMsgBoxYesNo("Op een ander bed opslaan?")
         
         If varReply = vbYes Then
-            ModPatient.OpenPatientLijst "Selecteer een bed"
+            ModPatient.Patient_OpenFileList "Selecteer een bed"
             
             strNew = GetBed()
             ModProgress.StartProgress "Verplaats Patient Naar Bed: " & strNew
@@ -365,7 +244,7 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
                     SetBed strBed
                     OpenBedAsk False, True
                     
-                    ModPatient.PatientClearAll False, True
+                    Patient_ClearAll False, True
                     SaveBedToFile strBed, True, True
                     
                     SetBed strNew
@@ -400,7 +279,7 @@ CloseBedError:
     ModProgress.FinishProgress
     
     ModMessage.ShowMsgBoxError "Kan patient niet opslaan op bed: " & strBed
-    ModLog.LogError strAction
+    ModLog.LogError Err, strAction
 
 End Sub
 
@@ -496,7 +375,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     
 SaveBedToFileError:
 
-    ModLog.LogError "Could not save bed to files with: " & Join(Array(strBed, strDataFile, strTextFile), ", ")
+    ModLog.LogError Err, "Could not save bed to files with: " & Join(Array(strBed, strDataFile, strTextFile), ", ")
 
     Application.DisplayAlerts = True
     SaveBedToFile = False
