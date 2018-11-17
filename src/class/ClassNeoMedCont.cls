@@ -9,47 +9,48 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private m_Name As String
-Private m_Unit As String
+Private m_Generic As String
+Private m_GenericUnit As String
 Private m_DoseUnit As String
-Private m_Conc As Double
-Private m_Volume As Double
+Private m_GenericQuantity As Double
+Private m_GenericVolume As Double
 Private m_MinDose As Double
 Private m_MaxDose As Double
-Private m_AbsMax As Double
-Private m_MinConc As Double
-Private m_MaxConc As Double
-Private m_OplVlst As String
-Private m_Advice As String
-Private m_OplVol As Double
-Private m_Rate As Double
+Private m_AbsMaxDose As Double
+Private m_MinConcentration As Double
+Private m_MaxConcentration As Double
+Private m_Solution As String
+Private m_DoseAdvice As String
+Private m_SolutionVolume As Double
+Private m_DripQuantity As Double
 Private m_Product As String
-Private m_Houdbaar As Integer
-Private m_Bewaar As String
-Private m_Tekst As String
+Private m_ShelfLife As Integer
+Private m_ShelfCondition As String
+Private m_PreparationText As String
 Private m_NormDose As String
+Private m_DilutionText As String
 
-Public Property Get Name() As String
+Public Property Get Generic() As String
 
-    Name = m_Name
-
-End Property
-
-Public Property Let Name(ByVal strName As String)
-
-    m_Name = strName
+    Generic = m_Generic
 
 End Property
 
-Public Property Get Unit() As String
+Public Property Let Generic(ByVal strName As String)
 
-    Unit = m_Unit
+    m_Generic = strName
 
 End Property
 
-Public Property Let Unit(ByVal strUnit As String)
+Public Property Get GenericUnit() As String
 
-    m_Unit = strUnit
+    GenericUnit = m_GenericUnit
+
+End Property
+
+Public Property Let GenericUnit(ByVal strUnit As String)
+
+    m_GenericUnit = strUnit
 
 End Property
 
@@ -65,27 +66,27 @@ Public Property Let DoseUnit(ByVal strDoseUnit As String)
 
 End Property
 
-Public Property Get Conc() As Double
+Public Property Get GenericQuantity() As Double
 
-    Conc = m_Conc
-
-End Property
-
-Public Property Let Conc(ByVal dblConc As Double)
-
-    m_Conc = dblConc
+    GenericQuantity = m_GenericQuantity
 
 End Property
 
-Public Property Get Volume() As Double
+Public Property Let GenericQuantity(ByVal dblConc As Double)
 
-    Volume = m_Volume
+    m_GenericQuantity = dblConc
 
 End Property
 
-Public Property Let Volume(ByVal dblVolume As Double)
+Public Property Get GenericVolume() As Double
 
-    m_Volume = dblVolume
+    GenericVolume = m_GenericVolume
+
+End Property
+
+Public Property Let GenericVolume(ByVal dblVolume As Double)
+
+    m_GenericVolume = dblVolume
 
 End Property
 
@@ -113,87 +114,87 @@ Public Property Let MaxDose(ByVal dblMaxDose As Double)
 
 End Property
 
-Public Property Get AbsMax() As Double
+Public Property Get AbsMaxDose() As Double
 
-    AbsMax = m_AbsMax
-
-End Property
-
-Public Property Let AbsMax(ByVal dblAbsMax As Double)
-
-    m_AbsMax = dblAbsMax
+    AbsMaxDose = m_AbsMaxDose
 
 End Property
 
-Public Property Get MinConc() As Double
+Public Property Let AbsMaxDose(ByVal dblAbsMax As Double)
 
-    MinConc = m_MinConc
-
-End Property
-
-Public Property Let MinConc(ByVal dblMinConc As Double)
-
-    m_MinConc = dblMinConc
+    m_AbsMaxDose = dblAbsMax
 
 End Property
 
-Public Property Get MaxConc() As Double
+Public Property Get MinConcentration() As Double
 
-    MaxConc = m_MaxConc
-
-End Property
-
-Public Property Let MaxConc(ByVal dblMaxConc As Double)
-
-    m_MaxConc = dblMaxConc
+    MinConcentration = m_MinConcentration
 
 End Property
 
-Public Property Get OplVlst() As String
+Public Property Let MinConcentration(ByVal dblMinConc As Double)
 
-    OplVlst = m_OplVlst
-
-End Property
-
-Public Property Let OplVlst(ByVal strOplVlst As String)
-
-    m_OplVlst = strOplVlst
+    m_MinConcentration = dblMinConc
 
 End Property
 
-Public Property Get Advice() As String
+Public Property Get MaxConcentration() As Double
 
-    Advice = m_Advice
-
-End Property
-
-Public Property Let Advice(ByVal strAdvice As String)
-
-    m_Advice = strAdvice
+    MaxConcentration = m_MaxConcentration
 
 End Property
 
-Public Property Get OplVol() As Double
+Public Property Let MaxConcentration(ByVal dblMaxConc As Double)
 
-    OplVol = m_OplVol
-
-End Property
-
-Public Property Let OplVol(ByVal dblOplVol As Double)
-
-    m_OplVol = dblOplVol
+    m_MaxConcentration = dblMaxConc
 
 End Property
 
-Public Property Get Rate() As Double
+Public Property Get Solution() As String
 
-    Rate = m_Rate
+    Solution = m_Solution
 
 End Property
 
-Public Property Let Rate(ByVal dblRate As Double)
+Public Property Let Solution(ByVal strOplVlst As String)
 
-    m_Rate = dblRate
+    m_Solution = strOplVlst
+
+End Property
+
+Public Property Get DoseAdvice() As String
+
+    DoseAdvice = m_DoseAdvice
+
+End Property
+
+Public Property Let DoseAdvice(ByVal strAdvice As String)
+
+    m_DoseAdvice = strAdvice
+
+End Property
+
+Public Property Get SolutionVolume() As Double
+
+    SolutionVolume = m_SolutionVolume
+
+End Property
+
+Public Property Let SolutionVolume(ByVal dblOplVol As Double)
+
+    m_SolutionVolume = dblOplVol
+
+End Property
+
+Public Property Get DripQuantity() As Double
+
+    DripQuantity = m_DripQuantity
+
+End Property
+
+Public Property Let DripQuantity(ByVal dblRate As Double)
+
+    m_DripQuantity = dblRate
 
 End Property
 
@@ -209,39 +210,52 @@ Public Property Let Product(ByVal strProduct As String)
 
 End Property
 
-Public Property Get Houdbaar() As Integer
+Public Property Get ShelfLife() As Integer
 
-    Houdbaar = m_Houdbaar
-
-End Property
-
-Public Property Let Houdbaar(ByVal intHoudbaar As Integer)
-
-    m_Houdbaar = intHoudbaar
+    ShelfLife = m_ShelfLife
 
 End Property
 
-Public Property Get Bewaar() As String
+Public Property Let ShelfLife(ByVal intHoudbaar As Integer)
 
-    Bewaar = m_Bewaar
-
-End Property
-
-Public Property Let Bewaar(ByVal strBewaar As String)
-
-    m_Bewaar = strBewaar
+    m_ShelfLife = intHoudbaar
 
 End Property
 
-Public Property Get Tekst() As String
+Public Property Get ShelfCondition() As String
 
-    Tekst = m_Tekst
+    ShelfCondition = m_ShelfCondition
+
+End Property
+
+Public Property Let ShelfCondition(ByVal strBewaar As String)
+
+    m_ShelfCondition = strBewaar
 
 End Property
 
-Public Property Let Tekst(ByVal strTekst As String)
+Public Property Get PreparationText() As String
 
-    m_Tekst = strTekst
+    PreparationText = m_PreparationText
 
 End Property
+
+Public Property Let PreparationText(ByVal strTekst As String)
+
+    m_PreparationText = strTekst
+
+End Property
+
+Public Property Get DilutionText() As String
+
+    DilutionText = m_DilutionText
+
+End Property
+
+Public Property Let DilutionText(ByVal strTekst As String)
+
+    m_DilutionText = strTekst
+
+End Property
+
 

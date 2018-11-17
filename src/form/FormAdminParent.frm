@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormAdminParEnt
    ClientHeight    =   10335
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   10980
+   ClientWidth     =   14205
    OleObjectBlob   =   "FormAdminParent.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -16,7 +16,11 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private m_ParEntCol As Collection
+Private m_Versions() As String
+Private m_SelectedVersion As String
 Private m_PrevSel As Integer
+
+Private Const ConstCaption As String = "Parenteralia Configuratie"
 
 Private Sub CenterForm()
 
@@ -26,15 +30,63 @@ Private Sub CenterForm()
 
 End Sub
 
-Private Sub UserForm_Initialize()
+Private Sub LoadVersions()
 
-    Dim objParEnt As ClassParent
+    Dim arrVersions() As String
+    Dim intN As Integer
+        
+    cboVersions.Clear
+    arrVersions = Database_GetConfigParEntVersions()
+    
+    If Not ModArray.ArrayIsEmpty(arrVersions) Then
+        For intN = 0 To UBound(arrVersions)
+            cboVersions.AddItem arrVersions(intN)
+        Next
+    End If
+    
+    
+End Sub
+
+Private Sub ToggleVersionSelect(ByVal blnVisible As Boolean)
+
+    If Not blnVisible Then
+        m_SelectedVersion = vbNullString
+        LoadParEnteralia
+    Else
+        LoadVersions
+    End If
+    
+    cboVersions.Visible = blnVisible
+    lblCboVersions.Visible = blnVisible
+
+End Sub
+
+Private Sub cboVersions_Change()
+
+    If Not cboVersions.Value = vbNullString Then
+        Set m_ParEntCol = Nothing
+        m_SelectedVersion = cboVersions.Value
+        LoadParEnteralia
+    End If
+    
+End Sub
+
+Private Sub optLastVersion_Click()
+
+    ToggleVersionSelect False
+
+End Sub
+
+Private Sub optSpecificVersion_Click()
+
+    ToggleVersionSelect True
+
+End Sub
+
+Private Sub UserForm_Initialize()
     
     LoadParEnteralia
-    
-    For Each objParEnt In m_ParEntCol
-        lbxParenteralia.AddItem objParEnt.Name
-    Next
+    ToggleVersionSelect False
     
     lbxParenteralia.ListIndex = 0
     
@@ -42,7 +94,27 @@ End Sub
 
 Private Sub LoadParEnteralia()
 
-    If m_ParEntCol Is Nothing Then Set m_ParEntCol = ModAdmin.Admin_GetParEnt()
+    Dim objParEnt As ClassParent
+    Dim strVersion As String
+    
+    If Setting_UseDatabase Then
+        Caption = ConstCaption & IIf(m_SelectedVersion = vbNullString, "", " Versie: " & m_SelectedVersion)
+        
+        If Not m_SelectedVersion = vbNullString Then
+            strVersion = FormatDateTimeSeconds(CDate(m_SelectedVersion))
+        End If
+        
+        Set m_ParEntCol = ModDatabase.Database_GetConfigParEnt(strVersion)
+    Else
+        Set m_ParEntCol = ModAdmin.Admin_GetParEnt()
+    End If
+    
+    lbxParenteralia.Clear
+    For Each objParEnt In m_ParEntCol
+        lbxParenteralia.AddItem objParEnt.Name
+    Next
+    
+    ClearSelectedParEnt
 
 End Sub
 
@@ -75,6 +147,40 @@ Private Sub LoadParEnt(ByVal intSel As Integer)
     m_PrevSel = intSel + 1
 
 End Sub
+Private Sub ClearSelectedParEnt()
+
+        lblName.Caption = ""
+        txtEnergy.Value = ""
+        txtEiwit.Value = ""
+        txtKH.Value = ""
+        txtVet.Value = ""
+        txtNa.Value = ""
+        txtK.Value = ""
+        txtCa.Value = ""
+        txtP.Value = ""
+        txtMg.Value = ""
+        txtFe.Value = ""
+        txtVitD.Value = ""
+        txtCl.Value = ""
+        txtProduct.Value = ""
+        
+        m_PrevSel = 0
+
+End Sub
+
+Private Function TextToNum(ByVal strText As String) As Double
+
+    On Error GoTo ErrorHandler
+    
+    TextToNum = CDbl(strText)
+    
+    Exit Function
+    
+ErrorHandler:
+
+    TextToNum = 0
+
+End Function
 
 Private Sub UpdatePreviousSelection()
 
@@ -85,18 +191,18 @@ Private Sub UpdatePreviousSelection()
     Set objParEnt = m_ParEntCol(m_PrevSel)
     
     With objParEnt
-        objParEnt.Energy = txtEnergy.Value
-        objParEnt.Eiwit = txtEiwit.Value
-        objParEnt.KH = txtKH.Value
-        objParEnt.Vet = txtVet.Value
-        objParEnt.Na = txtNa.Value
-        objParEnt.K = txtK.Value
-        objParEnt.Ca = txtCa.Value
-        objParEnt.P = txtP.Value
-        objParEnt.Mg = txtMg.Value
-        objParEnt.Fe = txtFe.Value
-        objParEnt.VitD = txtVitD.Value
-        objParEnt.Cl = txtCl.Value
+        objParEnt.Energy = TextToNum(txtEnergy.Value)
+        objParEnt.Eiwit = TextToNum(txtEiwit.Value)
+        objParEnt.KH = TextToNum(txtKH.Value)
+        objParEnt.Vet = TextToNum(txtVet.Value)
+        objParEnt.Na = TextToNum(txtNa.Value)
+        objParEnt.K = TextToNum(txtK.Value)
+        objParEnt.Ca = TextToNum(txtCa.Value)
+        objParEnt.P = TextToNum(txtP.Value)
+        objParEnt.Mg = TextToNum(txtMg.Value)
+        objParEnt.Fe = TextToNum(txtFe.Value)
+        objParEnt.VitD = TextToNum(txtVitD.Value)
+        objParEnt.Cl = TextToNum(txtCl.Value)
         objParEnt.Product = txtProduct.Value
     End With
 
@@ -128,6 +234,7 @@ End Sub
 Private Sub cmdOK_Click()
 
     Me.Hide
+    
     lblButton.Caption = "OK"
     lbxParenteralia_Click
     Admin_SetParEnt m_ParEntCol
@@ -137,11 +244,17 @@ End Sub
 Private Sub cmdSave_Click()
 
     Me.Hide
+    
     lblButton.Caption = "OK"
     lbxParenteralia_Click
     Admin_SetParEnt m_ParEntCol
-    Application_SaveParEntConfig
-
+    
+    If Setting_UseDatabase() Then
+        Database_SaveConfigParEnt
+    Else
+        Application_SaveParEntConfig
+    End If
+    
 End Sub
 
 Private Sub txtEnergy_KeyPress(ByVal intKey As MSForms.ReturnInteger)

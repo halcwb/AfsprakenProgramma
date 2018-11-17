@@ -473,11 +473,10 @@ Private Sub Test_DatabaseGetPatientData()
 
 End Sub
 
-Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
+Private Function GetSaveNeoConfigMedContSql(ByVal strVersion, blnIsBatch As Boolean) As String
 
     Dim strTable As String
     
-    Dim strVersion As String
     Dim strDepartment As String
     Dim strGeneric As String
     Dim strGenericUnit As String
@@ -515,7 +514,6 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
     Dim strSql
         
     strTable = "Tbl_Admin_NeoMedCont"
-    strVersion = ModDate.FormatDateTimeSeconds(Now())
     strVersion = "{ts'" & strVersion & "'}"
     strDepartment = "Neonatologie"
     strDilutionText = ModRange.GetRangeValue("Var_Neo_MedCont_VerdunningTekst", vbNullString)
@@ -689,13 +687,14 @@ End Function
 Public Sub Database_SaveNeoConfigMedCont()
 
     Dim strSql As String
+    Dim strVersion As String
     
     On Error GoTo ErrorHandler
      
-    Application.ScreenUpdating = False
     ModProgress.StartProgress "Neo Continue Medicatie Configuratie Opslaan"
 
-    strSql = GetSaveNeoConfigMedContSql(False)
+    strVersion = FormatDateTimeSeconds(Now())
+    strSql = GetSaveNeoConfigMedContSql(strVersion, False)
     strSql = ModDatabase.WrapTransaction(strSql, "insert_neoconfigmedcont")
     
     InitConnection
@@ -704,8 +703,8 @@ Public Sub Database_SaveNeoConfigMedCont()
     objConn.Execute strSql
     objConn.Close
     
+    Database_LogAction "Save neonatal configuration for continuous medication", , , strVersion
     ModProgress.FinishProgress
-    Application.ScreenUpdating = True
     
     Exit Sub
     
@@ -818,12 +817,11 @@ ErrorHandler:
 
 End Sub
 
-Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) As String
+Private Function GetSavePediatrieConfigMedContSql(ByVal strVersion As String, ByVal blnIsBatch As Boolean) As String
 
     Dim strSql As String
     Dim strTable As String
     
-    Dim strVersion As String
     Dim strDepartment As String
     Dim strGeneric As String
     Dim strGenericUnit As String
@@ -860,7 +858,6 @@ Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) A
     Dim objSrc As Range
     
     strTable = "Tbl_Admin_PedMedCont"
-    strVersion = ModDate.FormatDateTimeSeconds(Now())
     strVersion = "{ts'" & strVersion & "'}"
     strDepartment = "Pediatrie"
     strDilutionText = ""
@@ -1045,13 +1042,14 @@ End Function
 Public Sub Database_SavePediatrieConfigMedCont()
 
     Dim strSql As String
-    
+    Dim strVersion As String
 
     On Error GoTo ErrorHandler
      
     ModProgress.StartProgress "Pediatrie Continue Medicatie Configuratie Opslaan"
     
-    strSql = GetSavePediatrieConfigMedContSql(False)
+    strVersion = FormatDateTimeSeconds(Now())
+    strSql = GetSavePediatrieConfigMedContSql(strVersion, False)
     strSql = ModDatabase.WrapTransaction(strSql, "insert_pedconfigmedcont")
     
     InitConnection
@@ -1060,6 +1058,7 @@ Public Sub Database_SavePediatrieConfigMedCont()
     objConn.Execute strSql
     objConn.Close
     
+    Database_LogAction "Save pediatric configuration for continuous medication", , , strVersion
     ModProgress.FinishProgress
     
     Exit Sub
@@ -1170,14 +1169,13 @@ ErrorHandler:
 
 End Sub
 
-Private Function GetSaveConfigParentSql() As String
+Private Function GetSaveConfigParentSql(ByVal strVersion As String) As String
 
     Dim strSql As String
     Dim objTable As Range
     Dim intC As Integer
     Dim intR As Integer
     
-    Dim strVersion  As String
     Dim strName As String
     Dim dblEnergy As Double
     Dim dblProtein As Double
@@ -1216,7 +1214,6 @@ Private Function GetSaveConfigParentSql() As String
     strSql = strSql & "DECLARE @signed bit" & vbNewLine
     strSql = strSql & "" & vbNewLine
     
-    strVersion = ModDate.FormatDateTimeSeconds(Now())
     strVersion = "{ts'" & strVersion & "'}"
     
     For intR = 1 To intC
@@ -1284,12 +1281,14 @@ End Function
 Public Sub Database_SaveConfigParEnt()
 
     Dim strSql As String
+    Dim strVersion As String
     
     On Error GoTo ErrorHandler
     
     ModProgress.StartProgress "Configuratie voor parenteralia"
     
-    strSql = GetSaveConfigParentSql()
+    strVersion = FormatDateTimeSeconds(Now())
+    strSql = GetSaveConfigParentSql(strVersion)
     strSql = WrapTransaction(strSql, "insert_configparent")
     
     InitConnection
@@ -1298,6 +1297,7 @@ Public Sub Database_SaveConfigParEnt()
     objConn.Execute strSql
     objConn.Close
     
+    Database_LogAction "Save configuration for parenteral products", , , strVersion
     ModProgress.FinishProgress
     
     Exit Sub
@@ -1386,6 +1386,100 @@ ErrorHandler:
     ModLog.LogError Err, "Database_LoadConfigParEnt"
 End Sub
 
+Public Function Database_GetConfigParEntVersions() As String()
+
+    Dim arrVersions() As String
+    Dim objRs As Recordset
+    Dim strSql As String
+    
+    On Error GoTo ErrorHandler
+    
+    strSql = "SELECT * FROM [dbo].[GetConfigParEntVersions] ()" & vbNewLine
+    strSql = strSql & "ORDER BY [Version] DESC "
+    
+    InitConnection
+    
+    objConn.Open
+    Set objRs = objConn.Execute(strSql)
+    
+    Do While Not objRs.EOF
+        ModArray.AddItemToStringArray arrVersions, objRs.Fields("Version").Value
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+    
+    Database_GetConfigParEntVersions = arrVersions
+    
+    Exit Function
+    
+ErrorHandler:
+
+    ModLog.LogError Err, "Database_GetConfigParEntVersions"
+    objConn.Close
+    
+End Function
+
+Public Function Database_GetConfigParEnt(Optional ByVal strVersion As String = "") As Collection
+
+    Dim objCol As Collection
+    Dim objParEnt As ClassParent
+        
+    Dim strSql As String
+    Dim objRs As Recordset
+    
+    On Error GoTo ErrorHandler
+    
+    Set objCol = New Collection
+    
+    If strVersion = vbNullString Then
+        strSql = "SELECT * FROM dbo.GetLatestConfigParEnt()"
+    Else
+        strSql = "SELECT * FROM dbo.GetConfigParEntForVersion({ts'" & strVersion & "'})"
+    End If
+    
+    InitConnection
+    
+    objConn.Open
+    Set objRs = objConn.Execute(strSql)
+    
+    Do While Not objRs.EOF
+        Set objParEnt = New ClassParent
+    
+        objParEnt.Name = objRs.Fields("Name").Value
+        objParEnt.Energy = objRs.Fields("Energy").Value
+        objParEnt.Eiwit = objRs.Fields("Protein").Value
+        objParEnt.KH = objRs.Fields("Carbohydrate").Value
+        objParEnt.Vet = objRs.Fields("Lipid").Value
+        objParEnt.Na = objRs.Fields("Sodium").Value
+        objParEnt.K = objRs.Fields("Potassium").Value
+        objParEnt.Ca = objRs.Fields("Calcium").Value
+        objParEnt.P = objRs.Fields("Phosphor").Value
+        objParEnt.Mg = objRs.Fields("Magnesium").Value
+        objParEnt.Fe = objRs.Fields("Iron").Value
+        objParEnt.VitD = objRs.Fields("VitD").Value
+        objParEnt.Cl = objRs.Fields("Chloride").Value
+        objParEnt.Product = objRs.Fields("Product").Value
+        
+        objCol.Add objParEnt, objParEnt.Name
+        
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+    
+    Set Database_GetConfigParEnt = objCol
+    
+    Exit Function
+    
+ErrorHandler:
+
+    objConn.Close
+    
+    ModUtils.CopyToClipboard strSql
+    ModLog.LogError Err, "Database_GetConfigParEnt"
+
+End Function
 
 Public Function Database_GetVersions(ByVal strHospNum As String) As String()
 
@@ -1440,18 +1534,22 @@ Public Sub Database_ClearDatabase()
 
     Dim strDatabase As String
     Dim strSql As String
+    Dim strVersion As String
     
     On Error GoTo ErrorHandler
     
     strDatabase = ModSetting.Setting_GetDatabase()
+    
     If ModMessage.ShowMsgBoxYesNo("Database " & strDatabase & " leeg maken?") = vbYes Then
         If ModMessage.ShowMsgBoxYesNo("Weet u het zeker dat " & strDatabase & " leeggemaakt moet worden?") Then
             ModProgress.StartProgress "Clear Database"
             
+            strVersion = FormatDateTimeSeconds(Now())
+            
             strSql = "EXEC dbo.ClearDatabase  " & WrapString(strDatabase)
-            strSql = strSql & vbNewLine & GetSaveConfigParentSql()
-            strSql = strSql & vbNewLine & GetSavePediatrieConfigMedContSql(True)
-            strSql = strSql & vbNewLine & GetSaveNeoConfigMedContSql(True)
+            strSql = strSql & vbNewLine & GetSaveConfigParentSql(strVersion)
+            strSql = strSql & vbNewLine & GetSavePediatrieConfigMedContSql(strVersion, True)
+            strSql = strSql & vbNewLine & GetSaveNeoConfigMedContSql(strVersion, True)
             strSql = WrapTransaction(strSql, "cleardatabase_trans")
             
             InitConnection
@@ -1462,6 +1560,8 @@ Public Sub Database_ClearDatabase()
             ModProgress.FinishProgress
         End If
     End If
+    
+    Database_LogAction "Clear database", , , strVersion
 
     Exit Sub
 
@@ -1506,4 +1606,70 @@ Private Sub Test_Database_LogAction()
     Database_LogAction "Test"
 
 End Sub
+
+Public Function Database_GetNeoConfigMedCont(Optional ByVal strVersion As String = "") As Collection
+
+    Dim strSql As String
+    Dim objRs As Recordset
+    Dim objCol As Collection
+    Dim objConfig As ClassNeoMedCont
+    
+    On Error GoTo ErrorHandler
+       
+    InitConnection
+    
+    If strVersion = vbNullString Then
+        strSql = "SELECT * FROM [dbo].[GetLatestConfigMedContForDepartment] ('Neonatologie')"
+    Else
+        strSql = "SELECT * FROM [dbo].[GetConfigMedContForDepartmentWithVersion] ('Neonatologie'), " & WrapDateTime(strVersion)
+    End If
+    
+    objConn.Open
+    
+    Set objRs = objConn.Execute(strSql)
+    Set objCol = New Collection
+    
+    Do While Not objRs.EOF
+        Set objConfig = New ClassNeoMedCont
+        
+        objConfig.Generic = objRs.Fields("Generic").Value
+        objConfig.GenericUnit = objRs.Fields("GenericUnit").Value
+        objConfig.DoseUnit = objRs.Fields("DoseUnit").Value
+        objConfig.GenericQuantity = objRs.Fields("GenericQuantity").Value
+        objConfig.GenericVolume = objRs.Fields("GenericVolume").Value
+        objConfig.MinDose = objRs.Fields("MinDose").Value
+        objConfig.MaxDose = objRs.Fields("MaxDose").Value
+        objConfig.AbsMaxDose = objRs.Fields("AbsMaxDose").Value
+        objConfig.MinConcentration = objRs.Fields("MinConcentration").Value
+        objConfig.MaxConcentration = objRs.Fields("MaxConcentration").Value
+        objConfig.Solution = objRs.Fields("Solution").Value
+        objConfig.DoseAdvice = objRs.Fields("DoseAdvice").Value
+        objConfig.SolutionVolume = objRs.Fields("SolutionVolume").Value
+        objConfig.DripQuantity = objRs.Fields("DripQuantity").Value
+        objConfig.Product = objRs.Fields("Product").Value
+        objConfig.ShelfLife = objRs.Fields("ShelfLife").Value
+        objConfig.ShelfCondition = objRs.Fields("ShelfCondition").Value
+        objConfig.PreparationText = objRs.Fields("PreparationText").Value
+        objConfig.DilutionText = objRs.Fields("DilutionText").Value
+        
+        objCol.Add objConfig
+        
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+    
+    Set Database_GetNeoConfigMedCont = objCol
+    
+    Exit Function
+    
+ErrorHandler:
+
+    objConn.Close
+
+    ModUtils.CopyToClipboard strSql
+    ModLog.LogError Err, "Database_LoadNeoConfigMedCont with sql: " & vbNewLine & strSql
+    
+
+End Function
 

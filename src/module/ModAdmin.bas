@@ -130,8 +130,6 @@ Private Sub SelectAdminSheet(objSheet As Worksheet, objRange As Range, strTitle 
 End Sub
 
 Public Sub Admin_TblNeoMedCont()
-
-    'SelectAdminSheet shtNeoTblMedIV, ModRange.GetRange(constNeoMedContTbl), "NeoMedCont"
     
     Dim frmConfig As FormAdminNeoMedCont
     
@@ -148,8 +146,6 @@ Public Sub Admin_TblPedMedCont()
 End Sub
 
 Public Sub Admin_TblGlobParEnt()
-
-    ' SelectAdminSheet shtGlobTblParEnt, ModRange.GetRange(constGlobParEntTbl), "GlobParEnt"
     
     Dim frmConfig As FormAdminParent
     
@@ -181,26 +177,26 @@ Public Function Admin_GetNeoMedCont() As Collection
     
     For intN = 1 To intR
         Set objMed = New ClassNeoMedCont
-        objMed.Name = objTable.Cells(intN, 1)
-        objMed.Unit = objTable.Cells(intN, 2)
+        objMed.Generic = objTable.Cells(intN, 1)
+        objMed.GenericUnit = objTable.Cells(intN, 2)
         objMed.DoseUnit = objTable.Cells(intN, 3)
-        objMed.Conc = objTable.Cells(intN, 4)
-        objMed.Volume = objTable.Cells(intN, 5)
+        objMed.GenericQuantity = objTable.Cells(intN, 4)
+        objMed.GenericVolume = objTable.Cells(intN, 5)
         objMed.MinDose = objTable.Cells(intN, 6)
         objMed.MaxDose = objTable.Cells(intN, 7)
-        objMed.AbsMax = objTable.Cells(intN, 8)
-        objMed.MinConc = objTable.Cells(intN, 9)
-        objMed.MaxConc = objTable.Cells(intN, 10)
-        objMed.OplVlst = objTable.Cells(intN, 11)
-        objMed.Advice = objTable.Cells(intN, 12)
-        objMed.OplVol = objTable.Cells(intN, 13)
-        objMed.Rate = objTable.Cells(intN, 14)
+        objMed.AbsMaxDose = objTable.Cells(intN, 8)
+        objMed.MinConcentration = objTable.Cells(intN, 9)
+        objMed.MaxConcentration = objTable.Cells(intN, 10)
+        objMed.Solution = objTable.Cells(intN, 11)
+        objMed.DoseAdvice = objTable.Cells(intN, 12)
+        objMed.Solution = objTable.Cells(intN, 13)
+        objMed.DripQuantity = objTable.Cells(intN, 14)
         objMed.Product = objTable.Cells(intN, 15)
-        objMed.Houdbaar = objTable.Cells(intN, 16)
-        objMed.Bewaar = objTable.Cells(intN, 17)
-        objMed.Tekst = objTable.Cells(intN, 18)
+        objMed.ShelfLife = objTable.Cells(intN, 16)
+        objMed.ShelfCondition = objTable.Cells(intN, 17)
+        objMed.PreparationText = objTable.Cells(intN, 18)
         
-        objCol.Add objMed, objMed.Name
+        objCol.Add objMed, objMed.Generic
     Next
     
     Set Admin_GetNeoMedCont = objCol
@@ -225,26 +221,26 @@ Public Sub Admin_SetNeoMedCont(objNeoMedContCol As Collection, ByVal strVerdunni
         
         Set objMed = objNeoMedContCol.Item(intN)
         
-        objTable.Cells(intN, 1) = objMed.Name
-        objTable.Cells(intN, 2) = objMed.Unit
+        objTable.Cells(intN, 1) = objMed.Generic
+        objTable.Cells(intN, 2) = objMed.GenericUnit
         objTable.Cells(intN, 3) = objMed.DoseUnit
-        objTable.Cells(intN, 4) = objMed.Conc
-        objTable.Cells(intN, 5) = objMed.Volume
+        objTable.Cells(intN, 4) = objMed.GenericQuantity
+        objTable.Cells(intN, 5) = objMed.GenericVolume
         objTable.Cells(intN, 6) = objMed.MinDose
         objTable.Cells(intN, 7) = objMed.MaxDose
-        objTable.Cells(intN, 8) = objMed.AbsMax
-        objTable.Cells(intN, 9) = objMed.MinConc
-        objTable.Cells(intN, 10) = objMed.MaxConc
-        objTable.Cells(intN, 11) = objMed.OplVlst
-        objTable.Cells(intN, 12) = objMed.Advice
-        objTable.Cells(intN, 13) = objMed.OplVol
-        objTable.Cells(intN, 14) = objMed.Rate
+        objTable.Cells(intN, 8) = objMed.AbsMaxDose
+        objTable.Cells(intN, 9) = objMed.MinConcentration
+        objTable.Cells(intN, 10) = objMed.MaxConcentration
+        objTable.Cells(intN, 11) = objMed.Solution
+        objTable.Cells(intN, 12) = objMed.DoseAdvice
+        objTable.Cells(intN, 13) = objMed.SolutionVolume
+        objTable.Cells(intN, 14) = objMed.DripQuantity
         objTable.Cells(intN, 15) = objMed.Product
-        objTable.Cells(intN, 16) = objMed.Houdbaar
-        objTable.Cells(intN, 17) = objMed.Bewaar
-        objTable.Cells(intN, 18) = objMed.Tekst
+        objTable.Cells(intN, 16) = objMed.ShelfLife
+        objTable.Cells(intN, 17) = objMed.ShelfCondition
+        objTable.Cells(intN, 18) = objMed.PreparationText
         
-        ModProgress.SetJobPercentage objMed.Name & "...", intR, intN
+        ModProgress.SetJobPercentage objMed.Generic & "...", intR, intN
         
     Next
     

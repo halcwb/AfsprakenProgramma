@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormAdminNeoMedCont
    ClientHeight    =   11685
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   19575
+   ClientWidth     =   22695
    OleObjectBlob   =   "FormAdminNeoMedCont.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -39,8 +39,12 @@ End Function
 
 Private Sub LoadMedicamenten()
 
-    If m_MedCol Is Nothing Then Set m_MedCol = ModAdmin.Admin_GetNeoMedCont()
-
+    If Setting_UseDatabase Then
+        Set m_MedCol = Database_GetNeoConfigMedCont()
+    Else
+        Set m_MedCol = ModAdmin.Admin_GetNeoMedCont()
+    End If
+    
 End Sub
 
 Private Function MinSmallerThanMax(ByVal txtMin As String, ByVal txtMax As String) As Boolean
@@ -59,18 +63,18 @@ Private Function MinSmallerThanMax(ByVal txtMin As String, ByVal txtMax As Strin
     
 End Function
 
-Private Sub LoadOplVlst()
+Private Sub LoadSolution()
 
-    Dim objVlst As Range
+    Dim objSol As Range
     Dim strValue As String
     Dim intN As Integer
     Dim intC As Integer
     
-    Set objVlst = NeoInfB_GetNeoOplVlst()
-    intC = objVlst.Rows.Count
+    Set objSol = NeoInfB_GetNeoOplVlst()
+    intC = objSol.Rows.Count
     
     For intN = 1 To intC
-        strValue = objVlst.Cells(intN, 1).Value2
+        strValue = objSol.Cells(intN, 1).Value2
         cboOplVlst.AddItem strValue
     Next
 
@@ -125,9 +129,15 @@ Private Sub cmdSave_Click()
     Me.Hide
     lblButton.Caption = "OK"
     lbxMedicamenten_Click
+    
     Admin_SetNeoMedCont m_MedCol, txtVerdunning
-    Application_SaveNeoMedContConfig
-
+    
+    If Setting_UseDatabase Then
+        Database_SaveNeoConfigMedCont
+    Else
+        Admin_SetNeoMedCont m_MedCol, txtVerdunning
+    End If
+    
 End Sub
 
 Private Sub lbxMedicamenten_Click()
@@ -253,10 +263,10 @@ Private Sub UserForm_Initialize()
     Dim objMed As ClassNeoMedCont
     
     LoadMedicamenten
-    LoadOplVlst
+    LoadSolution
     
     For Each objMed In m_MedCol
-        lbxMedicamenten.AddItem objMed.Name
+        lbxMedicamenten.AddItem objMed.Generic
     Next
     
     txtVerdunning.Text = Admin_GetNeoMedVerdunning()
@@ -282,24 +292,25 @@ Private Sub LoadMedicament(ByVal intSel As Integer)
     Set objMed = m_MedCol(intSel + 1)
     
     With objMed
-        lblMed.Caption = .Name
-        cboUnit.Text = .Unit
+        lblMed.Caption = .Generic
+        cboUnit.Text = .GenericUnit
         cboDoseUnit.Text = .DoseUnit
-        txtConc.Text = .Conc
-        txtVol.Text = .Volume
-        cboOplVlst.Text = cboOplVlst.List(.OplVlst - 1) ' NeoInfB_GetNeoOplVlst(.OplVlst)
-        txtOplVol.Text = .OplVol
-        txtRate.Text = .Rate
-        txtMinConc.Text = .MinConc
-        txtMaxConc.Text = .MaxConc
+        txtConc.Text = .GenericQuantity
+        txtVol.Text = .GenericVolume
+        cboOplVlst.Text = cboOplVlst.List(.Solution - 1) ' NeoInfB_GetNeoOplVlst(.OplVlst)
+        txtOplVol.Text = .SolutionVolume
+        txtRate.Text = .DripQuantity
+        txtMinConc.Text = .MinConcentration
+        txtMaxConc.Text = .MaxConcentration
         txtMinDose.Text = .MinDose
         txtMaxDose.Text = .MaxDose
-        txtAbsMax.Text = .AbsMax
-        txtAdvice.Text = IIf(.Advice = vbNullString, GetAdvice(objMed), .Advice)
+        txtAbsMax.Text = .AbsMaxDose
+        txtAdvice.Text = IIf(.DoseAdvice = vbNullString, GetAdvice(objMed), .DoseAdvice)
         txtProduct.Text = .Product
-        txtHoudbaar.Text = .Houdbaar
-        txtBewaar.Text = .Bewaar
-        txtBereiding.Text = .Tekst
+        txtHoudbaar.Text = .ShelfLife
+        txtBewaar.Text = .ShelfCondition
+        txtBereiding.Text = .PreparationText
+        If Setting_UseDatabase Then txtVerdunning.Text = .DilutionText
     End With
     
     m_PrevSel = intSel + 1
@@ -315,23 +326,29 @@ Private Sub UpdatePreviousSelection()
     Set objMed = m_MedCol(m_PrevSel)
     
     With objMed
-        .Unit = cboUnit.Text
+        .GenericUnit = cboUnit.Text
         .DoseUnit = cboDoseUnit.Text
-        .Conc = txtConc.Text
-        .Volume = txtVol.Text
-        .OplVlst = IIf(cboOplVlst.ListIndex = -1, 0, cboOplVlst.ListIndex) + 1
-        .OplVol = txtOplVol.Text
-        .Rate = txtRate.Text
-        .MinConc = txtMinConc.Text
-        .MaxConc = txtMaxConc.Text
+        .GenericQuantity = txtConc.Text
+        .GenericVolume = txtVol.Text
+        .Solution = IIf(cboOplVlst.ListIndex = -1, 0, cboOplVlst.ListIndex) + 1
+        .SolutionVolume = txtOplVol.Text
+        .DripQuantity = txtRate.Text
+        .MinConcentration = txtMinConc.Text
+        .MaxConcentration = txtMaxConc.Text
         .MinDose = txtMinDose.Text
         .MaxDose = txtMaxDose.Text
-        .AbsMax = txtAbsMax.Text
-        .Advice = IIf(m_SetAdvice, txtAdvice.Text, vbNullString)
+        .AbsMaxDose = txtAbsMax.Text
+        .DoseAdvice = IIf(m_SetAdvice, txtAdvice.Text, vbNullString)
         .Product = txtProduct.Text
-        .Houdbaar = txtHoudbaar.Text
-        .Bewaar = txtBewaar.Text
-        .Tekst = txtBereiding.Text
+        .ShelfLife = txtHoudbaar.Text
+        .ShelfCondition = txtBewaar.Text
+        .PreparationText = txtBereiding.Text
+        
+        If Setting_UseDatabase Then
+            For Each objMed In m_MedCol
+                .DilutionText = txtVerdunning.Text
+            Next objMed
+        End If
     End With
 
 End Sub
