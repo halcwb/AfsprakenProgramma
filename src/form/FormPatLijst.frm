@@ -17,10 +17,10 @@ Option Explicit
 
 Private m_Pats As Collection
 Private m_OriginalPats As Collection
-
+Private m_Versions As Collection
 Private m_OnlyAdmitted As Boolean
 Private m_LatestVersion As Boolean
-Private m_Setting_UseDatabase As Boolean
+Private m_UseDatabase As Boolean
 Private m_Cancel As Boolean
 
 Public Function GetCancel() As Boolean
@@ -29,18 +29,18 @@ Public Function GetCancel() As Boolean
 
 End Function
 
-Private Sub SetSelectedHospNumAndVerson()
+Private Sub SetSelectedHospNumAndVersion()
 
     If Not m_LatestVersion Then
         If cboVersions.Value = vbNullString Then
             ModMessage.ShowMsgBoxExclam "Selecteer eerst een afspraken versie"
             Exit Sub
         Else
-            ModBed.SetDatabaseVersie cboVersions.Value
+            ModBed.SetDatabaseVersie Database_GetVersionIDFromString(cboVersions.Value)
         End If
     End If
     
-    If m_Setting_UseDatabase Then
+    If m_UseDatabase Then
         SetSelectedHospNum
     Else
         SetSelectedBed
@@ -58,7 +58,7 @@ End Sub
 
 Private Sub cmdOK_Click()
 
-    SetSelectedHospNumAndVerson
+    SetSelectedHospNumAndVersion
     m_Cancel = False
     Me.Hide
 
@@ -75,7 +75,7 @@ End Sub
 Private Sub lstPatienten_DblClick(ByVal blnCancel As MSForms.ReturnBoolean)
         
     SetSelectedVersion
-    If m_Setting_UseDatabase Then SetSelectedHospNum
+    If m_UseDatabase Then SetSelectedHospNum
     Me.Hide
 
 End Sub
@@ -127,9 +127,9 @@ Private Function PatToSortString(objPat As ClassPatientDetails) As String
 
 End Function
 
-Private Sub Setting_UseDatabase()
+Private Sub UseDatabase()
 
-    m_Setting_UseDatabase = True
+    m_UseDatabase = True
     frmPatSel.Visible = True
     frmVersion.Visible = True
 
@@ -142,8 +142,8 @@ Public Sub LoadDbPatients(ByVal colPats As Collection)
     Dim varSort As Variant
     Dim strPat As String
     
-    Setting_UseDatabase
-    
+    UseDatabase
+   
     Set m_Pats = New Collection
     Set m_OriginalPats = colPats
     
@@ -203,7 +203,7 @@ End Sub
 
 Private Sub SetSelectedVersion()
 
-    ModBed.SetDatabaseVersie cboVersions.Value
+    ModBed.SetDatabaseVersie IIf(cboVersions.Value = vbNullString, 0, cboVersions.Value)
 
 End Sub
 
@@ -312,19 +312,16 @@ End Sub
 Private Sub LoadVersions()
 
     Dim strHospNum
-    Dim arrVersions() As String
-    Dim intN As Integer
+    Dim objVersion As ClassVersion
     
     cboVersions.Clear
     strHospNum = GetSelectedHospNum()
     If Not strHospNum = vbNullString Then
-        arrVersions = ModDatabase.Database_GetVersions(strHospNum)
+        Set m_Versions = ModDatabase.Database_GetDataVersions(strHospNum)
         
-        If Not ModArray.ArrayIsEmpty(arrVersions) Then
-            For intN = 0 To UBound(arrVersions) - 1
-                cboVersions.AddItem arrVersions(intN)
-            Next
-        End If
+        For Each objVersion In m_Versions
+            cboVersions.AddItem objVersion.ToString()
+        Next
     End If
 
 End Sub

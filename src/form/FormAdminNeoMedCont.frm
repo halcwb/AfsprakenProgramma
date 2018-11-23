@@ -17,7 +17,37 @@ Option Explicit
 
 Private m_MedCol As Collection
 Private m_PrevSel As Integer ' Holds medicament index is 1 based, note! lbxMedicamenten is 0 based
-Private m_SetAdvice As Boolean
+Private m_SelectedVersion As Integer
+
+Private Const constDepartment = "Neonatologie"
+Private Const ConstCaption As String = "Neonatale Continue Medicatie Configuratie"
+
+Private Sub ClearMedDetails()
+
+        lblMed.Caption = ""
+        cboUnit.Text = ""
+        cboDoseUnit.Text = ""
+        txtConc.Text = ""
+        txtVol.Text = ""
+        cboOplVlst.Text = ""
+        txtOplVol.Text = ""
+        txtRate.Text = ""
+        txtMinConc.Text = ""
+        txtMaxConc.Text = ""
+        txtMinDose.Text = ""
+        txtMaxDose.Text = ""
+        txtAbsMax.Text = ""
+        txtAdvice.Text = ""
+        txtProduct.Text = ""
+        txtHoudbaar.Text = ""
+        txtBewaar.Text = ""
+        txtBereiding.Text = ""
+        txtVerdunning.Text = ""
+        
+        m_PrevSel = 0
+
+End Sub
+
 
 Private Function Validate(ByVal strMsg As String) As Boolean
 
@@ -37,13 +67,24 @@ Private Function Validate(ByVal strMsg As String) As Boolean
 
 End Function
 
-Private Sub LoadMedicamenten()
+Private Sub LoadMedicationCollection()
 
+    Dim objMed As ClassNeoMedCont
+    
     If Setting_UseDatabase Then
-        Set m_MedCol = Database_GetNeoConfigMedCont()
+        Caption = ConstCaption & IIf(m_SelectedVersion = 0, "", " Versie: " & m_SelectedVersion)
+        
+        Set m_MedCol = ModDatabase.Database_GetNeoConfigMedCont(m_SelectedVersion)
     Else
         Set m_MedCol = ModAdmin.Admin_GetNeoMedCont()
     End If
+    
+    lbxMedicamenten.Clear
+    For Each objMed In m_MedCol
+        lbxMedicamenten.AddItem objMed.Generic
+    Next
+    
+    ClearMedDetails
     
 End Sub
 
@@ -107,6 +148,53 @@ Private Sub cmdCancel_Click()
 
 End Sub
 
+Private Sub cmdImport_Click()
+
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim objDst As Range
+    Dim lngErr As Long
+    Dim strFile As String
+        
+    Dim objMed As ClassNeoMedCont
+    
+    strFile = ModFile.GetFileWithDialog
+    
+    Dim strMsg As String
+    
+    On Error GoTo HandleError
+       
+    Application.DisplayAlerts = False
+        
+    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+    Set objSrc = objConfigWbk.Sheets(constNeoMedContTbl).Range(constNeoMedContTbl)
+    Set objDst = ModRange.GetRange(constNeoMedContTbl)
+        
+    Sheet_CopyRangeFormulaToDst objSrc, objDst
+    Sheet_CopyRangeFormulaToDst objConfigWbk.Sheets(constNeoMedVerdunning).Range("A1"), ModRange.GetRange(constNeoMedVerdunning)
+    
+    Set m_MedCol = ModAdmin.Admin_GetNeoMedCont()
+    
+    lbxMedicamenten.Clear
+    For Each objMed In m_MedCol
+        lbxMedicamenten.AddItem objMed.Generic
+    Next
+    
+    ClearMedDetails
+    
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    
+    Exit Sub
+    
+HandleError:
+
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not import: " & strFile
+
+End Sub
+
 Private Sub cmdOK_Click()
 
     Me.Hide
@@ -124,6 +212,16 @@ Private Sub cmdPrint_Click()
 
 End Sub
 
+Private Sub cboVersions_Change()
+
+    If Not cboVersions.Value = vbNullString Then
+        Set m_MedCol = Nothing
+        m_SelectedVersion = Database_GetVersionIDFromString(cboVersions.Value)
+        LoadMedicationCollection
+    End If
+    
+End Sub
+
 Private Sub cmdSave_Click()
 
     Me.Hide
@@ -135,7 +233,7 @@ Private Sub cmdSave_Click()
     If Setting_UseDatabase Then
         Database_SaveNeoConfigMedCont
     Else
-        Admin_SetNeoMedCont m_MedCol, txtVerdunning
+        Application_SaveNeoMedContConfig
     End If
     
 End Sub
@@ -146,7 +244,48 @@ Private Sub lbxMedicamenten_Click()
     
     intSel = lbxMedicamenten.ListIndex
     
-    LoadMedicament intSel
+    LoadMedicationDetails intSel
+
+End Sub
+
+Private Sub optLastVersion_Click()
+
+    ToggleVersionSelect False
+
+End Sub
+
+Private Sub LoadVersions()
+
+    Dim colVersions As Collection
+    Dim objVersion As ClassVersion
+    Dim intN As Integer
+        
+    cboVersions.Clear
+    Set colVersions = Database_GetConfigMedContVersions(constDepartment)
+    
+    For Each objVersion In colVersions
+        cboVersions.AddItem objVersion.ToString()
+    Next
+    
+End Sub
+
+Private Sub ToggleVersionSelect(ByVal blnVisible As Boolean)
+
+    If Not blnVisible Then
+        m_SelectedVersion = 0
+        LoadMedicationCollection
+    Else
+        LoadVersions
+    End If
+    
+    cboVersions.Visible = blnVisible
+    lblCboVersions.Visible = blnVisible
+
+End Sub
+
+Private Sub optSpecificVersion_Click()
+
+    ToggleVersionSelect True
 
 End Sub
 
@@ -216,12 +355,6 @@ Private Sub txtHoudbaar_KeyPress(ByVal intKey As MSForms.ReturnInteger)
 
 End Sub
 
-Private Sub txtAdvice_Change()
-
-    m_SetAdvice = Not txtAdvice.Text = vbNullString
-
-End Sub
-
 Private Sub txtConc_Change()
     
     Validate vbNullString
@@ -261,15 +394,11 @@ End Sub
 Private Sub UserForm_Initialize()
 
     Dim objMed As ClassNeoMedCont
-    
-    LoadMedicamenten
+
+    optLastVersion.Value = True
     LoadSolution
     
-    For Each objMed In m_MedCol
-        lbxMedicamenten.AddItem objMed.Generic
-    Next
-    
-    txtVerdunning.Text = Admin_GetNeoMedVerdunning()
+    If Not Setting_UseDatabase Then txtVerdunning.Text = Admin_GetNeoMedVerdunning()
     lbxMedicamenten.ListIndex = 0
 
 End Sub
@@ -282,7 +411,7 @@ Private Sub CenterForm()
 
 End Sub
 
-Private Sub LoadMedicament(ByVal intSel As Integer)
+Private Sub LoadMedicationDetails(ByVal intSel As Integer)
 
     Dim objMed As ClassNeoMedCont
     
@@ -338,7 +467,7 @@ Private Sub UpdatePreviousSelection()
         .MinDose = txtMinDose.Text
         .MaxDose = txtMaxDose.Text
         .AbsMaxDose = txtAbsMax.Text
-        .DoseAdvice = IIf(m_SetAdvice, txtAdvice.Text, vbNullString)
+        .DoseAdvice = IIf(txtAdvice = GetAdvice(objMed), vbNullString, txtAdvice.Text)
         .Product = txtProduct.Text
         .ShelfLife = txtHoudbaar.Text
         .ShelfCondition = txtBewaar.Text

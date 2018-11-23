@@ -103,22 +103,11 @@ Public Sub Test_NeoInfB_ContMed()
     Dim blnShowMsg As Boolean
     Dim blnDevelop As Boolean
     
-    Dim dlgFile As FileDialog
     Dim varFile As Variant
     
     On Error GoTo Test_NeoInfB_ContMedError
     
-    Set dlgFile = Application.FileDialog(msoFileDialogFilePicker)
-    With dlgFile
-        .AllowMultiSelect = False
-        .InitialFileName = IIf(ModSetting.IsDevelopmentDir, WbkAfspraken.Path & "\tests\", WbkAfspraken.Path & "\..\Tests\")
-        If .Show Then
-            For Each varFile In .SelectedItems
-                If Not varFile = vbNullString Then Exit For
-                
-            Next
-        End If
-    End With
+    varFile = ModFile.GetFileWithDialog()
     
     If CStr(varFile) = vbNullString Then Exit Sub
     

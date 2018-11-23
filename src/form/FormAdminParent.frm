@@ -16,8 +16,8 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private m_ParEntCol As Collection
-Private m_Versions() As String
-Private m_SelectedVersion As String
+Private m_Versions As Collection
+Private m_SelectedVersion As Integer
 Private m_PrevSel As Integer
 
 Private Const ConstCaption As String = "Parenteralia Configuratie"
@@ -32,26 +32,23 @@ End Sub
 
 Private Sub LoadVersions()
 
-    Dim arrVersions() As String
-    Dim intN As Integer
-        
+    Dim objVersion As ClassVersion
+    
     cboVersions.Clear
-    arrVersions = Database_GetConfigParEntVersions()
+    Set m_Versions = Database_GetConfigParEntVersions()
     
-    If Not ModArray.ArrayIsEmpty(arrVersions) Then
-        For intN = 0 To UBound(arrVersions)
-            cboVersions.AddItem arrVersions(intN)
-        Next
-    End If
-    
+    For Each objVersion In m_Versions
+        cboVersions.AddItem objVersion.ToString()
+    Next
     
 End Sub
 
 Private Sub ToggleVersionSelect(ByVal blnVisible As Boolean)
 
     If Not blnVisible Then
-        m_SelectedVersion = vbNullString
-        LoadParEnteralia
+        m_SelectedVersion = 0
+        Set m_Versions = Nothing
+        LoadParEntCollection
     Else
         LoadVersions
     End If
@@ -65,10 +62,55 @@ Private Sub cboVersions_Change()
 
     If Not cboVersions.Value = vbNullString Then
         Set m_ParEntCol = Nothing
-        m_SelectedVersion = cboVersions.Value
-        LoadParEnteralia
+        m_SelectedVersion = Database_GetVersionIDFromString(cboVersions.Value)
+        LoadParEntCollection
     End If
     
+End Sub
+
+Private Sub cmdImport_Click()
+
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim objDst As Range
+    Dim lngErr As Long
+    Dim strFile As String
+        
+    Dim objParEnt As ClassParent
+    
+    strFile = ModFile.GetFileWithDialog
+    
+    Dim strMsg As String
+    
+    On Error GoTo HandleError
+       
+    Application.DisplayAlerts = False
+        
+    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+    Set objSrc = objConfigWbk.Sheets(constGlobParEntTbl).Range(constGlobParEntTbl)
+    Set objDst = ModRange.GetRange(constGlobParEntTbl)
+        
+    Sheet_CopyRangeFormulaToDst objSrc, objDst
+    
+    Set m_ParEntCol = ModAdmin.Admin_GetParEnt()
+    
+    lbxParenteralia.Clear
+    For Each objParEnt In m_ParEntCol
+        lbxParenteralia.AddItem objParEnt.Name
+    Next
+    
+    ClearParEntDetails
+    
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    
+    Exit Sub
+    
+HandleError:
+
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not import: " & strFile
 End Sub
 
 Private Sub optLastVersion_Click()
@@ -85,26 +127,19 @@ End Sub
 
 Private Sub UserForm_Initialize()
     
-    LoadParEnteralia
-    ToggleVersionSelect False
-    
+    optLastVersion.Value = True
     lbxParenteralia.ListIndex = 0
     
 End Sub
 
-Private Sub LoadParEnteralia()
+Private Sub LoadParEntCollection()
 
     Dim objParEnt As ClassParent
-    Dim strVersion As String
     
     If Setting_UseDatabase Then
-        Caption = ConstCaption & IIf(m_SelectedVersion = vbNullString, "", " Versie: " & m_SelectedVersion)
-        
-        If Not m_SelectedVersion = vbNullString Then
-            strVersion = FormatDateTimeSeconds(CDate(m_SelectedVersion))
-        End If
-        
-        Set m_ParEntCol = ModDatabase.Database_GetConfigParEnt(strVersion)
+        Caption = ConstCaption & IIf(m_SelectedVersion = 0, "", " Versie: " & m_SelectedVersion)
+
+        Set m_ParEntCol = ModDatabase.Database_GetConfigParEnt(m_SelectedVersion)
     Else
         Set m_ParEntCol = ModAdmin.Admin_GetParEnt()
     End If
@@ -114,11 +149,11 @@ Private Sub LoadParEnteralia()
         lbxParenteralia.AddItem objParEnt.Name
     Next
     
-    ClearSelectedParEnt
+    ClearParEntDetails
 
 End Sub
 
-Private Sub LoadParEnt(ByVal intSel As Integer)
+Private Sub LoadParEntDetails(ByVal intSel As Integer)
 
     Dim objParEnt As ClassParent
     
@@ -147,7 +182,8 @@ Private Sub LoadParEnt(ByVal intSel As Integer)
     m_PrevSel = intSel + 1
 
 End Sub
-Private Sub ClearSelectedParEnt()
+
+Private Sub ClearParEntDetails()
 
         lblName.Caption = ""
         txtEnergy.Value = ""
@@ -214,7 +250,7 @@ Private Sub lbxParenteralia_Click()
     
     intSel = lbxParenteralia.ListIndex
     
-    LoadParEnt intSel
+    LoadParEntDetails intSel
 
 End Sub
 

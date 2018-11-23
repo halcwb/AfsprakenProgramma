@@ -491,7 +491,7 @@ Public Sub Application_SaveNeoMedContConfig()
     ModProgress.StartProgress "Neo Continue Medicatie Configuratie Opslaan"
     
     strTable = "Tbl_Admin_NeoMedCont"
-    strDst = "A2:S24"
+    strDst = "A2:R24"
     strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
     
     SaveConfigTable strFile, strTable, strDst
@@ -526,6 +526,7 @@ Public Sub Application_SaveParEntConfig()
     Application.ScreenUpdating = True
 
 End Sub
+
 
 Private Function LoadConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String) As Boolean
     

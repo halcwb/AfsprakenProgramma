@@ -510,45 +510,45 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     
     ModRange.SetRangeValue constGPK & strN, objMed.GPK
     ModRange.SetRangeValue constATC & strN, objMed.ATC
-    ModRange.SetRangeValue constGeneric & strN, objMed.Generiek
-    ModRange.SetRangeValue constVorm & strN, objMed.Vorm
-    ModRange.SetRangeValue constConc & strN, objMed.Sterkte
-    ModRange.SetRangeValue constConcUnit & strN, objMed.SterkteEenheid
-    ModRange.SetRangeValue constLabel & strN, objMed.Etiket
+    ModRange.SetRangeValue constGeneric & strN, objMed.Generic
+    ModRange.SetRangeValue constVorm & strN, objMed.Shape
+    ModRange.SetRangeValue constConc & strN, objMed.GenericQuantity
+    ModRange.SetRangeValue constConcUnit & strN, objMed.GenericUnit
+    ModRange.SetRangeValue constLabel & strN, objMed.Label
     
     ModRange.SetRangeValue constRoute & strN, objMed.Route
-    ModRange.SetRangeValue constIndic & strN, objMed.Indicatie
+    ModRange.SetRangeValue constIndic & strN, objMed.Indication
     
     ModRange.SetRangeValue constHasDose & strN, objMed.HasDose
     If objMed.HasDose Then
-        ModRange.SetRangeValue constStandDose & strN, objMed.DeelDose
-        ModRange.SetRangeValue constDoseUnit & strN, objMed.DoseEenheid
+        ModRange.SetRangeValue constStandDose & strN, objMed.MultipleQuantity
+        ModRange.SetRangeValue constDoseUnit & strN, objMed.MultipleUnit
         
         ModRange.SetRangeValue constNormDose & strN, objMed.NormDose
         ModRange.SetRangeValue constMinDose & strN, objMed.MinDose
         ModRange.SetRangeValue constMaxDose & strN, objMed.MaxDose
-        ModRange.SetRangeValue constAbsDose & strN, objMed.AbsDose
-        ModRange.SetRangeValue constMaxKeer & strN, objMed.MaxKeer
+        ModRange.SetRangeValue constAbsDose & strN, objMed.AbsMaxDose
+        ModRange.SetRangeValue constMaxKeer & strN, objMed.MaxPerDose
           
         ModRange.SetRangeValue constMaxConc & strN, objMed.MaxConc
-        ModRange.SetRangeValue constOplVlst & strN, objMed.OplVlst
-        ModRange.SetRangeValue constOplVol & strN, objMed.OplVol
-        ModRange.SetRangeValue constMinTijd & strN, objMed.MinTijd
+        ModRange.SetRangeValue constOplVlst & strN, objMed.Solution
+        ModRange.SetRangeValue constOplVol & strN, objMed.SolutionVolume
+        ModRange.SetRangeValue constMinTijd & strN, objMed.MinInfusionTime
         
         
         ModRange.SetRangeValue constPerDose & strN, objMed.PerDose
         ModRange.SetRangeValue constPerKg & strN, objMed.PerKg
         ModRange.SetRangeValue constPerM2 & strN, objMed.PerM2
         
-        If objMed.OplVlst = "NaCl 0,9%" Then
+        If objMed.Solution = "NaCl 0,9%" Then
             ModRange.SetRangeValue constSolNo & strN, 2
-        ElseIf objMed.OplVlst = "glucose 5%" Then
+        ElseIf objMed.Solution = "glucose 5%" Then
             ModRange.SetRangeValue constSolNo & strN, 3
-        ElseIf objMed.OplVlst = "glucose 10%" Then
+        ElseIf objMed.Solution = "glucose 10%" Then
             ModRange.SetRangeValue constSolNo & strN, 4
         End If
         
-        ModRange.SetRangeValue constTime & strN, objMed.MinTijd
+        ModRange.SetRangeValue constTime & strN, objMed.MinInfusionTime
         
         If Not objMed.Freq = vbNullString Then
             Set dictFreq = GetMedicationFreqs()
@@ -568,7 +568,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
             dblAdjust = IIf(objMed.PerM2, ModPatient.CalculateBSA(), dblAdjust)
             
             dblFactor = IIf(objMed.PerDose, 1, ModExcel.Excel_Index(constFreqTable, intFreq, 3))
-            intDoseQty = objMed.CalcDose * dblAdjust / dblFactor / objMed.DeelDose
+            intDoseQty = objMed.CalcDose * dblAdjust / dblFactor / objMed.MultipleQuantity
             
             ModRange.SetRangeValue constDoseQty & strN, intDoseQty
             

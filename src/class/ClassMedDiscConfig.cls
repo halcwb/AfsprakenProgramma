@@ -11,16 +11,16 @@ Option Explicit
 
 Private m_GPK As String
 Private m_ATC As String
-Private m_TherapieGroep As String
-Private m_TherapieSubgroep As String
-Private m_Generiek As String
+Private m_MainGroup As String
+Private m_SubGroup As String
+Private m_Generic As String
 Private m_Product As String
-Private m_Vorm As String
-Private m_Etiket As String
-Private m_Sterkte As Double
-Private m_SterkteEenheid As String
-Private m_DeelDose As Double
-Private m_DoseEenheid As String
+Private m_Shape As String
+Private m_Label As String
+Private m_GenericQuantity As Double
+Private m_GenericUnit As String
+Private m_MultipleQuantity As Double
+Private m_MultipleUnit As String
 
 Private m_NeoNormDose As Double
 Private m_NeoMinDose As Double
@@ -30,17 +30,17 @@ Private m_PedNormDose As Double
 Private m_PedMinDose As Double
 Private m_PedMaxDose As Double
 
-Private m_AbsDose As Double
+Private m_PedAbsMaxDose As Double
 
 Private m_PedMaxConc As Double
-Private m_PedOplVlst As String
-Private m_PedOplVol As Double
-Private m_PedMinTijd As Integer
+Private m_PedSolution As String
+Private m_PedSolutionVolume As Double
+Private m_PedMinInfusionTime As Integer
 
 Private m_NeoMaxConc As Double
-Private m_NeoOplVlst As String
-Private m_NeoOplVol As Double
-Private m_NeoMinTijd As Integer
+Private m_NeoSolution As String
+Private m_NeoSoutionVolume As Double
+Private m_NeoMinInfustionTime As Integer
 
 Private m_IndicatieList As Collection
 Private m_RouteList As Collection
@@ -155,39 +155,39 @@ Public Property Let PedMaxConc(ByVal dblConc As Double)
 
 End Property
 
-Public Property Get PedOplVlst() As String
+Public Property Get PedSolution() As String
 
-    PedOplVlst = m_PedOplVlst
-
-End Property
-
-Public Property Let PedOplVlst(ByVal strVlst As String)
-
-    m_PedOplVlst = strVlst
+    PedSolution = m_PedSolution
 
 End Property
 
-Public Property Get PedOplVol() As Double
+Public Property Let PedSolution(ByVal strVlst As String)
 
-    PedOplVol = m_PedOplVol
-
-End Property
-
-Public Property Let PedOplVol(ByVal dblConc As Double)
-
-    m_PedOplVol = dblConc
+    m_PedSolution = strVlst
 
 End Property
 
-Public Property Get PedMinTijd() As Integer
+Public Property Get PedSolutionVolume() As Double
 
-    PedMinTijd = m_PedMinTijd
+    PedSolutionVolume = m_PedSolutionVolume
 
 End Property
 
-Public Property Let PedMinTijd(ByVal intTime As Integer)
+Public Property Let PedSolutionVolume(ByVal dblConc As Double)
 
-    m_PedMinTijd = intTime
+    m_PedSolutionVolume = dblConc
+
+End Property
+
+Public Property Get PedMinInfusionTime() As Integer
+
+    PedMinInfusionTime = m_PedMinInfusionTime
+
+End Property
+
+Public Property Let PedMinInfusionTime(ByVal intTime As Integer)
+
+    m_PedMinInfusionTime = intTime
 
 End Property
 
@@ -203,51 +203,51 @@ Public Property Let NeoMaxConc(ByVal dblConc As Double)
 
 End Property
 
-Public Property Get NeoOplVlst() As String
+Public Property Get NeoSolution() As String
 
-    NeoOplVlst = m_NeoOplVlst
-
-End Property
-
-Public Property Let NeoOplVlst(ByVal strVlst As String)
-
-    m_NeoOplVlst = strVlst
+    NeoSolution = m_NeoSolution
 
 End Property
 
-Public Property Get NeoOplVol() As Double
+Public Property Let NeoSolution(ByVal strVlst As String)
 
-    NeoOplVol = m_NeoOplVol
-
-End Property
-
-Public Property Let NeoOplVol(ByVal dblConc As Double)
-
-    m_NeoOplVol = dblConc
+    m_NeoSolution = strVlst
 
 End Property
 
-Public Property Get NeoMinTijd() As Integer
+Public Property Get NeoSoutionVolume() As Double
 
-    NeoMinTijd = m_NeoMinTijd
-
-End Property
-
-Public Property Let NeoMinTijd(ByVal intTime As Integer)
-
-    m_NeoMinTijd = intTime
+    NeoSoutionVolume = m_NeoSoutionVolume
 
 End Property
 
-Public Property Get AbsDose() As Double
+Public Property Let NeoSoutionVolume(ByVal dblConc As Double)
+
+    m_NeoSoutionVolume = dblConc
+
+End Property
+
+Public Property Get NeoMinInfustionTime() As Integer
+
+    NeoMinInfustionTime = m_NeoMinInfustionTime
+
+End Property
+
+Public Property Let NeoMinInfustionTime(ByVal intTime As Integer)
+
+    m_NeoMinInfustionTime = intTime
+
+End Property
+
+Public Property Get PedAbsMaxDose() As Double
     
-    AbsDose = m_AbsDose
+    PedAbsMaxDose = m_PedAbsMaxDose
     
 End Property
 
-Public Property Let AbsDose(ByVal dblDose As Double)
+Public Property Let PedAbsMaxDose(ByVal dblDose As Double)
 
-    m_AbsDose = dblDose
+    m_PedAbsMaxDose = dblDose
 
 End Property
 
@@ -287,123 +287,123 @@ Public Property Let Product(ByVal strProduct As String)
 
 End Property
 
-Public Property Get TherapieGroep() As String
+Public Property Get MainGroup() As String
 
-    TherapieGroep = m_TherapieGroep
-
-End Property
-
-Public Property Let TherapieGroep(ByVal strTherapieGroep As String)
-
-    m_TherapieGroep = strTherapieGroep
+    MainGroup = m_MainGroup
 
 End Property
 
-Public Property Get TherapieSubgroep() As String
+Public Property Let MainGroup(ByVal strTherapieGroep As String)
 
-    TherapieSubgroep = m_TherapieSubgroep
-
-End Property
-
-Public Property Let TherapieSubgroep(ByVal strTherapieSubgroep As String)
-
-    m_TherapieSubgroep = strTherapieSubgroep
+    m_MainGroup = strTherapieGroep
 
 End Property
 
-Public Property Get Generiek() As String
+Public Property Get SubGroup() As String
 
-    Generiek = m_Generiek
-
-End Property
-
-Public Property Let Generiek(ByVal strGeneriek As String)
-
-    m_Generiek = MedDisc_CanonGen(strGeneriek)
+    SubGroup = m_SubGroup
 
 End Property
 
-Private Function CreateEtiket() As String
+Public Property Let SubGroup(ByVal strTherapieSubgroep As String)
+
+    m_SubGroup = strTherapieSubgroep
+
+End Property
+
+Public Property Get Generic() As String
+
+    Generic = m_Generic
+
+End Property
+
+Public Property Let Generic(ByVal strGeneriek As String)
+
+    m_Generic = MedDisc_CanonGen(strGeneriek)
+
+End Property
+
+Private Function CreateLabel() As String
 
     Dim strEtiket As String
     
-    strEtiket = Join(Array(m_Generiek, m_Vorm, m_Sterkte, m_SterkteEenheid), " ")
-    CreateEtiket = strEtiket
+    strEtiket = Join(Array(m_Generic, m_Shape, m_GenericQuantity, m_GenericUnit), " ")
+    CreateLabel = strEtiket
 
 End Function
 
-Public Property Get Etiket() As String
+Public Property Get Label() As String
 
     Dim strEtiket As String
 
-    strEtiket = IIf(m_Etiket = vbNullString, CreateEtiket(), m_Etiket)
-    Etiket = strEtiket
+    strEtiket = IIf(m_Label = vbNullString, CreateLabel(), m_Label)
+    Label = strEtiket
 
 End Property
 
-Public Property Let Etiket(ByVal strEtiket As String)
+Public Property Let Label(ByVal strEtiket As String)
 
-    m_Etiket = strEtiket
-
-End Property
-
-Public Property Get Vorm() As String
-
-    Vorm = m_Vorm
+    m_Label = strEtiket
 
 End Property
 
-Public Property Let Vorm(ByVal strVorm As String)
+Public Property Get Shape() As String
+
+    Shape = m_Shape
+
+End Property
+
+Public Property Let Shape(ByVal strVorm As String)
     
-    m_Vorm = strVorm
+    m_Shape = strVorm
 
 End Property
 
-Public Property Get Sterkte() As Double
+Public Property Get GenericQuantity() As Double
 
-    Sterkte = m_Sterkte
-
-End Property
-
-Public Property Let Sterkte(ByVal strSterkte As Double)
-
-    m_Sterkte = strSterkte
+    GenericQuantity = m_GenericQuantity
 
 End Property
 
-Public Property Get SterkteEenheid() As String
+Public Property Let GenericQuantity(ByVal strSterkte As Double)
 
-    SterkteEenheid = m_SterkteEenheid
-
-End Property
-
-Public Property Let SterkteEenheid(ByVal strSterkteEenheid As String)
-
-    m_SterkteEenheid = strSterkteEenheid
+    m_GenericQuantity = strSterkte
 
 End Property
 
-Public Property Get DeelDose() As Double
+Public Property Get GenericUnit() As String
 
-    DeelDose = m_DeelDose
-
-End Property
-
-Public Property Let DeelDose(ByVal dblDose As Double)
-
-    m_DeelDose = dblDose
+    GenericUnit = m_GenericUnit
 
 End Property
 
-Public Property Get DoseEenheid() As String
+Public Property Let GenericUnit(ByVal strSterkteEenheid As String)
 
-    DoseEenheid = m_DoseEenheid
+    m_GenericUnit = strSterkteEenheid
 
 End Property
 
-Public Property Let DoseEenheid(ByVal strDosisEenheid As String)
+Public Property Get MultipleQuantity() As Double
 
-    m_DoseEenheid = strDosisEenheid
+    MultipleQuantity = m_MultipleQuantity
+
+End Property
+
+Public Property Let MultipleQuantity(ByVal dblDose As Double)
+
+    m_MultipleQuantity = dblDose
+
+End Property
+
+Public Property Get MultipleUnit() As String
+
+    MultipleUnit = m_MultipleUnit
+
+End Property
+
+Public Property Let MultipleUnit(ByVal strDosisEenheid As String)
+
+    m_MultipleUnit = strDosisEenheid
 
 End Property
 
@@ -443,21 +443,21 @@ Public Function GetRouteList() As Collection
 
 End Function
 
-Public Sub SetIndicatieList(ByVal strIndicaties As String)
+Public Sub SetIndicationList(ByVal strIndicaties As String)
 
     FillCollection m_IndicatieList, strIndicaties
 
 End Sub
 
-Public Function GetIndicatieList() As Collection
+Public Function GetIndicationList() As Collection
 
-    Set GetIndicatieList = m_IndicatieList
+    Set GetIndicationList = m_IndicatieList
     
 End Function
 
-Public Function GetMedicamentText() As String
+Public Function GetMedication() As String
 
-    GetMedicamentText = Me.Generiek & " " & Me.Vorm & " " & Me.Sterkte & " " & Me.SterkteEenheid
+    GetMedication = Me.Generic & " " & Me.Shape & " " & Me.GenericQuantity & " " & Me.GenericUnit
 
 End Function
 

@@ -24,14 +24,13 @@ Public Function GetFileVersie() As Date
 
 End Function
 
-Public Function GetDatabaseVersie() As String
+Public Function GetDatabaseVersie() As Integer
 
-    Dim strVer As String
+    Dim intVersion As String
     
-    strVer = ModRange.GetRangeValue(constVersie, "")
-    If Not strVer = vbNullString Then strVer = ModDate.FormatDateTimeSeconds(CDate(strVer))
+    intVersion = IIf(ModRange.GetRangeValue(constVersie, 0) = vbNullString, 0, ModRange.GetRangeValue(constVersie, 0))
     
-    GetDatabaseVersie = strVer
+    GetDatabaseVersie = intVersion
 
 End Function
 
@@ -41,9 +40,9 @@ Private Sub Test_GetDatabaseVersie()
 
 End Sub
 
-Public Sub SetDatabaseVersie(strVersie As String)
+Public Sub SetDatabaseVersie(intVersion As Integer)
 
-    ModRange.SetRangeValue constVersie, strVersie
+    ModRange.SetRangeValue constVersie, intVersion
 
 End Sub
 

@@ -109,7 +109,7 @@ Public Sub UnprotectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
     Dim intC As Integer
     
     Set colShts = GetUserInterfaceSheets()
-    intN = 1
+    intN = 0
     intC = colShts.Count
     For Each objItem In colShts
     
@@ -120,6 +120,7 @@ Public Sub UnprotectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
             .Unprotect ModConst.CONST_PASSWORD
         End With
         
+        intN = intN + 1
         If blnShowProgress Then ModProgress.SetJobPercentage "Verwijder Beveiliging", intC, intN
         
     Next objItem
@@ -134,7 +135,7 @@ Public Sub ProtectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
     Dim intC As Integer
     
     Set colShts = GetUserInterfaceSheets()
-    intN = 1
+    intN = 0
     intC = colShts.Count
     For Each objItem In colShts
     
@@ -145,6 +146,7 @@ Public Sub ProtectUserInterfaceSheets(ByVal blnShowProgress As Boolean)
             .Protect ModConst.CONST_PASSWORD
         End With
         
+        intN = intN + 1
         If blnShowProgress Then ModProgress.SetJobPercentage "Stel beveiliging in", intC, intN
         
     Next objItem

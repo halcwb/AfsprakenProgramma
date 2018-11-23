@@ -119,10 +119,10 @@ Public Sub AddMedicament(ByVal objMed As ClassMedDiscConfig)
     
     m_colMedicamenten.Add objMed
     
-    CollectionAddDistinctStringNotEmpty m_colGeneriek, objMed.Generiek
-    CollectionAddDistinctStringNotEmpty m_colVorm, objMed.Vorm
-    CollectionAddDistinctStringNotEmpty m_colSterkteEenheden, objMed.SterkteEenheid
-    CollectionAddDistinctStringNotEmpty m_colDosisEenheden, objMed.DoseEenheid
+    CollectionAddDistinctStringNotEmpty m_colGeneriek, objMed.Generic
+    CollectionAddDistinctStringNotEmpty m_colVorm, objMed.Shape
+    CollectionAddDistinctStringNotEmpty m_colSterkteEenheden, objMed.GenericUnit
+    CollectionAddDistinctStringNotEmpty m_colDosisEenheden, objMed.MultipleUnit
     
     For Each varRoute In objMed.GetRouteList()
         CollectionAddDistinctStringNotEmpty m_colRoutes, varRoute

@@ -16,6 +16,13 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private m_Pat As ClassPatientDetails
+Private m_Cancel As Boolean
+
+Public Function IsCanceled() As Boolean
+
+    IsCanceled = m_Cancel
+
+End Function
 
 Private Sub Validate(ByVal strText As String)
 
@@ -112,7 +119,8 @@ End Sub
 
 Private Sub cmdCancel_Click()
 
-    Me.Hide
+    m_Cancel = True
+    Hide
 
 End Sub
 

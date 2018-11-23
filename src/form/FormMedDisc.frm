@@ -204,7 +204,7 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
         SetToGPKMode True
         LoadMedicament True
         m_LoadGPK = True
-        cboGeneriek.Text = m_Med.Generiek
+        cboGeneriek.Text = m_Med.Generic
         m_LoadGPK = False
     End If
     
@@ -258,33 +258,33 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
 
     With m_Med
     
-        lblTherapieGroep.Caption = .TherapieGroep
-        lblSubGroep.Caption = .TherapieSubgroep
-        lblEtiket.Caption = .Etiket
+        lblTherapieGroep.Caption = .MainGroup
+        lblSubGroep.Caption = .SubGroup
+        lblEtiket.Caption = .Label
         lblProduct.Caption = .Product
         
         lblGPK.Caption = .GPK
         lblATC.Caption = .ATC
         
-        cboVorm.Value = .Vorm
+        cboVorm.Value = .Shape
         
-        txtSterkte.Text = .Sterkte
-        cboSterkteEenheid.Text = .SterkteEenheid
+        txtSterkte.Text = .GenericQuantity
+        cboSterkteEenheid.Text = .GenericUnit
         
         If blnReload Or cboRoute.Text = "" Then FillCombo cboRoute, .GetRouteList()
-        If blnReload Or cboIndicatie.Text = "" Then FillCombo cboIndicatie, .GetIndicatieList()
+        If blnReload Or cboIndicatie.Text = "" Then FillCombo cboIndicatie, .GetIndicationList()
         
-        If .DeelDose = 0 Then
+        If .MultipleQuantity = 0 Then
             chkDose.Value = False
             chkDose_Click
             
             Exit Sub
         End If
         
-        txtDeelDose.Text = .DeelDose
+        txtDeelDose.Text = .MultipleQuantity
         
         FillCombo cboDosisEenheid, GetDosisEenheden()
-        cboDosisEenheid.Text = .DoseEenheid
+        cboDosisEenheid.Text = .MultipleUnit
         
         If Not .GetFreqListString = vbNullString Then
             FillCombo cboFreq, .GetFreqList()
@@ -303,16 +303,16 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
         SetTextBoxNumericValue txtNormDose, .NormDose
         SetTextBoxNumericValue txtMinDose, .MinDose
         SetTextBoxNumericValue txtMaxDose, .MaxDose
-        SetTextBoxNumericValue txtAbsMax, .AbsDose
-        SetTextBoxNumericValue txtMaxPerDose, .MaxKeer
+        SetTextBoxNumericValue txtAbsMax, .AbsMaxDose
+        SetTextBoxNumericValue txtMaxPerDose, .MaxPerDose
         
         SetTextBoxNumericValue txtMaxConc, .MaxConc
         If .MaxConc > 0 And Not m_Conc Then cmdConc_Click
         
-        SetTextBoxNumericValue txtOplVol, .OplVol
-        SetTextBoxNumericValue txtTijd, .MinTijd
+        SetTextBoxNumericValue txtOplVol, .Solution
+        SetTextBoxNumericValue txtTijd, .MinInfusionTime
         
-        cboOplVlst.Value = .OplVlst
+        cboOplVlst.Value = .Solution
         
     End With
 
@@ -577,8 +577,8 @@ Private Sub ClearDose()
         m_Med.NormDose = 0
         m_Med.MinDose = 0
         m_Med.MaxDose = 0
-        m_Med.AbsDose = 0
-        m_Med.MaxKeer = 0
+        m_Med.AbsMaxDose = 0
+        m_Med.MaxPerDose = 0
         
         txtNormDose.Value = ""
         txtMinDose.Value = ""
@@ -686,7 +686,7 @@ Private Sub cmdQuery_Click()
 
     If Not m_Med.GPK = "" Then
         m_Med.Route = cboRoute.Text
-        m_Med.DoseEenheid = cboDosisEenheid.Text
+        m_Med.MultipleUnit = cboDosisEenheid.Text
         
         ModWeb.Web_RetrieveMedicationRules m_Med
         LoadMedicament False
@@ -726,20 +726,20 @@ Private Sub cmdOK_Click()
     
         Set m_Med = New ClassMedicatieDisc
         
-        m_Med.Generiek = cboGeneriek.Value
-        m_Med.Sterkte = StringToDouble(txtSterkte.Value)
-        m_Med.SterkteEenheid = cboSterkteEenheid.Value
-        m_Med.Vorm = cboVorm.Value
+        m_Med.Generic = cboGeneriek.Value
+        m_Med.GenericQuantity = StringToDouble(txtSterkte.Value)
+        m_Med.GenericUnit = cboSterkteEenheid.Value
+        m_Med.Shape = cboVorm.Value
         
     End If
     
     m_Med.Route = cboRoute.Value
-    m_Med.Indicatie = cboIndicatie.Value
+    m_Med.Indication = cboIndicatie.Value
     
     m_Med.HasDose = chkDose.Value
     If m_Med.HasDose Then
-        m_Med.DeelDose = StringToDouble(txtDeelDose.Value)
-        m_Med.DoseEenheid = cboDosisEenheid.Value
+        m_Med.MultipleQuantity = StringToDouble(txtDeelDose.Value)
+        m_Med.MultipleUnit = cboDosisEenheid.Value
         
         m_Med.Freq = cboFreq.Value
         m_Med.PerDose = chkPerDosis.Value
@@ -749,13 +749,13 @@ Private Sub cmdOK_Click()
         m_Med.NormDose = StringToDouble(txtNormDose.Value)
         m_Med.MinDose = StringToDouble(txtMinDose.Value)
         m_Med.MaxDose = StringToDouble(txtMaxDose.Value)
-        m_Med.AbsDose = StringToDouble(txtAbsMax.Value)
+        m_Med.AbsMaxDose = StringToDouble(txtAbsMax.Value)
         m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
         
-        m_Med.OplVlst = cboOplVlst.Value
+        m_Med.Solution = cboOplVlst.Value
         m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
-        m_Med.OplVol = StringToDouble(txtOplVol.Value)
-        m_Med.MinTijd = StringToDouble(txtTijd.Value)
+        m_Med.SolutionVolume = StringToDouble(txtOplVol.Value)
+        m_Med.MinInfusionTime = StringToDouble(txtTijd.Value)
     
     End If
     
@@ -1036,7 +1036,7 @@ Private Sub UserForm_Initialize()
     intC = Formularium_GetFormularium.MedicamentCount + 1
     
     For intN = 1 To intC
-        cboGeneriek.AddItem Formularium_GetFormularium.Item(intN).Generiek
+        cboGeneriek.AddItem Formularium_GetFormularium.Item(intN).Generic
     Next intN
     
     LoadFreq

@@ -1,11 +1,11 @@
 "$E$2: 	=Txt_Pat_AfspraakDat
 $I$2: 	=Txt_Pat_OpnameDat
 $K$2: 	=Txt_Pat_Gewicht
-$M$2: 	=Txt_Pat_Bed
+$N$2: 	=Txt_Pat_Bed
 $E$3: 	=Txt_Pat_FullName
 $I$3: 	=Txt_Pat_GeboorteDat
 $K$3: 	=Txt_Pat_Lengte
-$M$3: 	=""Versie: "" & FormatDateTimeSeconds(Var_Glob_Versie)
+$N$3: 	=""Versie: "" & Var_Glob_Versie
 $E$4: 	=Txt_Pat_PatNo
 $I$4: 	=Txt_Pat_Leeftijd
 $K$4: 	=Txt_Pat_Oppervlak

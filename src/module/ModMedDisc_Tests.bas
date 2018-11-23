@@ -90,15 +90,15 @@ Public Sub Test_MedDisc()
     intExit = 0
     For Each objMed In colMed
         For Each varRoute In objMed.GetRouteList()
-            If objMed.GetIndicatieList().Count > 0 Then
-                For Each varIndicatie In objMed.GetIndicatieList()
+            If objMed.GetIndicationList().Count > 0 Then
+                For Each varIndicatie In objMed.GetIndicationList()
                     intN = IIf(intN > constMedCount, 1, intN)
                     intTime = IIf(intTime > constMedTime, 1, intTime)
                     
                     strN = IntNToStrN(intN)
                     
                     objMed.Route = CStr(varRoute)
-                    objMed.Indicatie = CStr(varIndicatie)
+                    objMed.Indication = CStr(varIndicatie)
                             
                     ModMedDisc.MedDisc_SetMed objMed, strN
                     ModRange.SetRangeValue constFreq & strN, intTime
@@ -110,7 +110,7 @@ Public Sub Test_MedDisc()
                     intTime = intTime + 1
                     intC = intC + 1
                     
-                    ModProgress.SetJobPercentage objMed.Etiket, colMed.Count, intC
+                    ModProgress.SetJobPercentage objMed.Label, colMed.Count, intC
                     
                     If intN = 30 Then
                         intN = 30
@@ -124,7 +124,7 @@ Public Sub Test_MedDisc()
                 strN = IntNToStrN(intN)
                 
                 objMed.Route = CStr(varRoute)
-                objMed.Indicatie = vbNullString
+                objMed.Indication = vbNullString
                         
                 ModMedDisc.MedDisc_SetMed objMed, strN
                 ModRange.SetRangeValue constFreq & strN, intTime
@@ -136,7 +136,7 @@ Public Sub Test_MedDisc()
                 intTime = intTime + 1
                 intC = intC + 1
                 
-                ModProgress.SetJobPercentage objMed.Etiket, colMed.Count, intC
+                ModProgress.SetJobPercentage objMed.Label, colMed.Count, intC
                 
                 If intN = 30 Then
                     intN = 30

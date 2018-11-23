@@ -141,32 +141,32 @@ Public Sub Formularium_GetMedicamenten(objFormularium As ClassFormularium, ByVal
         With objMed
             
             .GPK = objFormRange.Cells(intN, constGPKIndx).Value2
-            .TherapieGroep = objFormRange.Cells(intN, constHoofdGroepIndx).Value2
-            .TherapieSubgroep = objFormRange.Cells(intN, constSubGroepIndx).Value2
+            .MainGroup = objFormRange.Cells(intN, constHoofdGroepIndx).Value2
+            .SubGroup = objFormRange.Cells(intN, constSubGroepIndx).Value2
             
             .ATC = objFormRange.Cells(intN, constATCIndx).Value2
-            .Generiek = objFormRange.Cells(intN, constGeneriekIndx).Value2
+            .Generic = objFormRange.Cells(intN, constGeneriekIndx).Value2
             .Product = objFormRange.Cells(intN, constProductIndx).Value2
-            .Vorm = objFormRange.Cells(intN, constVormIndx).Value2
-            .Sterkte = objFormRange.Cells(intN, constSterkteIndx).Value2
-            .SterkteEenheid = objFormRange.Cells(intN, constEenheidIndx).Value2
-            .Etiket = objFormRange.Cells(intN, constEtiketIndx).Value2
-            .DeelDose = objFormRange.Cells(intN, constStandDoseIndx).Value2
-            .DoseEenheid = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
+            .Shape = objFormRange.Cells(intN, constVormIndx).Value2
+            .GenericQuantity = objFormRange.Cells(intN, constSterkteIndx).Value2
+            .GenericUnit = objFormRange.Cells(intN, constEenheidIndx).Value2
+            .Label = objFormRange.Cells(intN, constEtiketIndx).Value2
+            .MultipleQuantity = objFormRange.Cells(intN, constStandDoseIndx).Value2
+            .MultipleUnit = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
             
             .SetRouteList objFormRange.Cells(intN, constRouteIndx).Value2
-            .SetIndicatieList objFormRange.Cells(intN, constIndicatiesIndx).Value2
+            .SetIndicationList objFormRange.Cells(intN, constIndicatiesIndx).Value2
             .SetFreqList objFormRange.Cells(intN, constFreqIndx).Value2
             
             .NormDose = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_DoseIndx, constNICU_DoseIndx)).Value2
             .MinDose = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OnderIndx, constNICU_OnderIndx)).Value2
             .MaxDose = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_BovenIndx, constNICU_BovenIndx)).Value2
-            .AbsDose = objFormRange.Cells(intN, constMaxDoseIndx).Value2
+            .AbsMaxDose = objFormRange.Cells(intN, constMaxDoseIndx).Value2
             
             .MaxConc = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_MaxConcIndx, constNICU_MaxConcIndx)).Value2
-            .OplVlst = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OplVlstIndx, constNICU_OplVlstIndx)).Value2
-            .OplVol = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OplVolIndx, constNICU_OplVolIndx)).Value2
-            .MinTijd = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_MinTijdIndx, constNICU_MinTijdIndx)).Value2
+            .Solution = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OplVlstIndx, constNICU_OplVlstIndx)).Value2
+            .SolutionVolume = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_OplVolIndx, constNICU_OplVolIndx)).Value2
+            .MinInfusionTime = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_MinTijdIndx, constNICU_MinTijdIndx)).Value2
         
         End With
                 
@@ -235,21 +235,21 @@ Public Sub Formularium_GetMedDiscConfig(objFormularium As ClassFormConfig, ByVal
         
         With objMed
             .GPK = objFormRange.Cells(intN, constGPKIndx).Value2
-            .TherapieGroep = objFormRange.Cells(intN, constHoofdGroepIndx).Value2
-            .TherapieSubgroep = objFormRange.Cells(intN, constSubGroepIndx).Value2
+            .MainGroup = objFormRange.Cells(intN, constHoofdGroepIndx).Value2
+            .SubGroup = objFormRange.Cells(intN, constSubGroepIndx).Value2
             
             .ATC = objFormRange.Cells(intN, constATCIndx).Value2
-            .Generiek = objFormRange.Cells(intN, constGeneriekIndx).Value2
+            .Generic = objFormRange.Cells(intN, constGeneriekIndx).Value2
             .Product = objFormRange.Cells(intN, constProductIndx).Value2
-            .Vorm = objFormRange.Cells(intN, constVormIndx).Value2
-            .Sterkte = objFormRange.Cells(intN, constSterkteIndx).Value2
-            .SterkteEenheid = objFormRange.Cells(intN, constEenheidIndx).Value2
-            .Etiket = objFormRange.Cells(intN, constEtiketIndx).Value2
-            .DeelDose = objFormRange.Cells(intN, constStandDoseIndx).Value2
-            .DoseEenheid = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
+            .Shape = objFormRange.Cells(intN, constVormIndx).Value2
+            .GenericQuantity = objFormRange.Cells(intN, constSterkteIndx).Value2
+            .GenericUnit = objFormRange.Cells(intN, constEenheidIndx).Value2
+            .Label = objFormRange.Cells(intN, constEtiketIndx).Value2
+            .MultipleQuantity = objFormRange.Cells(intN, constStandDoseIndx).Value2
+            .MultipleUnit = objFormRange.Cells(intN, constDoseEenheidIndx).Value2
             
             .SetRouteList objFormRange.Cells(intN, constRouteIndx).Value2
-            .SetIndicatieList objFormRange.Cells(intN, constIndicatiesIndx).Value2
+            .SetIndicationList objFormRange.Cells(intN, constIndicatiesIndx).Value2
             .SetFreqList objFormRange.Cells(intN, constFreqIndx).Value2
             
             .NeoNormDose = objFormRange.Cells(intN, constNICU_DoseIndx).Value2
@@ -260,17 +260,17 @@ Public Sub Formularium_GetMedDiscConfig(objFormularium As ClassFormConfig, ByVal
             .PedMinDose = objFormRange.Cells(intN, constPICU_OnderIndx).Value2
             .PedMaxDose = objFormRange.Cells(intN, constPICU_BovenIndx).Value2
             
-            .AbsDose = objFormRange.Cells(intN, constMaxDoseIndx).Value2
+            .PedAbsMaxDose = objFormRange.Cells(intN, constMaxDoseIndx).Value2
             
             .PedMaxConc = objFormRange.Cells(intN, constPICU_MaxConcIndx).Value2
-            .PedOplVol = objFormRange.Cells(intN, constPICU_OplVolIndx).Value2
-            .PedOplVlst = objFormRange.Cells(intN, constPICU_OplVlstIndx).Value2
-            .PedMinTijd = objFormRange.Cells(intN, constPICU_MinTijdIndx).Value2
+            .PedSolutionVolume = objFormRange.Cells(intN, constPICU_OplVolIndx).Value2
+            .PedSolution = objFormRange.Cells(intN, constPICU_OplVlstIndx).Value2
+            .PedMinInfusionTime = objFormRange.Cells(intN, constPICU_MinTijdIndx).Value2
             
             .NeoMaxConc = objFormRange.Cells(intN, constNICU_MaxConcIndx).Value2
-            .NeoOplVol = objFormRange.Cells(intN, constNICU_OplVolIndx).Value2
-            .NeoOplVlst = objFormRange.Cells(intN, constNICU_OplVlstIndx).Value2
-            .NeoMinTijd = objFormRange.Cells(intN, constNICU_MinTijdIndx).Value2
+            .NeoSoutionVolume = objFormRange.Cells(intN, constNICU_OplVolIndx).Value2
+            .NeoSolution = objFormRange.Cells(intN, constNICU_OplVlstIndx).Value2
+            .NeoMinInfustionTime = objFormRange.Cells(intN, constNICU_MinTijdIndx).Value2
             
         End With
         
@@ -340,11 +340,11 @@ Public Sub Formularium_SaveMedDiscConfig(ByVal blnShowProgress As Boolean)
         With objMed
             
             If Not Trim(LCase(objFormRange.Cells(intN, constGeneriekIndx).Value2)) Then
-                objFormRange.Cells(intN, constGeneriekIndx).Value2 = objMed.Generiek
+                objFormRange.Cells(intN, constGeneriekIndx).Value2 = objMed.Generic
             End If
             
-            If .DeelDose > 0 Then objFormRange.Cells(intN, constStandDoseIndx).Value2 = .DeelDose
-            If Not .DoseEenheid = vbNullString Then objFormRange.Cells(intN, constDoseEenheidIndx).Value2 = .DoseEenheid
+            If .MultipleQuantity > 0 Then objFormRange.Cells(intN, constStandDoseIndx).Value2 = .MultipleQuantity
+            If Not .MultipleUnit = vbNullString Then objFormRange.Cells(intN, constDoseEenheidIndx).Value2 = .MultipleUnit
             
             If Not .GetFreqListString() = vbNullString Then objFormRange.Cells(intN, constFreqIndx).Value2 = .GetFreqListString()
             
@@ -356,17 +356,17 @@ Public Sub Formularium_SaveMedDiscConfig(ByVal blnShowProgress As Boolean)
             If .PedMinDose > 0 Then objFormRange.Cells(intN, constPICU_OnderIndx).Value2 = .PedMinDose
             If .PedMaxDose > 0 Then objFormRange.Cells(intN, constPICU_BovenIndx).Value2 = .PedMaxDose
             
-            If .AbsDose > 0 Then objFormRange.Cells(intN, constMaxDoseIndx).Value2 = .AbsDose
+            If .PedAbsMaxDose > 0 Then objFormRange.Cells(intN, constMaxDoseIndx).Value2 = .PedAbsMaxDose
             
             If .PedMaxConc > 0 Then objFormRange.Cells(intN, constPICU_MaxConcIndx).Value2 = .PedMaxConc
-            If .PedOplVol > 0 Then objFormRange.Cells(intN, constPICU_OplVolIndx).Value2 = .PedOplVol
-            If Not .PedOplVlst = vbNullString Then objFormRange.Cells(intN, constPICU_OplVlstIndx).Value2 = .PedOplVlst
-            If .PedMinTijd > 0 Then objFormRange.Cells(intN, constPICU_MinTijdIndx).Value2 = .PedMinTijd
+            If .PedSolutionVolume > 0 Then objFormRange.Cells(intN, constPICU_OplVolIndx).Value2 = .PedSolutionVolume
+            If Not .PedSolution = vbNullString Then objFormRange.Cells(intN, constPICU_OplVlstIndx).Value2 = .PedSolution
+            If .PedMinInfusionTime > 0 Then objFormRange.Cells(intN, constPICU_MinTijdIndx).Value2 = .PedMinInfusionTime
         
             If .NeoMaxConc > 0 Then objFormRange.Cells(intN, constNICU_MaxConcIndx).Value2 = .NeoMaxConc
-            If .NeoOplVol > 0 Then objFormRange.Cells(intN, constNICU_OplVolIndx).Value2 = .NeoOplVol
-            If Not .NeoOplVlst = vbNullString Then objFormRange.Cells(intN, constNICU_OplVlstIndx).Value2 = .NeoOplVlst
-            If .NeoMinTijd > 0 Then objFormRange.Cells(intN, constNICU_MinTijdIndx).Value2 = .NeoMinTijd
+            If .NeoSoutionVolume > 0 Then objFormRange.Cells(intN, constNICU_OplVolIndx).Value2 = .NeoSoutionVolume
+            If Not .NeoSolution = vbNullString Then objFormRange.Cells(intN, constNICU_OplVlstIndx).Value2 = .NeoSolution
+            If .NeoMinInfustionTime > 0 Then objFormRange.Cells(intN, constNICU_MinTijdIndx).Value2 = .NeoMinInfustionTime
         
         End With
         

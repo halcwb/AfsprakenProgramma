@@ -566,4 +566,5 @@ $S$27: 	=SUM(S5:S19)+SUM(S21:S25)
 $T$27: 	=SUM(T5:T19)+SUM(T21:T25)
 $U$27: 	=SUM(U5:U19)+SUM(U21:U25)
 $AD$29: 	=IF(_Ped_MedIV_Opm="""","""",""verw"")
+$J$41: 	=INDEX(Tbl_Ped_BerMedCont,1,3)
 "

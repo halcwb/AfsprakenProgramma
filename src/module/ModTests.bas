@@ -162,7 +162,7 @@ Private Sub Test_CanReadFormulariumDb()
     AssertEqual intCount, objForm.MedicamentCount, "Medicament count should be: " + CStr(intCount), Not blnDontDisplay
     
     Set objMed = objForm.Item(100)
-    AssertTrue objMed.Generiek <> vbNullString, "Medicament should have a generic name", Not blnDontDisplay
+    AssertTrue objMed.Generic <> vbNullString, "Medicament should have a generic name", Not blnDontDisplay
     
 End Sub
 
@@ -325,3 +325,11 @@ Private Sub DoubleToString()
     ModMessage.ShowMsgBoxInfo CStr(CDec(0.5))
 
 End Sub
+
+Private Sub SplitToInt()
+
+    ModMessage.ShowMsgBoxInfo CInt(Split("1 : 12-11-2017")(0))
+
+End Sub
+
+

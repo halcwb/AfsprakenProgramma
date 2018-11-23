@@ -190,7 +190,7 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
         SetToGPKMode True
         LoadMedicament
         m_LoadGPK = True
-        cboGeneriek.Text = m_Med.Generiek
+        cboGeneriek.Text = m_Med.Generic
         m_LoadGPK = False
     End If
     
@@ -230,27 +230,27 @@ Private Sub LoadMedicament()
 
     With m_Med
     
-        lblTherapieGroep.Caption = .TherapieGroep
-        lblSubGroep.Caption = .TherapieSubgroep
-        lblEtiket.Caption = .Etiket
+        lblTherapieGroep.Caption = .MainGroup
+        lblSubGroep.Caption = .SubGroup
+        lblEtiket.Caption = .Label
         lblProduct.Caption = .Product
         
         lblGPK.Caption = .GPK
         lblATC.Caption = .ATC
         
         txtSynon.Value = cboGeneriek.Value
-        cboVorm.Value = .Vorm
+        cboVorm.Value = .Shape
         
-        txtSterkte.Text = .Sterkte
-        cboSterkteEenheid.Text = .SterkteEenheid
+        txtSterkte.Text = .GenericQuantity
+        cboSterkteEenheid.Text = .GenericUnit
         
-        txtDeelDose.Text = .DeelDose
+        txtDeelDose.Text = .MultipleQuantity
         
         FillCombo cboDosisEenheid, GetDosisEenheden()
-        cboDosisEenheid.Text = .DoseEenheid
+        cboDosisEenheid.Text = .MultipleUnit
         
         FillListBox lbxRoute, .GetRouteList()
-        FillListBox lbxIndicatie, .GetIndicatieList()
+        FillListBox lbxIndicatie, .GetIndicationList()
         
         LoadFreq
         If Not .GetFreqListString = vbNullString Then
@@ -270,12 +270,12 @@ Private Sub LoadMedicament()
         SetTextBoxNumericValue txtPedMinDose, .PedMinDose
         SetTextBoxNumericValue txtPedMaxDose, .PedMaxDose
         
-        SetTextBoxNumericValue txtAbsMax, .AbsDose
+        SetTextBoxNumericValue txtAbsMax, .PedAbsMaxDose
         
-        cboPedOplVlst.Value = .PedOplVlst
+        cboPedOplVlst.Value = .PedSolution
         SetTextBoxNumericValue txtPedConc, .PedMaxConc
-        SetTextBoxNumericValue txtPedVol, .PedOplVol
-        SetTextBoxNumericValue txtPedTijd, .PedMinTijd
+        SetTextBoxNumericValue txtPedVol, .PedSolutionVolume
+        SetTextBoxNumericValue txtPedTijd, .PedMinInfusionTime
         
     End With
 
@@ -480,7 +480,7 @@ Private Sub cmdOK_Click()
         Else
             Set objConfig = Formularium_GetFormConfig.GPK(m_Med.GPK)
             SetConfig objConfig
-            cboGeneriek.List(cboGeneriek.ListIndex) = objConfig.Generiek
+            cboGeneriek.List(cboGeneriek.ListIndex) = objConfig.Generic
         End If
     Next
     
@@ -503,11 +503,11 @@ Private Sub SetConfig(objConfig As ClassMedDiscConfig)
 
     blnIsPed = MetaVision_IsPediatrie()
     
-    objConfig.Generiek = txtSynon.Value
-    txtSynon.Value = objConfig.Generiek
+    objConfig.Generic = txtSynon.Value
+    txtSynon.Value = objConfig.Generic
     
-    objConfig.DeelDose = StringToDouble(txtDeelDose.Value)
-    objConfig.DoseEenheid = cboDosisEenheid.Value
+    objConfig.MultipleQuantity = StringToDouble(txtDeelDose.Value)
+    objConfig.MultipleUnit = cboDosisEenheid.Value
 
     objConfig.SetFreqList ListBoxToString(lbxFreq, False)
     objConfig.NeoNormDose = StringToDouble(txtNeoNormDose.Value)
@@ -518,29 +518,29 @@ Private Sub SetConfig(objConfig As ClassMedDiscConfig)
     objConfig.PedMinDose = StringToDouble(txtPedMinDose.Value)
     objConfig.PedMaxDose = StringToDouble(txtPedMaxDose.Value)
     
-    objConfig.AbsDose = StringToDouble(txtAbsMax.Value)
+    objConfig.PedAbsMaxDose = StringToDouble(txtAbsMax.Value)
     
-    objConfig.PedOplVlst = cboPedOplVlst.Value
+    objConfig.PedSolution = cboPedOplVlst.Value
     objConfig.PedMaxConc = StringToDouble(txtPedConc.Value)
-    objConfig.PedOplVol = StringToDouble(txtPedVol.Value)
-    objConfig.PedMinTijd = StringToDouble(txtPedTijd.Value)
+    objConfig.PedSolutionVolume = StringToDouble(txtPedVol.Value)
+    objConfig.PedMinInfusionTime = StringToDouble(txtPedTijd.Value)
     
     Set objMed = Formularium_GetFormularium.GPK(objConfig.GPK)
     
-    objMed.Generiek = objConfig.Generiek
-    objMed.DeelDose = objConfig.DeelDose
-    objMed.DoseEenheid = objConfig.DoseEenheid
+    objMed.Generic = objConfig.Generic
+    objMed.MultipleQuantity = objConfig.MultipleQuantity
+    objMed.MultipleUnit = objConfig.MultipleUnit
 
     objMed.SetFreqList objConfig.GetFreqListString
     objMed.NormDose = IIf(blnIsPed, objConfig.PedNormDose, objConfig.NeoNormDose)
     objMed.MinDose = IIf(blnIsPed, objConfig.PedMinDose, objConfig.NeoMinDose)
     objMed.MaxDose = IIf(blnIsPed, objConfig.PedMaxDose, objConfig.NeoMaxDose)
             
-    objMed.AbsDose = objConfig.AbsDose
+    objMed.AbsMaxDose = objConfig.PedAbsMaxDose
     
-    objMed.OplVlst = objConfig.PedOplVlst
+    objMed.Solution = objConfig.PedSolution
     objMed.MaxConc = objConfig.PedMaxConc
-    objMed.MinTijd = objConfig.PedMinTijd
+    objMed.MinInfusionTime = objConfig.PedMinInfusionTime
 
 End Sub
 
@@ -573,7 +573,7 @@ Private Function Matches(objMed As ClassMedDiscConfig) As Boolean
     Dim intN As Integer
     Dim intC As Integer
     
-    blnMatch = objMed.Generiek = cboGeneriek.Value
+    blnMatch = objMed.Generic = cboGeneriek.Value
     
     If blnMatch Then
         For Each varRoute In objMed.GetRouteList
@@ -854,7 +854,7 @@ Private Sub UserForm_Initialize()
     intC = Formularium_GetFormConfig.MedicamentCount + 1
     
     For intN = 1 To intC
-        cboGeneriek.AddItem Formularium_GetFormConfig.Item(intN).Generiek
+        cboGeneriek.AddItem Formularium_GetFormConfig.Item(intN).Generic
     Next intN
        
     SetTabOrder2 ' GetTabControls()

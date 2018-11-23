@@ -323,7 +323,7 @@ Public Sub Patient_EnterDetails()
     frmPat.SetPatient objPat
     frmPat.Show
     
-    WritePatientDetails objPat
+    If Not frmPat.IsCanceled Then WritePatientDetails objPat
 
 End Sub
 
@@ -557,7 +557,6 @@ Public Sub Patient_SavePatient()
     End If
 
     LogActionEnd strAction
-    Database_LogAction "Save patient"
     
     Exit Sub
     
@@ -569,6 +568,23 @@ ErrorHandler:
     ModLog.LogError Err, strAction
 
 End Sub
+
+Private Function GetVersionWarningMsg(ByVal intCurrent As Integer, ByVal intLatest As Integer) As String
+
+    Dim strMsg As String
+
+    strMsg = strMsg & "De afspraken zijn inmiddels gewijzig!" & vbNewLine
+    strMsg = strMsg & vbNewLine
+    strMsg = strMsg & "De huidige versie is: " & intCurrent & vbNewLine
+    strMsg = strMsg & "De laatst opgeslagen versie is: " & intLatest & vbNewLine
+    strMsg = strMsg & vbNewLine
+    strMsg = strMsg & "Wilt u toch de afspraken opslaan?" & vbNewLine
+    strMsg = strMsg & vbNewLine
+    strMsg = strMsg & "DEZE VERSIE WORDT DAN DE LAATSTE (ACTUELE) VERSIE!!"
+
+    GetVersionWarningMsg = strMsg
+
+End Function
 
 Private Function GetDateWarningMsg(ByVal strCurrent, ByVal strLatest) As String
 
@@ -595,9 +611,10 @@ End Sub
 
 Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Boolean
 
-    Dim strLatest As String
-    Dim strCurrent As String
+    Dim intLatest As Integer
+    Dim intCurrent As Integer
     Dim strPrescriber As String
+    Dim strHospNum As String
     Dim strMsg As String
     Dim intC As Integer
     Dim intR As Integer
@@ -610,19 +627,17 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     ' Guard for invalid bed name
     ' If Not IsValidBed(strBed) Then GoTo SaveBedToDatabaseError
     
-    strCurrent = Trim(ModBed.GetDatabaseVersie())
-    strLatest = Trim(ModDatabase.Database_GetLatestVersion(ModPatient.Patient_GetHospitalNumber()))
-    If Not strLatest = vbNullString Then
-        strLatest = ModDate.FormatDateTimeSeconds(CDate(strLatest))
-    End If
+    intCurrent = ModBed.GetDatabaseVersie()
+    strHospNum = Patient_GetHospitalNumber()
+    intLatest = ModDatabase.Database_GetLatestPrescriptionVersion(strHospNum)
             
-    If Not strLatest = vbNullString And Not strLatest = strCurrent Then
+    If Not intLatest = 0 And Not intLatest = intCurrent Then
         If blnShowProgress Then
             strProg = FormProgress.Caption
             ModProgress.FinishProgress
         End If
     
-        strMsg = GetDateWarningMsg(strCurrent, strLatest)
+        strMsg = GetVersionWarningMsg(intCurrent, intLatest)
         varReply = ModMessage.ShowMsgBoxYesNo(strMsg)
         
         If blnShowProgress Then ModProgress.StartProgress strProg
@@ -636,12 +651,11 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     ModDatabase.Database_SavePatient
     ModDatabase.Database_SavePrescriber
     
-    strLatest = ModDate.FormatDateTimeSeconds(Now())
     strPrescriber = ModMetaVision.MetaVision_GetUserLogin()
     
-    ModDatabase.InitDatabase
-    ModDatabase.Database_SaveData strLatest, ModPatient.Patient_GetHospitalNumber(), strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
-        
+    ModDatabase.Database_SaveData strHospNum, strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
+    ModBed.SetDatabaseVersie Database_GetLatestPrescriptionVersion(strHospNum)
+    
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
         
@@ -686,7 +700,7 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     Dim blnAll As Boolean
     Dim blnNeo As Boolean
     Dim strHospNum As String
-    Dim strVersion As String
+    Dim intVersion As Integer
     
     Dim objPat As ClassPatientDetails
     
@@ -698,8 +712,8 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
     strHospNum = Patient_GetHospitalNumber()
     strHospNum = IIf(strHospNum = vbNullString, objPat.HospitalNumber, strHospNum)
-    strVersion = ModBed.GetDatabaseVersie()
-    ModBed.SetDatabaseVersie vbNullString
+    intVersion = ModBed.GetDatabaseVersie()
+    ModBed.SetDatabaseVersie 0
     If blnAsk Then
         If blnShowProgress Then
             strTitle = FormProgress.Caption
@@ -709,17 +723,17 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
         If Patient_OpenDatabaseList("Selecteer een patient") Then
             If Patient_GetHospitalNumber() = vbNullString Then  ' No patient was selected
                 Patient_SetHospitalNumber strHospNum  ' Put back the old hospital number
-                SetDatabaseVersie strVersion         ' Put back current version
+                SetDatabaseVersie intVersion         ' Put back current version
                 Exit Sub                             ' And exit sub
             Else
                 strHospNum = Patient_GetHospitalNumber()
-                strVersion = ModBed.GetDatabaseVersie()
+                intVersion = ModBed.GetDatabaseVersie()
                 
                 If blnShowProgress Then ModProgress.StartProgress strTitle
             End If
         Else                                      ' Patientlist has been canceled so do nothing
             Patient_SetHospitalNumber strHospNum   ' Put back the old hospital number
-            SetDatabaseVersie strVersion          ' Put back current version
+            SetDatabaseVersie intVersion          ' Put back current version
             
             If blnShowProgress Then ModProgress.FinishProgress
             Exit Sub
@@ -728,7 +742,7 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
     If Not strHospNum = vbNullString Then
         Patient_SetHospitalNumber strHospNum
-        GetPatientDataFromDatabase strHospNum, strVersion
+        GetPatientDataFromDatabase strHospNum, intVersion
     End If
         
     ModDatabase.Database_LogAction "Open Patient"
@@ -750,7 +764,7 @@ Private Sub Test_OpenPatient()
 
 End Sub
 
-Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVal strVersion As String = "")
+Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVal intVersion As Integer = 0)
     
     On Error GoTo GetPatientDataFromDatabaseError
 
@@ -769,10 +783,10 @@ Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVa
             
     ModPatient.Patient_ClearData vbNullString, False, True
     
-    If strVersion = vbNullString Then
+    If intVersion = 0 Then
         ModDatabase.Database_GetPatientData strHospNum
     Else
-        ModDatabase.Database_GetPatientDataForVersion strHospNum, strVersion
+        ModDatabase.Database_GetPatientDataForVersion strHospNum, intVersion
     End If
     ModRange.SetRangeValue constHospNum, strHospNum 'Have to set hospitalnumber if leading zero got lost from transfer from database
     

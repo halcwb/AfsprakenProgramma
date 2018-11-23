@@ -18,6 +18,7 @@ Private Const constUnitIndx As Integer = 2
 Private Const constFactorIndex As Integer = 23
 
 
+
 ' Copy paste function cannot be reused because of private clear method
 Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
 
@@ -872,7 +873,7 @@ Private Sub SetStandByDose(ByVal intN As Integer)
     intMed = ModRange.GetRangeValue(constMedIVKeuze & strN, vbNullString)
     strMed = ModExcel.Excel_Index(constTblMed, intMed, 1)
     
-    If ModString.ContainsCaseInsensitive(strMed, "EPI") Then Exit Sub
+    If strMed = vbNullString Or ModString.ContainsCaseInsensitive(strMed, "EPI") Then Exit Sub
     
     strEenheid = ModExcel.Excel_Index("Tbl_Ped_BerMedCont", intN, 38)
     

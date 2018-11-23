@@ -1,11 +1,11 @@
 Attribute VB_Name = "ModAdmin"
 Option Explicit
 
-Private Const constNeoMedContTbl As String = "Tbl_Admin_NeoMedCont"
-Private Const constGlobParEntTbl As String = "Tbl_Admin_ParEnt"
-Private Const constPedMedContTbl As String = "Tbl_Admin_PedMedCont"
+Public Const constNeoMedContTbl As String = "Tbl_Admin_NeoMedCont"
+Public Const constGlobParEntTbl As String = "Tbl_Admin_ParEnt"
+Public Const constPedMedContTbl As String = "Tbl_Admin_PedMedCont"
 
-Private Const constNeoMedVerdunning As String = "Var_Neo_MedCont_VerdunningTekst"
+Public Const constNeoMedVerdunning As String = "Var_Neo_MedCont_VerdunningTekst"
 
 Private Function CheckPassword() As Boolean
     
@@ -141,7 +141,7 @@ End Sub
 
 Public Sub Admin_TblPedMedCont()
 
-    SelectAdminSheet shtPedTblMedIV, ModRange.GetRange(constPedMedContTbl), "PedMedCont"
+    Admin_ImportContPedContMed
 
 End Sub
 
@@ -189,12 +189,13 @@ Public Function Admin_GetNeoMedCont() As Collection
         objMed.MaxConcentration = objTable.Cells(intN, 10)
         objMed.Solution = objTable.Cells(intN, 11)
         objMed.DoseAdvice = objTable.Cells(intN, 12)
-        objMed.Solution = objTable.Cells(intN, 13)
+        objMed.SolutionVolume = objTable.Cells(intN, 13)
         objMed.DripQuantity = objTable.Cells(intN, 14)
         objMed.Product = objTable.Cells(intN, 15)
         objMed.ShelfLife = objTable.Cells(intN, 16)
         objMed.ShelfCondition = objTable.Cells(intN, 17)
         objMed.PreparationText = objTable.Cells(intN, 18)
+        objMed.DilutionText = ModRange.GetRangeValue(constNeoMedVerdunning, vbNullString)
         
         objCol.Add objMed, objMed.Generic
     Next
@@ -325,5 +326,54 @@ Public Sub Admin_SetParEnt(objParEntCol As Collection)
     
     ModProgress.FinishProgress
     
+End Sub
+
+Public Sub Admin_ImportContPedContMed()
+
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim objDst As Range
+    Dim lngErr As Long
+    Dim strFile As String
+    Dim intVersion As Integer
+    Dim strMsg As String
+    Dim vbAnswer
+        
+    Dim objMed As ClassNeoMedCont
+    
+    On Error GoTo HandleError
+    
+    strMsg = "Kies een Excel bestand met de Pediatrie configuratie voor continue medicatie"
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    strFile = ModFile.GetFileWithDialog
+        
+    strMsg = "Dit bestand importeren?" & vbNewLine & strFile
+    If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
+       
+    Application.DisplayAlerts = False
+        
+    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+    Set objSrc = objConfigWbk.Sheets(constPedMedContTbl).Range(constPedMedContTbl)
+    Set objDst = ModRange.GetRange(constPedMedContTbl)
+        
+    Sheet_CopyRangeFormulaToDst objSrc, objDst
+    Database_SavePedConfigMedCont
+    
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    
+    intVersion = Database_GetLatestConfigMedContVersion("Pediatrie")
+    strMsg = "De meest recente versie van de pediatrie configuratie van continue medicatie is nu: " & intVersion
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    Exit Sub
+    
+HandleError:
+
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not import: " & strFile
+
 End Sub
 

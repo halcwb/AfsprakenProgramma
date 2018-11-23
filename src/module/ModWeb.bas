@@ -32,7 +32,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     
     strGPK = objMed.GPK
     strRTE = objMed.Route
-    strUNT = objMed.DoseEenheid
+    strUNT = objMed.MultipleUnit
     
     If strRTE = vbNullString Then
         ModMessage.ShowMsgBoxInfo "Geef de route op"
@@ -74,7 +74,7 @@ Private Sub Test_GetJson()
     Set objResponse = objClient.GetJson("/request?bty=2017&btm=1&btd=1&wth=10&hgt=70&gpk=9504&rte=or")
     
     ProcessJson objResponse, objMed
-    ModMessage.ShowMsgBoxInfo objMed.Etiket
+    ModMessage.ShowMsgBoxInfo objMed.Label
 
 End Sub
 
@@ -124,17 +124,17 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
     Set objDict = JsonConverter.ParseJson(strJson)
         
     objMed.ATC = NotEmpty(objMed.ATC, objDict("atc"))
-    objMed.TherapieGroep = NotEmpty(objMed.TherapieGroep, objDict("therapyGroup"))
-    objMed.TherapieSubgroep = NotEmpty(objMed.TherapieSubgroep, objDict("therapySubGroup"))
-    objMed.Generiek = NotEmpty(objMed.Generiek, objDict("generic"))
+    objMed.MainGroup = NotEmpty(objMed.MainGroup, objDict("therapyGroup"))
+    objMed.SubGroup = NotEmpty(objMed.SubGroup, objDict("therapySubGroup"))
+    objMed.Generic = NotEmpty(objMed.Generic, objDict("generic"))
     objMed.Product = NotEmpty(objMed.Product, objDict("tradeProduct"))
-    objMed.Vorm = NotEmpty(objMed.Vorm, objDict("shape"))
-    objMed.Etiket = NotEmpty(objMed.Etiket, objDict("label"))
-    objMed.Sterkte = NotEmpty(objMed.Sterkte, objDict("concentration"))
-    objMed.SterkteEenheid = NotEmpty(objMed.SterkteEenheid, objDict("concentrationUnit"))
-    objMed.DeelDose = NotEmpty(objMed.DeelDose, objDict("multiple"))
-    objMed.DoseEenheid = NotEmpty(objMed.DoseEenheid, objDict("multipleUnit"))
-    objMed.Indicatie = NotEmpty(objMed.Indicatie, objDict("indication"))
+    objMed.Shape = NotEmpty(objMed.Shape, objDict("shape"))
+    objMed.Label = NotEmpty(objMed.Label, objDict("label"))
+    objMed.GenericQuantity = NotEmpty(objMed.GenericQuantity, objDict("concentration"))
+    objMed.GenericUnit = NotEmpty(objMed.GenericUnit, objDict("concentrationUnit"))
+    objMed.MultipleQuantity = NotEmpty(objMed.MultipleQuantity, objDict("multiple"))
+    objMed.MultipleUnit = NotEmpty(objMed.MultipleUnit, objDict("multipleUnit"))
+    objMed.Indication = NotEmpty(objMed.Indication, objDict("indication"))
         
     dblVal = objMed.NormDose
     objMed.NormDose = NotEmpty(objMed.NormDose, objDict("normDose"))
@@ -154,8 +154,8 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
         objMed.PerM2 = objDict("perM2")
     End If
     
-    objMed.AbsDose = NotEmpty(objMed.AbsDose, objDict("absMaxTotal"))
-    objMed.MaxKeer = NotEmpty(objMed.MaxKeer, objDict("absMaxPerDose"))
+    objMed.AbsMaxDose = NotEmpty(objMed.AbsMaxDose, objDict("absMaxTotal"))
+    objMed.MaxPerDose = NotEmpty(objMed.MaxPerDose, objDict("absMaxPerDose"))
 
     If objMed.Freq = "" Then objMed.SetFreqList objDict("frequency")
     If objMed.Route = "" Then objMed.SetRouteList objDict("route")

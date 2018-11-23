@@ -11,18 +11,18 @@ Option Explicit
 
 Private m_GPK As String
 Private m_ATC As String
-Private m_TherapieGroep As String
-Private m_TherapieSubgroep As String
-Private m_Generiek As String
+Private m_MainGroup As String
+Private m_SubGroup As String
+Private m_Generic As String
 Private m_Product As String
-Private m_Vorm As String
-Private m_Etiket As String
-Private m_Sterkte As Double
-Private m_SterkteEenheid As String
-Private m_DeelDose As Double
-Private m_DoseEenheid As String
+Private m_Shape As String
+Private m_Label As String
+Private m_GenericQuantity As Double
+Private m_GenericUnit As String
+Private m_MultipleQuantity As Double
+Private m_MultipleUnit As String
 Private m_Route As String
-Private m_Indicatie As String
+Private m_Indication As String
 Private m_Freq As String
 Private m_HasDose As Boolean
 Private m_PerDose As Boolean
@@ -33,14 +33,14 @@ Private m_KeerDose As Double
 Private m_NormDose As Double
 Private m_MinDose As Double
 Private m_MaxDose As Double
-Private m_AbsDose As Double
-Private m_MaxKeer As Double
+Private m_AbsMaxDose As Double
+Private m_MaxPerDose As Double
 Private m_MaxConc As Double
-Private m_OplVlst As String
-Private m_OplVol As Double
-Private m_MinTijd As Integer
+Private m_Solution As String
+Private m_SolutionVolume As Double
+Private m_MinInfusionTime As Integer
 
-Private m_IndicatieList As Collection
+Private m_IndicationList As Collection
 Private m_RouteList As Collection
 Private m_FreqList As Collection
 
@@ -118,15 +118,15 @@ Public Property Let NormDose(ByVal dblDose As Double)
 
 End Property
 
-Public Property Get MaxKeer() As Double
+Public Property Get MaxPerDose() As Double
 
-    MaxKeer = m_MaxKeer
+    MaxPerDose = m_MaxPerDose
 
 End Property
 
-Public Property Let MaxKeer(ByVal dblDose As Double)
+Public Property Let MaxPerDose(ByVal dblDose As Double)
 
-    m_MaxKeer = dblDose
+    m_MaxPerDose = dblDose
 
 End Property
 
@@ -195,39 +195,39 @@ Public Property Let MaxConc(ByVal dblConc As Double)
 
 End Property
 
-Public Property Get OplVlst() As String
+Public Property Get Solution() As String
 
-    OplVlst = m_OplVlst
-
-End Property
-
-Public Property Let OplVlst(ByVal strVlst As String)
-
-    m_OplVlst = strVlst
+    Solution = m_Solution
 
 End Property
 
-Public Property Get OplVol() As Double
+Public Property Let Solution(ByVal strVlst As String)
 
-    OplVol = m_OplVol
-
-End Property
-
-Public Property Let OplVol(ByVal dblVol As Double)
-
-    m_OplVol = dblVol
+    m_Solution = strVlst
 
 End Property
 
-Public Property Get MinTijd() As Integer
+Public Property Get SolutionVolume() As Double
 
-    MinTijd = m_MinTijd
+    SolutionVolume = m_SolutionVolume
 
 End Property
 
-Public Property Let MinTijd(ByVal intTime As Integer)
+Public Property Let SolutionVolume(ByVal dblVol As Double)
 
-    m_MinTijd = intTime
+    m_SolutionVolume = dblVol
+
+End Property
+
+Public Property Get MinInfusionTime() As Integer
+
+    MinInfusionTime = m_MinInfusionTime
+
+End Property
+
+Public Property Let MinInfusionTime(ByVal intTime As Integer)
+
+    m_MinInfusionTime = intTime
 
 End Property
 
@@ -243,15 +243,15 @@ Public Property Let MinDose(ByVal dblDose As Double)
 
 End Property
 
-Public Property Get AbsDose() As Double
+Public Property Get AbsMaxDose() As Double
     
-    AbsDose = m_AbsDose
+    AbsMaxDose = m_AbsMaxDose
     
 End Property
 
-Public Property Let AbsDose(ByVal dblDose As Double)
+Public Property Let AbsMaxDose(ByVal dblDose As Double)
 
-    m_AbsDose = dblDose
+    m_AbsMaxDose = dblDose
 
 End Property
 
@@ -291,75 +291,75 @@ Public Property Let Product(ByVal strProduct As String)
 
 End Property
 
-Public Property Get TherapieGroep() As String
+Public Property Get MainGroup() As String
 
-    TherapieGroep = m_TherapieGroep
-
-End Property
-
-Public Property Let TherapieGroep(ByVal strTherapieGroep As String)
-
-    m_TherapieGroep = strTherapieGroep
+    MainGroup = m_MainGroup
 
 End Property
 
-Public Property Get TherapieSubgroep() As String
+Public Property Let MainGroup(ByVal strTherapieGroep As String)
 
-    TherapieSubgroep = m_TherapieSubgroep
-
-End Property
-
-Public Property Let TherapieSubgroep(ByVal strTherapieSubgroep As String)
-
-    m_TherapieSubgroep = strTherapieSubgroep
+    m_MainGroup = strTherapieGroep
 
 End Property
 
-Public Property Get Generiek() As String
+Public Property Get SubGroup() As String
 
-    Generiek = m_Generiek
-
-End Property
-
-Public Property Let Generiek(ByVal strGeneriek As String)
-
-    m_Generiek = MedDisc_CanonGen(strGeneriek)
+    SubGroup = m_SubGroup
 
 End Property
 
-Private Function CreateEtiket() As String
+Public Property Let SubGroup(ByVal strTherapieSubgroep As String)
+
+    m_SubGroup = strTherapieSubgroep
+
+End Property
+
+Public Property Get Generic() As String
+
+    Generic = m_Generic
+
+End Property
+
+Public Property Let Generic(ByVal strGeneriek As String)
+
+    m_Generic = MedDisc_CanonGen(strGeneriek)
+
+End Property
+
+Private Function CreateLabel() As String
 
     Dim strEtiket As String
     
-    strEtiket = Join(Array(m_Generiek, m_Vorm, m_Sterkte, m_SterkteEenheid), " ")
-    CreateEtiket = strEtiket
+    strEtiket = Join(Array(m_Generic, m_Shape, m_GenericQuantity, m_GenericUnit), " ")
+    CreateLabel = strEtiket
 
 End Function
 
-Public Property Get Etiket() As String
+Public Property Get Label() As String
 
     Dim strEtiket As String
 
-    strEtiket = IIf(m_Etiket = vbNullString, CreateEtiket(), m_Etiket)
-    Etiket = strEtiket
+    strEtiket = IIf(m_Label = vbNullString, CreateLabel(), m_Label)
+    Label = strEtiket
 
 End Property
 
-Public Property Let Etiket(ByVal strEtiket As String)
+Public Property Let Label(ByVal strEtiket As String)
 
-    m_Etiket = strEtiket
-
-End Property
-
-Public Property Get Vorm() As String
-
-    Vorm = m_Vorm
+    m_Label = strEtiket
 
 End Property
 
-Public Property Let Vorm(ByVal strVorm As String)
+Public Property Get Shape() As String
+
+    Shape = m_Shape
+
+End Property
+
+Public Property Let Shape(ByVal strVorm As String)
     
-    m_Vorm = strVorm
+    m_Shape = strVorm
 
 End Property
 
@@ -375,63 +375,63 @@ Public Property Let Route(ByVal strRoute As String)
 
 End Property
 
-Public Property Get Sterkte() As Double
+Public Property Get GenericQuantity() As Double
 
-    Sterkte = m_Sterkte
-
-End Property
-
-Public Property Let Sterkte(ByVal strSterkte As Double)
-
-    m_Sterkte = strSterkte
+    GenericQuantity = m_GenericQuantity
 
 End Property
 
-Public Property Get SterkteEenheid() As String
+Public Property Let GenericQuantity(ByVal strSterkte As Double)
 
-    SterkteEenheid = m_SterkteEenheid
-
-End Property
-
-Public Property Let SterkteEenheid(ByVal strSterkteEenheid As String)
-
-    m_SterkteEenheid = strSterkteEenheid
+    m_GenericQuantity = strSterkte
 
 End Property
 
-Public Property Get DeelDose() As Double
+Public Property Get GenericUnit() As String
 
-    DeelDose = m_DeelDose
-
-End Property
-
-Public Property Let DeelDose(ByVal dblDose As Double)
-
-    m_DeelDose = dblDose
+    GenericUnit = m_GenericUnit
 
 End Property
 
-Public Property Get DoseEenheid() As String
+Public Property Let GenericUnit(ByVal strSterkteEenheid As String)
 
-    DoseEenheid = m_DoseEenheid
-
-End Property
-
-Public Property Let DoseEenheid(ByVal strDosisEenheid As String)
-
-    m_DoseEenheid = strDosisEenheid
+    m_GenericUnit = strSterkteEenheid
 
 End Property
 
-Public Property Get Indicatie() As String
+Public Property Get MultipleQuantity() As Double
 
-    Indicatie = m_Indicatie
+    MultipleQuantity = m_MultipleQuantity
 
 End Property
 
-Public Property Let Indicatie(ByVal strIndicatie As String)
+Public Property Let MultipleQuantity(ByVal dblDose As Double)
 
-    m_Indicatie = Strings.LCase(strIndicatie)
+    m_MultipleQuantity = dblDose
+
+End Property
+
+Public Property Get MultipleUnit() As String
+
+    MultipleUnit = m_MultipleUnit
+
+End Property
+
+Public Property Let MultipleUnit(ByVal strDosisEenheid As String)
+
+    m_MultipleUnit = strDosisEenheid
+
+End Property
+
+Public Property Get Indication() As String
+
+    Indication = m_Indication
+
+End Property
+
+Public Property Let Indication(ByVal strIndicatie As String)
+
+    m_Indication = Strings.LCase(strIndicatie)
 
 End Property
 
@@ -471,21 +471,21 @@ Public Function GetRouteList() As Collection
 
 End Function
 
-Public Sub SetIndicatieList(ByVal strIndicaties As String)
+Public Sub SetIndicationList(ByVal strIndicaties As String)
     
-    m_Indicatie = strIndicaties
-    FillCollection m_IndicatieList, strIndicaties
+    m_Indication = strIndicaties
+    FillCollection m_IndicationList, strIndicaties
     
 End Sub
 
-Public Function GetIndicatieList() As Collection
+Public Function GetIndicationList() As Collection
     
-    Set GetIndicatieList = m_IndicatieList
+    Set GetIndicationList = m_IndicationList
     
 End Function
 
 Public Function GetMedicamentText() As String
 
-    GetMedicamentText = Me.Generiek & " " & Me.Vorm & " " & Me.Sterkte & " " & Me.SterkteEenheid
+    GetMedicamentText = Me.Generic & " " & Me.Shape & " " & Me.GenericQuantity & " " & Me.GenericUnit
 
 End Function

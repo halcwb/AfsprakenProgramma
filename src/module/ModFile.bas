@@ -204,3 +204,30 @@ Private Sub Test_File_GetFolderPath()
     MsgBox WbkAfspraken.Path
     
 End Sub
+    
+Public Function GetFileWithDialog() As String
+    
+    Dim dlgFile As FileDialog
+    Dim varFile As Variant
+    
+    Set dlgFile = Application.FileDialog(msoFileDialogFilePicker)
+    With dlgFile
+        .AllowMultiSelect = False
+        .InitialFileName = IIf(ModSetting.IsDevelopmentDir, WbkAfspraken.Path & "\tests\", WbkAfspraken.Path & "\..\Tests\")
+        If .Show Then
+            For Each varFile In .SelectedItems
+                If Not varFile = vbNullString Then Exit For
+                
+            Next
+        End If
+    End With
+    
+    GetFileWithDialog = CStr(varFile)
+
+End Function
+
+Private Sub Test_GetFileWithDialog()
+
+    ModMessage.ShowMsgBoxInfo "File choosen: " & GetFileWithDialog()
+
+End Sub
