@@ -85,6 +85,8 @@ Known issues
 Form diff script aanpassen check op parameter instellingen (laatste waarde)
 Medische status import scripts aanpassen
 Copy functie voor de gehele afspraken tekst (voor invoer in HIX).
+Config versies opslaan in data set
+Min en max dosering tussen haakjes achter de dosering
 
 Planning formulier:
 - Check op max knopnaam lengte van 60 tekens bij aanmaken nieuwe knopnaam

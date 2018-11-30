@@ -1,15 +1,13 @@
 Attribute VB_Name = "ModWeb"
 Option Explicit
 
-Private Const constUrl As String = "/request?bty=BTY&btm=BTM&btd=BTD&wth=WTH&hgt=HGT&gpk=GPK&rte=RTE&unt=UNT"
+Private Const constUrl As String = "/request?age=AGE&wth=WTH&hgt=HGT&gpk=GPK&rte=RTE&unt=UNT"
 
 Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
 
     If objMed.GPK = "" Then Exit Sub
 
-    Dim strBTY As String
-    Dim strBTM As String
-    Dim strBTD As String
+    Dim strAge As String
     Dim strWTH As String
     Dim strHGT As String
     Dim strGPK As String
@@ -23,9 +21,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     
     objClient.BaseUrl = "http://iis2503.ds.umcutrecht.nl/genform"
         
-    strBTY = ModDate.DateYear(ModPatient.Patient_BirthDate())
-    strBTM = ModDate.DateMonth(ModPatient.Patient_BirthDate())
-    strBTD = ModDate.DateDay(ModPatient.Patient_BirthDate())
+    strAge = DateDiff("m", ModPatient.Patient_BirthDate(), Now())
     
     strWTH = Val(ModPatient.Patient_GetWeight())
     strHGT = Val(ModPatient.Patient_GetHeight())
@@ -40,9 +36,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     End If
     
     strUrl = constUrl
-    strUrl = Replace(strUrl, "BTY", strBTY)
-    strUrl = Replace(strUrl, "BTM", strBTM)
-    strUrl = Replace(strUrl, "BTD", strBTD)
+    strUrl = Replace(strUrl, "AGE", strAge)
     strUrl = Replace(strUrl, "WTH", strWTH)
     strUrl = Replace(strUrl, "HGT", strHGT)
     strUrl = Replace(strUrl, "GPK", strGPK)
@@ -62,64 +56,31 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
 
 End Sub
 
-
 Private Sub Test_GetJson()
 
     Dim objClient As New WebClient
     Dim objResponse As WebResponse
     Dim objMed As New ClassMedicatieDisc
     
-    objClient.BaseUrl = "http://localhost:8080"
+    objClient.BaseUrl = "http://iis2503.ds.umcutrecht.nl/genform"
     
-    Set objResponse = objClient.GetJson("/request?bty=2017&btm=1&btd=1&wth=10&hgt=70&gpk=9504&rte=or")
+    Set objResponse = objClient.GetJson("/request?age=0&wth=1.0&hgt=50&gpk=3689&rte=iv")
     
+    ModMessage.ShowMsgBoxInfo objResponse.Content
     ProcessJson objResponse, objMed
     ModMessage.ShowMsgBoxInfo objMed.Label
 
 End Sub
 
-'birthYear 2017
-'birthMonth 1
-'birthDay 1
-'weightKg 10
-'birthWeightGram 0
-'lengthCm 0
-'gender ""
-'gestAgeWeeks 0
-'gestAgeDays 0
-'GPK "9504"
-'ATC "N02BE01 "
-'therapyGroup "ANALGETICA"
-'therapySubGroup "OVERIGE ANALGETICA EN ANTIPYRETICA"
-'generic "PARACETAMOL"
-'tradeProduct ""
-'Shape "STROOP"
-'Label "PARACETAMOL 24MG/ML STROOP"
-'concentration 0
-'concentrationUnit ""
-'multiple 0
-'multipleUnit ""
-'Route "or"
-'indication ""
-'Frequency "3 x / dag||antenoctum||1 x / dag||2 x / dag||4 x / dag"
-'PerDose False
-'PerKg True
-'PerM2 False
-'NormDose 0
-'MinDose 0
-'MaxDose 90.048
-'absMaxTotal 480
-'absMaxPerDose 120
-
 Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc)
 
+    Dim colRules As Collection
+    Dim objRule As ClassDoseRule
+    
     Dim objDict As Dictionary
+    Dim colJson As Collection
     Dim strJson As String
-    Dim dblVal As Double
-    Dim blnChange As Boolean
-    
-'    ModMessage.ShowMsgBoxInfo objResponse.Content
-    
+        
     strJson = objResponse.Content
     Set objDict = JsonConverter.ParseJson(strJson)
         
@@ -136,29 +97,53 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
     objMed.MultipleUnit = NotEmpty(objMed.MultipleUnit, objDict("multipleUnit"))
     objMed.Indication = NotEmpty(objMed.Indication, objDict("indication"))
         
-    dblVal = objMed.NormDose
-    objMed.NormDose = NotEmpty(objMed.NormDose, objDict("normDose"))
-    blnChange = Not objMed.NormDose = dblVal
-    
-    dblVal = objMed.MinDose
-    objMed.MinDose = NotEmpty(objMed.MinDose, objDict("minDose"))
-    blnChange = blnChange Or (Not dblVal = objMed.MinDose)
-    
-    dblVal = objMed.MaxDose
-    objMed.MaxDose = NotEmpty(objMed.MaxDose, objDict("maxDose"))
-    blnChange = blnChange Or (Not dblVal = objMed.MaxDose)
+    Set colJson = objDict("rules")
+        
+    Set colRules = New Collection
+    For Each objDict In colJson
+        Set objRule = New ClassDoseRule
+        
+        objRule.Freq = objDict("frequency")
+        
+        objRule.NormDose = objDict("normTotalDose")
+        objRule.MinDose = objDict("minTotalDose")
+        objRule.MaxDose = objDict("maxTotalDose")
+        objRule.MaxPerDose = objDict("maxPerDose")
+        objRule.AbsMaxDose = objDict("maxTotalDose")
+        
+        If objDict("normTotalDosePerKg") > 0 Or objDict("minTotalDosePerKg") > 0 Or objDict("maxTotalDosePerKg") > 0 Then
+            objRule.PerKg = True
+            objRule.NormDose = objDict("normTotalDosePerKg")
+            objRule.MinDose = objDict("minTotalDosePerKg")
+            objRule.MaxDose = objDict("maxTotalDosePerKg")
+        End If
+            
+        If objDict("normTotalDosePerM2") > 0 Or objDict("minTotalDosePerM2") > 0 Or objDict("maxTotalDosePerM2") > 0 Then
+            objRule.PerM2 = True
+            objRule.NormDose = objDict("normTotalDosePerM2")
+            objRule.MinDose = objDict("minTotalDosePerM2")
+            objRule.MaxDose = objDict("maxTotalDosePerM2")
+        End If
+        
+        colRules.Add objRule
+    Next
 
-    If blnChange Then
-        objMed.PerDose = objDict("perDose")
-        objMed.PerKg = objDict("perKg")
-        objMed.PerM2 = objDict("perM2")
+    If colRules.Count = 1 Then
+        Set objRule = colRules(1)
+        
+        objMed.PerKg = objRule.PerKg
+        objMed.PerM2 = objRule.PerM2
+        
+        objMed.SetFreqList objRule.Freq
+        
+        objMed.NormDose = objRule.NormDose
+        objMed.MinDose = objRule.MinDose
+        objMed.MaxDose = objRule.MaxDose
+        objMed.MaxPerDose = objRule.MaxPerDose
+        objMed.AbsMaxDose = objRule.AbsMaxDose
+    
     End If
-    
-    objMed.AbsMaxDose = NotEmpty(objMed.AbsMaxDose, objDict("absMaxTotal"))
-    objMed.MaxPerDose = NotEmpty(objMed.MaxPerDose, objDict("absMaxPerDose"))
-
-    If objMed.Freq = "" Then objMed.SetFreqList objDict("frequency")
-    If objMed.Route = "" Then objMed.SetRouteList objDict("route")
+'    If objMed.Freq = "" Then objMed.SetFreqList objDict("frequency")
 
 End Sub
 

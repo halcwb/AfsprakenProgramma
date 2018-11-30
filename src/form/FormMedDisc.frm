@@ -637,6 +637,52 @@ Private Sub cmdClear_Click()
     
 End Sub
 
+Private Sub cmdGStand_Click()
+    
+    Dim strUrl As String
+    Dim dblAge As Double
+    Dim dblWeight As Double
+    Dim strRoute As String
+    Dim strGPK As String
+    Dim strMsg As String
+    
+    strUrl = "http://iis2503.ds.umcutrecht.nl/GenForm/html?"
+    
+    If Not Patient_BirthDate() = ModDate.EmptyDate Then
+        dblAge = DateDiff("m", Patient_BirthDate, Now())
+    Else
+        strMsg = "Patient heeft geen geboortedatum."
+    End If
+    
+    dblWeight = Patient_GetWeight()
+    
+    If Not cboRoute.Value = vbNullString Then
+        strRoute = cboRoute.Value
+    Else
+        strMsg = "Kies eerst een route."
+    End If
+    
+    If Not m_Med Is Nothing Then
+        strGPK = m_Med.GPK
+    Else
+        strMsg = "Kies eerst een medicament."
+    End If
+    
+    If Not strMsg = vbNullString Then
+        ModMessage.ShowMsgBoxInfo strMsg
+        Exit Sub
+    End If
+    
+    strUrl = strUrl & "gpk=" & strGPK
+    strUrl = strUrl & "&age=" & dblAge
+    strUrl = strUrl & "&wht=" & dblWeight
+    strUrl = strUrl & "&rte=" & strRoute
+    
+    ModUtils.CopyToClipboard strUrl
+    ActiveWorkbook.FollowHyperlink strUrl
+
+End Sub
+
 Private Sub cmdKeerDose_Click()
 
     Dim objPic As StdPicture

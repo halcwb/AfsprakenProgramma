@@ -43,6 +43,7 @@ Private m_MinInfusionTime As Integer
 Private m_IndicationList As Collection
 Private m_RouteList As Collection
 Private m_FreqList As Collection
+Private m_DoseRules As Collection
 
 Public Property Get PerKg() As Boolean
 
@@ -489,3 +490,16 @@ Public Function GetMedicamentText() As String
     GetMedicamentText = Me.Generic & " " & Me.Shape & " " & Me.GenericQuantity & " " & Me.GenericUnit
 
 End Function
+
+Public Property Get DoseRules() As Collection
+
+    Set DoseRules = m_DoseRules
+
+End Property
+
+Public Property Let DoseRules(colRules As Collection)
+
+    Set m_DoseRules = colRules
+
+End Property
+
