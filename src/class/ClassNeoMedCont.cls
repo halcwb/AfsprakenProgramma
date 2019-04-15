@@ -20,6 +20,7 @@ Private m_AbsMaxDose As Double
 Private m_MinConcentration As Double
 Private m_MaxConcentration As Double
 Private m_Solution As String
+Private m_SolutionRequired As Boolean
 Private m_DoseAdvice As String
 Private m_SolutionVolume As Double
 Private m_DripQuantity As Double
@@ -159,6 +160,18 @@ End Property
 Public Property Let Solution(ByVal strOplVlst As String)
 
     m_Solution = strOplVlst
+
+End Property
+
+Public Property Get SolutionRequired() As Boolean
+
+    SolutionRequired = m_SolutionRequired
+
+End Property
+
+Public Property Let SolutionRequired(ByVal blnReq As Boolean)
+
+    m_SolutionRequired = blnReq
 
 End Property
 

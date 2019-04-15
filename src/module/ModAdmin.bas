@@ -188,6 +188,7 @@ Public Function Admin_GetNeoMedCont() As Collection
         objMed.MinConcentration = objTable.Cells(intN, 9)
         objMed.MaxConcentration = objTable.Cells(intN, 10)
         objMed.Solution = objTable.Cells(intN, 11)
+        objMed.SolutionRequired = objTable.Cells(intN, 19)
         objMed.DoseAdvice = objTable.Cells(intN, 12)
         objMed.SolutionVolume = objTable.Cells(intN, 13)
         objMed.DripQuantity = objTable.Cells(intN, 14)
@@ -233,6 +234,7 @@ Public Sub Admin_SetNeoMedCont(objNeoMedContCol As Collection, ByVal strVerdunni
         objTable.Cells(intN, 9) = objMed.MinConcentration
         objTable.Cells(intN, 10) = objMed.MaxConcentration
         objTable.Cells(intN, 11) = objMed.Solution
+        objTable.Cells(intN, 19) = objMed.SolutionRequired
         objTable.Cells(intN, 12) = objMed.DoseAdvice
         objTable.Cells(intN, 13) = objMed.SolutionVolume
         objTable.Cells(intN, 14) = objMed.DripQuantity

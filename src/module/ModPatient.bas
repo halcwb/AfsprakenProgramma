@@ -31,6 +31,39 @@ Public Function Patient_BirthDate() As Date
 
 End Function
 
+Public Function Patient_CorrectedAgeInMo() As Double
+
+    Dim dtmBD As Date
+    Dim intDays As Integer
+    Dim intWeeks As Integer
+    Dim dtmCorrBD As Date
+    Dim dblAge As Double
+    
+    dtmBD = Patient_BirthDate()
+    intDays = ModRange.GetRangeValue(constDagen, 0)
+    intWeeks = ModRange.GetRangeValue(constWeken, 0)
+    intDays = (40 * 7) - (intDays + (intWeeks * 7))
+    
+    If intDays > 0 Then
+        dtmCorrBD = DateAdd("d", dtmBD, intDays)
+    Else
+        dtmCorrBD = dtmBD
+    End If
+    
+    dblAge = DateDiff("m", dtmCorrBD, Now())
+    If dblAge < 0 Then dblAge = 0
+    
+    Patient_CorrectedAgeInMo = dblAge
+
+End Function
+
+Private Sub Test_Patient_CorrectedAgeInMo()
+
+
+    ModMessage.ShowMsgBoxInfo Patient_CorrectedAgeInMo
+
+End Sub
+
 Public Function Patient_GetHospitalNumber() As String
 
     Patient_GetHospitalNumber = ModRange.GetRangeValue(constHospNum, vbNullString)

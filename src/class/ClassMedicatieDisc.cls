@@ -23,6 +23,7 @@ Private m_MultipleQuantity As Double
 Private m_MultipleUnit As String
 Private m_Route As String
 Private m_Indication As String
+Private m_Substance As String
 Private m_Freq As String
 Private m_HasDose As Boolean
 Private m_PerDose As Boolean
@@ -39,6 +40,7 @@ Private m_MaxConc As Double
 Private m_Solution As String
 Private m_SolutionVolume As Double
 Private m_MinInfusionTime As Integer
+Private m_DoseText As String
 
 Private m_IndicationList As Collection
 Private m_RouteList As Collection
@@ -171,6 +173,30 @@ Public Function GetFreqListString() As String
     GetFreqListString = strList
     
 End Function
+
+Public Property Get DoseText() As String
+
+    DoseText = m_DoseText
+
+End Property
+
+Public Property Let DoseText(ByVal strDoseText As String)
+
+    m_DoseText = strDoseText
+
+End Property
+
+Public Property Get Substance() As String
+
+    Substance = m_Substance
+
+End Property
+
+Public Property Let Substance(ByVal strSubstance As String)
+
+    m_Substance = strSubstance
+
+End Property
 
 Public Property Get Freq() As String
 
@@ -493,13 +519,17 @@ End Function
 
 Public Property Get DoseRules() As Collection
 
-    Set DoseRules = m_DoseRules
+    If m_DoseRules Is Nothing Then
+        Set DoseRules = New Collection
+    Else
+        Set DoseRules = m_DoseRules
+    End If
 
 End Property
 
 Public Property Let DoseRules(colRules As Collection)
 
     Set m_DoseRules = colRules
-
+    
 End Property
 

@@ -55,6 +55,7 @@ Public Sub SendApotheekWerkBrief()
     
     Dim objMsg As Object
     Dim strTo As String
+    Dim strCc As String
     Dim strFrom As String
     Dim strSubject As String
     Dim strHTML As String
@@ -103,6 +104,7 @@ Public Sub SendApotheekWerkBrief()
     ModNeoInfB.NeoInfB_SelectInfB True, False
     
     strTo = strMail
+    strCc = "vbassneo@umcutrecht.nl"
     strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
     strSubject = "NICU VTGM protocollen voor " & ModPatient.Patient_GetHospitalNumber & " " & ModPatient.Patient_GetLastName & ", " & ModPatient.Patient_GetFirstName
     strHTML = vbNullString
@@ -111,6 +113,7 @@ Public Sub SendApotheekWerkBrief()
     With objMsg
          
         .To = CStr(strTo)
+        .Cc = CStr(strCc)
         .From = CStr(strFrom)
         .Subject = CStr(strSubject)
         .HTMLBody = CStr(strHTML)

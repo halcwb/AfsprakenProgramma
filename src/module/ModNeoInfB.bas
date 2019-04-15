@@ -43,7 +43,8 @@ Private Const constAdvMinIndex As Integer = 6
 Private Const constAdvOplIndex As Integer = 11
 Private Const constDefHoevIndex As Integer = 13
 Private Const constDefStandIndex As Integer = 14
-Private Const constFactorIndex As Integer = 20
+Private Const constAdvOplVerpl As Integer = 19
+Private Const constFactorIndex As Integer = 21
 
 Private Const constMedKeuze As String = "Var_Neo_InfB_Cont_MedKeuze_"
 Private Const constMedSterkte As String = "Var_Neo_InfB_Cont_MedSterkte_"
@@ -405,10 +406,12 @@ End Sub
 Private Function GetMedicamentItemWithIndex(ByVal intMed As Integer, ByVal intIndex As Integer) As Variant
 
     Dim objTblMed As Range
+    Dim varResult As Variant
     
     Set objTblMed = ModRange.GetRange(constTblMedIV)
 
-    GetMedicamentItemWithIndex = objTblMed.Cells(intMed, intIndex).Value2
+    varResult = objTblMed.Cells(intMed, intIndex).Value2
+    GetMedicamentItemWithIndex = varResult
     
 End Function
 
@@ -471,7 +474,6 @@ Private Sub ChangeMedContIV(ByVal intN As Integer, ByVal blnRemove As Boolean)
     dblStand = GetMedicamentItemWithIndex(intMedIndx, constDefStandIndex) * 10
     
     If blnRemove Then ModRange.SetRangeValue constMedKeuze & strN, 1
-    
     
     ModRange.SetRangeValue constOplHoev & strN, IIf(blnRemove, 0, dblOplQty)
     ModRange.SetRangeValue constStand & strN, IIf(blnRemove, 0, dblStand)
@@ -1387,20 +1389,35 @@ Private Sub CheckOplVlst(ByVal intN As Integer, ByVal blnShowWarn As Boolean)
     Dim intMed As Integer
     Dim intOplVlst As Integer
     Dim intAdvVlst As Integer
+    Dim blnVerpl As Boolean
+    
     
     strN = ModString.IntNToStrN(intN)
     intMed = ModRange.GetRangeValue(constMedKeuze & strN, 0)
     If intMed > 0 Then
         intAdvVlst = GetMedicamentItemWithIndex(intMed, constAdvOplIndex)
         intOplVlst = ModRange.GetRangeValue(constOplossing & strN, 0)
+        
         'Geen oplossing vloeistof
         If intAdvVlst = 1 And Not intOplVlst = 1 Then
             ResetOplVlst constOplossing & strN, intAdvVlst, blnShowWarn
         End If
+        
+        'Oplossing vloeistof is geen oplossing vloeistof
+        If intOplVlst > 12 Then
+            ResetOplVlst constOplossing & strN, intAdvVlst, False
+            Exit Sub
+        End If
+        
+        ' Oplossing vloeistof is niet verplicht
+        blnVerpl = (GetMedicamentItemWithIndex(intMed, constAdvOplVerpl) = True)
+        If Not blnVerpl Then Exit Sub
+                
         'Oplossing vloeistof is NaCl
         If intAdvVlst = 12 And Not intOplVlst = 12 Then
             ResetOplVlst constOplossing & strN, intAdvVlst, blnShowWarn
         End If
+        
         'Oplossing vloeistof is glucose
         If intAdvVlst > 1 And intAdvVlst < 12 And (intOplVlst = 1 Or intOplVlst > 11) Then
             ResetOplVlst constOplossing & strN, intAdvVlst, blnShowWarn

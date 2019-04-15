@@ -91,3 +91,5 @@ Min en max dosering tussen haakjes achter de dosering
 Planning formulier:
 - Check op max knopnaam lengte van 60 tekens bij aanmaken nieuwe knopnaam
 
+NB PLANNEN FORMULIER LOOPT VAST INDIEN GEEN AFSPRAKEN!!
+

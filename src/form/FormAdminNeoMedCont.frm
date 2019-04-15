@@ -30,6 +30,7 @@ Private Sub ClearMedDetails()
         txtConc.Text = ""
         txtVol.Text = ""
         cboOplVlst.Text = ""
+        chkSolReq.Value = False
         txtOplVol.Text = ""
         txtRate.Text = ""
         txtMinConc.Text = ""
@@ -428,6 +429,7 @@ Private Sub LoadMedicationDetails(ByVal intSel As Integer)
         txtVol.Text = .GenericVolume
         cboOplVlst.Text = cboOplVlst.List(.Solution - 1) ' NeoInfB_GetNeoOplVlst(.OplVlst)
         txtOplVol.Text = .SolutionVolume
+        chkSolReq.Value = .SolutionRequired
         txtRate.Text = .DripQuantity
         txtMinConc.Text = .MinConcentration
         txtMaxConc.Text = .MaxConcentration
@@ -461,6 +463,7 @@ Private Sub UpdatePreviousSelection()
         .GenericVolume = txtVol.Text
         .Solution = IIf(cboOplVlst.ListIndex = -1, 0, cboOplVlst.ListIndex) + 1
         .SolutionVolume = txtOplVol.Text
+        .SolutionRequired = chkSolReq.Value
         .DripQuantity = txtRate.Text
         .MinConcentration = txtMinConc.Text
         .MaxConcentration = txtMaxConc.Text

@@ -9,6 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+Private m_Substance As String
 Private m_Freq As String
 Private m_PerDose As Boolean
 Private m_PerKg As Boolean
@@ -94,6 +95,17 @@ Public Property Let MaxPerDose(ByVal dblDose As Double)
 
 End Property
 
+Public Property Get Substance() As String
+
+    Substance = m_Substance
+
+End Property
+
+Public Property Let Substance(ByVal strSubstance As String)
+
+    m_Substance = strSubstance
+
+End Property
 
 Public Property Get Freq() As String
 

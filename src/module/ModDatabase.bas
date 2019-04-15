@@ -49,6 +49,9 @@ Public Const CONST_GET_PATIENTS = "dbo.GetPatients"
 Public Const CONST_INSERT_PATIENT = "InsertPatient"
 Public Const CONST_UPDATE_PATIENT = "UpdatePatient"
 
+Public Const constMedDiscTbl = "Table"
+
+
 Private Sub InitConnection()
 
     Dim strSecret As String
@@ -598,6 +601,7 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
     Dim dblMinConcentration As Double
     Dim dblMaxConcentration As Double
     Dim strSolution As String
+    Dim intSolutionRequired As Integer
     Dim dblDripQuantity As Double
     Dim strDoseUnit As String
     Dim dblMinDose As Double
@@ -646,6 +650,7 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
         strSql = strSql & "DECLARE @minConcentration float" & vbNewLine
         strSql = strSql & "DECLARE @maxConcentration float" & vbNewLine
         strSql = strSql & "DECLARE @solution nvarchar(300)" & vbNewLine
+        strSql = strSql & "DECLARE @solutionRequired bit" & vbNewLine
         strSql = strSql & "DECLARE @dripQuantity float" & vbNewLine
         strSql = strSql & "DECLARE @doseUnit nvarchar(50)" & vbNewLine
         strSql = strSql & "DECLARE @minDose float" & vbNewLine
@@ -682,6 +687,8 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
         dblMinConcentration = objSrc.Cells(intR, 9).Value2
         dblMaxConcentration = objSrc.Cells(intR, 10).Value2
         strSolution = objSrc.Cells(intR, 11).Value2
+        intSolutionRequired = 0
+        If objSrc.Cells(intR, 19).Value Then intSolutionRequired = 1
         strDoseAdvice = objSrc.Cells(intR, 12).Value2
         dblSolutionVolume = objSrc.Cells(intR, 13).Value2
         dblDripQuantity = objSrc.Cells(intR, 14).Value2
@@ -706,6 +713,7 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
         strSql = strSql & "SET @minConcentration  = " & DoubleToString(dblMinConcentration) & vbNewLine
         strSql = strSql & "SET @maxConcentration  = " & DoubleToString(dblMaxConcentration) & vbNewLine
         strSql = strSql & "SET @solution  = '" & strSolution & "'" & vbNewLine
+        strSql = strSql & "SET @solutionRequired  = " & intSolutionRequired & vbNewLine
         strSql = strSql & "SET @dripQuantity  =  " & DoubleToString(dblDripQuantity) & vbNewLine
         strSql = strSql & "SET @doseUnit  = '" & strDoseUnit & "'" & vbNewLine
         strSql = strSql & "SET @minDose  =  " & DoubleToString(dblMinDose) & vbNewLine
@@ -742,6 +750,7 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
         strSql = strSql & "  ,@minConcentration" & vbNewLine
         strSql = strSql & "  ,@maxConcentration" & vbNewLine
         strSql = strSql & "  ,@solution" & vbNewLine
+        strSql = strSql & "  ,@solutionRequired" & vbNewLine
         strSql = strSql & "  ,@dripQuantity" & vbNewLine
         strSql = strSql & "  ,@doseUnit" & vbNewLine
         strSql = strSql & "  ,@minDose" & vbNewLine
@@ -841,6 +850,11 @@ Public Sub Database_LoadNeoConfigMedCont()
         objSrc.Cells(intR, 9).Value2 = objRs.Fields("MinConcentration").Value
         objSrc.Cells(intR, 10).Value2 = objRs.Fields("MaxConcentration").Value
         objSrc.Cells(intR, 11).Value2 = objRs.Fields("Solution").Value
+        If objRs.Fields("SolutionRequired").Value Then
+            objSrc.Cells(intR, 19).Value2 = True
+        Else
+            objSrc.Cells(intR, 19).Value2 = False
+        End If
         objSrc.Cells(intR, 12).Value2 = objRs.Fields("DoseAdvice").Value
         objSrc.Cells(intR, 13).Value2 = objRs.Fields("SolutionVolume").Value
         objSrc.Cells(intR, 14).Value2 = objRs.Fields("DripQuantity").Value
@@ -848,7 +862,6 @@ Public Sub Database_LoadNeoConfigMedCont()
         objSrc.Cells(intR, 16).Value2 = objRs.Fields("ShelfLife").Value
         objSrc.Cells(intR, 17).Value2 = objRs.Fields("ShelfCondition").Value
         objSrc.Cells(intR, 18).Value2 = objRs.Fields("PreparationText").Value
-        objSrc.Cells(intR, 19).Value2 = objRs.Fields("DoseAdvice").Value
         
         ModRange.SetRangeValue "Var_Neo_MedCont_VerdunningTekst", objRs.Fields("DilutionText").Value
         
@@ -1727,6 +1740,11 @@ Public Function Database_GetNeoConfigMedCont(Optional ByVal intVersion As Intege
         objConfig.MinConcentration = objRs.Fields("MinConcentration").Value
         objConfig.MaxConcentration = objRs.Fields("MaxConcentration").Value
         objConfig.Solution = objRs.Fields("Solution").Value
+        If objRs.Fields("SolutionRequired").Value Then
+            objConfig.SolutionRequired = True
+        Else
+            objConfig.SolutionRequired = False
+        End If
         objConfig.DoseAdvice = objRs.Fields("DoseAdvice").Value
         objConfig.SolutionVolume = objRs.Fields("SolutionVolume").Value
         objConfig.DripQuantity = objRs.Fields("DripQuantity").Value
@@ -1803,16 +1821,267 @@ Private Sub Test_Database_GetConfigMedContVersions()
 
 End Sub
 
-Public Sub Database_ImportConfigMedDis()
+Private Function RemoveQuotes(ByVal strString As String) As String
 
+    RemoveQuotes = Replace(strString, "'", "")
+
+End Function
+
+Private Sub Test_RemoveQuotes()
+
+    ModMessage.ShowMsgBoxInfo RemoveQuotes("Geen 'quotes'")
+
+End Sub
+
+Private Function GetSaveConfigMedDiscSql(objTable As Range) As String
+
+    Dim strSql As String
+    Dim strLatest As String
+    Dim intC As Integer
+    Dim intR As Integer
+    
+    Dim strGPK As String
+    Dim strATC As String
+    Dim strMainGroup As String
+    Dim strSubGroup As String
+    Dim strGeneric As String
+    Dim strProduct As String
+    Dim strLabel As String
+    Dim strShape As String
+    Dim strRoutes As String
+    Dim dblGenericQuantity As Double
+    Dim strGenericUnit As String
+    Dim dblMultipleQuantity As Double
+    Dim strMultipleUnit As String
+    Dim strIndications As String
+    
+    intC = objTable.Rows.Count
+    
+    strSql = strSql & "DECLARE @RC int" & vbNewLine
+    strSql = strSql & "DECLARE @versionID int" & vbNewLine
+    strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
+    strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
+    strSql = strSql & "DECLARE @GPK int" & vbNewLine
+    strSql = strSql & "DECLARE @ATC nvarchar(10)" & vbNewLine
+    strSql = strSql & "DECLARE @MainGroup nvarchar(300)" & vbNewLine
+    strSql = strSql & "DECLARE @SubGroup nvarchar(300)" & vbNewLine
+    strSql = strSql & "DECLARE @Generic nvarchar(300)" & vbNewLine
+    strSql = strSql & "DECLARE @Product nvarchar(300)" & vbNewLine
+    strSql = strSql & "DECLARE @Label nvarchar(300)" & vbNewLine
+    strSql = strSql & "DECLARE @Shape nvarchar(150)" & vbNewLine
+    strSql = strSql & "DECLARE @Routes nvarchar(300)" & vbNewLine
+    strSql = strSql & "DECLARE @GenericQuantity float" & vbNewLine
+    strSql = strSql & "DECLARE @GenericUnit nvarchar(50)" & vbNewLine
+    strSql = strSql & "DECLARE @MultipleQuantity float" & vbNewLine
+    strSql = strSql & "DECLARE @MultipleUnit nvarchar(50)" & vbNewLine
+    strSql = strSql & "DECLARE @Indications nvarchar(max)" & vbNewLine
+    strSql = strSql & "DECLARE @IsActive bit" & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    
+    strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigMedDiscVersion()"
+    strLatest = strLatest & GetVersionSQL(strLatest) & vbNewLine
+    strSql = strSql & strLatest
+    
+    For intR = 3 To intC
+    
+        strSql = strSql & "SET @versionID  = @versionID" & vbNewLine
+        strSql = strSql & "SET @versionUTC  = @versionUTC" & vbNewLine
+        strSql = strSql & "SET @versionDate  = @versionDate" & vbNewLine
+        
+        strGPK = objTable.Cells(intR, 1).Value2
+        strATC = objTable.Cells(intR, 2).Value2
+        strMainGroup = RemoveQuotes(objTable.Cells(intR, 3).Value2)
+        strSubGroup = RemoveQuotes(objTable.Cells(intR, 4).Value2)
+        strGeneric = RemoveQuotes(objTable.Cells(intR, 5).Value2)
+        strProduct = RemoveQuotes(objTable.Cells(intR, 6).Value2)
+        strLabel = RemoveQuotes(objTable.Cells(intR, 7).Value2)
+        strShape = objTable.Cells(intR, 8).Value2
+        strRoutes = objTable.Cells(intR, 9).Value2
+        dblGenericQuantity = objTable.Cells(intR, 10).Value2
+        strGenericUnit = objTable.Cells(intR, 11).Value2
+        dblMultipleQuantity = objTable.Cells(intR, 12).Value2
+        strMultipleUnit = objTable.Cells(intR, 13).Value2
+        strIndications = RemoveQuotes(objTable.Cells(intR, 14).Value2)
+        
+        strSql = strSql & "SET @GPK  = " & strGPK & "" & vbNewLine
+        strSql = strSql & "SET @ATC  = '" & strATC & "'" & vbNewLine
+        strSql = strSql & "SET @MainGroup  = '" & strMainGroup & "'" & vbNewLine
+        strSql = strSql & "SET @SubGroup  = '" & strSubGroup & "'" & vbNewLine
+        strSql = strSql & "SET @Generic  = '" & strGeneric & "'" & vbNewLine
+        strSql = strSql & "SET @Product  = '" & strProduct & "'" & vbNewLine
+        strSql = strSql & "SET @Label  = '" & strLabel & "'" & vbNewLine
+        strSql = strSql & "SET @Shape  = '" & strShape & "'" & vbNewLine
+        strSql = strSql & "SET @Routes  = '" & strRoutes & "'" & vbNewLine
+        strSql = strSql & "SET @GenericQuantity  = " & DoubleToString(dblGenericQuantity) & vbNewLine
+        strSql = strSql & "SET @GenericUnit  = '" & strGenericUnit & "'" & vbNewLine
+        strSql = strSql & "SET @MultipleQuantity  = " & DoubleToString(dblMultipleQuantity) & vbNewLine
+        strSql = strSql & "SET @MultipleUnit  = '" & strMultipleUnit & "'" & vbNewLine
+        strSql = strSql & "SET @Indications  = '" & strIndications & "'" & vbNewLine
+        strSql = strSql & "SET @IsActive = 1" & vbNewLine
+        strSql = strSql & "" & vbNewLine
+        
+        strSql = strSql & "" & vbNewLine
+        strSql = strSql & "EXECUTE @RC = [dbo].[InsertConfigMedDisc] " & vbNewLine
+        strSql = strSql & "   @versionID" & vbNewLine
+        strSql = strSql & "  ,@versionUTC" & vbNewLine
+        strSql = strSql & "  ,@versionDate" & vbNewLine
+        strSql = strSql & "  ,@GPK" & vbNewLine
+        strSql = strSql & "  ,@ATC" & vbNewLine
+        strSql = strSql & "  ,@MainGroup" & vbNewLine
+        strSql = strSql & "  ,@SubGroup" & vbNewLine
+        strSql = strSql & "  ,@Generic" & vbNewLine
+        strSql = strSql & "  ,@Product" & vbNewLine
+        strSql = strSql & "  ,@Label" & vbNewLine
+        strSql = strSql & "  ,@Shape" & vbNewLine
+        strSql = strSql & "  ,@Routes" & vbNewLine
+        strSql = strSql & "  ,@GenericQuantity" & vbNewLine
+        strSql = strSql & "  ,@GenericUnit" & vbNewLine
+        strSql = strSql & "  ,@MultipleQuantity" & vbNewLine
+        strSql = strSql & "  ,@MultipleUnit" & vbNewLine
+        strSql = strSql & "  ,@Indications" & vbNewLine
+        strSql = strSql & "  ,@IsActive" & vbNewLine
+        
+        ModProgress.SetJobPercentage "Opslaan", intC, intR
+    
+    Next
+    
+    strSql = strSql & vbNewLine
+    strSql = strSql & GetLogSQL("Save configuration for discontinuous medication", False, , "ConfigMedDisc")
+ 
+    GetSaveConfigMedDiscSql = strSql
+
+
+End Function
+
+Private Sub SaveConfigMedDisc(objSrc As Range)
+    Dim strSql As String
+    
     On Error GoTo ErrorHandler
+    
+    ModProgress.StartProgress "Configuratie voor medicatie discontinue opslaan"
+    
+    strSql = GetSaveConfigMedDiscSql(objSrc)
+    strSql = WrapTransaction(strSql, "insert_med_disc_config")
+    
+    InitConnection
+    
+    objConn.Open
+    objConn.Execute strSql
+    objConn.Close
+    
+    ModProgress.FinishProgress
     
     Exit Sub
     
 ErrorHandler:
+    
+    objConn.Close
+    
+    ModUtils.CopyToClipboard strSql
+    ModProgress.FinishProgress
+    ModLog.LogError Err, "SaveConfigMedDisc"
+    
 
+End Sub
 
-    ModLog.LogError Err, "Database_ImportConfigMedDis"
+Private Function GetLatestConfigMedDiscVersion() As Integer
+    Dim intVersion As Integer
+    Dim objRs As Recordset
+    Dim strSql As String
+    
+    On Error GoTo ErrorHandler
+    
+    strSql = "SELECT [dbo].[GetLatestConfigMedDiscVersion] ()"
+    
+    InitConnection
+    
+    objConn.Open
+    Set objRs = objConn.Execute(strSql)
+    
+    Do While Not objRs.EOF
+        intVersion = objRs.Fields(0).Value
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+    
+    GetLatestConfigMedDiscVersion = intVersion
+    
+    Exit Function
+    
+ErrorHandler:
+
+    ModLog.LogError Err, "GetLatestConfigMedDiscVersion"
+    objConn.Close
+End Function
+
+Private Sub Test_GetLatestConfigMedDiscVersion()
+
+    ModMessage.ShowMsgBoxInfo GetLatestConfigMedDiscVersion()
+
+End Sub
+
+Public Sub Database_ImportConfigMedDisc()
+
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim lngErr As Long
+    Dim strFile As String
+    Dim intVersion As Integer
+    Dim strMsg As String
+    Dim vbAnswer
+        
+    Dim objMed As ClassNeoMedCont
+    
+    On Error GoTo ErrorHandler
+    
+    strMsg = "Kies een Excel bestand met de configuratie voor discontinue medicatie"
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    strFile = ModFile.GetFileWithDialog
+        
+    strMsg = "Dit bestand importeren?" & vbNewLine & strFile
+    If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
+       
+    Application.DisplayAlerts = False
+        
+    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+    Set objSrc = objConfigWbk.Sheets(constMedDiscTbl).Range("A2").CurrentRegion()
+    
+    If objSrc.Columns.Count < 14 Then
+        objConfigWbk.Close
+        Application.DisplayAlerts = True
+        
+        strMsg = "Kan dit bestand niet importeren, er moeten minstens 14 kolommen zijn." & vbNewLine
+        strMsg = "Dit bestand bevat slechts " & objSrc.Columns.Count & " kolommen."
+        ModMessage.ShowMsgBoxExclam strMsg
+        
+        Exit Sub
+    End If
+        
+    SaveConfigMedDisc objSrc
+    
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    
+    intVersion = GetLatestConfigMedDiscVersion()
+    strMsg = "De meest recente versie van de configuratie van disccontinue medicatie is nu: " & intVersion
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    Exit Sub
+        
+ErrorHandler:
+
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+
+    ModLog.LogError Err, "Database_ImportConfigMedDisc"
+
+End Sub
+
+Private Sub Test_Database_ImportConfigMedDisc()
+
+    Database_ImportConfigMedDisc
 
 End Sub
 
@@ -1842,6 +2111,75 @@ End Function
 Private Sub Test_GetLatestConfigMedContVersion()
 
     ModMessage.ShowMsgBoxInfo Database_GetLatestConfigMedContVersion("Pediatrie")
+
+End Sub
+
+Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
+
+
+    Dim strSql As String
+    Dim objRs As Recordset
+    Dim intC As Integer
+    Dim objMed As ClassMedicatieDisc
+    
+    On Error GoTo ErrorHandler
+    
+    ModProgress.StartProgress "Formularium"
+    
+    strSql = "SELECT * FROM [dbo].[GetConfigMedDiscLatest] () AS md" & vbNewLine
+    strSql = strSql & "ORDER BY md.Generic, md.Shape, md.GenericQuantity"
+
+    InitConnection
+    
+    objConn.Open
+    Set objRs = objConn.Execute(strSql)
+    
+    Do While Not objRs.EOF
+        Set objMed = New ClassMedicatieDisc
+        
+        With objMed
+            
+            .GPK = objRs.Fields("GPK").Value
+            .MainGroup = objRs.Fields("MainGroup").Value
+            .SubGroup = objRs.Fields("SubGroup").Value
+            
+            .ATC = objRs.Fields("ATC").Value
+            .Generic = objRs.Fields("Generic").Value
+            .Product = objRs.Fields("Product").Value
+            .Shape = objRs.Fields("Shape").Value
+            .GenericQuantity = objRs.Fields("GenericQuantity").Value
+            .GenericUnit = objRs.Fields("GenericUnit").Value
+            .Label = objRs.Fields("Label").Value
+            .MultipleQuantity = objRs.Fields("MultipleQuantity").Value
+            .MultipleUnit = objRs.Fields("MultipleUnit").Value
+            
+            .SetRouteList objRs.Fields("Routes").Value
+            .SetIndicationList objRs.Fields("Indications").Value
+        
+        End With
+                
+        objFormularium.AddMedicament objMed
+        
+        intC = intC + 1
+        If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", 1600, intC
+        
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+    ModProgress.FinishProgress
+
+    Exit Sub
+    
+ErrorHandler:
+
+    ModProgress.FinishProgress
+    objConn.Close
+    ModLog.LogError Err, "Database_GetMedicamenten"
+
+
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
 
 End Sub
 

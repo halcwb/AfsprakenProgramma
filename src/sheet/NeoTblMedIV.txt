@@ -15,76 +15,98 @@ $P$1: 	=O1+1
 $Q$1: 	=P1+1
 $R$1: 	=Q1+1
 $S$1: 	=R1+1
-$T$1: 	=S1+1
 $A$4: 	=A3+1
-$U$4: 	=HLOOKUP(C4,Tbl_Glob_Conv_EenhCont,VLOOKUP(D4,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$4: 	=V3+1
+$U$4: 	=IF(M4="""",G4&"" - ""&H4&"" "" &D4,M4)
+$V$4: 	=HLOOKUP(C4,Tbl_Glob_Conv_EenhCont,VLOOKUP(D4,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$4: 	=W3+1
 $A$5: 	=A4+1
-$U$5: 	=HLOOKUP(C5,Tbl_Glob_Conv_EenhCont,VLOOKUP(D5,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$5: 	=V4+1
+$U$5: 	=IF(M5="""",G5&"" - ""&H5&"" "" &D5,M5)
+$V$5: 	=HLOOKUP(C5,Tbl_Glob_Conv_EenhCont,VLOOKUP(D5,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$5: 	=W4+1
 $A$6: 	=A5+1
-$U$6: 	=HLOOKUP(C6,Tbl_Glob_Conv_EenhCont,VLOOKUP(D6,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$6: 	=V5+1
+$U$6: 	=IF(M6="""",G6&"" - ""&H6&"" "" &D6,M6)
+$V$6: 	=HLOOKUP(C6,Tbl_Glob_Conv_EenhCont,VLOOKUP(D6,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$6: 	=W5+1
 $A$7: 	=A6+1
-$U$7: 	=HLOOKUP(C7,Tbl_Glob_Conv_EenhCont,VLOOKUP(D7,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$7: 	=V6+1
+$U$7: 	=IF(M7="""",G7&"" - ""&H7&"" "" &D7,M7)
+$V$7: 	=HLOOKUP(C7,Tbl_Glob_Conv_EenhCont,VLOOKUP(D7,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$7: 	=W6+1
 $A$8: 	=A7+1
-$U$8: 	=HLOOKUP(C8,Tbl_Glob_Conv_EenhCont,VLOOKUP(D8,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$8: 	=V7+1
+$U$8: 	=IF(M8="""",G8&"" - ""&H8&"" "" &D8,M8)
+$V$8: 	=HLOOKUP(C8,Tbl_Glob_Conv_EenhCont,VLOOKUP(D8,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$8: 	=W7+1
 $A$9: 	=A8+1
-$U$9: 	=HLOOKUP(C9,Tbl_Glob_Conv_EenhCont,VLOOKUP(D9,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$9: 	=V8+1
+$U$9: 	=IF(M9="""",G9&"" - ""&H9&"" "" &D9,M9)
+$V$9: 	=HLOOKUP(C9,Tbl_Glob_Conv_EenhCont,VLOOKUP(D9,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$9: 	=W8+1
 $A$10: 	=A9+1
-$U$10: 	=HLOOKUP(C10,Tbl_Glob_Conv_EenhCont,VLOOKUP(D10,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$10: 	=V9+1
+$U$10: 	=IF(M10="""",G10&"" - ""&H10&"" "" &D10,M10)
+$V$10: 	=HLOOKUP(C10,Tbl_Glob_Conv_EenhCont,VLOOKUP(D10,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$10: 	=W9+1
 $A$11: 	=A10+1
-$U$11: 	=HLOOKUP(C11,Tbl_Glob_Conv_EenhCont,VLOOKUP(D11,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$11: 	=V10+1
+$U$11: 	=IF(M11="""",G11&"" - ""&H11&"" "" &D11,M11)
+$V$11: 	=HLOOKUP(C11,Tbl_Glob_Conv_EenhCont,VLOOKUP(D11,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$11: 	=W10+1
 $A$12: 	=A11+1
-$U$12: 	=HLOOKUP(C12,Tbl_Glob_Conv_EenhCont,VLOOKUP(D12,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$12: 	=V11+1
+$U$12: 	=IF(M12="""",G12&"" - ""&H12&"" "" &D12,M12)
+$V$12: 	=HLOOKUP(C12,Tbl_Glob_Conv_EenhCont,VLOOKUP(D12,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$12: 	=W11+1
 $A$13: 	=A12+1
-$U$13: 	=HLOOKUP(C13,Tbl_Glob_Conv_EenhCont,VLOOKUP(D13,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$13: 	=V12+1
+$U$13: 	=IF(M13="""",G13&"" - ""&H13&"" "" &D13,M13)
+$V$13: 	=HLOOKUP(C13,Tbl_Glob_Conv_EenhCont,VLOOKUP(D13,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$13: 	=W12+1
 $A$14: 	=A13+1
-$U$14: 	=HLOOKUP(C14,Tbl_Glob_Conv_EenhCont,VLOOKUP(D14,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$14: 	=V13+1
+$U$14: 	=IF(M14="""",G14&"" - ""&H14&"" "" &D14,M14)
+$V$14: 	=HLOOKUP(C14,Tbl_Glob_Conv_EenhCont,VLOOKUP(D14,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$14: 	=W13+1
 $A$15: 	=A14+1
-$U$15: 	=HLOOKUP(C15,Tbl_Glob_Conv_EenhCont,VLOOKUP(D15,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$15: 	=V14+1
+$U$15: 	=IF(M15="""",G15&"" - ""&H15&"" "" &D15,M15)
+$V$15: 	=HLOOKUP(C15,Tbl_Glob_Conv_EenhCont,VLOOKUP(D15,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$15: 	=W14+1
 $A$16: 	=A15+1
-$U$16: 	=HLOOKUP(C16,Tbl_Glob_Conv_EenhCont,VLOOKUP(D16,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$16: 	=V15+1
+$U$16: 	=IF(M16="""",G16&"" - ""&H16&"" "" &D16,M16)
+$V$16: 	=HLOOKUP(C16,Tbl_Glob_Conv_EenhCont,VLOOKUP(D16,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$16: 	=W15+1
 $A$17: 	=A16+1
-$U$17: 	=HLOOKUP(C17,Tbl_Glob_Conv_EenhCont,VLOOKUP(D17,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$17: 	=V16+1
+$U$17: 	=IF(M17="""",G17&"" - ""&H17&"" "" &D17,M17)
+$V$17: 	=HLOOKUP(C17,Tbl_Glob_Conv_EenhCont,VLOOKUP(D17,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$17: 	=W16+1
 $A$18: 	=A17+1
-$U$18: 	=HLOOKUP(C18,Tbl_Glob_Conv_EenhCont,VLOOKUP(D18,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$18: 	=V17+1
+$U$18: 	=IF(M18="""",G18&"" - ""&H18&"" "" &D18,M18)
+$V$18: 	=HLOOKUP(C18,Tbl_Glob_Conv_EenhCont,VLOOKUP(D18,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$18: 	=W17+1
 $A$19: 	=A18+1
-$U$19: 	=HLOOKUP(C19,Tbl_Glob_Conv_EenhCont,VLOOKUP(D19,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$19: 	=V18+1
+$U$19: 	=IF(M19="""",G19&"" - ""&H19&"" "" &D19,M19)
+$V$19: 	=HLOOKUP(C19,Tbl_Glob_Conv_EenhCont,VLOOKUP(D19,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$19: 	=W18+1
 $A$20: 	=A19+1
-$U$20: 	=HLOOKUP(C20,Tbl_Glob_Conv_EenhCont,VLOOKUP(D20,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$20: 	=V19+1
+$U$20: 	=IF(M20="""",G20&"" - ""&H20&"" "" &D20,M20)
+$V$20: 	=HLOOKUP(C20,Tbl_Glob_Conv_EenhCont,VLOOKUP(D20,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$20: 	=W19+1
 $A$21: 	=A20+1
-$U$21: 	=HLOOKUP(C21,Tbl_Glob_Conv_EenhCont,VLOOKUP(D21,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$21: 	=V20+1
+$U$21: 	=IF(M21="""",G21&"" - ""&H21&"" "" &D21,M21)
+$V$21: 	=HLOOKUP(C21,Tbl_Glob_Conv_EenhCont,VLOOKUP(D21,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$21: 	=W20+1
 $A$22: 	=A21+1
-$U$22: 	=HLOOKUP(C22,Tbl_Glob_Conv_EenhCont,VLOOKUP(D22,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$22: 	=V21+1
+$U$22: 	=IF(M22="""",G22&"" - ""&H22&"" "" &D22,M22)
+$V$22: 	=HLOOKUP(C22,Tbl_Glob_Conv_EenhCont,VLOOKUP(D22,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$22: 	=W21+1
 $A$23: 	=A22+1
-$U$23: 	=HLOOKUP(C23,Tbl_Glob_Conv_EenhCont,VLOOKUP(D23,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$23: 	=V22+1
+$U$23: 	=IF(M23="""",G23&"" - ""&H23&"" "" &D23,M23)
+$V$23: 	=HLOOKUP(C23,Tbl_Glob_Conv_EenhCont,VLOOKUP(D23,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$23: 	=W22+1
 $A$24: 	=A23+1
-$U$24: 	=HLOOKUP(C24,Tbl_Glob_Conv_EenhCont,VLOOKUP(D24,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$24: 	=V23+1
+$U$24: 	=IF(M24="""",G24&"" - ""&H24&"" "" &D24,M24)
+$V$24: 	=HLOOKUP(C24,Tbl_Glob_Conv_EenhCont,VLOOKUP(D24,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$24: 	=W23+1
 $A$25: 	=A24+1
-$U$25: 	=HLOOKUP(C25,Tbl_Glob_Conv_EenhCont,VLOOKUP(D25,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$25: 	=V24+1
+$U$25: 	=IF(M25="""",G25&"" - ""&H25&"" "" &D25,M25)
+$V$25: 	=HLOOKUP(C25,Tbl_Glob_Conv_EenhCont,VLOOKUP(D25,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$25: 	=W24+1
 $A$26: 	=A25+1
-$U$26: 	=HLOOKUP(C26,Tbl_Glob_Conv_EenhCont,VLOOKUP(D26,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
-$V$26: 	=V25+1
+$U$26: 	=IF(M26="""",G26&"" - ""&H26&"" "" &D26,M26)
+$V$26: 	=HLOOKUP(C26,Tbl_Glob_Conv_EenhCont,VLOOKUP(D26,Tbl_Glob_Conv_EenhCont,2,FALSE),FALSE)
+$W$26: 	=W25+1
 $C$27: 	=B27+1
 $D$27: 	=C27+1
 $E$27: 	=D27+1
@@ -102,6 +124,6 @@ $P$27: 	=O27+1
 $Q$27: 	=P27+1
 $R$27: 	=Q27+1
 $S$27: 	=R27+1
-$T$27: 	=S27+1
-$U$27: 	=T27+1
+$U$27: 	=S27+1
+$V$27: 	=U27+1
 "

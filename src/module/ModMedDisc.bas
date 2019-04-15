@@ -573,6 +573,10 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
             ModRange.SetRangeValue constDoseQty & strN, intDoseQty
             
         End If
+        
+        If Not objMed.DoseText = vbNullString Then
+            ModRange.SetRangeValue constText & strN, objMed.DoseText
+        End If
     End If
     
 End Sub

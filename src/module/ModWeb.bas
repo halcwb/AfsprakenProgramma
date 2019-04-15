@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModWeb"
 Option Explicit
 
-Private Const constUrl As String = "/request?age=AGE&wth=WTH&hgt=HGT&gpk=GPK&rte=RTE&unt=UNT"
+Private Const constUrl As String = "/request?age=AGE&wth=WTH&hgt=HGT&gpk=GPK&gen=GEN&shp=SHP&rte=RTE&unt=UNT"
 
 Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
 
@@ -11,6 +11,8 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     Dim strWTH As String
     Dim strHGT As String
     Dim strGPK As String
+    Dim strGEN As String
+    Dim strSHP As String
     Dim strRTE As String
     Dim strUNT As String
     
@@ -21,12 +23,14 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     
     objClient.BaseUrl = "http://iis2503.ds.umcutrecht.nl/genform"
         
-    strAge = DateDiff("m", ModPatient.Patient_BirthDate(), Now())
+    strAge = Patient_CorrectedAgeInMo()
     
     strWTH = Val(ModPatient.Patient_GetWeight())
     strHGT = Val(ModPatient.Patient_GetHeight())
     
     strGPK = objMed.GPK
+    strGEN = objMed.Generic
+    strSHP = objMed.Shape
     strRTE = objMed.Route
     strUNT = objMed.MultipleUnit
     
@@ -40,6 +44,8 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     strUrl = Replace(strUrl, "WTH", strWTH)
     strUrl = Replace(strUrl, "HGT", strHGT)
     strUrl = Replace(strUrl, "GPK", strGPK)
+    strUrl = Replace(strUrl, "GEN", strGEN)
+    strUrl = Replace(strUrl, "SHP", strSHP)
     strUrl = Replace(strUrl, "RTE", strRTE)
     strUrl = Replace(strUrl, "UNT", strUNT)
     
@@ -103,6 +109,7 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
     For Each objDict In colJson
         Set objRule = New ClassDoseRule
         
+        objRule.Substance = objDict("substance")
         objRule.Freq = objDict("frequency")
         
         objRule.NormDose = objDict("normTotalDose")
@@ -131,6 +138,8 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
     If colRules.Count = 1 Then
         Set objRule = colRules(1)
         
+        objMed.Substance = objRule.Substance
+        
         objMed.PerKg = objRule.PerKg
         objMed.PerM2 = objRule.PerM2
         
@@ -141,9 +150,14 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
         objMed.MaxDose = objRule.MaxDose
         objMed.MaxPerDose = objRule.MaxPerDose
         objMed.AbsMaxDose = objRule.AbsMaxDose
+        
+    ElseIf colRules.Count = 0 Then
     
+        objMed.PerKg = True
+        
     End If
-'    If objMed.Freq = "" Then objMed.SetFreqList objDict("frequency")
+    
+    objMed.DoseRules = colRules
 
 End Sub
 
@@ -165,6 +179,5 @@ Private Sub Test_NotEmpty()
     ModMessage.ShowMsgBoxInfo NotEmpty(0, 2)
     ModMessage.ShowMsgBoxInfo NotEmpty(1, 2)
     ModMessage.ShowMsgBoxInfo NotEmpty(1, 0)
-    
 
 End Sub

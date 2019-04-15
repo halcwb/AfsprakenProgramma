@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FormMedDisc
    ClientHeight    =   14940
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   10545
+   ClientWidth     =   10920
    OleObjectBlob   =   "FormMedDisc.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -155,6 +155,62 @@ Private Sub cboFreq_Change()
     
 End Sub
 
+Private Sub cboFreqTime_Change()
+
+    SelectDoseRule
+
+End Sub
+
+Private Sub SelectDoseRule()
+
+    Dim objRule As ClassDoseRule
+    Dim strTime As String
+    
+    For Each objRule In m_Med.DoseRules
+        strTime = Trim(Split(Split(objRule.Freq, "||")(0), "/")(1))
+        
+        If cboFreqTime.Value = strTime And cboSubstance.Value = objRule.Substance Then
+            With m_Med
+                .PerKg = objRule.PerKg
+                .PerM2 = objRule.PerM2
+                
+                .SetFreqList objRule.Freq
+                
+                .NormDose = objRule.NormDose
+                .MinDose = objRule.MinDose
+                .MaxDose = objRule.MaxDose
+                .MaxPerDose = objRule.MaxPerDose
+                .AbsMaxDose = objRule.AbsMaxDose
+                
+                If Not .GetFreqListString = vbNullString Then
+                    FillCombo cboFreq, .GetFreqList()
+                Else
+                    LoadFreq
+                End If
+                
+                If Not .Freq = vbNullString Then cboFreq.Value = .Freq
+                
+                optNone = True
+                optKg = .PerKg
+                optM2 = .PerM2
+                
+                chkPerDosis = .PerDose
+                
+                SetTextBoxNumericValue txtNormDose, .NormDose
+                SetTextBoxNumericValue txtMinDose, .MinDose
+                SetTextBoxNumericValue txtMaxDose, .MaxDose
+                SetTextBoxNumericValue txtAbsMax, .AbsMaxDose
+                SetTextBoxNumericValue txtMaxPerDose, .MaxPerDose
+            End With
+            
+        End If
+    Next
+    
+    CalculateDose
+
+End Sub
+
+
 Private Sub cboGeneriek_Click()
 
     cboGeneriek_Change
@@ -255,6 +311,8 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
     
     Dim intN As Integer
     Dim arrFreq() As String
+    Dim strTime As String
+    Dim objRule As ClassDoseRule
 
     With m_Med
     
@@ -293,6 +351,7 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
         End If
         
         If Not .Freq = vbNullString Then cboFreq.Value = .Freq
+        If Not .Substance = vbNullString Then cboSubstance.Value = .Substance
         
         optNone = True
         optKg = .PerKg
@@ -314,9 +373,46 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
         
         cboOplVlst.Value = .Solution
         
+        If m_Med.DoseRules.Count > 1 Then
+            lblFreqTime.Visible = True
+            cboFreqTime.Visible = True
+            
+            For Each objRule In m_Med.DoseRules
+                strTime = Trim(Split(Split(objRule.Freq, "||")(0), "/")(1))
+                If Not ComboContainsStringValue(cboFreqTime, strTime) Then cboFreqTime.AddItem strTime
+                If Not ComboContainsStringValue(cboSubstance, objRule.Substance) Then cboSubstance.AddItem objRule.Substance
+            Next
+            
+            SetComboIfCountOne cboFreqTime
+            SetComboIfCountOne cboSubstance
+        Else
+            lblFreqTime.Visible = False
+            cboFreqTime.Visible = False
+        End If
+        
     End With
 
 End Sub
+
+Private Function ComboContainsStringValue(objCombo As MSForms.ComboBox, strVal As String) As Boolean
+
+    Dim varVal As Variant
+    
+    If objCombo.ListCount = 0 Then
+        ComboContainsStringValue = False
+        Exit Function
+    End If
+    
+    For Each varVal In objCombo.List
+        If varVal = strVal Then
+            ComboContainsStringValue = True
+            Exit Function
+        End If
+    Next
+    
+    ComboContainsStringValue = False
+
+End Function
 
 Public Sub SetComboBoxIfNotEmpty(cboBox As MSForms.ComboBox, ByVal strValue As String)
 
@@ -361,10 +457,17 @@ Private Sub FillCombo(objCombo As ComboBox, colItems As Collection)
         If Not varItem = vbNullString Then objCombo.AddItem CStr(varItem)
     Next varItem
     
+    SetComboIfCountOne objCombo
+    
+End Sub
+
+Private Sub SetComboIfCountOne(objCombo As ComboBox)
+    
     If objCombo.ListCount = 1 Then
         objCombo.Text = objCombo.List(0)
     End If
     
+
 End Sub
 
 Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
@@ -547,6 +650,12 @@ Private Sub CalculateVolume()
 
 End Sub
 
+Private Sub cboSubstance_Change()
+
+    SelectDoseRule
+
+End Sub
+
 Private Sub chkDose_Click()
     
     If Not frmDose.Visible Then ClearDose
@@ -644,12 +753,15 @@ Private Sub cmdGStand_Click()
     Dim dblWeight As Double
     Dim strRoute As String
     Dim strGPK As String
+    Dim strGEN As String
+    Dim strSHP As String
+    Dim strUNT As String
     Dim strMsg As String
     
     strUrl = "http://iis2503.ds.umcutrecht.nl/GenForm/html?"
     
     If Not Patient_BirthDate() = ModDate.EmptyDate Then
-        dblAge = DateDiff("m", Patient_BirthDate, Now())
+        dblAge = Patient_CorrectedAgeInMo()
     Else
         strMsg = "Patient heeft geen geboortedatum."
     End If
@@ -664,6 +776,9 @@ Private Sub cmdGStand_Click()
     
     If Not m_Med Is Nothing Then
         strGPK = m_Med.GPK
+        strGEN = m_Med.Generic
+        strSHP = m_Med.Shape
+        strUNT = m_Med.MultipleUnit
     Else
         strMsg = "Kies eerst een medicament."
     End If
@@ -673,11 +788,14 @@ Private Sub cmdGStand_Click()
         Exit Sub
     End If
     
-    strUrl = strUrl & "gpk=" & strGPK
-    strUrl = strUrl & "&age=" & dblAge
+    strUrl = strUrl & "age=" & dblAge
     strUrl = strUrl & "&wht=" & dblWeight
+    strUrl = strUrl & "&gpk=" & strGPK
+    strUrl = strUrl & "&gen=" & strGEN
+    strUrl = strUrl & "&shp=" & strSHP
     strUrl = strUrl & "&rte=" & strRoute
-    
+    strUrl = strUrl & "&unt=" & strUNT
+        
     ModUtils.CopyToClipboard strUrl
     ActiveWorkbook.FollowHyperlink strUrl
 
@@ -759,6 +877,7 @@ Private Sub cmdOK_Click()
 
     Dim intAnswer As Integer
     Dim strMsg As String
+    Dim intIndx As Integer
     
     If Not lblValid.Caption = vbNullString Then
         strMsg = "Voorschrift is nog niet goed."
@@ -802,12 +921,35 @@ Private Sub cmdOK_Click()
         m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
         m_Med.SolutionVolume = StringToDouble(txtOplVol.Value)
         m_Med.MinInfusionTime = StringToDouble(txtTijd.Value)
+        
+        If cboSubstance.ListCount > 1 Then
+            m_Med.DoseText = "Dosering: "
+            For intIndx = 0 To cboSubstance.ListCount - 1
+                cboSubstance.Value = cboSubstance.List(intIndx)
+                SelectDoseRule
+                m_Med.DoseText = m_Med.DoseText & " + " & GetDoseText()
+            Next
+        End If
     
     End If
     
     CloseForm "OK"
 
 End Sub
+
+Private Function GetDoseText() As String
+
+    Dim strText As String
+    
+    strText = strText & cboSubstance.Value
+    strText = strText & " " & StringToDouble(txtCalcDose.Value)
+    strText = strText & " " & lblDoseUnit
+
+    GetDoseText = strText
+
+End Function
+
+
 
 Private Sub cmdParEnt_Click()
 
@@ -1039,6 +1181,8 @@ Private Sub UserForm_Activate()
     CenterForm
     
     Validate vbNullString
+    
+    cboGeneriek.SetFocus
 
 End Sub
 

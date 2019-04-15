@@ -409,7 +409,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
 
     If dblGewicht < 2 Then Exit Sub
     
-    Select Case dblGewicht
+    Select Case Int(dblGewicht)
         Case 2 To 6
             ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 2, CInt(varTPN))
             
