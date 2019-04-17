@@ -79,6 +79,7 @@ Private Sub cmdImport_Click()
     Dim objParEnt As ClassParent
     
     strFile = ModFile.GetFileWithDialog
+    If strFile = "" Then Exit Sub
     
     Dim strMsg As String
     

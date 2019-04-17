@@ -16,6 +16,13 @@ Option Explicit
 
 Private m_Range As String
 Private m_Validate As String
+Private m_IsSST1 As Boolean
+
+Public Sub SetIsSST1()
+
+    m_IsSST1 = True
+
+End Sub
 
 Private Function Validate() As Boolean
 
@@ -29,6 +36,8 @@ Private Function Validate() As Boolean
         Case Else
             strMsg = vbNullString
     End Select
+    
+    If StringToDouble(txtWaarde.Value) < 0 Then strMsg = "Kan geen negatieve waarde invoeren"
     
     lblValid.Caption = strMsg
     Validate = strMsg = vbNullString
@@ -50,7 +59,13 @@ End Sub
 
 Private Sub cmdOK_Click()
     
-    If Not m_Range = vbNullString Then ModRange.SetRangeValue m_Range, StringToDouble(txtWaarde.Value)
+    If Not m_Range = vbNullString Then
+        If m_IsSST1 Then
+            PedTPN_SetSST1GlucoseVol StringToDouble(txtWaarde.Value)
+        Else
+            ModRange.SetRangeValue m_Range, StringToDouble(txtWaarde.Value)
+        End If
+    End If
     Me.Hide
 
 End Sub

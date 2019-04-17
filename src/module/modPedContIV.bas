@@ -18,7 +18,6 @@ Private Const constUnitIndx As Integer = 2
 Private Const constFactorIndex As Integer = 23
 
 
-
 ' Copy paste function cannot be reused because of private clear method
 Private Sub ShowPickList(ByVal strTbl As String, ByVal strRange As String, ByVal intStart As Integer, ByVal intMax As Integer)
 
@@ -101,6 +100,7 @@ Private Sub Clear(ByVal intN As Integer)
         ModRange.SetRangeValue strMedicament, 1
     Else
         ModRange.SetRangeValue strMedicament, vbNullString
+        ModRange.SetRangeValue "_Ped_MedIV_DoseUnit_" & strN, ""
     End If
     
     ModRange.SetRangeValue strMedSterkte, 0
@@ -617,6 +617,9 @@ Private Sub EnterMed(ByVal intN As Integer)
 
     Dim strMed As String
     Dim strSterkte As String
+    Dim strDoseUnit As String
+    Dim dblOplVol As Double
+    
     Dim arrSterkte() As String
     Dim frmMedIV As FormMedIV
     
@@ -624,20 +627,27 @@ Private Sub EnterMed(ByVal intN As Integer)
     
     strMed = ModRange.GetRangeValue(constMedIVKeuze & intN, vbNullString)
     strSterkte = ModRange.GetRangeValue(constMedIVSterkte & intN, vbNullString)
+    strDoseUnit = ModRange.GetRangeValue("_Ped_MedIV_DoseUnit_" & intN, vbNullString)
+    dblOplVol = ModRange.GetRangeValue("_Ped_MedIV_OplVol_" & intN, vbNullString)
+    
     arrSterkte = Split(strSterkte, " ")
     
     frmMedIV.txtMedicament.Text = strMed
     frmMedIV.txtSterkte.Text = ModArray.StringArrayItem(arrSterkte, 0)
-    frmMedIV.txtEenheid.Text = ModArray.StringArrayItem(arrSterkte, 1)
+    frmMedIV.cboUnit.Value = ModArray.StringArrayItem(arrSterkte, 1)
+    frmMedIV.txtSolVol = dblOplVol
+    frmMedIV.cboDoseUnit.Value = strDoseUnit
     
     frmMedIV.Show
     
     If frmMedIV.lblValid.Caption = vbNullString Then
     
         strMed = frmMedIV.txtMedicament.Text
-        strSterkte = frmMedIV.txtSterkte.Text & " " & Trim(frmMedIV.txtEenheid)
+        strSterkte = frmMedIV.txtSterkte.Text & " " & Trim(frmMedIV.cboUnit.Text)
         ModRange.SetRangeValue constMedIVKeuze & intN, strMed
         ModRange.SetRangeValue constMedIVSterkte & intN, strSterkte
+        ModRange.SetRangeValue "_Ped_MedIV_DoseUnit_" & intN, frmMedIV.cboDoseUnit.Text
+        ModRange.SetRangeValue "_Ped_MedIV_OplVol_" & intN, frmMedIV.txtSolVol.Text
     
     End If
     

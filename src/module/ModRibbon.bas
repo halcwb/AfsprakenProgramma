@@ -199,7 +199,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
              ModAdmin.Admin_TblGlobParEnt
         
         Case "btnMedDisc"                                    ' -> Beheer Discontinue medicatie
-             ModFormularium.Formularium_ShowConfig
+             ModDatabase.Database_ImportConfigMedDisc
         
         'grpFB                                              ' -- ACCEPTATIE TESTS --
         

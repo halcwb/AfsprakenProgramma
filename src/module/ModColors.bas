@@ -3,7 +3,7 @@ Option Explicit
 
 Public Enum RGBColors
     R = 1
-    G = 2
+    g = 2
     B = 3
 End Enum
 
@@ -186,7 +186,7 @@ Public Function ConvertLongToRGB(ByVal lngC As Long, ByVal intOpt As RGBColors) 
 
     If intOpt = RGBColors.R Then
         ConvertLongToRGB = lngR
-    ElseIf intOpt = RGBColors.G Then
+    ElseIf intOpt = RGBColors.g Then
         ConvertLongToRGB = lngG
     Else
         ConvertLongToRGB = lngB
@@ -201,7 +201,7 @@ Public Function ShowColorDialog(ByVal lngC As Long) As Long
     Dim lngB As Long
 
     lngR = ConvertLongToRGB(lngC, R)
-    lngG = ConvertLongToRGB(lngC, G)
+    lngG = ConvertLongToRGB(lngC, g)
     lngB = ConvertLongToRGB(lngC, B)
 
     If Application.Dialogs(xlDialogEditColor).Show(10, lngR, lngG, lngB) = True Then

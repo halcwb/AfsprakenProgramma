@@ -320,7 +320,7 @@ Public Sub WriteNamesToSheet(shtSheet As Worksheet, ByVal blnShowProgress As Boo
         
         shtSheet.Cells(intN, 1).Value2 = Strings.Replace(objName.RefersTo, "=", vbNullString)
         shtSheet.Cells(intN, 2).Value2 = objName.Name
-        shtSheet.Cells(intN, 4).Formula = "=IFERROR(VLOOKUP(B" & intN & ",PatData!$A$2:$A$2000,1,)," & strEmpty & ")<>" & strEmpty
+        shtSheet.Cells(intN, 4).Formula = "=IFERROR(VLOOKUP(B" & intN & ",PatData!$A$2:$A$3000,1,)," & strEmpty & ")<>" & strEmpty
         shtSheet.Cells(intN, 5).Value2 = varValue
         shtSheet.Cells(intN, 6).Value2 = blnIsFormula ' Is Formula
         shtSheet.Cells(intN, 7).Value2 = blnIsData ' Is Data

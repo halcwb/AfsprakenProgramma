@@ -26,6 +26,7 @@ Private Const constSST2Keuze As String = "_Ped_TPN_SST2Keuze"
 
 Private Const constTPN As String = "_Ped_TPN_Keuze"
 Private Const constTPNVol As String = "_Ped_TPN_Vol"
+Private Const constSST1Vol As String = "_Ped_TPN_SST1Vol"
 Private Const constTPNDag As String = "_Ped_TPN_DagKeuze"
 
 Private Const constNaCl1 As String = "_Ped_TPN_NaCl1"
@@ -72,6 +73,7 @@ Public Sub PedEntTPN_ClearSST1()
     ModRange.SetRangeValue constTPNVol, 0
     
     ModRange.SetRangeValue constSST1Stand, 0
+    ModRange.SetRangeValue constSST1Vol, 0
     ModRange.SetRangeValue constSST1Keuze, 1
     
     ModRange.SetRangeValue constNaCl1, False
@@ -331,34 +333,6 @@ Public Sub PedEntTPN_ClearOpm()
 
 End Sub
 
-'Public Sub PedEntTPN_SelectTPNPrint()
-'
-'    Dim dblGew As Double
-'
-'    dblGew = ModPatient.Patient_GetWeight
-'
-'    If dblGew >= CONST_TPN_1 And dblGew <= CONST_TPN_2 Then
-'        shtPedPrtTPN2tot6.Select
-'    Else
-'        If dblGew <= CONST_TPN_3 Then
-'            shtPedPrtTPN7tot15.Select
-'        Else
-'            If dblGew <= CONST_TPN_4 Then
-'                shtPedPrtTPN16tot30.Select
-'            Else
-'                If dblGew <= CONST_TPN_5 Then
-'                    shtPedPrtTPN31tot50.Select
-'                Else
-'                    shtPedPrtTPN50.Select
-'                End If
-'            End If
-'        End If
-'    End If
-'
-'    ActiveSheet.Range("A1").Select
-'
-'End Sub
-
 Public Function GetPedTPNIndexForWeight() As Integer
 
     Dim dblWeight As Double
@@ -367,11 +341,11 @@ Public Function GetPedTPNIndexForWeight() As Integer
     dblWeight = ModPatient.Patient_GetWeight()
     
     intTPN = 1
-    intTPN = IIf(dblWeight >= CONST_TPN_1, 2, intTPN)
-    intTPN = IIf(dblWeight >= CONST_TPN_2, 3, intTPN)
-    intTPN = IIf(dblWeight >= CONST_TPN_3, 4, intTPN)
-    intTPN = IIf(dblWeight >= CONST_TPN_4, 5, intTPN)
-    intTPN = IIf(dblWeight > CONST_TPN_5, 6, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_1, 3, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_2, 4, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_3, 5, intTPN)
+    intTPN = IIf(dblWeight >= CONST_TPN_4, 6, intTPN)
+    intTPN = IIf(dblWeight > CONST_TPN_5, 7, intTPN)
     
     GetPedTPNIndexForWeight = intTPN
 
@@ -389,6 +363,31 @@ Private Sub SetTPNAdvies(ByVal strRange As String, dblVal As Double)
 
 End Sub
 
+Public Sub PedTPN_SetSST1GlucoseVol(ByVal dblVol As Double)
+
+    dblVol = dblVol - ModRange.GetRangeValue("Var_Ped_TPN_SSTGlucBerekend", 0)
+    If dblVol >= 0 Then SetTPNAdvies "_Ped_TPN_SST1Vol", dblVol
+
+End Sub
+
+Public Sub PedTPN_SetSST1Stand()
+
+    Dim dblStand As Double
+    
+    dblStand = ModRange.GetRangeValue("Var_Ped_TPN_SST1Vol", 0) / 24
+
+    ' ALS(C3<100;C3/10;C3-90)
+    If dblStand < 10 Then
+        dblStand = Round(dblStand, 1)
+        SetTPNAdvies constSST1Stand, dblStand * 10
+    Else
+        dblStand = Round(dblStand, 0) + 90
+        SetTPNAdvies constSST1Stand, dblStand
+    End If
+
+End Sub
+
+
 Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
 
     Dim dblVol As Double
@@ -398,12 +397,15 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
     Dim dblLipid As Double
     Dim dblSolu As Double
     Dim dblGewicht As Double
+    Dim intTPN As Integer
     
     dblGewicht = ModPatient.Patient_GetWeight()
-        
+    
+    intTPN = ModRange.GetRangeValue(constTPN, 1)
+    PedEntTPN_ClearSST1
+    PedEntTPN_ClearLipid
+    
     If intDag = 4 Or intDag = 0 Then
-            PedEntTPN_ClearTPN
-            PedEntTPN_ClearLipid
         Exit Sub
     End If
 
@@ -411,7 +413,8 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
     
     Select Case Int(dblGewicht)
         Case 2 To 6
-            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 2, CInt(varTPN))
+            intTPN = IIf(intTPN = 2, 2, 3)
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), intTPN, CInt(varTPN))
             
             ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
@@ -437,6 +440,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                     
                     ModRange.SetRangeValue constGlucSol, constGluc10
+                    PedTPN_SetSST1GlucoseVol 120 * dblGewicht
                 
                 Case 2
                     ModRange.SetRangeValue constSST1Keuze, 3
@@ -447,6 +451,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                     ModRange.SetRangeValue constGlucSol, constGluc12_5
+                    PedTPN_SetSST1GlucoseVol 105 * dblGewicht
                 
                 Case 3
                     ModRange.SetRangeValue constSST1Keuze, 5
@@ -457,21 +462,14 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
             
                     ModRange.SetRangeValue constGlucSol, constGluc17_5
+                    PedTPN_SetSST1GlucoseVol 90 * dblGewicht
             
             End Select
             
-            dblVol = (150 * dblGewicht - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
-            
-            If dblVol < 5 Then
-                SetTPNAdvies constSST1Stand, dblVol * 10
-            ElseIf dblVol < 146 Then
-                SetTPNAdvies constSST1Stand, dblVol + 45
-            Else
-                SetTPNAdvies constSST1Stand, (dblVol + 125) / 5
-            End If
+            PedTPN_SetSST1Stand
             
         Case 7 To 15
-            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 3, CInt(varTPN))
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 4, CInt(varTPN))
             
             ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
@@ -501,6 +499,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                     ModRange.SetRangeValue constGlucSol, constGluc10
+                    PedTPN_SetSST1GlucoseVol 65 * dblGewicht
                 
                 Case 2
                     ModRange.SetRangeValue constSST1Keuze, 6
@@ -511,6 +510,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                     ModRange.SetRangeValue constGlucSol, constGluc20
+                    PedTPN_SetSST1GlucoseVol 50 * dblGewicht
                 
                 Case 3
                     ModRange.SetRangeValue constSST1Keuze, 8
@@ -521,21 +521,17 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                     
                     ModRange.SetRangeValue constGlucSol, constGluc30
-            
+                    If dblGewicht < 11 Then
+                        PedTPN_SetSST1GlucoseVol 55 * dblGewicht
+                    Else
+                        PedTPN_SetSST1GlucoseVol 40 * dblGewicht
+                    End If
             End Select
-            
-            dblVol = (90 * dblGewicht + ((15 - dblGewicht) / 8) * 20 * dblGewicht - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
-            
-            If dblVol < 5 Then
-                SetTPNAdvies constSST1Stand, dblVol * 10
-            ElseIf dblVol < 146 Then
-                SetTPNAdvies constSST1Stand, dblVol + 45
-            Else
-                SetTPNAdvies constSST1Stand, (dblVol + 125) / 5
-            End If
+                        
+            PedTPN_SetSST1Stand
     
         Case 16 To 30
-            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 4, CInt(varTPN))
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 5, CInt(varTPN))
             
             ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
@@ -567,6 +563,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                     ModRange.SetRangeValue constGlucSol, constGluc10
+                    PedTPN_SetSST1GlucoseVol 50 * dblGewicht
                 
                 Case 2
                     ModRange.SetRangeValue constSST1Keuze, 6
@@ -577,6 +574,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                     ModRange.SetRangeValue constGlucSol, constGluc20
+                    PedTPN_SetSST1GlucoseVol 40 * dblGewicht
                 
                 Case 3
                     ModRange.SetRangeValue constSST1Keuze, 8
@@ -587,21 +585,14 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                     
                     ModRange.SetRangeValue constGlucSol, constGluc30
+                    PedTPN_SetSST1GlucoseVol 30 * dblGewicht
             
             End Select
             
-            dblVol = (70 * dblGewicht + ((30 - dblGewicht) / 14) * 10 * dblGewicht - 15 - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
-            
-            If dblVol < 5 Then
-                SetTPNAdvies constSST1Stand, dblVol * 10
-            ElseIf dblVol < 146 Then
-                SetTPNAdvies constSST1Stand, dblVol + 45
-            Else
-                SetTPNAdvies constSST1Stand, (dblVol + 125) / 5
-            End If
+            PedTPN_SetSST1Stand
         
         Case 31 To 50
-            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 5, CInt(varTPN))
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 6, CInt(varTPN))
             
             ModRange.SetRangeValue constNaCl1, True
             dblNaCl = 6 * dblGewicht
@@ -633,6 +624,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                     ModRange.SetRangeValue constGlucSol, constGluc10
+                    PedTPN_SetSST1GlucoseVol 35 * dblGewicht
                 
                 Case 2
                     ModRange.SetRangeValue constSST1Keuze, 6
@@ -643,6 +635,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                 
                     ModRange.SetRangeValue constGlucSol, constGluc20
+                    PedTPN_SetSST1GlucoseVol 30 * dblGewicht
                 
                 Case 3
                     ModRange.SetRangeValue constSST1Keuze, IIf(dblGewicht > 35, 9, 7)
@@ -653,22 +646,18 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
                     
                     ModRange.SetRangeValue constGlucSol, IIf(ModPatient.Patient_GetWeight >= 40, constGluc40, constGluc25)
-                    
+                    If dblGewicht < 36 Then
+                        PedTPN_SetSST1GlucoseVol 40 * dblGewicht
+                    Else
+                        PedTPN_SetSST1GlucoseVol 20 * dblGewicht
+                    End If
             
             End Select
             
-            dblVol = (50 * dblGewicht + ((50 - dblGewicht) / 19) * 20 * dblGewicht - 15 - ModRange.GetRangeValue(constTPNVol, 0) * 2 - dblNaCl * 2 - dblKCl * 2 - dblLipid * 24) / 24
-            
-            If dblVol < 5 Then
-                SetTPNAdvies constSST1Stand, dblVol * 10
-            ElseIf dblVol < 146 Then
-                SetTPNAdvies constSST1Stand, dblVol + 45
-            Else
-                SetTPNAdvies constSST1Stand, (dblVol + 125) / 5
-            End If
+            PedTPN_SetSST1Stand
             
         Case Else
-            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 6, CInt(varTPN))
+            ModRange.SetRangeValue constTPN, IIf(IsMissing(varTPN), 7, CInt(varTPN))
             
             ModRange.SetRangeValue constNaCl1, False
             ModRange.SetRangeValue constKCl1, False
@@ -709,15 +698,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                     SetTPNAdvies constLipid, IIf(dblLipid < 5, dblLipid * 10, dblLipid + 45)
             End Select
             
-            dblVol = 0
-            
-            If dblVol < 5 Then
-                SetTPNAdvies constSST1Stand, dblVol * 10
-            ElseIf dblVol < 146 Then
-                SetTPNAdvies constSST1Stand, dblVol + 45
-            Else
-                SetTPNAdvies constSST1Stand, (dblVol + 125) / 5
-            End If
+            PedTPN_SetSST1Stand
                 
     End Select
     
@@ -773,13 +754,23 @@ Public Sub PedEntTPN_TPNText()
 
 End Sub
 
-Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String)
+Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String, Optional ByVal blnIsSST1 As Boolean)
 
     Dim frmInvoer As FormInvoerNumeriek
+    Dim dblValue As Double
     
     Set frmInvoer = New FormInvoerNumeriek
+    If blnIsSST1 Then frmInvoer.SetIsSST1
     frmInvoer.lblText.Caption = "Voer hoeveelheid in voor " & strItem
-    frmInvoer.SetValue strRange, strItem, ModRange.GetRangeValue(strRange, 0), "mL", vbNullString
+    
+    dblValue = ModRange.GetRangeValue(strRange, 0)
+    If blnIsSST1 Then
+        dblValue = dblValue + ModRange.GetRangeValue("Var_Ped_TPN_SSTGlucBerekend", 0)
+        frmInvoer.SetValue strRange, strItem, dblValue, "mL", vbNullString
+    Else
+        frmInvoer.SetValue strRange, strItem, dblValue, "mL", vbNullString
+    End If
+    
     frmInvoer.Show
     
 End Sub
@@ -799,6 +790,13 @@ Public Sub PedEntTPN_ChangeTPNVol()
         ModRange.SetRangeValue constTPN, 1
     End If
 
+End Sub
+
+Public Sub PedEntTPN_SST1()
+
+    EnterHoeveelheid "_Ped_TPN_SST1Vol", "SST1", True
+    ModRange.SetRangeValue constNaCl1, True
+    
 End Sub
 
 Public Sub PedEntTPN_NaCL1()

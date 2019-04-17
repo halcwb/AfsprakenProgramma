@@ -953,6 +953,7 @@ Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) A
     strSql = strSql & "DECLARE @minConcentration float" & vbNewLine
     strSql = strSql & "DECLARE @maxConcentration float" & vbNewLine
     strSql = strSql & "DECLARE @solution nvarchar(300)" & vbNewLine
+    strSql = strSql & "DECLARE @solutionRequired bit" & vbNewLine
     strSql = strSql & "DECLARE @dripQuantity float" & vbNewLine
     strSql = strSql & "DECLARE @doseUnit nvarchar(50)" & vbNewLine
     strSql = strSql & "DECLARE @minDose float" & vbNewLine
@@ -1027,6 +1028,7 @@ Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) A
         strSql = strSql & "SET @minConcentration  = " & DoubleToString(dblMinConcentration) & vbNewLine
         strSql = strSql & "SET @maxConcentration  = " & DoubleToString(dblMaxConcentration) & vbNewLine
         strSql = strSql & "SET @solution  = '" & strSolution & "'" & vbNewLine
+        strSql = strSql & "SET @solutionRequired  = 0" & vbNewLine
         strSql = strSql & "SET @dripQuantity  =  " & DoubleToString(dblDripQuantity) & vbNewLine
         strSql = strSql & "SET @doseUnit  = '" & strDoseUnit & "'" & vbNewLine
         strSql = strSql & "SET @minDose  =  " & DoubleToString(dblMinDose) & vbNewLine
@@ -1063,6 +1065,7 @@ Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) A
         strSql = strSql & "  ,@minConcentration" & vbNewLine
         strSql = strSql & "  ,@maxConcentration" & vbNewLine
         strSql = strSql & "  ,@solution" & vbNewLine
+        strSql = strSql & "  ,@solutionRequired" & vbNewLine
         strSql = strSql & "  ,@dripQuantity" & vbNewLine
         strSql = strSql & "  ,@doseUnit" & vbNewLine
         strSql = strSql & "  ,@minDose" & vbNewLine
