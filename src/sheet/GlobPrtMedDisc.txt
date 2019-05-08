@@ -1,0 +1,28 @@
+"$B$1: 	=NOW()
+$G$1: 	=OR(G4,G5,G8,G9,G10,G11,G14,G15,G16,G17)
+$B$4: 	=_User_LastName
+$G$4: 	=OR(B4=0,B4 ="""")
+$B$5: 	=_User_FirstName
+$G$5: 	=OR(B5=0,B5 ="""")
+$B$8: 	=__0_PatNum
+$G$8: 	=OR(B8=0,B8 ="""")
+$B$9: 	=__2_AchterNaam
+$G$9: 	=OR(B9=0,B9 ="""")
+$B$10: 	=__3_VoorNaam
+$G$10: 	=OR(B10=0,B10 ="""")
+$B$11: 	=__4_GebDatum
+$G$11: 	=OR(B11=0,B11 ="""")
+$B$14: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,39,FALSE),"""")
+$G$14: 	=OR(B14=0,B14 ="""")
+$B$15: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,26,FALSE),"""")
+$G$15: 	=OR(B15=0,B15 ="""")
+$B$16: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,24,FALSE),"""")
+$G$16: 	=OR(B16=0,B16 ="""")
+$B$17: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,25,FALSE),"""")
+$G$17: 	=OR(B17=0,B17 ="""")
+$B$18: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,41,FALSE),"""")
+$B$19: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,28,FALSE),"""")
+$B$20: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,27,FALSE),"""")
+$B$21: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,42,FALSE),"""")
+$B$22: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,30,FALSE),"""")
+"

@@ -51,7 +51,6 @@ Public Const CONST_UPDATE_PATIENT = "UpdatePatient"
 
 Public Const constMedDiscTbl = "Table"
 
-
 Private Sub InitConnection()
 
     Dim strSecret As String
@@ -285,10 +284,10 @@ Public Sub Database_SavePrescriber()
     
     On Error GoTo SavePrescriberError
     
-    strUser = ModMetaVision.MetaVision_GetUserLogin()
-    strLN = WrapString("Bollen")
-    strFN = WrapString("")
-    strRole = WrapString("")
+    strUser = WrapString(ModRange.GetRangeValue("_User_Login", ""))
+    strLN = WrapString(ModRange.GetRangeValue("_User_FirstName", ""))
+    strFN = WrapString(ModRange.GetRangeValue("_User_LastName", ""))
+    strRole = WrapString(ModRange.GetRangeValue("_User_Type", ""))
         
     arrSql = Array(WrapString(strUser), strLN, strFN, strRole, 0)
         
@@ -1152,7 +1151,7 @@ Public Sub Database_LoadPedConfigMedCont()
     
     Do While Not objRs.EOF
         intR = intR + 1
-        If intR > 31 Then GoTo ErrorHandler
+        If intR > 32 Then GoTo ErrorHandler
         
         objSrc.Cells(intR, 1).Value2 = objRs.Fields("Generic").Value
         objSrc.Cells(intR, 2).Value2 = objRs.Fields("GenericUnit").Value
@@ -1173,7 +1172,7 @@ Public Sub Database_LoadPedConfigMedCont()
         objSrc.Cells(intR, 17).Value2 = objRs.Fields("Solution").Value
         objSrc.Cells(intR, 18).Value2 = objRs.Fields("DoseAdvice").Value
                 
-        ModProgress.SetJobPercentage "Data laden", 31, intR
+        ModProgress.SetJobPercentage "Data laden", 32, intR
         objRs.MoveNext
     Loop
     

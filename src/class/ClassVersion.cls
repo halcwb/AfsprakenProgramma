@@ -19,9 +19,9 @@ Public Property Get VersionID() As Integer
 
 End Property
 
-Public Property Let VersionID(intID As Integer)
+Public Property Let VersionID(intId As Integer)
 
-    m_VersionID = intID
+    m_VersionID = intId
 
 End Property
 

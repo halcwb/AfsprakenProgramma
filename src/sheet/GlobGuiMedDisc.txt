@@ -1,4 +1,5 @@
-"$G$2: 	=Txt_Pat_AfspraakDat
+"$F$1: 	=_Glob_Lab_eGFR
+$G$2: 	=Txt_Pat_AfspraakDat
 $N$2: 	=Txt_Pat_GeboorteDat
 $R$2: 	=Txt_Pat_Gewicht
 $T$2: 	=Txt_Pat_Bed

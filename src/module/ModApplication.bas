@@ -229,6 +229,7 @@ Public Sub Application_Initialize()
             ModBed.SetBed strBed
             ModBed.OpenBedAsk False, True
         End If
+        MetaVision_SyncLab
     Else
         Patient_ClearAll False, True ' Default start with no patient
     End If

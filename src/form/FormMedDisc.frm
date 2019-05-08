@@ -28,6 +28,13 @@ Private m_Freq As Dictionary
 Private m_Keer As Boolean
 Private m_Conc As Boolean
 Private m_Adjust As String
+Private m_Mail As Boolean
+
+Public Property Get Mail() As Boolean
+
+    Mail = m_Mail
+
+End Property
 
 Public Sub SetToVolume()
 
@@ -165,9 +172,18 @@ Private Sub SelectDoseRule()
 
     Dim objRule As ClassDoseRule
     Dim strTime As String
+    Dim strFreq As String
     
     For Each objRule In m_Med.DoseRules
-        strTime = Trim(Split(Split(objRule.Freq, "||")(0), "/")(1))
+        strFreq = objRule.Freq
+        If strFreq = "antenoctum" Then
+            strTime = "dag"
+        Else
+            strFreq = Replace(strFreq, "antenoctum||", "")
+        End If
+        
+        strTime = Replace(strTime, "antenoctum||", "")
+        strTime = Trim(Split(Split(strFreq, "||")(0), "/")(1))
         
         If cboFreqTime.Value = strTime And cboSubstance.Value = objRule.Substance Then
             With m_Med
@@ -816,6 +832,13 @@ Private Sub cmdKeerDose_Click()
     
 End Sub
 
+Private Sub cmdMail_Click()
+
+    m_Mail = True
+    cmdOK_Click
+
+End Sub
+
 Private Sub cmdNormDose_Click()
 
     Dim objPic As StdPicture
@@ -1217,6 +1240,7 @@ Private Sub UserForm_Initialize()
 
     m_LoadGPK = False
     m_Keer = False
+    m_Mail = False
     
     m_TherapieGroep = lblTherapieGroep.Caption
     m_SubGroep = lblSubGroep.Caption

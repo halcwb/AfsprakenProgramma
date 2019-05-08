@@ -699,6 +699,491 @@ Public Sub GetLeverNierFunctie(ByVal strHospNum As String)
     
 End Sub
 
+Private Function GetLatestTextSignalInPeriod(ByVal intPatId As Long, ByVal intParId As Long, Optional ByVal dtmFrom As Date, Optional ByVal dtmTo As Date) As ClassSignal
+
+    Dim strFrom As String
+    Dim strTo As String
+    Dim strSql As String
+    Dim strServer As String
+    Dim strDatabase As String
+    Dim objSignal As ClassSignal
+    Dim objRs As Recordset
+    
+        
+    strFrom = WrapDateTime(dtmFrom)
+    strTo = WrapDateTime(dtmTo)
+    
+    strSql = strSql & "DECLARE @parId AS INTEGER" & vbNewLine
+    strSql = strSql & "DECLARE @patId AS INTEGER" & vbNewLine
+    strSql = strSql & "DECLARE @fromTime AS DATE" & vbNewLine
+    strSql = strSql & "DECLARE @toTime AS DATE" & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SET @parId = " & intParId & vbNewLine
+    strSql = strSql & "SET @patId = " & intPatId & vbNewLine
+        
+    If Not strFrom = "" Then
+        strSql = strSql & "SET @fromTime = " & strFrom & vbNewLine
+    End If
+    
+    If Not strTo = "" Then
+        strSql = strSql & "SET @toTime = " & strTo & vbNewLine
+    End If
+    
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SELECT TOP 1 " & vbNewLine
+    strSql = strSql & "p.Abbreviation AS [Name]" & vbNewLine
+    strSql = strSql & ", s.[Time] AS [Time]" & vbNewLine
+    strSql = strSql & ", pt.[Text] AS [Value]" & vbNewLine
+    strSql = strSql & "FROM TextSignals s" & vbNewLine
+    strSql = strSql & "INNER JOIN [Parameters] p ON p.ParameterID = s.ParameterID" & vbNewLine
+    strSql = strSql & "INNER JOIN ParametersText pt on pt.ParameterID = s.ParameterID AND pt.TextID = s.TextID" & vbNewLine
+    strSql = strSql & "WHERE s.ParameterID = @parId AND" & vbNewLine
+    strSql = strSql & "s.PatientID = @patId" & vbNewLine
+    
+    If Not strFrom = "" Then
+        strSql = strSql & "AND" & vbNewLine
+        strSql = strSql & "s.Time >= @fromTime" & vbNewLine
+    End If
+    
+    If Not strTo = "" Then
+        strSql = strSql & "AND" & vbNewLine
+        strSql = strSql & "s.Time <= @toTime  " & vbNewLine
+    End If
+    
+    strSql = strSql & "ORDER BY s.Time DESC" & vbNewLine
+        
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    ModUtils.CopyToClipboard strSql
+    Set objRs = objConn.Execute(strSql)
+    
+    Set objSignal = New ClassSignal
+    If Not (objRs.BOF And objRs.EOF) Then
+        With objSignal
+            .Name = objRs.Fields("Name").Value
+            .Time = objRs.Fields("Time").Value
+            .Value = objRs.Fields("Value").Value
+        End With
+    End If
+    
+    objConn.Close
+
+    Set GetLatestTextSignalInPeriod = objSignal
+
+End Function
+
+Private Sub Test_GetLatestTextSignal()
+
+    Dim dtmFrom As Date
+    Dim dtmTo As Date
+    Dim objSignal As ClassSignal
+    
+    dtmTo = Now()
+    dtmFrom = DateAdd("yyyy", -5, dtmTo)
+
+    Set objSignal = GetLatestTextSignalInPeriod(31583, 5373)
+    ModMessage.ShowMsgBoxInfo objSignal.Name & ": " & objSignal.Value & " " & objSignal.Unit
+
+End Sub
+
+Private Function GetSumNumSignalInPeriod(ByVal intPatId As Long, ByVal strDescr As String, Optional ByVal dtmFrom As Date, Optional ByVal dtmTo As Date) As Double
+
+    Dim strFrom As String
+    Dim strTo As String
+    Dim strSql As String
+    Dim strServer As String
+    Dim strDatabase As String
+    Dim dblSum As Double
+    Dim objRs As Recordset
+    
+    strFrom = WrapDateTime(dtmFrom)
+    strTo = WrapDateTime(dtmTo)
+    
+    strSql = strSql & "DECLARE @descr AS NVARCHAR(MAX)" & vbNewLine
+    strSql = strSql & "DECLARE @patId AS INTEGER" & vbNewLine
+    strSql = strSql & "DECLARE @fromTime AS DATE" & vbNewLine
+    strSql = strSql & "DECLARE @toTime AS DATE" & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SET @descr = '" & strDescr & "'" & vbNewLine
+    strSql = strSql & "SET @patId = " & intPatId & vbNewLine
+        
+    If Not strFrom = "" Then
+        strSql = strSql & "SET @fromTime = " & strFrom & vbNewLine
+    End If
+    
+    If Not strTo = "" Then
+        strSql = strSql & "SET @toTime = " & strTo & vbNewLine
+    End If
+    
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SELECT  " & vbNewLine
+    strSql = strSql & "SUM (s.Value) AS [Sum]" & vbNewLine
+    strSql = strSql & "FROM Signals s" & vbNewLine
+    strSql = strSql & "WHERE " & vbNewLine
+    strSql = strSql & "s.ParameterID IN (SELECT s.ParameterID FROM [Parameters] s WHERE s.Description LIKE @descr)" & vbNewLine
+    strSql = strSql & "AND s.PatientID = @patId" & vbNewLine
+    
+    If Not strFrom = "" Then
+        strSql = strSql & "AND" & vbNewLine
+        strSql = strSql & "s.Time >= @fromTime" & vbNewLine
+    End If
+    
+    If Not strTo = "" Then
+        strSql = strSql & "AND" & vbNewLine
+        strSql = strSql & "s.Time <= @toTime  " & vbNewLine
+    End If
+            
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    ModUtils.CopyToClipboard strSql
+    Set objRs = objConn.Execute(strSql)
+    
+    If Not (objRs.BOF And objRs.EOF) Then
+        If Not IsNull(objRs.Fields("Sum").Value) Then dblSum = objRs.Fields("Sum").Value
+    End If
+    
+    objConn.Close
+
+    GetSumNumSignalInPeriod = dblSum
+
+End Function
+
+Private Sub Test_GetSumNumSignalInPeriod()
+
+    ModMessage.ShowMsgBoxInfo GetSumNumSignalInPeriod(31583, "<diurese>%")
+
+End Sub
+
+Private Function GetLatestNumSignalInPeriod(ByVal intPatId As Long, ByVal intParId As Long, Optional ByVal dtmFrom As Date, Optional ByVal dtmTo As Date) As ClassSignal
+
+    Dim strFrom As String
+    Dim strTo As String
+    Dim strSql As String
+    Dim strServer As String
+    Dim strDatabase As String
+    Dim objSignal As ClassSignal
+    Dim objRs As Recordset
+    
+        
+    strFrom = WrapDateTime(dtmFrom)
+    strTo = WrapDateTime(dtmTo)
+    
+    strSql = strSql & "DECLARE @parId AS INTEGER" & vbNewLine
+    strSql = strSql & "DECLARE @patId AS INTEGER" & vbNewLine
+    strSql = strSql & "DECLARE @fromTime AS DATE" & vbNewLine
+    strSql = strSql & "DECLARE @toTime AS DATE" & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SET @parId = " & intParId & vbNewLine
+    strSql = strSql & "SET @patId = " & intPatId & vbNewLine
+        
+    If Not strFrom = "" Then
+        strSql = strSql & "SET @fromTime = " & strFrom & vbNewLine
+    End If
+    
+    If Not strTo = "" Then
+        strSql = strSql & "SET @toTime = " & strTo & vbNewLine
+    End If
+    
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SELECT TOP 1 " & vbNewLine
+    strSql = strSql & "p.Abbreviation AS [Name]" & vbNewLine
+    strSql = strSql & ", s.Time AS [Time]" & vbNewLine
+    strSql = strSql & ", s.Value / u.Multiplier AS [Value]" & vbNewLine
+    strSql = strSql & ", u.UnitName AS [Unit]" & vbNewLine
+    strSql = strSql & "FROM Signals s" & vbNewLine
+    strSql = strSql & "INNER JOIN [Parameters] p ON p.ParameterID = s.ParameterID" & vbNewLine
+    strSql = strSql & "INNER JOIN Units u ON u.UnitID = p.UnitID" & vbNewLine
+    strSql = strSql & "WHERE s.ParameterID = @parId AND" & vbNewLine
+    strSql = strSql & "s.PatientID = @patId" & vbNewLine
+    
+    If Not strFrom = "" Then
+        strSql = strSql & "AND" & vbNewLine
+        strSql = strSql & "s.Time >= @fromTime" & vbNewLine
+    End If
+    
+    If Not strTo = "" Then
+        strSql = strSql & "AND" & vbNewLine
+        strSql = strSql & "s.Time <= @toTime  " & vbNewLine
+    End If
+    
+    strSql = strSql & "ORDER BY s.Time DESC" & vbNewLine
+        
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    ModUtils.CopyToClipboard strSql
+    Set objRs = objConn.Execute(strSql)
+    
+    Set objSignal = New ClassSignal
+    If Not (objRs.BOF And objRs.EOF) Then
+        With objSignal
+            .Name = objRs.Fields("Name").Value
+            .Time = objRs.Fields("Time").Value
+            .Value = objRs.Fields("Value").Value
+            .Unit = objRs.Fields("Unit").Value
+        End With
+    End If
+    
+    objConn.Close
+
+    Set GetLatestNumSignalInPeriod = objSignal
+
+End Function
+
+Private Sub Test_GetLatestNumSignal()
+
+    Dim dtmFrom As Date
+    Dim dtmTo As Date
+    Dim objSignal As ClassSignal
+    
+    dtmTo = Now()
+    dtmFrom = DateAdd("yyyy", -5, dtmTo)
+
+    Set objSignal = GetLatestNumSignalInPeriod(31583, 5473)
+    ModMessage.ShowMsgBoxInfo objSignal.Name & ": " & objSignal.Value & " " & objSignal.Unit
+
+End Sub
+
+Private Function WrapDateTime(dtmDate As Date) As String
+
+    Dim strDate As String
+    
+    strDate = FormatDateTimeSeconds(dtmDate)
+    If strDate = "" Then
+        WrapDateTime = ""
+    Else
+        WrapDateTime = "{ts'" & strDate & "'}"
+    End If
+    
+End Function
+
+Private Sub Test_WrapDateTime()
+
+
+    ModMessage.ShowMsgBoxInfo WrapDateTime(Now())
+
+End Sub
+
+
+Public Function MetaVision_eGFRWarning() As String
+
+    Dim intPatId As Integer
+
+    Dim intCreatId As Integer
+    Dim intHeightId As Integer
+    Dim intWeightId As Integer
+    Dim intGenderId As Integer
+    
+    Dim intDays As Long
+    Dim intValidDays As Integer
+    
+    Dim dblHeight As Double
+    Dim dblWeight As Double
+    Dim strGender As String
+    
+    Dim strSql As String
+    Dim strServer As String
+    Dim strDatabase As String
+    Dim objRs As Recordset
+    
+    Dim dtmFrom As Date
+    Dim dtmTo As Date
+    
+    Dim blnAKI As Boolean
+    Dim blnDiff As Boolean
+    Dim blnCreat As Boolean
+    Dim blnDiurese As Boolean
+    Dim dblCreat As Double
+    Dim intEGFR As Integer
+    Dim dblVal As Double
+    Dim dblMin As Double
+    Dim dblMax As Double
+    Dim dtmMin As Date
+    Dim dtmMax As Date
+    Dim dtmTime As Date
+    Dim dtmVal As Date
+    Dim dblDiurese As Double
+    Dim strResult As String
+    Dim strTime As String
+    Dim dblGender As Double
+    
+    intCreatId = 4156  ' Creatinine (bl)
+    intHeightId = 9505 ' Actuele Lengte (cm)
+    intWeightId = 8365 ' Gewicht (kg)
+    intGenderId = 5373 ' Patient geslacht 1 = Vrouw, 2 = Man, 3 = Onbekend
+
+    intPatId = MetaVision_GetCurrentPatientID()
+
+    ' Determine valid period to get the height
+    intDays = DateDiff("d", Patient_BirthDate(), Now())
+    intValidDays = 15
+    If intDays > 90 Then intValidDays = 30
+    If intDays > 365 Then intValidDays = 90
+
+    ' Get the latest height in the valid period
+    dtmFrom = DateAdd("d", Now(), -1 * intValidDays)
+    dtmTo = Now()
+    dblHeight = GetLatestNumSignalInPeriod(intPatId, intHeightId, dtmFrom, dtmTo).Value
+    
+    ' Get the latest weight in the valid period
+    dtmFrom = DateAdd("d", Now(), -1 * intValidDays)
+    dtmTo = Now()
+    dblWeight = GetLatestNumSignalInPeriod(intPatId, intWeightId, dtmFrom, dtmTo).Value
+
+    ' Get the latest known gender
+    strGender = GetLatestTextSignalInPeriod(intPatId, intGenderId).Value
+
+    'Get the latest creat lab values of the last 90 days
+    strSql = strSql & "DECLARE @patId INT" & vbNewLine
+    strSql = strSql & "DECLARE @parId INT" & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SET @patId = " & intPatId & vbNewLine
+    strSql = strSql & "SET @parId = " & intCreatId & vbNewLine
+    strSql = strSql & "" & vbNewLine
+    strSql = strSql & "SELECT s.[Time], s.Value / u.Multiplier Value FROM Signals s" & vbNewLine
+    strSql = strSql & "INNER JOIN Parameters p ON p.ParameterID = s.ParameterID" & vbNewLine
+    strSql = strSql & "INNER JOIN Units u ON u.UnitID = p.UnitID" & vbNewLine
+    strSql = strSql & "WHERE s.PatientID = @patId" & vbNewLine
+    strSql = strSql & "AND s.ParameterID = @parId" & vbNewLine
+    strSql = strSql & "AND s.Error = 0" & vbNewLine
+    strSql = strSql & "AND datediff(d, s.[Time], getdate()) <= 90" & vbNewLine
+    strSql = strSql & "ORDER BY s.[Time] DESC" & vbNewLine
+
+    strServer = MetaVision_GetServer()
+    strDatabase = MetaVision_GetDatabase()
+    
+    InitConnection strServer, strDatabase
+    
+    objConn.Open
+    
+    ModUtils.CopyToClipboard strSql
+    Set objRs = objConn.Execute(strSql)
+        
+    blnAKI = False
+    dblCreat = 0
+    intEGFR = 0
+    dblVal = 0
+    dblMin = 1
+    dtmMin = Now()
+    dtmMax = Now()
+    dblMax = 0
+    Do While Not objRs.EOF
+        ' Values not yet initialized, set to the first creat value
+        If dblCreat = 0 Then
+            dtmTime = CDate(objRs.Fields("Time").Value)
+            dblCreat = objRs.Fields("Value").Value
+            dblMin = dblCreat
+            dblMax = dblCreat
+        End If
+        ' AKI if the difference with the previous value > 26.5 microg/l
+        If dblVal > 0 Then blnDiff = (objRs.Fields("Value").Value - dblVal) > 26.5
+        dblVal = objRs.Fields("Value").Value
+        ' Calculate min and max creat for the last 7  days
+        dtmVal = objRs.Fields("Time").Value
+        If DateDiff("d", dtmVal, Now()) <= 7 Then
+            If dblMin > dblVal Then
+                dblMin = dblVal
+                dtmMin = dtmVal
+            End If
+
+            If dblMax < dblVal Then
+                dblMax = dblVal
+                dtmMax = dtmVal
+            End If
+        End If
+
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+
+
+    ' Determine if there is AKI
+    If dtmMax > dtmMin Then blnCreat = (dblMax / dblMin) > 1.5
+    If dblWeight > 0 Then
+        dtmTo = Now()
+        dtmFrom = DateAdd("h", -6, dtmTo)
+        dblDiurese = GetSumNumSignalInPeriod(intPatId, "<diurese>%", dtmFrom, dtmTo)
+        dblDiurese = dblDiurese / dblWeight
+        
+        If dblDiurese < 0.5 Then blnDiurese = True
+    End If
+    blnAKI = (blnAKI Or blnDiff)
+    blnAKI = (blnAKI Or blnCreat)
+    blnAKI = (blnAKI Or blnDiurese)
+
+    ' Test
+    ' intDays = 600
+    ' dblCreat = 100
+    ' dblHeight = 100
+    ' eGFR = 36
+
+    ' Test
+    ' intDays = 18 * 365
+    ' dblWeight = 50
+    ' dblCreat = 120
+    ' strGender = "Vrouw"
+    ' eGFR =
+
+    If intDays < 365 Then
+        strResult = ""
+    ElseIf dblWeight < 50 Then
+        ' Calculate eGFR from the last known creat value
+        ' The Schwartz formule:
+        If dblCreat > 0 Then intEGFR = CInt(36.2 * dblHeight / (dblCreat))
+
+        strTime = FormatDateTime(dtmTime, vbShortDate)
+        strResult = ""
+        If intEGFR < 60 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), beperkte nierfunctie!"
+        If intEGFR < 50 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), denk aan evt. dosering aanpassingen!"
+        If dblHeight = 0 And dblCreat > 0 And intEGFR = 0 Then strResult = "Geen lengte bekend, kan eGFR niet berekenen. Graag actuele lengte invoeren."
+
+    Else
+        ' Calculate eGFR from the last known creat value
+        ' The MDRD formule:
+        If strGender = "Vrouw" Then dblGender = 0.742
+        If strGender = "Man" Then dblGender = 1
+        If dblCreat > 0 Then intEGFR = CInt((175 * ((dblCreat / 88.4) ^ (-1.154))) * ((intDays / 365) ^ -0.203) * (dblGender))
+
+        strTime = FormatDateTime(dtmTime, vbShortDate)
+        If intEGFR < 60 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), beperkte nierfunctie!"
+        If intEGFR < 50 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), denk aan evt. dosering aanpassingen!"
+
+    End If
+
+
+    If blnAKI Then
+        If strResult <> "" Then strResult = strResult & " "
+        If blnDiff Then strResult = strResult & "Stijging van creatinine waarden van > 26,5 microm/l. "
+        If blnCreat Then strResult = strResult & "Stijging van creatinine waarden van > 1,5 keer van de voorgaande waarde. "
+        If blnDiurese Then strResult = strResult & "Verminderde diurese van < 0.5 ml/kg/uur. "
+        strResult = strResult & vbNewLine & "Patient heeft mogelijk Acute Kidney Injury."
+    End If
+
+    MetaVision_eGFRWarning = strResult
+
+End Function
+
+Private Sub Test_MetaVision_eGFRWarning()
+
+    ModMessage.ShowMsgBoxInfo MetaVision_eGFRWarning()
+
+End Sub
+
 Public Sub MetaVision_SyncLab()
 
     Dim strHospNum As String
@@ -714,6 +1199,8 @@ Public Sub MetaVision_SyncLab()
     strHospNum = ModPatient.Patient_GetHospitalNumber()
     GetLab strHospNum
     GetLeverNierFunctie strHospNum
+    
+    ModRange.SetRangeValue "_Glob_Lab_eGFR", MetaVision_eGFRWarning()
     
 End Sub
 
