@@ -737,7 +737,7 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
     Dim objPat As ClassPatientDetails
     
-    On Error GoTo ErrorOpenBed
+    On Error GoTo ErrorHandler
     
     Set objPat = New ClassPatientDetails
     ModMetaVision.MetaVision_GetPatientDetails objPat, ModMetaVision.MetaVision_GetCurrentPatientID, vbNullString
@@ -775,14 +775,14 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
     If Not strHospNum = vbNullString Then
         Patient_SetHospitalNumber strHospNum
-        GetPatientDataFromDatabase strHospNum, intVersion
+        GetPatientDataFromDatabase strHospNum, ModDatabase.Database_GetLatestPrescriptionVersion(strHospNum)
     End If
         
     ModDatabase.Database_LogAction "Open Patient"
     
     Exit Sub
 
-ErrorOpenBed:
+ErrorHandler:
 
     ModMessage.ShowMsgBoxError "Kan bed " & strHospNum & " niet openenen"
     ModLog.LogError Err, Err.Description

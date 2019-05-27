@@ -27,7 +27,6 @@ Private m_LoadGPK As Boolean
 Private m_Freq As Dictionary
 Private m_Keer As Boolean
 Private m_Conc As Boolean
-Private m_Adjust As String
 Private m_Mail As Boolean
 
 Public Property Get Mail() As Boolean
@@ -174,6 +173,8 @@ Private Sub SelectDoseRule()
     Dim strTime As String
     Dim strFreq As String
     
+    ClearDose
+    
     For Each objRule In m_Med.DoseRules
         strFreq = objRule.Freq
         If strFreq = "antenoctum" Then
@@ -185,6 +186,7 @@ Private Sub SelectDoseRule()
         strTime = Replace(strTime, "antenoctum||", "")
         strTime = Trim(Split(Split(strFreq, "||")(0), "/")(1))
         
+        If cboFreqTime.Value = vbNullString Then cboFreqTime.Value = strTime
         If cboFreqTime.Value = strTime And cboSubstance.Value = objRule.Substance Then
             With m_Med
                 .PerKg = objRule.PerKg
@@ -284,19 +286,33 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
 
 End Function
 
+Private Function GetAdjust() As String
+    
+    Dim strAdjust As String
+    
+    strAdjust = vbNullString
+    strAdjust = IIf(optKg.Value, "kg", strAdjust)
+    strAdjust = IIf(optM2.Value, "m2", strAdjust)
+
+    GetAdjust = strAdjust
+
+End Function
+
 Private Sub SetDoseUnit()
 
+    Dim strAdjust As String
     Dim strUnit As String
     Dim strTime As String
     
+    strAdjust = GetAdjust()
     strUnit = Trim(cboDosisEenheid.Text)
     strTime = IIf(chkPerDosis.Value, "dosis", GetTimeByFreq())
     
     If Not strUnit = vbNullString Then
         If Not strTime = vbNullString Then
-            cboDoseUnit.Text = strUnit & (IIf(m_Adjust = "", "/", "/" & m_Adjust & "/")) & strTime
+            cboDoseUnit.Text = strUnit & (IIf(strAdjust = "", "/", "/" & strAdjust & "/")) & strTime
         Else
-            cboDoseUnit.Text = strUnit & (IIf(m_Adjust = "", "", "/" & m_Adjust))
+            cboDoseUnit.Text = strUnit & (IIf(strAdjust = "", "", "/" & strAdjust))
         End If
         
         cboKeerUnit.Text = strUnit
@@ -326,6 +342,7 @@ End Sub
 Private Sub LoadMedicament(ByVal blnReload As Boolean)
     
     Dim intN As Integer
+    Dim strFreq As String
     Dim arrFreq() As String
     Dim strTime As String
     Dim objRule As ClassDoseRule
@@ -354,6 +371,8 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
             
             Exit Sub
         End If
+        
+        FillCombo cboSubstConc, GetSubstances()
         
         txtDeelDose.Text = .MultipleQuantity
         
@@ -394,7 +413,12 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
             cboFreqTime.Visible = True
             
             For Each objRule In m_Med.DoseRules
-                strTime = Trim(Split(Split(objRule.Freq, "||")(0), "/")(1))
+                ' Remove antenoctum to enable string to time parsing
+                strFreq = objRule.Freq
+                strFreq = IIf(strFreq = "antenoctum", "1 x /dag", strFreq)
+                strFreq = Replace(strFreq, "antenoctum||", "")
+                
+                strTime = Trim(Split(Split(strFreq, "||")(0), "/")(1))
                 If Not ComboContainsStringValue(cboFreqTime, strTime) Then cboFreqTime.AddItem strTime
                 If Not ComboContainsStringValue(cboSubstance, objRule.Substance) Then cboSubstance.AddItem objRule.Substance
             Next
@@ -462,10 +486,25 @@ Private Function GetDosisEenheden() As Collection
 
 End Function
 
+Private Function GetSubstances() As Collection
+
+    Dim colSubst As Collection
+    Dim objSubst As ClassSubstance
+    
+    Set colSubst = New Collection
+    For Each objSubst In m_Med.Substances
+        colSubst.Add objSubst.Substance
+    Next
+    
+    Set GetSubstances = colSubst
+
+End Function
+
 Private Sub FillCombo(objCombo As ComboBox, colItems As Collection)
 
     Dim varItem As Variant
 
+    objCombo.Text = vbNullString
     objCombo.Clear
     
     For Each varItem In colItems
@@ -641,7 +680,13 @@ Private Sub CalculateDose()
     If Not m_Keer Then txtKeerDose.Value = dblKeer
         
     CalculateVolume
-    
+    CalculateLabel
+    SetProductDose
+
+End Sub
+
+Private Sub CalculateLabel()
+
     lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDeelDose.Value & " " & cboDosisEenheid.Text
 
 End Sub
@@ -672,6 +717,24 @@ Private Sub cboSubstance_Change()
 
 End Sub
 
+Private Sub cboSubstConc_Change()
+
+    Dim objSubst As ClassSubstance
+
+    lblSubstConc.Caption = cboSterkteEenheid.Text
+    If cboSubstConc.Text = cboGeneriek.Text Then txtSubstConc.Value = txtSterkte.Value
+    
+    For Each objSubst In m_Med.Substances
+        If objSubst.Substance = cboSubstConc.Text Then
+            txtSubstConc.Text = objSubst.Concentration
+            
+            Exit For
+        End If
+    Next
+    cboSubstance.Text = cboSubstConc.Text
+
+End Sub
+
 Private Sub chkDose_Click()
     
     If Not frmDose.Visible Then ClearDose
@@ -693,7 +756,7 @@ Private Sub ClearDose()
         
         m_Med.PerDose = False
         m_Med.PerKg = True
-        m_Med.PerM2 = True
+        m_Med.PerM2 = False
         
         chkPerDosis.Value = False
         optKg.Value = True
@@ -732,10 +795,12 @@ Private Sub cmdFormularium_Click()
     Dim strUrl As String
     
     strUrl = "https://www.kinderformularium.nl/"
-    If Not m_Med.ATC = vbNullString Then
-        strUrl = strUrl & "geneesmiddelen?atc_code=" + m_Med.ATC
-    Else
-        strUrl = strUrl & "geneesmiddelen?name=" + cboGeneriek.Text
+    If Not m_Med Is Nothing Then
+        If Not m_Med.ATC = vbNullString Then
+            strUrl = strUrl & "geneesmiddelen?atc_code=" + m_Med.ATC
+        Else
+            strUrl = strUrl & "geneesmiddelen?name=" + cboGeneriek.Text
+        End If
     End If
 
     ActiveWorkbook.FollowHyperlink strUrl
@@ -769,7 +834,7 @@ Private Sub cmdGStand_Click()
     Dim dblWeight As Double
     Dim strRoute As String
     Dim strGPK As String
-    Dim strGEN As String
+    Dim strGen As String
     Dim strSHP As String
     Dim strUNT As String
     Dim strMsg As String
@@ -792,7 +857,7 @@ Private Sub cmdGStand_Click()
     
     If Not m_Med Is Nothing Then
         strGPK = m_Med.GPK
-        strGEN = m_Med.Generic
+        strGen = m_Med.Generic
         strSHP = m_Med.Shape
         strUNT = m_Med.MultipleUnit
     Else
@@ -807,7 +872,7 @@ Private Sub cmdGStand_Click()
     strUrl = strUrl & "age=" & dblAge
     strUrl = strUrl & "&wht=" & dblWeight
     strUrl = strUrl & "&gpk=" & strGPK
-    strUrl = strUrl & "&gen=" & strGEN
+    strUrl = strUrl & "&gen=" & strGen
     strUrl = strUrl & "&shp=" & strSHP
     strUrl = strUrl & "&rte=" & strRoute
     strUrl = strUrl & "&unt=" & strUNT
@@ -940,38 +1005,56 @@ Private Sub cmdOK_Click()
         m_Med.AbsMaxDose = StringToDouble(txtAbsMax.Value)
         m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
         
+        m_Med.Substance = cboSubstance.Text
+        m_Med.KeerDose = StringToDouble(txtKeerDose.Value)
+        
         m_Med.Solution = cboOplVlst.Value
         m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
         m_Med.SolutionVolume = StringToDouble(txtOplVol.Value)
         m_Med.MinInfusionTime = StringToDouble(txtTijd.Value)
         
-        If cboSubstance.ListCount > 1 Then
-            m_Med.DoseText = "Dosering: "
-            For intIndx = 0 To cboSubstance.ListCount - 1
-                cboSubstance.Value = cboSubstance.List(intIndx)
-                SelectDoseRule
-                m_Med.DoseText = m_Med.DoseText & " + " & GetDoseText()
-            Next
-        End If
-    
     End If
     
     CloseForm "OK"
 
 End Sub
 
-Private Function GetDoseText() As String
+Private Sub SetProductDose()
+
+    m_Med.Substance = cboSubstance.Text
+    m_Med.KeerDose = StringToDouble(txtKeerDose.Value)
+
+End Sub
+
+Private Function GetProductDose() As String
 
     Dim strText As String
+    Dim strSubst As String
+    Dim dblConc As Double
+    Dim strConc As String
+    Dim arrConc() As String
+    Dim strUnit As String
+    Dim dblQty As Double
+    Dim objSubst As ClassSubstance
     
-    strText = strText & cboSubstance.Value
-    strText = strText & " " & StringToDouble(txtCalcDose.Value)
-    strText = strText & " " & lblDoseUnit
+    strSubst = cboSubstance.Text
+    For Each objSubst In m_Med.Substances
+        If objSubst.Substance = strSubst Then
+            dblConc = objSubst.Concentration
+            strConc = cboSterkteEenheid.Text
+            arrConc = Split(strConc, "/")
+            If UBound(arrConc) = 1 Then strUnit = arrConc(1)
+        End If
+        
+        If dblConc > 0 And Not strUnit = "" Then
+            dblQty = dblConc * StringToDouble(txtKeerDose.Text)
+            strText = strText & " (= " & cboFreq.Text & " " & dblQty & " " & strUnit & ")"
+        End If
+    Next
 
-    GetDoseText = strText
+    GetProductDose = strText
 
 End Function
-
 
 
 Private Sub cmdParEnt_Click()
@@ -990,21 +1073,18 @@ End Sub
 
 Private Sub optKg_Change()
 
-    m_Adjust = "kg"
     SetDoseUnit
 
 End Sub
 
 Private Sub optNone_Change()
 
-    m_Adjust = ""
     SetDoseUnit
 
 End Sub
 
 Private Sub optM2_Change()
 
-    m_Adjust = "m2"
     SetDoseUnit
 
 End Sub
@@ -1093,6 +1173,7 @@ Private Sub txtKeerDose_AfterUpdate()
     If dblKeer = 0 Then
         ModMessage.ShowMsgBoxExclam "Deze keerdosering kan niet met een deelbaarheid van " & txtDeelDose.Text
     End If
+    
 
 End Sub
 
@@ -1165,6 +1246,39 @@ Private Sub txtNormDose_Change()
 End Sub
 
 Private Sub txtNormDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModUtils.OnlyNumericAscii KeyAscii
+
+End Sub
+
+Private Sub txtSterkte_Change()
+
+    Dim strGen As String
+    Dim strSub As String
+    
+    strSub = Trim(LCase(cboSubstConc.Text))
+    strGen = Trim(LCase(cboGeneriek.Text))
+    
+    If strSub = strGen Then
+        txtSubstConc.Value = txtSterkte.Value
+    End If
+    
+
+End Sub
+
+Private Sub txtSubstConc_Change()
+
+    Dim objSubst As ClassSubstance
+    
+    For Each objSubst In m_Med.Substances
+        If objSubst.Substance = cboSubstConc.Text Then
+            objSubst.Concentration = StringToDouble(txtSubstConc.Text)
+        End If
+    Next
+
+End Sub
+
+Private Sub txtSubstConc_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.OnlyNumericAscii KeyAscii
 

@@ -16,6 +16,7 @@ Private Const constUserLogin As String = "UserLogin"
 
 Private Const constCurrentPatient As String = "Current Patient"
 Private Const constPatientId As String = "PatientID"
+Private Const constHospNum As String = "__0_PatNum"
 
 Private Const constConnection As String = "Database Connect"
 
@@ -981,7 +982,7 @@ End Sub
 
 Public Function MetaVision_eGFRWarning() As String
 
-    Dim intPatId As Integer
+    Dim intPatId As Long
 
     Dim intCreatId As Integer
     Dim intHeightId As Integer

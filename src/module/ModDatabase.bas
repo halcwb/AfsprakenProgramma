@@ -2123,6 +2123,8 @@ Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal bl
     Dim objRs As Recordset
     Dim intC As Integer
     Dim objMed As ClassMedicatieDisc
+    Dim arrSubst() As String
+    Dim intN As Integer
     
     On Error GoTo ErrorHandler
     
@@ -2160,6 +2162,15 @@ Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal bl
         
         End With
                 
+        arrSubst = Split(objMed.Generic, "+")
+        For intN = 0 To UBound(arrSubst)
+            objMed.AddSubstance arrSubst(intN), 0
+        Next
+        
+        If objMed.Substances.Count = 1 Then
+            objMed.Substances(1).Concentration = objMed.GenericQuantity
+        End If
+        
         objFormularium.AddMedicament objMed
         
         intC = intC + 1

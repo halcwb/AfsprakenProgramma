@@ -257,7 +257,7 @@ ErrorHandler:
     strError = strError & vbNewLine & strAction
     ModLog.LogError Err, strError
     
-    Application_CloseApplication
+    If ModSetting.IsProductionDir() Then Application_CloseApplication
     
 End Sub
 

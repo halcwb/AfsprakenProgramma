@@ -552,21 +552,21 @@ Public Function PrepareHttpRequest(Request As WebRequest, Optional Async As Bool
         '   Invalid date or certificate expired, 0x2000
         '   = 0x3300 = 13056
         ' - Enable https-to-http redirects
-        web_Http.Option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableCertificateRevocationCheck) = False
-        web_Http.Option(web_WinHttpRequestOption.web_WinHttpRequestOption_SslErrorIgnoreFlags) = 13056
-        web_Http.Option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableHttpsToHttpRedirects) = True
+        web_Http.option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableCertificateRevocationCheck) = False
+        web_Http.option(web_WinHttpRequestOption.web_WinHttpRequestOption_SslErrorIgnoreFlags) = 13056
+        web_Http.option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableHttpsToHttpRedirects) = True
     Else
         ' By default:
         ' - Enable certificate revocation check (especially useful after HeartBleed)
         ' - Ignore no SLL erros
         ' - Disable https-to-http redirects
-        web_Http.Option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableCertificateRevocationCheck) = True
-        web_Http.Option(web_WinHttpRequestOption.web_WinHttpRequestOption_SslErrorIgnoreFlags) = 0
-        web_Http.Option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableHttpsToHttpRedirects) = False
+        web_Http.option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableCertificateRevocationCheck) = True
+        web_Http.option(web_WinHttpRequestOption.web_WinHttpRequestOption_SslErrorIgnoreFlags) = 0
+        web_Http.option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableHttpsToHttpRedirects) = False
     End If
 
     ' Setup redirects
-    web_Http.Option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableRedirects) = Me.FollowRedirects
+    web_Http.option(web_WinHttpRequestOption.web_WinHttpRequestOption_EnableRedirects) = Me.FollowRedirects
 
     ' Set headers on http request (after open)
     For Each web_KeyValue In Request.Headers

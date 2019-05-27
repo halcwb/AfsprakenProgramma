@@ -11,7 +11,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     Dim strWTH As String
     Dim strHGT As String
     Dim strGPK As String
-    Dim strGEN As String
+    Dim strGen As String
     Dim strSHP As String
     Dim strRTE As String
     Dim strUNT As String
@@ -29,7 +29,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     strHGT = Val(ModPatient.Patient_GetHeight())
     
     strGPK = objMed.GPK
-    strGEN = objMed.Generic
+    strGen = objMed.Generic
     strSHP = objMed.Shape
     strRTE = objMed.Route
     strUNT = objMed.MultipleUnit
@@ -44,7 +44,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     strUrl = Replace(strUrl, "WTH", strWTH)
     strUrl = Replace(strUrl, "HGT", strHGT)
     strUrl = Replace(strUrl, "GPK", strGPK)
-    strUrl = Replace(strUrl, "GEN", strGEN)
+    strUrl = Replace(strUrl, "GEN", strGen)
     strUrl = Replace(strUrl, "SHP", strSHP)
     strUrl = Replace(strUrl, "RTE", strRTE)
     strUrl = Replace(strUrl, "UNT", strUNT)
@@ -82,7 +82,7 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
 
     Dim colRules As Collection
     Dim objRule As ClassDoseRule
-    
+        
     Dim objDict As Dictionary
     Dim colJson As Collection
     Dim strJson As String
@@ -132,6 +132,7 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
             objRule.MaxDose = objDict("maxTotalDosePerM2")
         End If
         
+        If Not objMed.HasSubstance(objRule.Substance) Then objMed.AddSubstance objRule.Substance, 0
         colRules.Add objRule
     Next
 
@@ -155,6 +156,10 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc
     
         objMed.PerKg = True
         
+    End If
+    
+    If objMed.Substances.Count = 1 Then
+        objMed.Substances.Item(1).Concentration = objMed.GenericQuantity
     End If
     
     objMed.DoseRules = colRules

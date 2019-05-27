@@ -103,7 +103,7 @@ End Property
 
 Public Property Let Substance(ByVal strSubstance As String)
 
-    m_Substance = strSubstance
+    m_Substance = Trim(LCase(strSubstance))
 
 End Property
 

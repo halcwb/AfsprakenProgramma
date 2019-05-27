@@ -22,7 +22,9 @@ Private Const constHasDose As String = "_Glob_MedDisc_HasDose_"         ' Prescr
 Private Const constPRN As String = "_Glob_MedDisc_PRN_"                 ' PRN
 Private Const constPRNText As String = "_Glob_MedDisc_PRNText_"         ' PRN tekst
 Private Const constFreq As String = "_Glob_MedDisc_Freq_"               ' Frequentie
+Private Const constDoseSubst As String = "_Glob_MedDisc_DoseSubst_"     ' Dose stof
 Private Const constDoseQty As String = "_Glob_MedDisc_DoseHoev_"        ' Dose hoeveelheid
+Private Const constProdQty As String = "_Glob_MedDisc_ProductDose_"     ' Product hoeveelheid
 Private Const constSolNo As String = "_Glob_MedDisc_OplKeuze_"          ' Oplossing vloeistof
 Private Const constSolVol As String = "_Glob_MedDisc_OplVol_"           ' Oplossing volume
 Private Const constTime As String = "_Glob_MedDisc_Inloop_"             ' Inloop tijd
@@ -412,6 +414,8 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
     Dim dblKeer As Double
     Dim dblWght As Double
     Dim dblFact As Double
+    Dim strFreq As String
+    Dim strTime As String
       
     strN = IntNToStrN(intN)
     
@@ -443,7 +447,13 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         ' Edited details
         .SetComboBoxIfNotEmpty .cboRoute, ModRange.GetRangeValue(constRoute & strN, vbNullString)
         .SetComboBoxIfNotEmpty .cboIndicatie, ModRange.GetRangeValue(constIndic & strN, vbNullString)
-        .SetComboBoxIfNotEmpty .cboFreq, ModRange.GetRangeValue(constFreqText & strN, vbNullString)
+        strFreq = ModRange.GetRangeValue(constFreqText & strN, vbNullString)
+        
+        If Not strFreq = vbNullString Then strTime = ModExcel.Excel_VLookup(strFreq, "Tbl_Glob_MedFreq", 2)
+        ' Change of dose time clears all dose details!
+        .SetComboBoxIfNotEmpty .cboFreqTime, strTime
+        ' Therefore, now set the freq
+        .SetComboBoxIfNotEmpty .cboFreq, strFreq
         
         .chkDose.Value = ModRange.GetRangeValue(constHasDose & strN, True)
         .SetTextBoxIfNotEmpty .txtDeelDose, ModRange.GetRangeValue(constStandDose & strN, vbNullString)
@@ -500,7 +510,6 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
             End If
         End If
         
-        
     End With
     
 End Sub
@@ -528,8 +537,10 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     
     ModRange.SetRangeValue constHasDose & strN, objMed.HasDose
     If objMed.HasDose Then
+        ModRange.SetRangeValue constDoseSubst & strN, objMed.Substance
         ModRange.SetRangeValue constStandDose & strN, objMed.MultipleQuantity
         ModRange.SetRangeValue constDoseUnit & strN, objMed.MultipleUnit
+        ModRange.SetRangeValue constProdQty & strN, objMed.ProductDose
         
         ModRange.SetRangeValue constNormDose & strN, objMed.NormDose
         ModRange.SetRangeValue constMinDose & strN, objMed.MinDose
@@ -1288,14 +1299,12 @@ End Sub
 Private Function PrintMedDiscPrev(ByVal blnPrev As Boolean, ByVal strFile As String) As String
 
     Dim strPDF As String
-
-    shtGlobPrtMedDisc.Unprotect ModConst.CONST_PASSWORD
     
     If strFile = vbNullString Then
-        PrintSheet shtGlobPrtMedDisc, 1, False, blnPrev
+        PrintSheet shtGlobBerMedDisc, 1, False, blnPrev
     Else
         strPDF = strFile & ".pdf"
-        SaveSheetAsPDF shtGlobPrtMedDisc, strPDF, True
+        SaveSheetAsPDF shtGlobBerMedDisc, strPDF, True
     End If
     
     PrintMedDiscPrev = strPDF

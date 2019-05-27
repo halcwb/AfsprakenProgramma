@@ -40,8 +40,10 @@ Private m_MaxConc As Double
 Private m_Solution As String
 Private m_SolutionVolume As Double
 Private m_MinInfusionTime As Integer
+Private m_ProductDose As Double
 Private m_DoseText As String
 
+Private m_Substances As Collection
 Private m_IndicationList As Collection
 Private m_RouteList As Collection
 Private m_FreqList As Collection
@@ -145,6 +147,37 @@ Public Property Let CalcDose(ByVal dblDose As Double)
 
 End Property
 
+Public Property Get KeerDose() As Double
+
+    KeerDose = m_KeerDose
+
+End Property
+
+Public Property Let KeerDose(ByVal dblDose As Double)
+
+    Dim objSubst As ClassSubstance
+    
+    m_KeerDose = dblDose
+    For Each objSubst In m_Substances
+        If objSubst.Substance = m_Substance And objSubst.Concentration > 0 Then
+            ProductDose = dblDose / objSubst.Concentration
+        End If
+    Next
+
+End Property
+
+Public Property Get ProductDose() As Double
+
+    ProductDose = m_ProductDose
+
+End Property
+
+Public Property Let ProductDose(ByVal dblDose As Double)
+
+    m_ProductDose = dblDose
+
+End Property
+
 Public Sub SetFreqList(ByVal strFreqList As String)
 
     FillCollection m_FreqList, strFreqList
@@ -175,6 +208,45 @@ Public Function GetFreqListString() As String
 End Function
 
 Public Property Get DoseText() As String
+
+    Dim intSubstCount As Integer
+    Dim dblProdDose As Double
+    Dim dblSubstDose As Double
+    Dim strSubstDose As String
+    Dim strSubstText As String
+    Dim strSubstUnit As String
+    Dim strProdUnit As String
+    Dim objSubst As ClassSubstance
+    
+    If m_KeerDose > 0 Then
+        intSubstCount = 0
+        For Each objSubst In m_Substances
+            If objSubst.Concentration > 0 Then
+                intSubstCount = intSubstCount + 1
+                If objSubst.Substance = m_Substance Then
+                    dblProdDose = m_KeerDose / objSubst.Concentration
+                End If
+            End If
+        Next
+        
+        If intSubstCount > 1 Then
+            m_DoseText = vbNullString
+            If UBound(Split(m_GenericUnit, "/")) >= 1 Then
+                strSubstUnit = Split(m_GenericUnit, "/")(0)
+                strProdUnit = Split(m_GenericUnit, "/")(1)
+            End If
+            For Each objSubst In m_Substances
+                dblSubstDose = dblProdDose * objSubst.Concentration
+                strSubstDose = objSubst.Substance & " " & DoubleToString(dblSubstDose) & " " & strSubstUnit
+                strSubstText = strSubstText & IIf(strSubstText = vbNullString, strSubstDose, " + " & strSubstDose)
+            Next
+            
+            m_DoseText = "dosering o.b.v. " & m_Substance & ": "
+            m_DoseText = m_DoseText & m_Freq & " " & DoubleToString(dblProdDose) & " " & strProdUnit & " = " & strSubstText
+        End If
+    Else
+        m_DoseText = ""
+    End If
 
     DoseText = m_DoseText
 
@@ -533,3 +605,61 @@ Public Property Let DoseRules(colRules As Collection)
     
 End Property
 
+Public Property Get Substances() As Collection
+    
+    Dim arrSubst() As String
+    Dim intI As Integer
+    
+    If m_Substances Is Nothing Then
+        Set m_Substances = New Collection
+        arrSubst = Split(Generic, "+")
+        For intI = 0 To UBound(arrSubst)
+            AddSubstance arrSubst(intI), 0
+        Next
+    End If
+    
+    Set Substances = m_Substances
+
+End Property
+
+Public Property Let Substances(colSubst As Collection)
+    Dim objSubst As ClassSubstance
+    
+    For Each objSubst In colSubst
+        AddSubstance objSubst.Substance, objSubst.Concentration
+    Next
+    
+End Property
+
+Public Sub AddSubstance(ByVal strSubst As String, ByVal dblConc As Double)
+    
+    Dim objSubst As ClassSubstance
+
+    If m_Substances Is Nothing Then Set m_Substances = New Collection
+    
+    If Not HasSubstance(strSubst) Then
+        Set objSubst = New ClassSubstance
+        objSubst.Substance = strSubst
+        objSubst.Concentration = dblConc
+        m_Substances.Add objSubst
+    End If
+
+End Sub
+
+Public Function HasSubstance(ByVal strSubst As String) As Boolean
+
+    Dim objSubst As ClassSubstance
+    
+    strSubst = Trim(LCase(strSubst))
+    If Not m_Substances Is Nothing Then
+        For Each objSubst In m_Substances
+            If objSubst.Substance = strSubst Then
+                HasSubstance = True
+                Exit Function
+            End If
+        Next
+    End If
+    
+    HasSubstance = False
+
+End Function
