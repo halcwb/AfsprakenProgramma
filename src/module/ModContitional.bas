@@ -200,7 +200,7 @@ Public Sub SetInfB1700Formatting()
 
 End Sub
 
-Public Sub SetPedTPNFormatting()
+Public Sub SetPedTPNNegLipidVolFormatting()
     
     Dim strTPNError As String
     
@@ -209,3 +209,25 @@ Public Sub SetPedTPNFormatting()
     SetConditionalFormattingErr shtPedGuiEntTPN, "G", strTPNError, 35, 35, 18
 
 End Sub
+
+Public Sub SetPedTPNSST1LT24Formatting()
+    
+    Dim strTPNError As String
+    
+    strTPNError = "=PedBerTPN!AE"
+    ' 3 - 22
+    SetConditionalFormattingErr shtPedGuiEntTPN, "I", strTPNError, 22, 22, 19
+
+End Sub
+
+Public Sub SetPedTPNLipidLT24Formatting()
+    
+    Dim strTPNError As String
+    
+    strTPNError = "=PedBerTPN!AE"
+    ' 16 - 34
+    SetConditionalFormattingErr shtPedGuiEntTPN, "I", strTPNError, 34, 34, 18
+
+End Sub
+
+

@@ -233,6 +233,7 @@ Public Sub Application_Initialize()
     Else
         Patient_ClearAll False, True ' Default start with no patient
     End If
+    MetaVision_SetUser ' Have to reload current user login
     
     ModSheet.SelectPedOrNeoStartSheet False  ' Select the first GUI sheet
     

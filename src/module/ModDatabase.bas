@@ -171,7 +171,7 @@ Private Function PrescriberExists(strUser As String) As Boolean
 
     Dim strSql As String
     
-    strSql = "SELECT * FROM " & CONST_GET_PRESCRIBERS & " ('" & strUser & "')"
+    strSql = "SELECT * FROM " & CONST_GET_PRESCRIBERS & " (" & strUser & ")"
     
     InitConnection
     
@@ -289,7 +289,7 @@ Public Sub Database_SavePrescriber()
     strFN = WrapString(ModRange.GetRangeValue("_User_LastName", ""))
     strRole = WrapString(ModRange.GetRangeValue("_User_Type", ""))
         
-    arrSql = Array(WrapString(strUser), strLN, strFN, strRole, 0)
+    arrSql = Array(strUser, strLN, strFN, strRole, 0)
         
     InitConnection
     

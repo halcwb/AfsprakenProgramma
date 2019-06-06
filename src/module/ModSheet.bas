@@ -249,7 +249,11 @@ End Sub
 
 Public Sub SaveSheetAsPDF(shtSheet As Worksheet, ByVal strFile As String, blnFitToPortrait As Boolean)
     
+    Dim varVisible As Variant
+    
     shtSheet.Unprotect ModConst.CONST_PASSWORD
+    varVisible = shtSheet.Visible
+    shtSheet.Visible = xlSheetVisible
     shtSheet.PageSetup.LeftHeader = "AfsprakenProgramma " & ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
 
     If blnFitToPortrait Then
@@ -269,7 +273,10 @@ Public Sub SaveSheetAsPDF(shtSheet As Worksheet, ByVal strFile As String, blnFit
         Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas _
         :=False, OpenAfterPublish:=False
 
-    If Not ModSetting.IsDevelopmentMode Then shtSheet.Protect ModConst.CONST_PASSWORD
+    If Not ModSetting.IsDevelopmentMode Then
+        shtSheet.Protect ModConst.CONST_PASSWORD
+        shtSheet.Visible = varVisible
+    End If
 
 End Sub
 

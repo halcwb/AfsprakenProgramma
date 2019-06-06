@@ -1301,10 +1301,10 @@ Private Function PrintMedDiscPrev(ByVal blnPrev As Boolean, ByVal strFile As Str
     Dim strPDF As String
     
     If strFile = vbNullString Then
-        PrintSheet shtGlobBerMedDisc, 1, False, blnPrev
+        PrintSheet shtGlobBerMedDiscMail, 1, False, blnPrev
     Else
         strPDF = strFile & ".pdf"
-        SaveSheetAsPDF shtGlobBerMedDisc, strPDF, True
+        SaveSheetAsPDF shtGlobBerMedDiscMail, strPDF, True
     End If
     
     PrintMedDiscPrev = strPDF

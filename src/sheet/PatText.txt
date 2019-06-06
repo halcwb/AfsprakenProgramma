@@ -1336,6 +1336,6 @@ $A$169: 	=D169&"".""&E169
 $B$169: 	=IF(NeoGuiAfspr!D48="""","""",NeoGuiAfspr!C48&"": ""&NeoGuiAfspr!D48)
 $C$169: 	=A169&""**""&B169
 $A$170: 	=D170&"".""&E170
-$B$170: 	=IF(NeoGuiAfspr!D49="""","""",NeoGuiAfspr!C49&"": ""&NeoGuiAfspr!D49)
+$B$170: 	=IF(_Neo_AfsprD_OverigTekst="""","""",NeoGuiAfspr!C49&"": ""&_Neo_AfsprD_OverigTekst)
 $C$170: 	=A170&""**""&B170
 "

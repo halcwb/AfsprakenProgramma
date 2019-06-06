@@ -19,6 +19,7 @@ Private Const constVoeding As String = "_Ped_Ent_Keuze_"
 Private Const constEntText As String = "_Ped_Ent_Opm"
 Private Const constTpnText As String = "_Ped_TPN_Opm"
 
+Private Const constLipidStand As String = "_Ped_TPN_LipidStand"
 Private Const constSST1Stand As String = "_Ped_TPN_SST1Stand"
 Private Const constSST1Keuze As String = "_Ped_TPN_SST1Keuze"
 Private Const constSST2Stand As String = "_Ped_TPN_SST2Stand"
@@ -370,6 +371,22 @@ Public Sub PedTPN_SetSST1GlucoseVol(ByVal dblVol As Double)
 
 End Sub
 
+Public Sub PedTPN_SetLipidStand()
+
+    Dim dblStand As Double
+    
+    dblStand = ModRange.GetRangeValue("Var_Ped_TPN_LipidVol", 0) / 24
+
+    ' ALS(C3<100;C3/10;C3-90)
+    If dblStand < 10 Then
+        dblStand = Round(dblStand, 1)
+        SetTPNAdvies constLipidStand, dblStand * 10
+    Else
+        dblStand = Round(dblStand, 0) + 90
+        SetTPNAdvies constLipidStand, dblStand
+    End If
+
+End Sub
 Public Sub PedTPN_SetSST1Stand()
 
     Dim dblStand As Double
@@ -383,6 +400,23 @@ Public Sub PedTPN_SetSST1Stand()
     Else
         dblStand = Round(dblStand, 0) + 90
         SetTPNAdvies constSST1Stand, dblStand
+    End If
+
+End Sub
+
+Public Sub PedTPN_SetSST2Stand()
+
+    Dim dblStand As Double
+    
+    dblStand = ModRange.GetRangeValue("Var_Ped_TPN_SST2Vol", 0) / 24
+
+    ' ALS(C3<100;C3/10;C3-90)
+    If dblStand < 10 Then
+        dblStand = Round(dblStand, 1)
+        SetTPNAdvies constSST2Stand, dblStand * 10
+    Else
+        dblStand = Round(dblStand, 0) + 90
+        SetTPNAdvies constSST2Stand, dblStand
     End If
 
 End Sub

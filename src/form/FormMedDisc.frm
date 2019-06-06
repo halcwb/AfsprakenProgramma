@@ -1170,17 +1170,20 @@ Private Sub txtKeerDose_AfterUpdate()
 
     SetTextBoxNumericValue txtKeerDose, dblKeer
     
+    If m_Keer Then CalculateDose
+    
     If dblKeer = 0 Then
         ModMessage.ShowMsgBoxExclam "Deze keerdosering kan niet met een deelbaarheid van " & txtDeelDose.Text
     End If
     
+    Validate vbNullString
 
 End Sub
 
 Private Sub txtKeerDose_Change()
 
-    If m_Keer Then CalculateDose
-    Validate vbNullString
+    'If m_Keer Then CalculateDose
+    'Validate vbNullString
 
 End Sub
 
