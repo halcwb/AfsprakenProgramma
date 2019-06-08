@@ -17,6 +17,7 @@ Private Const constDoseUnit As String = "_Glob_MedDisc_DoseEenh_"       ' Dose e
 Private Const constRoute As String = "_Glob_MedDisc_Toed_"              ' Toediening route
 Private Const constIndic As String = "_Glob_MedDisc_Ind_"               ' Indicatie
 Private Const constHasDose As String = "_Glob_MedDisc_HasDose_"         ' Prescription has dose
+Private Const constATCGroup As String = "_Glob_MedDisc_Group_"          ' ATC groep
 
 ' --- Voorschrift ---
 Private Const constPRN As String = "_Glob_MedDisc_PRN_"                 ' PRN
@@ -168,6 +169,7 @@ Private Sub Clear(ByVal intN As Integer)
     ModRange.SetRangeValue constDoseUnit & strN, vbNullString
     ModRange.SetRangeValue constRoute & strN, vbNullString
     ModRange.SetRangeValue constIndic & strN, vbNullString
+    ModRange.SetRangeValue constATCGroup & strN, vbNullString
     
     ModRange.SetRangeValue constPRN & strN, False
     ModRange.SetRangeValue constPRNText & strN, vbNullString
@@ -512,6 +514,8 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         
     End With
     
+    MedDisc_SortTableMedDisc
+    
 End Sub
 
 Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
@@ -531,7 +535,8 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
     ModRange.SetRangeValue constConc & strN, objMed.GenericQuantity
     ModRange.SetRangeValue constConcUnit & strN, objMed.GenericUnit
     ModRange.SetRangeValue constLabel & strN, objMed.Label
-    
+    ModRange.SetRangeValue constATCGroup & strN, objMed.MainGroup
+
     ModRange.SetRangeValue constRoute & strN, objMed.Route
     ModRange.SetRangeValue constIndic & strN, objMed.Indication
     
@@ -1310,4 +1315,28 @@ Private Function PrintMedDiscPrev(ByVal blnPrev As Boolean, ByVal strFile As Str
     PrintMedDiscPrev = strPDF
     
 End Function
+
+Public Sub MedDisc_SortTableMedDisc()
+    
+    Dim strColumn As String
+    Dim strRange As String
+    
+    strColumn = "Bx2:Bx31"
+    strRange = "Tbl_Glob_SortMedDisc"
+    
+    shtGlobBerMedDisc.Sort.SortFields.Clear
+    shtGlobBerMedDisc.Sort.SortFields.Add Key:=Range( _
+        strColumn), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    With shtGlobBerMedDisc.Sort
+        .SetRange Range(strRange)
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+
+End Sub
+
 

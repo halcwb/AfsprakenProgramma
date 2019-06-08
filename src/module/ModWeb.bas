@@ -1,6 +1,8 @@
 Attribute VB_Name = "ModWeb"
 Option Explicit
 
+
+Private Const constHost = "http://vpxap-meta01.ds.umcutrecht.nl"
 Private Const constUrl As String = "/request?age=AGE&wth=WTH&hgt=HGT&gpk=GPK&gen=GEN&shp=SHP&rte=RTE&unt=UNT"
 
 Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
@@ -21,7 +23,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     Dim objClient As New WebClient
     Dim objResponse As WebResponse
     
-    objClient.BaseUrl = "http://iis2503.ds.umcutrecht.nl/genform"
+    objClient.BaseUrl = constHost & "/genform"
         
     strAge = Patient_CorrectedAgeInMo()
     
