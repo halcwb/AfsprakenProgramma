@@ -8,7 +8,7 @@ $Y$3: 	=X3
 $Z$3: 	=IF(_Ped_TPN_SST1Stand=0,"""",""verw"")
 $AB$3: 	=IF(G3>0,""in ""&ROUND(G3/F3,1)&"" uur"","""")
 $AC$3: 	=IF(Y3="""","""",Y3&"" ""&AB3)
-$AE$3: 	=G3/F3>25
+$AE$3: 	=IF(F3>0,G3/F3>25,FALSE)
 $AC$4: 	=IF(Y4="""","""",Y4&"" ""&AB4)
 $D$5: 	=_Ped_TPN_Keuze=6
 $F$5: 	=IF((_Ped_TPN_Keuze=6),G5/24,0)
@@ -74,7 +74,7 @@ $T$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,T$1,FALSE))*$I7
 $U$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,U$1,FALSE))*$I7
 $X$7: 	=IF(G7=0,"""",G7&"" ml"")
 $AC$7: 	=IF(Y7="""","""",Y7&"" ""&AB7)
-$G$8: 	=ROUND(C8+IF(D5,0,E5*G5)+G9*E9+G10*E10+IF(D11,0,G12*E12+G13*E13),0)
+$G$8: 	=C8
 $H$8: 	=IF(B8=1,"""",INDEX(Tbl_Ped_SST,B8,1))
 $I$8: 	=IF($G$3=0,0,IF($I$3/$G$3<1,G8*$I$3/$G$3,G8))
 $J$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,J$1,FALSE))*$I8
@@ -136,7 +136,7 @@ $D$11: 	=AND(_Ped_TPN_Keuze>1,_Ped_TPN_Keuze<6,_Ped_TPN_SST1Keuze<=12)
 $F$11: 	=ROUND(IF(G11>0,(G11+G12+G13)/24,0),1)
 $G$11: 	=IF(D11,E12*G12+E13*G13,0)
 $H$11: 	=IF(G11=0,"""",A11)
-$I$11: 	=IF($G$3=0,0,IF($I$3/$G$3<1,G11*$I$3/$G$3,G11))
+$I$11: 	=IF(D11,G11,IF($G$3=0,0,IF($I$3/$G$3<1,G11*$I$3/$G$3,G11)))
 $J$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,J$1,FALSE))*$I11
 $K$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,K$1,FALSE))*$I11
 $L$11: 	=IF($H11="""",0,VLOOKUP($H11,Tbl_Glob_ParEnt,L$1,FALSE))*$I11
@@ -155,10 +155,10 @@ $Y$11: 	=IF(W11="""","""",SUM(G11:G13)&"" ml"")
 $Z$11: 	=IF(G11=0,"""",""verw"")
 $AB$11: 	=IF(F11>0,""in ""&ROUND(SUM(G11:G13)/IF(F11>10,ROUNDUP(F11,0),ROUNDUP(F11,1)),1)&"" uur"","""")
 $AC$11: 	=IF(Y11="""","""",Y11&"" ""&AB11)
-$AE$11: 	=G11/F11>25
+$AE$11: 	=IF(F11>0,G11/F11>25,FALSE)
 $G$12: 	=ROUND(IF(B12,C12,0),1)
 $H$12: 	=IF(B12,A12,"""")
-$I$12: 	=IF($G$3=0,0,IF($I$3/$G$3<1,G12*$I$3/$G$3,G12))
+$I$12: 	=IF(D11,G12,IF($G$3=0,0,IF($I$3/$G$3<1,G12*$I$3/$G$3,G12)))
 $J$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,J$1,FALSE))*$I12
 $K$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,K$1,FALSE))*$I12
 $L$12: 	=IF($H12="""",0,VLOOKUP($H12,Tbl_Glob_ParEnt,L$1,FALSE))*$I12
@@ -177,7 +177,7 @@ $Z$12: 	=IF(G12=0,"""",""verw"")
 $AC$12: 	=IF(Y12="""","""",Y12&"" ""&AB12)
 $G$13: 	=ROUND(IF(B13,C13,0),1)
 $H$13: 	=IF(B13,A13,"""")
-$I$13: 	=IF($G$3=0,0,IF($I$3/$G$3<1,G13*$I$3/$G$3,G13))
+$I$13: 	=IF(D11,G13,IF($G$3=0,0,IF($I$3/$G$3<1,G13*$I$3/$G$3,G13)))
 $J$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,J$1,FALSE))*$I13
 $K$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,K$1,FALSE))*$I13
 $L$13: 	=IF($H13="""",0,VLOOKUP($H13,Tbl_Glob_ParEnt,L$1,FALSE))*$I13
@@ -216,9 +216,9 @@ $Y$14: 	=IF(W14="""","""",SUM(G14:G15)&"" ml"")
 $Z$14: 	=IF(G14=0,"""",""verw"")
 $AB$14: 	=IF(F14>0,""in ""&ROUND(SUM(G14:G15)/IF(F14>10,ROUNDUP(F14,0),ROUNDUP(F14,1)),1)&"" uur"","""")
 $AC$14: 	=IF(Y14="""","""",Y14&"" ""&AB14)
-$AE$14: 	=G14/F14>25
+$AE$14: 	=IF(F14>0,G14/F14>25,FALSE)
 $E$15: 	=IF(PedBerIVenPM!K2,5,15)
-$G$15: 	=ROUND(IF(B15,SUM(IF(C15<50,C15/10,C15-45)),0),1)
+$G$15: 	=C15
 $H$15: 	=IF(B15,A15,"""")
 $I$15: 	=G15
 $J$15: 	=IF($H15="""",0,VLOOKUP($H15,Tbl_Glob_ParEnt,J$1,FALSE))*$I15
@@ -245,11 +245,11 @@ $W$16: 	=IF(F16>0,F16&"" ml/uur"","""")
 $X$16: 	=IF(G16=0,"""",G16&"" ml"")
 $Y$16: 	=IF(W16="""","""",SUM(G16)&"" ml"")
 $Z$16: 	=IF(G16=0,"""",""verw"")
-$AB$16: 	=IF(G16>0,""in ""&ROUND(G16/F16,1)&"" uur"","""")
+$AB$16: 	=IF(AND(G16>0,F16>0),""in ""&ROUND(G16/F16,1)&"" uur"","""")
 $AC$16: 	=IF(Y16="""","""",Y16&"" ""&AB16)
-$AE$16: 	=G16/F16>25
+$AE$16: 	=IF(F16>0,G16/F16>25,FALSE)
 $D$17: 	=G17<0
-$G$17: 	=_Ped_TPN_LipidVol
+$G$17: 	=C17
 $H$17: 	=IF(G17=0,"""",INDEX(Tbl_Ped_Lipid,B17,1))
 $I$17: 	=IF(Var_Ped_TPN_LipidVol=0,0,IF($I$16/Var_Ped_TPN_LipidVol<1,$I$16/Var_Ped_TPN_LipidVol*G17,G17))
 $J$17: 	=IF($H17="""",0,VLOOKUP($H17,Tbl_Glob_ParEnt,J$1,FALSE))*$I17
@@ -268,7 +268,7 @@ $W$17: 	=IF(F17>0,IF(F17>10,ROUNDUP(F17,0),ROUNDUP(F17,1))&"" ml/uur"","""")
 $X$17: 	=IF(G17=0,"""",G17&"" ml"")
 $Z$17: 	=IF(G17=0,"""",""verw"")
 $AC$17: 	=IF(Y17="""","""",Y17&"" ""&AB17)
-$G$18: 	=_Ped_TPN_VitIntraVol/10
+$G$18: 	=IF(B18,C18,0)
 $H$18: 	=IF(B18,A18,"""")
 $I$18: 	=IF(Var_Ped_TPN_LipidVol=0,0,IF($I$16/Var_Ped_TPN_LipidVol<1,$I$16/Var_Ped_TPN_LipidVol*G18,G18))
 $J$18: 	=IF($H18="""",0,VLOOKUP($H18,Tbl_Glob_ParEnt,J$1,FALSE))*$I18
@@ -287,7 +287,7 @@ $W$18: 	=IF(F18>0,IF(F18>10,ROUNDUP(F18,0),ROUNDUP(F18,1))&"" ml/uur"","""")
 $X$18: 	=IF(G18=0,"""",G18&"" ml"")
 $Z$18: 	=IF(G18=0,"""",""verw"")
 $AC$18: 	=IF(Y18="""","""",Y18&"" ""&AB18)
-$G$19: 	=_Ped_TPN_SoluvitVol/10
+$G$19: 	=IF(B19,C19,0)
 $H$19: 	=IF(B19,A19,"""")
 $I$19: 	=IF(Var_Ped_TPN_LipidVol=0,0,IF($I$16/Var_Ped_TPN_LipidVol<1,$I$16/Var_Ped_TPN_LipidVol*G19,G19))
 $J$19: 	=IF($H19="""",0,VLOOKUP($H19,Tbl_Glob_ParEnt,J$1,FALSE))*$I19
@@ -306,20 +306,39 @@ $W$19: 	=IF(F19>0,IF(F19>10,ROUNDUP(F19,0),ROUNDUP(F19,1))&"" ml/uur"","""")
 $X$19: 	=IF(G19=0,"""",G19&"" ml"")
 $Z$19: 	=IF(G19=0,"""",""verw"")
 $AC$19: 	=IF(Y19="""","""",Y19&"" ""&AB19)
-$F$21: 	=IF(C21<100,C21/10,C21-90)
-$G$21: 	=SUM(G22:G24)
-$H$21: 	=IF(F21=0,"""",A21)
-$I$21: 	=IF(F21*24>Var_Ped_TPN_SST2Vol,Var_Ped_TPN_SST2Vol,F21*24)
-$W$21: 	=IF(F21>0,F21&"" ml/uur"","""")
+$F$20: 	=IF(C20<100,C20/10,C20-90)
+$G$20: 	=SUM(G21:G23)
+$H$20: 	=IF(F20=0,"""",A20)
+$I$20: 	=IF(F20*24>Var_Ped_TPN_SST2Vol,Var_Ped_TPN_SST2Vol,F20*24)
+$W$20: 	=IF(F20>0,F20&"" ml/uur"","""")
+$X$20: 	=IF(G20=0,"""",G20&"" ml"")
+$Y$20: 	=IF(W20="""","""",X20)
+$Z$20: 	=IF(G20=0,"""",""verw"")
+$AB$20: 	=IF(G20>0,""in ""&ROUND(G20/F20,1)&"" uur"","""")
+$AC$20: 	=IF(Y20="""","""",Y20&"" ""&AB20)
+$AE$20: 	=IF(F20>0,G20/F20>25,FALSE)
+$G$21: 	=_Ped_TPN_SST2Vol
+$H$21: 	=IF(B21=1,"""",INDEX(Tbl_Ped_SST,B21,1))
+$I$21: 	=IF(Var_Ped_TPN_SST2Vol=0,0,IF($I$20/Var_Ped_TPN_SST2Vol<1,$I$20/Var_Ped_TPN_SST2Vol*G21,G21))
+$J$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,J$1,FALSE))*$I21
+$K$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,K$1,FALSE))*$I21
+$L$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,L$1,FALSE))*$I21
+$M$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,M$1,FALSE))*$I21
+$N$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,N$1,FALSE))*$I21
+$O$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,O$1,FALSE))*$I21
+$P$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,P$1,FALSE))*$I21
+$Q$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,Q$1,FALSE))*$I21
+$R$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,R$1,FALSE))*$I21
+$S$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,S$1,FALSE))*$I21
+$T$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,T$1,FALSE))*$I21
+$U$21: 	=IF($H21="""",0,VLOOKUP($H21,Tbl_Glob_ParEnt,U$1,FALSE))*$I21
+$W$21: 	=IF(F21>0,IF(F21>10,ROUNDUP(F21,0),ROUNDUP(F21,1))&"" ml/uur"","""")
 $X$21: 	=IF(G21=0,"""",G21&"" ml"")
-$Y$21: 	=IF(W21="""","""",X21)
 $Z$21: 	=IF(G21=0,"""",""verw"")
-$AB$21: 	=IF(G21>0,""in ""&ROUND(G21/F21,1)&"" uur"","""")
 $AC$21: 	=IF(Y21="""","""",Y21&"" ""&AB21)
-$AE$21: 	=G21/F21>25
-$G$22: 	=_Ped_TPN_SST2Vol
-$H$22: 	=IF(B22=1,"""",INDEX(Tbl_Ped_SST,B22,1))
-$I$22: 	=IF(Var_Ped_TPN_SST2Vol=0,0,IF($I$21/Var_Ped_TPN_SST2Vol<1,$I$21/Var_Ped_TPN_SST2Vol*G22,G22))
+$G$22: 	=IF(B22,C22,0)
+$H$22: 	=IF(B22,A22,"""")
+$I$22: 	=IF(Var_Ped_TPN_SST2Vol=0,0,IF($I$20/Var_Ped_TPN_SST2Vol<1,$I$20/Var_Ped_TPN_SST2Vol*G22,G22))
 $J$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,J$1,FALSE))*$I22
 $K$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,K$1,FALSE))*$I22
 $L$22: 	=IF($H22="""",0,VLOOKUP($H22,Tbl_Glob_ParEnt,L$1,FALSE))*$I22
@@ -336,9 +355,10 @@ $W$22: 	=IF(F22>0,IF(F22>10,ROUNDUP(F22,0),ROUNDUP(F22,1))&"" ml/uur"","""")
 $X$22: 	=IF(G22=0,"""",G22&"" ml"")
 $Z$22: 	=IF(G22=0,"""",""verw"")
 $AC$22: 	=IF(Y22="""","""",Y22&"" ""&AB22)
-$G$23: 	=ROUND(IF(B23,IF(C23<50,C23/10,C23-45),0),1)
+$E$23: 	=IF(PedBerIVenPM!K2,5,12.5)
+$G$23: 	=IF(B23,C23,0)
 $H$23: 	=IF(B23,A23,"""")
-$I$23: 	=IF(Var_Ped_TPN_SST2Vol=0,0,IF($I$21/Var_Ped_TPN_SST2Vol<1,$I$21/Var_Ped_TPN_SST2Vol*G23,G23))
+$I$23: 	=IF(Var_Ped_TPN_SST2Vol=0,0,IF($I$20/Var_Ped_TPN_SST2Vol<1,$I$20/Var_Ped_TPN_SST2Vol*G23,G23))
 $J$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,J$1,FALSE))*$I23
 $K$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,K$1,FALSE))*$I23
 $L$23: 	=IF($H23="""",0,VLOOKUP($H23,Tbl_Glob_ParEnt,L$1,FALSE))*$I23
@@ -355,70 +375,49 @@ $W$23: 	=IF(F23>0,IF(F23>10,ROUNDUP(F23,0),ROUNDUP(F23,1))&"" ml/uur"","""")
 $X$23: 	=IF(G23=0,"""",G23&"" ml"")
 $Z$23: 	=IF(G23=0,"""",""verw"")
 $AC$23: 	=IF(Y23="""","""",Y23&"" ""&AB23)
-$E$24: 	=IF(PedBerIVenPM!K2,5,12.5)
-$G$24: 	=ROUND(IF(B24,IF(C24<50,C24/10,C24-45),0),1)
-$H$24: 	=IF(B24,A24,"""")
-$I$24: 	=IF(Var_Ped_TPN_SST2Vol=0,0,IF($I$21/Var_Ped_TPN_SST2Vol<1,$I$21/Var_Ped_TPN_SST2Vol*G24,G24))
-$J$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,J$1,FALSE))*$I24
-$K$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,K$1,FALSE))*$I24
-$L$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,L$1,FALSE))*$I24
-$M$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,M$1,FALSE))*$I24
-$N$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,N$1,FALSE))*$I24
-$O$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,O$1,FALSE))*$I24
-$P$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,P$1,FALSE))*$I24
-$Q$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,Q$1,FALSE))*$I24
-$R$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,R$1,FALSE))*$I24
-$S$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,S$1,FALSE))*$I24
-$T$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,T$1,FALSE))*$I24
-$U$24: 	=IF($H24="""",0,VLOOKUP($H24,Tbl_Glob_ParEnt,U$1,FALSE))*$I24
-$W$24: 	=IF(F24>0,IF(F24>10,ROUNDUP(F24,0),ROUNDUP(F24,1))&"" ml/uur"","""")
-$X$24: 	=IF(G24=0,"""",G24&"" ml"")
-$Z$24: 	=IF(G24=0,"""",""verw"")
-$AC$24: 	=IF(Y24="""","""",Y24&"" ""&AB24)
-$G$26: 	=SUM(G5:G24)-G21-G16
-$I$26: 	=SUM(I5:I24)
-$J$26: 	=SUM(J3:J24)
-$K$26: 	=SUM(K3:K24)
-$L$26: 	=SUM(L3:L24)
-$M$26: 	=SUM(M3:M24)
-$N$26: 	=SUM(N3:N24)
-$O$26: 	=SUM(O3:O24)
-$P$26: 	=SUM(P3:P24)
-$Q$26: 	=SUM(Q3:Q24)
-$R$26: 	=SUM(R3:R24)
-$S$26: 	=SUM(S3:S24)
-$T$26: 	=SUM(T3:T24)
-$U$26: 	=SUM(U3:U24)
-$V$26: 	=I26
-$G$28: 	=ROUND(IF(D5,0,E5*G5)+G9*E9+G10*E10+IF(D11,0,G12*E12+G13*E13),0)
-$B$31: 	=IF(NOT(D5),IF(H5="""","""",H5&""::""&X5),"""")
-$C$31: 	=IF(NOT($H$21=""""),H22&""::""&X22,"""")
-$D$31: 	=IF(AND(D5,H5<>""""),H5&""::""&X5,"""")
-$E$31: 	=IF(AND(D6,H6<>""""),H6&""::""&X6,"""")
-$F$31: 	=IF(D11,IF(H11="""","""",H11&""::""&X11),"""")
-$G$31: 	=IF(H14="""","""",H14&""::""&X14)
-$H$31: 	=IF(H17="""","""",H17&""::""&X17)
-$B$32: 	=IF(NOT(D6),IF(H6="""","""",H6&""::""&X6),"""")
-$C$32: 	=IF(NOT($H$21=""""),H23&""::""&X23,"""")
-$E$32: 	=IF(AND(D7,H7<>""""),H7&""::""&X7,"""")
-$F$32: 	=IF(D11,IF(H12="""","""",H12&""::""&X12),"""")
-$G$32: 	=IF(H15="""","""",H15&""::""&X15)
-$H$32: 	=IF(H18="""","""",H18&""::""&X18)
-$B$33: 	=IF(B8>1,H8&""::""&X8,"""")
-$C$33: 	=IF(NOT($H$21=""""),H24&""::""&X24,"""")
-$F$33: 	=IF(D11,IF(H13="""","""",H13&""::""&X13),"""")
-$H$33: 	=IF(H19="""","""",H19&""::""&X19)
-$B$34: 	=IF(B9,H9&""::""&X9,"""")
-$B$35: 	=IF(B10,H10&""::""&X10,"""")
-$C$35: 	=IF(NOT(E9),J9&""::""&Z9,"""")
-$B$36: 	=IF(AND(H12<>"""",NOT(D11)),H12&""::""&X12,"""")
-$C$36: 	=IF(NOT(E10),J10&""::""&Z10,"""")
-$B$37: 	=IF(AND(H13<>"""",NOT(D11)),H13&""::""&X13,"""")
-$B$38: 	=ConcatenateRange(B31:B37,""##"")
-$C$38: 	=ConcatenateRange(C31:C37,""##"")
-$D$38: 	=ConcatenateRange(D31:D37,""##"")
-$E$38: 	=ConcatenateRange(E31:E37,""##"")
-$F$38: 	=ConcatenateRange(F31:F37,""##"")
-$G$38: 	=ConcatenateRange(G31:G37,""##"")
-$H$38: 	=ConcatenateRange(H31:H37,""##"")
+$G$25: 	=SUM(G5:G23)-G20-G16
+$I$25: 	=SUM(I5:I23)
+$J$25: 	=SUM(J3:J23)
+$K$25: 	=SUM(K3:K23)
+$L$25: 	=SUM(L3:L23)
+$M$25: 	=SUM(M3:M23)
+$N$25: 	=SUM(N3:N23)
+$O$25: 	=SUM(O3:O23)
+$P$25: 	=SUM(P3:P23)
+$Q$25: 	=SUM(Q3:Q23)
+$R$25: 	=SUM(R3:R23)
+$S$25: 	=SUM(S3:S23)
+$T$25: 	=SUM(T3:T23)
+$U$25: 	=SUM(U3:U23)
+$V$25: 	=I25
+$B$30: 	=IF(NOT(D5),IF(H5="""","""",H5&""::""&X5),"""")
+$C$30: 	=IF(NOT($H$20=""""),H21&""::""&X21,"""")
+$D$30: 	=IF(AND(D5,H5<>""""),H5&""::""&X5,"""")
+$E$30: 	=IF(AND(D6,H6<>""""),H6&""::""&X6,"""")
+$F$30: 	=IF(D11,IF(H11="""","""",H11&""::""&X11),"""")
+$G$30: 	=IF(H14="""","""",H14&""::""&X14)
+$H$30: 	=IF(H17="""","""",H17&""::""&X17)
+$B$31: 	=IF(NOT(D6),IF(H6="""","""",H6&""::""&X6),"""")
+$C$31: 	=IF(NOT($H$20=""""),H22&""::""&X22,"""")
+$E$31: 	=IF(AND(D7,H7<>""""),H7&""::""&X7,"""")
+$F$31: 	=IF(D11,IF(H12="""","""",H12&""::""&X12),"""")
+$G$31: 	=IF(H15="""","""",H15&""::""&X15)
+$H$31: 	=IF(H18="""","""",H18&""::""&X18)
+$B$32: 	=IF(B8>1,H8&""::""&X8,"""")
+$C$32: 	=IF(NOT($H$20=""""),H23&""::""&X23,"""")
+$F$32: 	=IF(D11,IF(H13="""","""",H13&""::""&X13),"""")
+$H$32: 	=IF(H19="""","""",H19&""::""&X19)
+$B$33: 	=IF(B9,H9&""::""&X9,"""")
+$B$34: 	=IF(B10,H10&""::""&X10,"""")
+$C$34: 	=IF(NOT(E9),J9&""::""&Z9,"""")
+$B$35: 	=IF(AND(H12<>"""",NOT(D11)),H12&""::""&X12,"""")
+$C$35: 	=IF(NOT(E10),J10&""::""&Z10,"""")
+$B$36: 	=IF(AND(H13<>"""",NOT(D11)),H13&""::""&X13,"""")
+$B$37: 	=ConcatenateRange(B30:B36,""##"")
+$C$37: 	=ConcatenateRange(C30:C36,""##"")
+$D$37: 	=ConcatenateRange(D30:D36,""##"")
+$E$37: 	=ConcatenateRange(E30:E36,""##"")
+$F$37: 	=ConcatenateRange(F30:F36,""##"")
+$G$37: 	=ConcatenateRange(G30:G36,""##"")
+$H$37: 	=ConcatenateRange(H30:H36,""##"")
 "

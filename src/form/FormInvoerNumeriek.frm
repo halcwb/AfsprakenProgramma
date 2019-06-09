@@ -18,6 +18,9 @@ Private m_Range As String
 Private m_Validate As String
 Private m_IsSST1 As Boolean
 
+Private Const constSST1Vol As String = "_Ped_TPN_SST1Vol"
+
+
 Public Sub SetIsSST1()
 
     m_IsSST1 = True
@@ -61,7 +64,7 @@ Private Sub cmdOK_Click()
     
     If Not m_Range = vbNullString Then
         If m_IsSST1 Then
-            PedTPN_SetSST1GlucoseVol StringToDouble(txtWaarde.Value)
+            ModRange.SetRangeValue constSST1Vol, Round(StringToDouble(txtWaarde.Value), 1)
         Else
             ModRange.SetRangeValue m_Range, StringToDouble(txtWaarde.Value)
         End If

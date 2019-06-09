@@ -155,11 +155,11 @@ Private Function PrintTPN(ByVal blnPrev As Boolean, ByVal strFile As String) As 
     dblGew = ModPatient.Patient_GetWeight()
     
     If intTPN > 1 Then
-        If intTPN = 2 Then Set objSheet = shtPedPrtTPN2tot6
-        If intTPN = 3 Then Set objSheet = shtPedPrtTPN7tot15
-        If intTPN = 4 Then Set objSheet = shtPedPrtTPN16tot30
-        If intTPN = 5 Then Set objSheet = shtPedPrtTPN31tot50
-        If intTPN = 6 Then Set objSheet = shtPedPrtTPN50
+        If intTPN < 4 Then Set objSheet = shtPedPrtTPN2tot6
+        If intTPN = 4 Then Set objSheet = shtPedPrtTPN7tot15
+        If intTPN = 5 Then Set objSheet = shtPedPrtTPN16tot30
+        If intTPN = 6 Then Set objSheet = shtPedPrtTPN31tot50
+        If intTPN = 7 Then Set objSheet = shtPedPrtTPN50
             
     Else
         Set objSheet = shtPedPrtTPN2tot6

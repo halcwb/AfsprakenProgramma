@@ -1321,8 +1321,10 @@ Public Sub MedDisc_SortTableMedDisc()
     Dim strColumn As String
     Dim strRange As String
     
-    strColumn = "Bx2:Bx31"
+    strColumn = "BW2:BW31"
     strRange = "Tbl_Glob_SortMedDisc"
+    
+    Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
     
     shtGlobBerMedDisc.Sort.SortFields.Clear
     shtGlobBerMedDisc.Sort.SortFields.Add Key:=Range( _
@@ -1336,7 +1338,9 @@ Public Sub MedDisc_SortTableMedDisc()
         .SortMethod = xlPinYin
         .Apply
     End With
-
+    
+    Application.ScreenUpdating = True
+    
 End Sub
 
 

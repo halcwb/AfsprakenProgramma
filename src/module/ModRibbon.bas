@@ -26,7 +26,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         'grpBedden                                          ' -- PATIENTEN --
         
-        Case "btnPatientList"                                   ' -> Open patient lijst
+        Case "btnPatientList"                               ' -> Open patient lijst
             If Setting_UseDatabase Then
                 Patient_OpenPatientAndAsk
             Else
