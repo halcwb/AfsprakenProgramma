@@ -10,7 +10,7 @@ $B$9: 	=__2_AchterNaam
 $G$9: 	=OR(B9=0,B9 ="""")
 $B$10: 	=__3_VoorNaam
 $G$10: 	=OR(B10=0,B10 ="""")
-$B$11: 	=__4_GebDatum
+$B$11: 	= FormatDateDayMonthYears(  __4_GebDatum)
 $G$11: 	=OR(B11=0,B11 ="""")
 $B$14: 	=IFERROR(VLOOKUP(B$13,Tbl_Glob_BerMedDisc,39,FALSE),"""")
 $G$14: 	=OR(B14=0,B14 ="""")

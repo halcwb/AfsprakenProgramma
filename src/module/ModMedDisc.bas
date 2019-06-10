@@ -585,14 +585,14 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
         
         ModRange.SetRangeValue constFreqList & strN, objMed.GetFreqListString
         
-        If Not objMed.CalcDose = 0 And Not intFreq < 2 Then
+        If Not objMed.MultipleQuantity = 0 And Not intFreq < 2 Then
             dblAdjust = 1
             dblAdjust = IIf(objMed.PerKg, ModPatient.Patient_GetWeight(), dblAdjust)
             dblAdjust = IIf(objMed.PerM2, ModPatient.CalculateBSA(), dblAdjust)
             
             dblFactor = IIf(objMed.PerDose, 1, ModExcel.Excel_Index(constFreqTable, intFreq, 3))
-            intDoseQty = objMed.CalcDose * dblAdjust / dblFactor / objMed.MultipleQuantity
-            
+            ' intDoseQty = objMed.CalcDose * dblAdjust / dblFactor / objMed.MultipleQuantity
+            intDoseQty = objMed.KeerDose / objMed.MultipleQuantity
             ModRange.SetRangeValue constDoseQty & strN, intDoseQty
             
         End If

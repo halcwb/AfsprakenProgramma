@@ -70,6 +70,12 @@ Public Function FormatDateYearMonthDay(dtmDateTime As Date) As String
 
 End Function
 
+Public Function FormatDateDayMonthYears(dtmDateTime As Date) As String
+
+    FormatDateDayMonthYears = Format(dtmDateTime, "dd-mm-yyyy")
+
+End Function
+
 Public Function FormatDateHoursMinutes(dtmDate As Date) As String
 
     FormatDateHoursMinutes = Format(dtmDate, "hh:mm:ss")

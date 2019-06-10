@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModProgress"
 Option Explicit
 
-Public Sub SetJobPercentage(ByVal strJob As String, ByVal intTot As Integer, ByVal intProg As Integer)
+Public Sub SetJobPercentage(ByVal strJob As String, ByVal intTot As Long, ByVal intProg As Long)
     
     Dim intPerc As Integer
     

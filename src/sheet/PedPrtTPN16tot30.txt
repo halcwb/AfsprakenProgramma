@@ -5,6 +5,7 @@ $B$5: 	=__1_Bed
 $F$5: 	=Txt_Pat_GeboorteDat
 $B$6: 	=IF(OR(_User_Type=""Artsen"",_User_Type=""Supervisor""), _User_LastName&"", ""&_User_FirstName,"""")
 $F$6: 	=Txt_Pat_Gewicht
+$A$9: 	=IF(_Pat_Gewicht>0,""Tot. hoev. vocht: "" & FixPrecision(C9/_Pat_Gewicht, 1) & "" ml/kg/24 uur = "","""")
 $C$9: 	=SUM(I22,I27,I36)
 $A$13: 	=IF(G15="""","""",PedBerTPN!W3)
 $G$13: 	=IF(A13="""","""",PedBerTPN!X9)

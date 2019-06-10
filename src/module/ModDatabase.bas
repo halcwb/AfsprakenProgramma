@@ -485,7 +485,7 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
 
     Dim strSql As String
     Dim intC As Long
-    Dim intN As Integer
+    Dim intN As Long
     Dim strPar As String
     Dim varVal As Variant
     Dim varEmp As Variant
@@ -507,7 +507,7 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
     
     Set objRs = objConn.Execute(strSql)
     
-    intC = shtPatData.Range("A1").Rows.Count
+    intC = shtPatData.Range("A1").CurrentRegion.Rows.Count
     Do While Not objRs.EOF
         If Not blnVersionSet Then
             ModRange.SetRangeValue constVersie, objRs.Fields("VersionID").Value

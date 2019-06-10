@@ -479,7 +479,7 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
     Case 2 To 6
         Set objSheet = shtPedPrtTPN2tot6
     
-        intTPN = IIf(intTPN = 2, 2, 3)
+        intTPN = IIf(intTPN = 2, 2, 3) ' Samenstelling B of NICU Mix
         blnNaCl = True
         dblNaCl = 6 * dblGewicht
         blnKCl = True
@@ -511,6 +511,8 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
             
     Case 7 To 15
         Set objSheet = shtPedPrtTPN7tot15
+        
+        intTPN = 4 ' Samenstelling C
         
         blnNaCl = True
         dblNaCl = 6 * dblGewicht
@@ -545,6 +547,8 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
                             
     Case 16 To 30
         Set objSheet = shtPedPrtTPN16tot30
+    
+        intTPN = 5 ' Samenstelling D
     
         blnNaCl = True
         dblNaCl = 6 * dblGewicht
@@ -581,6 +585,8 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
     Case 31 To 50
         Set objSheet = shtPedPrtTPN31tot50
     
+        intTPN = 6 ' Samenstelling E
+    
         blnNaCl = True
         dblNaCl = 6 * dblGewicht
         blnKCl = True
@@ -615,6 +621,8 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
             
     Case Else
         Set objSheet = shtPedPrtTPN50
+
+        intTPN = 7 ' Nutriflex
 
         blnNaCl = False
         blnKCl = False
