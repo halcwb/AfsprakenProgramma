@@ -513,9 +513,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         End If
         
     End With
-    
-    MedDisc_SortTableMedDisc
-    
+        
 End Sub
 
 Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
@@ -1343,4 +1341,99 @@ Public Sub MedDisc_SortTableMedDisc()
     
 End Sub
 
+
+Public Sub SendApotheekMedDiscValidation()
+
+    Dim blnAsk As Boolean
+    Dim blnPrint As Boolean
+    Dim strUser As String
+    Dim vbAnswer As Integer
+    
+    Dim objMsg As Object
+    Dim strTo As String
+    Dim strCc As String
+    Dim strFrom As String
+    Dim strSubject As String
+    Dim strHTML As String
+    
+    Dim strFile As String
+    Dim strPDF As String
+    
+    Dim strMail As String
+    
+    On Error GoTo ErrorHandler
+                          
+    strMail = "wkz-algemeen@umcutrecht.nl"
+    If Not ModSetting.IsProductionDir() Then strMail = ModMessage.ShowInputBox("Voer een email adres in", vbNullString)
+    
+    If strMail = vbNullString Then
+        ModMessage.ShowMsgBoxExclam "Er moet een email adres worden ingevoerd." & vbNewLine & "Kan de apotheekbrief niet verzenden!"
+        Exit Sub
+    End If
+        
+    ModProgress.StartProgress "Discontinue medicatie voor validatie naar de apotheek verzenden"
+
+    strTo = strMail
+'     strCc = "vbassneo@umcutrecht.nl"
+    strFrom = "FunctioneelBeheerMetavision@umcutrecht.nl"
+    strSubject = "Medicatie validatie voor " & ModPatient.Patient_GetHospitalNumber & " " & ModPatient.Patient_GetLastName & ", " & ModPatient.Patient_GetFirstName
+    strHTML = vbNullString
+    
+    Set objMsg = CreateObject("CDO.Message")
+    With objMsg
+         
+        .To = CStr(strTo)
+'         .Cc = CStr(strCc)
+        .From = CStr(strFrom)
+        .Subject = CStr(strSubject)
+        .HTMLBody = CStr(strHTML)
+        .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2 'cdoSendUsingPickup=1, cdoSendUsingPort=2, cdoSendUsingExchange=3
+        .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = "mail.umcutrecht.nl"
+        .Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+        .Configuration.Fields.Update
+        
+        strFile = Environ("TEMP") & "\MedDiscValidation_" & ModPatient.Patient_GetHospitalNumber
+        strPDF = PrintMedDiscValidationPrev(False, strFile)
+        .AddAttachment strPDF
+                
+        .Send
+    
+    End With
+        
+    Set objMsg = Nothing
+    
+    ModProgress.FinishProgress
+    
+    ModMessage.ShowMsgBoxInfo "Medicatie validatie is verstuurd naar de apotheek"
+    
+    Exit Sub
+
+ErrorHandler:
+
+    ModLog.LogError Err, "SendApotheekMedDiscValidation"
+    
+    On Error Resume Next
+    
+    ModMessage.ShowMsgBoxError "Medicatie validatie is niet verstuurd naar de apotheek, een foutmelding is verzonden naar functioneel beheer"
+        
+    Set objMsg = Nothing
+    
+    ModProgress.FinishProgress
+
+End Sub
+
+Private Function PrintMedDiscValidationPrev(ByVal blnPrev As Boolean, ByVal strFile As String) As String
+
+    Dim strPDF As String
+    
+    If strFile = vbNullString Then
+        PrintSheet shtGlobPrtMedDisc, 1, False, blnPrev
+    Else
+        strPDF = strFile & ".pdf"
+        SaveSheetAsPDF shtGlobPrtMedDisc, strPDF, True
+    End If
+    
+    PrintMedDiscValidationPrev = strPDF
+    
+End Function
 

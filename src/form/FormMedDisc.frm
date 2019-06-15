@@ -29,6 +29,8 @@ Private m_Keer As Boolean
 Private m_Conc As Boolean
 Private m_Mail As Boolean
 
+
+
 Public Property Get Mail() As Boolean
 
     Mail = m_Mail
@@ -653,7 +655,7 @@ Private Sub CalculateDose()
     dblAdjust = IIf(optM2.Value, dblM2, dblAdjust)
     
     If dblFact = 0 Or (Not m_Keer And dblDose = 0) Or (m_Keer And dblKeer = 0) Or dblAdjust = 0 Or dblDeel = 0 Then
-        SetTextBoxNumericValue txtKeerDose, 0
+        If Not m_Keer Then SetTextBoxNumericValue txtKeerDose, 0
         SetTextBoxNumericValue txtCalcDose, 0
         Exit Sub
     End If
@@ -839,7 +841,7 @@ Private Sub cmdGStand_Click()
     Dim strUNT As String
     Dim strMsg As String
     
-    strUrl = "http://iis2503.ds.umcutrecht.nl/GenForm/html?"
+    strUrl = "http://vpxap-meta01.ds.umcutrecht.nl/GenForm/html?"
     
     If Not Patient_BirthDate() = ModDate.EmptyDate Then
         dblAge = Patient_CorrectedAgeInMo()
@@ -895,6 +897,26 @@ Private Sub cmdKeerDose_Click()
 
     CalculateDose
     
+End Sub
+
+Private Sub cmdKompas_Click()
+
+    Dim strUrl As String
+    Dim strFirst As String
+    Dim strGeneric As String
+    
+    strUrl = "https://www.farmacotherapeutischkompas.nl/bladeren/preparaatteksten/{FIRST}/{GENERIC}"
+    
+    strGeneric = Trim(LCase(cboGeneriek.Text))
+    
+    If Not strGeneric = vbNullString Then
+        strFirst = Left(strGeneric, 1)
+        strUrl = Replace(strUrl, "{FIRST}", strFirst)
+        strUrl = Replace(strUrl, "{GENERIC}", strGeneric)
+    End If
+    
+    ActiveWorkbook.FollowHyperlink strUrl
+
 End Sub
 
 Private Sub cmdMail_Click()
@@ -1074,18 +1096,21 @@ End Sub
 Private Sub optKg_Change()
 
     SetDoseUnit
+    CalculateDose
 
 End Sub
 
 Private Sub optNone_Change()
 
     SetDoseUnit
+    CalculateDose
 
 End Sub
 
 Private Sub optM2_Change()
 
     SetDoseUnit
+    CalculateDose
 
 End Sub
 
@@ -1182,8 +1207,8 @@ End Sub
 
 Private Sub txtKeerDose_Change()
 
-    'If m_Keer Then CalculateDose
-    'Validate vbNullString
+    If m_Keer Then CalculateDose
+    Validate vbNullString
 
 End Sub
 

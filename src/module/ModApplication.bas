@@ -244,6 +244,8 @@ Public Sub Application_Initialize()
     
     Application.ScreenUpdating = True
     
+    If CheckMedicationValidation() Then Application_CloseApplication
+    
     Exit Sub
     
 ErrorHandler:
@@ -660,3 +662,23 @@ Private Sub ClearLogin()
     ModRange.SetRangeValue "_User_Type", vbNullString
     
 End Sub
+
+
+Private Function CheckMedicationValidation() As Boolean
+
+    Dim blnCheck As Boolean
+    Dim strRegPath As String
+    Dim strKey As String
+    
+    strRegPath = "HKCU\SOFTWARE\UMCU\MV"
+    strKey = "MedicatieValidatie"
+    If ModRegistry.RegistryKeyExists(strRegPath, strKey) Then
+        blnCheck = ModRegistry.ReadRegistryKey(strRegPath, strKey) = 1
+        If blnCheck Then ModMedDisc.SendApotheekMedDiscValidation
+    Else
+        blnCheck = False
+    End If
+    
+    CheckMedicationValidation = blnCheck
+
+End Function

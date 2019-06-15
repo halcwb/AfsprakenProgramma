@@ -563,6 +563,8 @@ Public Sub Patient_SavePatient()
 
     On Error GoTo ErrorHandler
     
+    MedDisc_SortTableMedDisc
+    
     If ModString.StringIsZeroOrEmpty(ModPatient.Patient_GetHospitalNumber()) Then
         ModMessage.ShowMsgBoxExclam "Kan patient zonder ziekenhuis nummer niet opslaan!"
         Exit Sub

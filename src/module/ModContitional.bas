@@ -180,6 +180,33 @@ Public Sub SetMedDiscConditionalFormatting()
 
 End Sub
 
+Public Sub SetMedDiscPrtConditionalFormatting()
+    
+    Dim strFreqWarn As String
+    Dim strDoseWarn As String
+    Dim strDoseErr As String
+    
+    Dim strConcErr As String
+    Dim strOplErr As String
+    Dim strTimeErr As String
+    
+    Dim strMOWarn As String
+    
+    strFreqWarn = "=GlobBerMedDisc!BF"
+    strDoseWarn = "=GlobBerMedDisc!BL"
+    strDoseErr = "=GlobBerMedDisc!BM"
+    
+    strConcErr = "=GlobBerMedDisc!BA"
+    strOplErr = "=GlobBerMedDisc!BB"
+    strTimeErr = "=GlobBerMedDisc!BC"
+        
+    SetConditionalFormattingWarn shtGlobPrtMedDisc, "B", strFreqWarn, 3, 32, 1
+    SetConditionalFormattingWarnErr shtGlobPrtMedDisc, "F", strDoseErr, strDoseWarn, 3, 32, 1
+    
+    SetConditionalFormattingErr shtGlobPrtMedDisc, "E", strConcErr, 3, 32, 1
+    SetConditionalFormattingErr shtGlobPrtMedDisc, "E", strTimeErr, 3, 32, 1
+    
+End Sub
 Public Sub SetInfBVochtTPNFormatting()
     
     Dim strTPNError As String

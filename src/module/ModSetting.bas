@@ -12,24 +12,6 @@ Private Const constPatientsFile As String = "Patienten.xlsx"
 
 Private Const constExt As String = ".xlsx"
 
-'DB_DatabaseBusy
-'Setting_MVMed
-'SettingDataDir
-'SettingDbDir
-'SettingDevDir
-'SettingDevMode
-'SettingLogDir
-'SettingLogging
-'SettingNeoDir
-'SettingPedDir
-'SettingProdDB
-'SettingProdServer
-'SettingServer
-'SettingTestDB
-'SettingTestLogDir
-'SettingTestServer
-'SettingUseDatabase
-
 Private Const constDevMode As String = "SettingDevMode"
 Private Const constLogging As String = "SettingLogging"
 Private Const constNeoDir As String = "SettingNeoDir"

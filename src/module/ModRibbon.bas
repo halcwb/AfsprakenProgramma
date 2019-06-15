@@ -121,8 +121,11 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnPedPrintTPN"                               ' -> TPN Brief
             ModPedPrint.PedPrint_PrintTPN True
             
-        Case "btnPedSendTPN"                               ' -> TPN Brief
+        Case "btnPedSendTPN"                                ' -> TPN Brief
             ModPedPrint.PedPrint_SendTPN
+        
+        Case "btnPedSendMedVal"                             ' -> Medicatie Validatie
+            ModMedDisc.SendApotheekMedDiscValidation
         
         'grpNeoPrint                                        ' -- PRINT NEO ---
         
@@ -144,6 +147,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnNeoPrintWerkbr"                            ' -> Werkbrief
             ModNeoPrint.PrintNeoWerkBrief
             
+        Case "btnNeoSendMedVal"                             ' -> Medicatie Validatie
+            ModMedDisc.SendApotheekMedDiscValidation
+        
         'grpDevelopment                                     ' -- DEVELOPMENT --
         
         Case "btnDevMode"                                   ' -> Development Mode
@@ -198,7 +204,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnParent"                                    ' -> Beheer ParEnterale Vloeistoffen
              ModAdmin.Admin_TblGlobParEnt
         
-        Case "btnMedDisc"                                    ' -> Beheer Discontinue medicatie
+        Case "btnMedDisc"                                   ' -> Beheer Discontinue medicatie
              ModDatabase.Database_ImportConfigMedDisc
         
         'grpFB                                              ' -- ACCEPTATIE TESTS --
