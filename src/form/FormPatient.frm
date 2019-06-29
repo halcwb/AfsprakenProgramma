@@ -92,12 +92,12 @@ Private Sub btnRefresh_Click()
         Me.txtBirthDay = DateTime.Day(m_Pat.GeboorteDatum)
         Me.txtBirthMonth = DateTime.Month(m_Pat.GeboorteDatum)
         Me.txtBirthYear = DateTime.Year(m_Pat.GeboorteDatum)
-        Me.txtWeight = m_Pat.Gewicht
-        Me.txtLength = m_Pat.Lengte
+        If m_Pat.Gewicht > 0 Then Me.txtWeight = m_Pat.Gewicht
+        If m_Pat.Lengte > 0 Then Me.txtLength = m_Pat.Lengte
         Me.cboGeslacht.Text = m_Pat.Geslacht
-        Me.txtBirthWeight = m_Pat.GeboorteGewicht
+        If m_Pat.GeboorteGewicht > 0 Then Me.txtBirthWeight = m_Pat.GeboorteGewicht
         Me.txtGestDay = m_Pat.Days
-        Me.txtGestWeek = m_Pat.Weeks
+        If m_Pat.Weeks > 0 Then Me.txtGestWeek = m_Pat.Weeks
         
         Validate vbNullString
     End If

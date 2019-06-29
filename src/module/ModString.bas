@@ -53,6 +53,17 @@ Public Function ContainsCaseSensitive(ByVal strString As String, ByVal strValue 
     
 End Function
 
+' Checks whether strString contains strValue case sensitive, ignores spaces
+Public Function ContainsInclSpace(ByVal strString As String, ByVal strValue As String) As Boolean
+
+    If Strings.InStr(1, strString, strValue) > 0 Then
+        ContainsInclSpace = True
+    Else
+        ContainsInclSpace = False
+    End If
+    
+End Function
+
 Public Function StartsWith(ByVal strString As String, ByVal strValue As String) As Boolean
 
     StartsWith = Strings.InStr(1, strString, strValue) = 1

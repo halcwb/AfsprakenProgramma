@@ -83,6 +83,14 @@ Public Function Formularium_IsInitialized() As Boolean
 
 End Function
 
+Public Function Formularium_GetNewFormularium() As ClassFormularium
+
+    Set m_Formularium = Nothing
+    Formularium_Initialize
+    Set Formularium_GetNewFormularium = m_Formularium
+
+End Function
+
 Public Function Formularium_GetFormularium() As ClassFormularium
 
     Formularium_Initialize

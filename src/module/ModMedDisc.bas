@@ -375,6 +375,18 @@ Public Sub MedDisc_Clear_30()
 
 End Sub
 
+Public Sub MedDisc_ClearAll(ByVal blnShowProgress As Boolean)
+
+    Dim intN As Integer
+    
+    For intN = 1 To 30
+        Clear intN
+        If blnShowProgress Then ModProgress.SetJobPercentage "Medicatie verwijderen", 30, intN
+        
+    Next
+
+End Sub
+
 Public Function GetMedicationFreqs() As Dictionary
 
     Dim objTable As Range
@@ -1437,3 +1449,130 @@ Private Function PrintMedDiscValidationPrev(ByVal blnPrev As Boolean, ByVal strF
     
 End Function
 
+Public Sub MedDisc_Import()
+
+    Dim intAnswer As VbMsgBoxResult
+    Dim strMsg As String
+    
+    strMsg = "Om medicatie uit HIX te importeren moeten de volgende stappen worden genomen:"
+    strMsg = strMsg & vbNewLine & "1. Selecteer de medicatielijst van de betreffende patient in HIX"
+    strMsg = strMsg & vbNewLine & "2. Zorg dat alle actieve medicatie regels zijn aangevinkt (links boven in de medicatielijst)"
+    strMsg = strMsg & vbNewLine & "3. Rechtsklik in de medicatie lijst en kies de optie kopieren"
+    strMsg = strMsg & vbNewLine & ""
+    strMsg = strMsg & vbNewLine & "Als je dit gedaan hebt en je de medicatie wilt importeren klik dan op Ja"
+    
+    intAnswer = ModMessage.ShowMsgBoxYesNo(strMsg)
+    
+    If intAnswer = vbYes Then
+        Application.DisplayAlerts = False
+        
+        shtGlobTemp.UsedRange.ClearContents
+        shtGlobTemp.Range("A1").PasteSpecial xlPasteAll
+        Application.DisplayAlerts = True
+    
+        ImportMedications
+        shtGlobTemp.Cells.ClearContents
+    End If
+    
+
+End Sub
+
+Private Sub ImportMedications()
+
+    Dim objForm As ClassFormularium
+    Dim objRange As Range
+    Dim objMed As ClassMedicatieDisc
+    Dim colMed As Collection
+    Dim intN As Integer
+    Dim intC As Integer
+    Dim intJ As Integer
+    Dim intK As Integer
+    Dim intM As Integer
+    Dim strK As String
+    Dim strLabel As String
+    Dim arrLabel() As String
+    Dim strMissed As String
+    Dim blnSet As Boolean
+    Dim blnEqs As Boolean
+    Dim strMsg As String
+    Dim strGen As String
+    Dim strProd As String
+    
+    Set objForm = ModFormularium.Formularium_GetNewFormularium()
+    Set colMed = objForm.GetMedicamenten(False)
+    Set objRange = shtGlobTemp.Range("A1").CurrentRegion()
+        
+    ModProgress.StartProgress "Importeren van medicatie uit HIX"
+        
+    Application.ScreenUpdating = False
+    MedDisc_ClearAll True
+    Application.ScreenUpdating = True
+        
+    intC = objRange.Rows.Count + 10
+    For intN = 2 To intC
+       strLabel = Trim(objRange.Cells(intN, 3).Value)
+       If Not (strLabel = vbNullString Or strLabel = "Geaccordeerd") Then
+            intM = intM + 1
+            blnSet = False
+            For Each objMed In colMed
+                 arrLabel = Split(objMed.Label, " ")
+                 blnEqs = True
+                 
+                 strGen = arrLabel(0) & " "
+                 strProd = Split(objMed.Product, " ")(0) & " "
+                 
+                 blnEqs = blnEqs And ModString.ContainsInclSpace(strLabel, strGen)
+                 If Not blnEqs Then
+                    blnEqs = ModString.ContainsInclSpace(strLabel, strProd)
+                    arrLabel = Split(objMed.Product, " ")
+                 End If
+                 
+                 If blnEqs Then
+                    For intJ = 1 To UBound(arrLabel)
+                       blnEqs = blnEqs And (ModString.ContainsCaseSensitive(strLabel, arrLabel(intJ)))
+                    Next
+                 End If
+                 
+                 If blnEqs Then
+                    intK = intK + 1
+                    strK = ModString.IntNToStrN(intK)
+                    objMed.Indication = vbNullString
+                    
+                    ModRange.SetRangeValue constText & strK, objRange.Cells(intN, 4).Value & " " & objRange.Cells(intN, 5).Value
+                    MedDisc_SetMed objMed, strK
+                    
+                    blnSet = True
+                    Exit For
+                 End If
+            Next
+            
+            If Not blnSet Then
+                strMissed = strMissed & vbNewLine & strLabel
+                
+                intK = intK + 1
+                strK = ModString.IntNToStrN(intK)
+                ModRange.SetRangeValue constText & strK, strLabel & " " & objRange.Cells(intN, 4).Value & " " & objRange.Cells(intN, 5).Value
+            End If
+       
+       End If
+       
+       ModProgress.SetJobPercentage "Medicatie import", intC, intN
+    Next
+    
+    MedDisc_SortTableMedDisc
+    
+    If strMissed = vbNullString Then
+        strMsg = "Alle (" & intM & ") medicamenten werden geimporteerd"
+    Else
+        strMsg = "De volgende medicamenten konden niet worden geimporteerd: " & vbNewLine & strMissed
+    End If
+    
+    ModProgress.FinishProgress
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    Set colMed = Nothing
+    Set objMed = Nothing
+    Set objForm = Nothing
+    Set objRange = Nothing
+
+End Sub

@@ -170,12 +170,20 @@ End Sub
 Public Function GetMedicamenten(ByVal blnShowProgress As Boolean) As Collection
 
     Dim objC As ClassStringComparer
-
-    Database_GetMedicamenten Me, blnShowProgress
     
-    Set objC = New ClassStringComparer
-    ModCollection.CollectionSort m_colVorm, objC
-    ModCollection.CollectionSort m_colSterkteEenheden, objC
+    If Not m_colMedicamenten Is Nothing Then
+    
+        If Not m_colMedicamenten.Count > 0 Then
+
+            Database_GetMedicamenten Me, blnShowProgress
+            
+            Set objC = New ClassStringComparer
+            ModCollection.CollectionSort m_colVorm, objC
+            ModCollection.CollectionSort m_colSterkteEenheden, objC
+        
+        End If
+    
+    End If
     
     Set GetMedicamenten = m_colMedicamenten
 
