@@ -19,6 +19,8 @@ Private Const constDateReplace As String = "{DATEFORMAT}"
 Private Const constDateFormula As String = vbNullString
 Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
 
+Private Const constStandardPrefix As String = "standaard_"
+
 Public Sub Patient_SetHospitalNumber(ByVal strHospNum As String)
 
     ModRange.SetRangeValue constHospNum, strHospNum
@@ -66,7 +68,11 @@ End Sub
 
 Public Function Patient_GetHospitalNumber() As String
 
-    Patient_GetHospitalNumber = ModRange.GetRangeValue(constHospNum, vbNullString)
+    Dim strHospNum As String
+    
+    strHospNum = ModRange.GetRangeValue(constHospNum, vbNullString)
+    
+    Patient_GetHospitalNumber = strHospNum
 
 End Function
 
@@ -196,17 +202,20 @@ Public Function Patient_OpenDatabaseList(ByVal strCaption As String) As Boolean
     
     Dim frmPats As FormPatLijst
     Dim colPats As Collection
+    Dim colStand As Collection
     Dim blnCancel As Boolean
     
     On Error GoTo OpenPatientListError
     
     Set colPats = GetMetaVisionPatients()
+    Set colStand = ModDatabase.Database_GetStandardPatients()
     Set frmPats = New FormPatLijst
     
     With frmPats
         .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
         .SetOnlyAdmittedTrue
-        .LoadDbPatients colPats
+        .LoadDbPatients colStand, True
+        .LoadDbPatients colPats, False
         .Show
     End With
     
@@ -567,7 +576,15 @@ Public Sub Patient_SavePatient()
     
     If ModString.StringIsZeroOrEmpty(ModPatient.Patient_GetHospitalNumber()) Then
         ModMessage.ShowMsgBoxExclam "Kan patient zonder ziekenhuis nummer niet opslaan!"
-        Exit Sub
+        
+        varReply = ModMessage.ShowMsgBoxYesNo("Patient als standaard patient opslaan?")
+        If varReply = vbYes Then
+            CreateStandardPatient
+            ' If still no hosp number, exit
+            If ModString.StringIsZeroOrEmpty(ModPatient.Patient_GetHospitalNumber()) Then Exit Sub
+        Else
+            Exit Sub
+        End If
     End If
     
     blnNeo = MetaVision_IsNeonatologie()
@@ -601,6 +618,40 @@ ErrorHandler:
     
     ModMessage.ShowMsgBoxError "Kan patient niet opslaan in de database"
     ModLog.LogError Err, strAction
+
+End Sub
+
+Private Sub CreateStandardPatient()
+
+    Dim strName As String
+    Dim strHospNum As String
+    Dim intHospNum As Integer
+    
+    strName = ModMessage.ShowInputBox("Geef een naam op voor de standaard patient", vbNullString)
+    
+    If Not strName = vbNullString Then
+        strHospNum = ModDatabase.Database_GetLastStandardPatientHospNum()
+        strHospNum = Replace(strHospNum, constStandardPrefix, vbNullString)
+        If strHospNum = vbNullString Then
+            intHospNum = 1
+        Else
+            intHospNum = CInt(strHospNum) + 1
+        End If
+        
+        If intHospNum > 999 Then
+            ModMessage.ShowMsgBoxExclam "Maximaal aantal van 999 standaard patienten is bereikt"
+        Else
+            strHospNum = constStandardPrefix & intHospNum
+            strHospNum = IIf(intHospNum < 100, constStandardPrefix & "0" & intHospNum, strHospNum)
+            strHospNum = IIf(intHospNum < 10, constStandardPrefix & "00" & intHospNum, strHospNum)
+            
+            ModPatient.Patient_SetHospitalNumber strHospNum
+            ModRange.SetRangeValue constAN, "Patient"
+            ModRange.SetRangeValue constVN, strName
+            
+        End If
+        
+    End If
 
 End Sub
 
@@ -735,6 +786,7 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     Dim blnAll As Boolean
     Dim blnNeo As Boolean
     Dim strHospNum As String
+    Dim strStandard As String
     Dim intVersion As Integer
     
     Dim objPat As ClassPatientDetails
@@ -757,27 +809,36 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
         If Patient_OpenDatabaseList("Selecteer een patient") Then
             If Patient_GetHospitalNumber() = vbNullString Then  ' No patient was selected
-                Patient_SetHospitalNumber strHospNum  ' Put back the old hospital number
+                Patient_SetHospitalNumber strHospNum ' Put back the old hospital number
                 SetDatabaseVersie intVersion         ' Put back current version
                 Exit Sub                             ' And exit sub
             Else
-                strHospNum = Patient_GetHospitalNumber()
-                intVersion = ModBed.GetDatabaseVersie()
-                
-                If blnShowProgress Then ModProgress.StartProgress strTitle
+                If Patient_IsStandard(Patient_GetHospitalNumber()) Then
+                    strStandard = Patient_GetHospitalNumber()
+                    Patient_SetHospitalNumber strHospNum
+                    strHospNum = vbNullString
+                Else
+                    strHospNum = Patient_GetHospitalNumber()
+                    intVersion = ModBed.GetDatabaseVersie()
+                    
+                    If blnShowProgress Then ModProgress.StartProgress strTitle
+                End If
             End If
         Else                                      ' Patientlist has been canceled so do nothing
-            Patient_SetHospitalNumber strHospNum   ' Put back the old hospital number
+            Patient_SetHospitalNumber strHospNum  ' Put back the old hospital number
             SetDatabaseVersie intVersion          ' Put back current version
             
             If blnShowProgress Then ModProgress.FinishProgress
-            Exit Sub
+            Exit Sub                              ' And exit sub
         End If
     End If
     
     If Not strHospNum = vbNullString Then
-        Patient_SetHospitalNumber strHospNum
         GetPatientDataFromDatabase strHospNum, ModDatabase.Database_GetLatestPrescriptionVersion(strHospNum)
+    End If
+    
+    If Not strStandard = vbNullString Then
+        GetPatientDataFromDatabase strStandard, ModDatabase.Database_GetLatestPrescriptionVersion(strStandard)
     End If
         
     ModDatabase.Database_LogAction "Open Patient"
@@ -790,6 +851,12 @@ ErrorHandler:
     ModLog.LogError Err, Err.Description
     
 End Sub
+
+Public Function Patient_IsStandard(ByVal strHospNum) As Boolean
+
+    Patient_IsStandard = ModString.StartsWith(strHospNum, constStandardPrefix)
+
+End Function
 
 Private Sub Test_OpenPatient()
     
@@ -816,14 +883,18 @@ Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVa
     
     ModLog.LogActionStart strAction, strParams
             
-    ModPatient.Patient_ClearData vbNullString, False, True
+    If blnNeo Then
+        ModPatient.Patient_ClearNeoData
+    Else
+        ModPatient.Patient_ClearPedData
+    End If
     
     If intVersion = 0 Then
         ModDatabase.Database_GetPatientData strHospNum
     Else
         ModDatabase.Database_GetPatientDataForVersion strHospNum, intVersion
     End If
-    ModRange.SetRangeValue constHospNum, strHospNum 'Have to set hospitalnumber if leading zero got lost from transfer from database
+    If Not Patient_IsStandard(strHospNum) Then ModRange.SetRangeValue constHospNum, strHospNum 'Have to set hospitalnumber if leading zero got lost from transfer from database
     
     If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True ' Make sure that infuusbrief data is updated
             

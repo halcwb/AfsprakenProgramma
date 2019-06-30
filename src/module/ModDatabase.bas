@@ -271,6 +271,37 @@ SavePatientError:
     
 End Sub
 
+Public Function Database_GetLastStandardPatientHospNum() As String
+
+    Dim strSql As String
+    Dim strHospNum As String
+    Dim objRs As Recordset
+    
+    strSql = "SELECT dbo.GetLastStandardPatientHospNum()"
+
+    InitConnection
+    
+    objConn.Open
+    Set objRs = objConn.Execute(strSql)
+    
+    If Not objRs.EOF Then
+        strHospNum = IIf(IsNull(objRs.Fields(0)), vbNullString, objRs.Fields(0).Value)
+    Else
+        strHospNum = 0
+    End If
+    
+    objConn.Close
+    
+    Database_GetLastStandardPatientHospNum = strHospNum
+    
+End Function
+
+Private Sub Test_Database_GetLastStandardPatientHospNum()
+
+    ModMessage.ShowMsgBoxInfo Database_GetLastStandardPatientHospNum()
+
+End Sub
+
 Public Sub Database_SavePrescriber()
 
     Dim strUser As String
@@ -491,8 +522,11 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
     Dim varEmp As Variant
     Dim objRs As Recordset
     Dim blnVersionSet As Boolean
+    Dim blnIsStandard As Boolean
     
     On Error GoTo Database_GetPatientDataError
+    
+    Application.ScreenUpdating = False
     
     strSql = strSql & "SELECT * FROM "
     If intVersion = 0 Then
@@ -508,6 +542,9 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
     Set objRs = objConn.Execute(strSql)
     
     intC = shtPatData.Range("A1").CurrentRegion.Rows.Count
+    ' Determine if the current patient is a standard patient and not a standard patient applied to a patient
+    blnIsStandard = Patient_IsStandard(strHospNum) And (Patient_GetHospitalNumber() = vbNullString Or Patient_IsStandard(Patient_GetHospitalNumber))
+    blnVersionSet = Patient_IsStandard(strHospNum) And Not blnIsStandard ' Patient standard is applied, keep the current version
     Do While Not objRs.EOF
         If Not blnVersionSet Then
             ModRange.SetRangeValue constVersie, objRs.Fields("VersionID").Value
@@ -520,7 +557,11 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
         If IsNumeric(varVal) Then varVal = CDbl(varVal)
         If IsLogical(varVal) Then varVal = CBool(varVal)
         
-        ModRange.SetRangeValue strPar, varVal
+        If Patient_IsStandard(strHospNum) And ModString.StartsWith(strPar, "__") And Not blnIsStandard Then
+            'Do not change patient details for loading standard data
+        Else
+            ModRange.SetRangeValue strPar, varVal
+        End If
         
         intN = intN + 1
         ModProgress.SetJobPercentage "Patient data laden", intC, intN
@@ -529,6 +570,7 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
     Loop
     
     objConn.Close
+    Application.ScreenUpdating = True
     
     Exit Sub
 
@@ -538,7 +580,7 @@ Database_GetPatientDataError:
     
     ModLog.LogError Err, "Could not get patient data with hospitalnumber " & strHospNum & " with SQL: " & vbNewLine & strSql
     objConn.Close
-    
+    Application.ScreenUpdating = True
 
 End Sub
 
@@ -2196,3 +2238,34 @@ ErrorHandler:
 
 End Sub
 
+Public Function Database_GetStandardPatients() As Collection
+
+    Dim strSql As String
+    Dim colPats As Collection
+    Dim objPat As ClassPatientDetails
+    Dim objRs As Recordset
+    
+    Set colPats = New Collection
+    strSql = "SELECT * FROM dbo.GetStandardPatients()"
+    
+    InitConnection
+    objConn.Open
+    
+    Set objRs = objConn.Execute(strSql)
+    
+    Do While Not objRs.EOF
+        Set objPat = New ClassPatientDetails
+        
+        objPat.HospitalNumber = objRs.Fields("HospitalNumber").Value
+        objPat.AchterNaam = objRs.Fields("LastName").Value
+        objPat.VoorNaam = objRs.Fields("FirstName").Value
+        
+        colPats.Add objPat
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+    
+    Set Database_GetStandardPatients = colPats
+    
+End Function

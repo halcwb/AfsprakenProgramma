@@ -17,11 +17,13 @@ Option Explicit
 
 Private m_Pats As Collection
 Private m_OriginalPats As Collection
+Private m_StandardPats As Collection
 Private m_Versions As Collection
 Private m_OnlyAdmitted As Boolean
 Private m_LatestVersion As Boolean
 Private m_UseDatabase As Boolean
 Private m_Cancel As Boolean
+Private m_Standard As Boolean
 
 Public Function GetCancel() As Boolean
 
@@ -135,7 +137,7 @@ Private Sub UseDatabase()
 
 End Sub
 
-Public Sub LoadDbPatients(ByVal colPats As Collection)
+Public Sub LoadDbPatients(ByVal colPats As Collection, ByVal blnStandard As Boolean)
 
     Dim objPat As ClassPatientDetails
     Dim arrSort() As Variant
@@ -145,12 +147,17 @@ Public Sub LoadDbPatients(ByVal colPats As Collection)
     UseDatabase
    
     Set m_Pats = New Collection
-    Set m_OriginalPats = colPats
+    
+    If blnStandard Then
+        Set m_StandardPats = colPats
+    Else
+        Set m_OriginalPats = colPats
+    End If
     
     Me.lstPatienten.Clear
     
     For Each objPat In colPats
-        If m_OnlyAdmitted Then
+        If m_OnlyAdmitted And Not blnStandard Then
             If Not objPat.Bed = vbNullString And objPat.Afdeling = ModMetaVision.MetaVision_GetDepartment() Then
                 ModArray.AddItemToVariantArray arrSort, PatToSortString(objPat)
             End If
@@ -159,20 +166,22 @@ Public Sub LoadDbPatients(ByVal colPats As Collection)
         End If
     Next objPat
     
-    arrSort = SortArrayAtoZ(arrSort)
+    If colPats.Count > 0 Then
+        arrSort = SortArrayAtoZ(arrSort)
+        
+        For Each varSort In arrSort
+            For Each objPat In colPats
+                If PatToSortString(objPat) = varSort Then
+                    m_Pats.Add objPat
+                    strPat = objPat.ToString
+                    strPat = IIf(m_OnlyAdmitted, objPat.Bed & " - " & strPat, strPat)
+                    
+                    Me.lstPatienten.AddItem strPat
+                End If
+            Next objPat
+        Next varSort
+    End If
     
-    For Each varSort In arrSort
-        For Each objPat In colPats
-            If PatToSortString(objPat) = varSort Then
-                m_Pats.Add objPat
-                strPat = objPat.ToString
-                strPat = IIf(m_OnlyAdmitted, objPat.Bed & " - " & strPat, strPat)
-                
-                Me.lstPatienten.AddItem strPat
-            End If
-        Next objPat
-    Next varSort
-
 End Sub
 
 Private Function GetSelectedHospNum() As String
@@ -232,7 +241,8 @@ End Sub
 Private Sub ToggleAdmitted(ByVal blnAdmitted As Boolean)
 
     m_OnlyAdmitted = blnAdmitted
-    If Not m_OriginalPats Is Nothing Then LoadDbPatients m_OriginalPats
+    m_Standard = False
+    If Not m_OriginalPats Is Nothing Then LoadDbPatients m_OriginalPats, False
 
 End Sub
 
@@ -245,6 +255,14 @@ End Sub
 Private Sub optAllPatients_Click()
 
     ToggleAdmitted Not optAllPatients.Value
+
+End Sub
+
+Private Sub optStandard_Click()
+
+    m_Standard = True
+    m_OnlyAdmitted = False
+    If Not m_StandardPats Is Nothing Then LoadDbPatients m_StandardPats, True
 
 End Sub
 

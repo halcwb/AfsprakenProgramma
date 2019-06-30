@@ -17,6 +17,7 @@ Option Explicit
 
 Private m_Pat As ClassPatientDetails
 Private m_Cancel As Boolean
+Private m_IsStandard As Boolean
 
 Public Function IsCanceled() As Boolean
 
@@ -49,6 +50,14 @@ Private Sub Validate(ByVal strText As String)
     strValid = IIf(txtPatNum.Value = vbNullString, "Vul patient nummer in", strValid)
     
     strValid = IIf(strText = vbNullString, strValid, strText)
+    
+    If m_IsStandard Then
+        txtLastName.Text = "Patient"
+        
+        strValid = vbNullString
+        strValid = IIf(txtFirstName.Value = vbNullString, "Vul de naam voor een standaar patient in", strValid)
+    End If
+    
     lblValid.Caption = strValid
     cmdOK.Enabled = strValid = vbNullString
 
@@ -562,6 +571,8 @@ Private Sub UserForm_Activate()
 End Sub
 
 Private Sub UserForm_Initialize()
+    
+    m_IsStandard = Patient_IsStandard(Patient_GetHospitalNumber())
 
     Me.txtAdmDay.TabIndex = 1
     Me.txtAdmMonth.TabIndex = 2
@@ -593,5 +604,49 @@ Private Sub UserForm_Initialize()
     cboGeslacht.AddItem "man"
     cboGeslacht.AddItem "vrouw"
     cboGeslacht.AddItem "onbepaald"
+    
+    If m_IsStandard Then
+    
+        txtPatNum.Enabled = False
+        txtLastName.Enabled = False
+    
+        btnRefresh.Visible = False
+        txtAdmDay.Visible = False
+        txtAdmMonth.Visible = False
+        txtAdmYear.Visible = False
+        txtBirthDay.Visible = False
+        txtBirthMonth.Visible = False
+        txtBirthYear.Visible = False
+        txtWeight.Visible = False
+        txtLength.Visible = False
+        cboGeslacht.Visible = False
+        txtGestWeek.Visible = False
+        txtGestDay.Visible = False
+        txtBirthWeight.Visible = False
+        
+        Label1.Visible = False
+        Label2.Visible = False
+        Label3.Visible = False
+        Label8.Visible = False
+        Label9.Visible = False
+        Label9.Visible = False
+        Label10.Visible = False
+        Label11.Visible = False
+        Label12.Visible = False
+        Label13.Visible = False
+        Label14.Visible = False
+        Label15.Visible = False
+        Label16.Visible = False
+        Label17.Visible = False
+        Label18.Visible = False
+        
+        lblGew.Visible = False
+        lblLen.Visible = False
+        
+        btnAdmNow.Visible = False
+        btnBdNow.Visible = False
+        
+        Me.Caption = "Standaard patient"
+    End If
 
 End Sub

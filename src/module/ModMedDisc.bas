@@ -1497,6 +1497,7 @@ Private Sub ImportMedications()
     Dim strMsg As String
     Dim strGen As String
     Dim strProd As String
+    Dim strTooMany As String
     
     Set objForm = ModFormularium.Formularium_GetNewFormularium()
     Set colMed = objForm.GetMedicamenten(False)
@@ -1533,6 +1534,9 @@ Private Sub ImportMedications()
                     Next
                  End If
                  
+                 'Make sure that no more than 30 MO's are added
+                 blnEqs = blnEqs And (intK < 30)
+                 
                  If blnEqs Then
                     intK = intK + 1
                     strK = ModString.IntNToStrN(intK)
@@ -1546,12 +1550,16 @@ Private Sub ImportMedications()
                  End If
             Next
             
-            If Not blnSet Then
-                strMissed = strMissed & vbNewLine & strLabel
-                
-                intK = intK + 1
-                strK = ModString.IntNToStrN(intK)
-                ModRange.SetRangeValue constText & strK, strLabel & " " & objRange.Cells(intN, 4).Value & " " & objRange.Cells(intN, 5).Value
+            If intK > 30 Then
+                strTooMany = strTooMany & vbNewLine & strLabel
+            Else
+                If Not blnSet Then
+                    strMissed = strMissed & vbNewLine & strLabel
+                    
+                    intK = intK + 1
+                    strK = ModString.IntNToStrN(intK)
+                    ModRange.SetRangeValue constText & strK, strLabel & " " & objRange.Cells(intN, 4).Value & " " & objRange.Cells(intN, 5).Value
+                End If
             End If
        
        End If
@@ -1561,10 +1569,16 @@ Private Sub ImportMedications()
     
     MedDisc_SortTableMedDisc
     
-    If strMissed = vbNullString Then
+    If strMissed = vbNullString And strTooMany = vbNullString Then
         strMsg = "Alle (" & intM & ") medicamenten werden geimporteerd"
     Else
-        strMsg = "De volgende medicamenten konden niet worden geimporteerd: " & vbNewLine & strMissed
+        If Not strMissed = vbNullString Then
+            strMsg = "De volgende medicamenten konden niet worden geimporteerd: " & vbNewLine & strMissed
+        End If
+        If Not strTooMany = vbNullString Then
+            strMsg = IIf(strMsg = vbNullString, strMsg, strMsg & vbNewLine & vbNewLine)
+            strMsg = strMsg & "De volgende medicamenten waren te veel opdrachten: " & vbNewLine & strTooMany
+        End If
     End If
     
     ModProgress.FinishProgress
