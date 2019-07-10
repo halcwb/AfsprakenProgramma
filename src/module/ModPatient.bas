@@ -418,13 +418,15 @@ Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As 
             
             For intN = 2 To intC
                 strRange = .Cells(intN, 1).Value2
-                If strStartWith = vbNullString Then
-                    varValue = .Cells(intN, 3).Value2
-                    ModRange.SetRangeValue strRange, varValue
-                Else
-                    If ModString.StartsWith(strRange, strStartWith) Then
+                If Not ModString.StartsWith(strRange, "_User") Then
+                    If strStartWith = vbNullString Then
                         varValue = .Cells(intN, 3).Value2
                         ModRange.SetRangeValue strRange, varValue
+                    Else
+                        If ModString.StartsWith(strRange, strStartWith) Then
+                            varValue = .Cells(intN, 3).Value2
+                            ModRange.SetRangeValue strRange, varValue
+                        End If
                     End If
                 End If
                 
@@ -450,7 +452,7 @@ Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As 
         .Calculation = xlCalculationAutomatic
     End With
     
-    Database_LogAction "Clear patient data", , strHospNum
+    Database_LogAction "Clear patient data", ModUser.User_GetCurrent().Login, strHospNum
 
 
 End Sub
@@ -699,7 +701,7 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
 
     Dim intLatest As Integer
     Dim intCurrent As Integer
-    Dim strPrescriber As String
+    Dim objUser As ClassUser
     Dim strHospNum As String
     Dim strMsg As String
     Dim intC As Integer
@@ -737,9 +739,9 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     ModDatabase.Database_SavePatient
     ModDatabase.Database_SavePrescriber
     
-    strPrescriber = ModMetaVision.MetaVision_GetUserLogin()
+    Set objUser = ModUser.User_GetCurrent()
     
-    ModDatabase.Database_SaveData strHospNum, strPrescriber, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
+    ModDatabase.Database_SaveData strHospNum, objUser.Login, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
     ModBed.SetDatabaseVersie Database_GetLatestPrescriptionVersion(strHospNum)
     
     Application.DisplayAlerts = True
@@ -841,7 +843,7 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
         GetPatientDataFromDatabase strStandard, ModDatabase.Database_GetLatestPrescriptionVersion(strStandard)
     End If
         
-    ModDatabase.Database_LogAction "Open Patient"
+    ModDatabase.Database_LogAction "Open Patient", ModUser.User_GetCurrent().Login, strHospNum
     
     Exit Sub
 
@@ -879,7 +881,7 @@ Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVa
     
     blnNeo = MetaVision_IsNeonatologie()
     
-    strAction = "ModBed.GetPatientDataFromDatabase"
+    strAction = "ModPatient.GetPatientDataFromDatabase"
     
     ModLog.LogActionStart strAction, strParams
             
@@ -900,7 +902,7 @@ Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVa
             
     ModApplication.SetApplicationTitle
 
-    ModMetaVision.MetaVision_SyncLab
+    If Not Patient_IsStandard(strHospNum) Then ModMetaVision.MetaVision_SyncLab
     ModSheet.SelectPedOrNeoStartSheet True
     
     ModProgress.FinishProgress

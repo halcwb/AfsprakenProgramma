@@ -197,9 +197,15 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         
         Case "btnNeoMedCont"                                ' -> Beheer Continue Medicatie Neo
              ModAdmin.Admin_TblNeoMedCont
+             
+        Case "btnNeoMedContExport"                          ' -> Beheer Continue Medicatie Neo Exporteren
+            ModAdmin.Admin_ExportNeoContMed
         
         Case "btnPedMedCont"                                ' -> Beheer Continue Medicatie Ped
              ModAdmin.Admin_TblPedMedCont
+        
+        Case "btnPedMedContExport"                          ' -> Beheer Continue Medicatie Ped Exporteren
+            ModAdmin.Admin_ExportPedContMed
         
         Case "btnParent"                                    ' -> Beheer ParEnterale Vloeistoffen
              ModAdmin.Admin_TblGlobParEnt

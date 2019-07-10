@@ -610,7 +610,7 @@ Private Sub cmdSave_Click()
     Me.Hide
     
     ModProgress.StartProgress "Medicatie configuratie opslaan"
-    ModFormularium.Formularium_SaveMedDiscConfig (True)
+    ModFormularium.Formularium_ExportMedDiscConfig (True)
     ModProgress.FinishProgress
 
 End Sub

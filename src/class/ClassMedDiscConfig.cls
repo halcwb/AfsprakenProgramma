@@ -437,6 +437,19 @@ Public Sub SetRouteList(ByVal strRoutes As String)
 
 End Sub
 
+Public Function GetRouteString() As String
+    
+    Dim strRoute As String
+    Dim varRoute As Variant
+    
+    For Each varRoute In m_RouteList
+        strRoute = IIf(strRoute = vbNullString, varRoute, strRoute & "||" & varRoute)
+    Next
+
+    GetRouteString = strRoute
+
+End Function
+
 Public Function GetRouteList() As Collection
     
     Set GetRouteList = m_RouteList
@@ -448,6 +461,19 @@ Public Sub SetIndicationList(ByVal strIndicaties As String)
     FillCollection m_IndicatieList, strIndicaties
 
 End Sub
+
+Public Function GetIndicationString() As String
+
+    Dim varIndication As Variant
+    Dim strIndication As String
+    
+    For Each varIndication In m_IndicatieList
+        strIndication = IIf(strIndication = vbNullString, varIndication, strIndication & "||" & varIndication)
+    Next
+    
+    GetIndicationString = strIndication
+
+End Function
 
 Public Function GetIndicationList() As Collection
 

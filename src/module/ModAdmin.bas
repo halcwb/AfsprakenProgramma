@@ -330,6 +330,93 @@ Public Sub Admin_SetParEnt(objParEntCol As Collection)
     
 End Sub
 
+Private Sub ExportContMed(ByVal strName As String, ByVal strTable As String, ByVal objHeading As Range, ByVal objSrc As Range)
+    
+    Dim objWbk As Workbook
+    Dim strFile As String
+    Dim objDst As Range
+    Dim shtDst As Worksheet
+    Dim intHeading As Integer
+    Dim intTableRows As Integer
+    Dim intTableColumns As Integer
+    Dim varDir As Variant
+    
+    On Error GoTo ErrorHandler
+    
+    varDir = ModFile.GetFolderWithDialog()
+    
+    If CStr(varDir) = vbNullString Then Exit Sub
+    
+    strFile = Replace(ModDate.FormatDateTimeSeconds(Now()), ":", "_")
+    strFile = Replace(strFile, " ", "_")
+    strFile = CStr(varDir) & "\" & strName & "_" & strFile & "_.xlsx"
+    
+    Set objWbk = Workbooks.Add()
+    Set shtDst = objWbk.Sheets(1)
+    shtDst.Name = strTable
+    
+    objHeading.Copy
+    shtDst.Range("A1").PasteSpecial xlPasteValues
+    
+    objSrc.Copy
+    intHeading = objHeading.Rows.Count + 1
+    intTableRows = objSrc.Rows.Count
+    intTableColumns = objSrc.Columns.Count
+    shtDst.Range("A" & intHeading).PasteSpecial xlPasteValues
+    shtDst.Range(Cells(intHeading, 1), Cells(intTableRows + intHeading - 1, intTableColumns)).Name = strTable
+    
+    Application.DisplayAlerts = False
+    objWbk.SaveAs strFile
+    Application.DisplayAlerts = True
+    
+    objWbk.Close
+    
+    ModMessage.ShowMsgBoxInfo "Configuratie van continue medicatie geexporteerd naar: " & strFile
+    
+    Exit Sub
+
+ErrorHandler:
+
+    Application.DisplayAlerts = False
+    objWbk.Close
+    Application.DisplayAlerts = True
+    
+    ModMessage.ShowMsgBoxError "Kon configuratie voor continue medicatie niet exporteren"
+
+End Sub
+
+Public Sub Admin_ExportPedContMed()
+    
+    Dim objHeading As Range
+    Dim objSrc As Range
+    Dim strName As String
+    Dim varDir As Variant
+    
+    strName = "PedMedCont"
+    
+    Set objHeading = shtPedTblMedIV.Range("B1:S3")
+    Set objSrc = shtPedTblMedIV.Range(constPedMedContTbl)
+
+    ExportContMed strName, constPedMedContTbl, objHeading, objSrc
+
+End Sub
+
+Public Sub Admin_ExportNeoContMed()
+    
+    Dim objHeading As Range
+    Dim objSrc As Range
+    Dim strName As String
+    Dim varDir As Variant
+    
+    strName = "NeoMedCont"
+    
+    Set objHeading = shtNeoTblMedIV.Range("B2:T2")
+    Set objSrc = shtNeoTblMedIV.Range(constNeoMedContTbl)
+
+    ExportContMed strName, constNeoMedContTbl, objHeading, objSrc
+
+End Sub
+
 Public Sub Admin_ImportContPedContMed()
 
     Dim objConfigWbk As Workbook

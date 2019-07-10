@@ -905,10 +905,16 @@ Private Sub cmdKompas_Click()
     Dim strFirst As String
     Dim strGeneric As String
     
+    On Error GoTo ErrorHandler
+    
     strUrl = "https://www.farmacotherapeutischkompas.nl/bladeren/preparaatteksten/{FIRST}/{GENERIC}"
     
     strGeneric = Trim(LCase(cboGeneriek.Text))
     
+    If strGeneric = vbNullString Then Exit Sub
+    
+    strGeneric = Replace(strGeneric, "-", "_")
+    strGeneric = Replace(strGeneric, "+", "_")
     If Not strGeneric = vbNullString Then
         strFirst = Left(strGeneric, 1)
         strUrl = Replace(strUrl, "{FIRST}", strFirst)
@@ -916,6 +922,12 @@ Private Sub cmdKompas_Click()
     End If
     
     ActiveWorkbook.FollowHyperlink strUrl
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    ActiveWorkbook.FollowHyperlink "https://www.farmacotherapeutischkompas.nl"
 
 End Sub
 
@@ -1083,11 +1095,9 @@ Private Sub cmdParEnt_Click()
 
     Dim strUrl As String
     
-    If MetaVision_IsNeonatologie() Then
-        strUrl = "https://neonaten-umcutrecht.parenteralia.nl/"
-    Else
-        strUrl = "https://kinderen-ic-umcutrecht.parenteralia.nl/"
-    End If
+    On Error Resume Next
+    
+    strUrl = "https://infoland-prod.umcutrecht.nl/iprova/Portaal/Handboek_Parenteralia/Zoeken/?Query=" & m_Med.Generic
     
     ActiveWorkbook.FollowHyperlink strUrl
 

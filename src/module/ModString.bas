@@ -239,8 +239,20 @@ Private Sub ConcatenateRange_Test()
 End Sub
 Public Function StringToDouble(ByVal strDbl As String) As Double
 
-    StringToDouble = Val(Replace(strDbl, ",", "."))
+    On Error GoTo ErrorHandler
 
+    If strDbl = vbNullString Then
+        StringToDouble = 0
+    Else
+        StringToDouble = Val(Replace(strDbl, ",", "."))
+    End If
+    
+    Exit Function
+    
+ErrorHandler:
+
+    StringToDouble = 0
+    
 End Function
 
 Private Sub Test_StringToDouble()

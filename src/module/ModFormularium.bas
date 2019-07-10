@@ -310,81 +310,96 @@ GetMedicamentenError:
     
 End Sub
 
-Public Sub Formularium_SaveMedDiscConfig(ByVal blnShowProgress As Boolean)
+Public Sub Formularium_ExportMedDiscConfig(ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer
     Dim intC As Integer
-    Dim objFormRange As Range
+    Dim objWbk As Workbook
     Dim objSheet As Worksheet
     
-    Dim strFileName As String
+    Dim strFile As String
+    Dim varDir As String
     Dim strName As String
     Dim strSheet As String
     Dim blnIsPed As Boolean
     
+    Dim colMed As Collection
     Dim objMed As ClassMedDiscConfig
     
     On Error GoTo GetMedicamentenError
     
-    blnIsPed = MetaVision_IsPediatrie()
-    
-    strName = constFormularium
+    strName = "FormulariumDB"
     strSheet = "Table"
+    
+    varDir = ModFile.GetFolderWithDialog()
+    
+    If CStr(varDir) = vbNullString Then Exit Sub
+    
+    strFile = Replace(ModDate.FormatDateTimeSeconds(Now()), ":", "_")
+    strFile = Replace(strFile, " ", "_")
+    strFile = CStr(varDir) & "\" & strName & "_" & strFile & "_.xlsx"
+    
+    Set objWbk = Workbooks.Add()
+    Set objSheet = objWbk.Sheets(1)
+    objSheet.Name = strSheet
     
     Application.DisplayAlerts = False
     Application.ScreenUpdating = False
     
-    strFileName = ModMedDisc.GetFormulariumDatabasePath() + strName
-
-    Workbooks.Open strFileName, True, False
-    
-    Set objSheet = Workbooks(strName).Worksheets(strSheet)
-    Set objFormRange = objSheet.Range("A1").CurrentRegion
-        
-    intC = objFormRange.Rows.Count
-    For intN = constFormDbStart To intC
-        Set objMed = m_FormConfig.GPK(objFormRange.Cells(intN, constGPKIndx).Value2)
+    Set colMed = Formularium_GetFormConfig().GetMedicamenten(True)
+    intN = constFormDbStart
+    intC = colMed.Count
+    For Each objMed In colMed
         
         With objMed
             
-            If Not Trim(LCase(objFormRange.Cells(intN, constGeneriekIndx).Value2)) Then
-                objFormRange.Cells(intN, constGeneriekIndx).Value2 = objMed.Generic
-            End If
+            objSheet.Cells(intN, constGPKIndx).Value2 = objMed.GPK
+            objSheet.Cells(intN, constATCIndx).Value2 = objMed.ATC
+            objSheet.Cells(intN, constHoofdGroepIndx).Value2 = objMed.MainGroup
+            objSheet.Cells(intN, constSubGroepIndx).Value2 = objMed.SubGroup
+            objSheet.Cells(intN, constGeneriekIndx).Value2 = objMed.Generic
+            objSheet.Cells(intN, constProductIndx).Value2 = objMed.Product
+            objSheet.Cells(intN, constEtiketIndx).Value2 = objMed.Label
+            objSheet.Cells(intN, constVormIndx).Value2 = objMed.Shape
+            objSheet.Cells(intN, constRouteIndx).Value2 = objMed.GetRouteString()
+            objSheet.Cells(intN, constSterkteIndx).Value2 = objMed.GenericQuantity
+            objSheet.Cells(intN, constEenheidIndx).Value2 = objMed.GenericUnit
+                        
+            If .MultipleQuantity > 0 Then objSheet.Cells(intN, constStandDoseIndx).Value2 = .MultipleQuantity
+            If Not .MultipleUnit = vbNullString Then objSheet.Cells(intN, constDoseEenheidIndx).Value2 = .MultipleUnit
             
-            If .MultipleQuantity > 0 Then objFormRange.Cells(intN, constStandDoseIndx).Value2 = .MultipleQuantity
-            If Not .MultipleUnit = vbNullString Then objFormRange.Cells(intN, constDoseEenheidIndx).Value2 = .MultipleUnit
+            objSheet.Cells(intN, constIndicatiesIndx).Value2 = objMed.GetIndicationString
             
-            If Not .GetFreqListString() = vbNullString Then objFormRange.Cells(intN, constFreqIndx).Value2 = .GetFreqListString()
+            If Not .GetFreqListString() = vbNullString Then objSheet.Cells(intN, constFreqIndx).Value2 = .GetFreqListString()
             
-            If .NeoNormDose > 0 Then objFormRange.Cells(intN, constNICU_DoseIndx).Value2 = .NeoNormDose
-            If .NeoMinDose > 0 Then objFormRange.Cells(intN, constNICU_OnderIndx).Value2 = .NeoMinDose
-            If .NeoMaxDose > 0 Then objFormRange.Cells(intN, constNICU_BovenIndx).Value2 = .NeoMaxDose
+            If .NeoNormDose > 0 Then objSheet.Cells(intN, constNICU_DoseIndx).Value2 = .NeoNormDose
+            If .NeoMinDose > 0 Then objSheet.Cells(intN, constNICU_OnderIndx).Value2 = .NeoMinDose
+            If .NeoMaxDose > 0 Then objSheet.Cells(intN, constNICU_BovenIndx).Value2 = .NeoMaxDose
             
-            If .PedNormDose > 0 Then objFormRange.Cells(intN, constPICU_DoseIndx).Value2 = .PedNormDose
-            If .PedMinDose > 0 Then objFormRange.Cells(intN, constPICU_OnderIndx).Value2 = .PedMinDose
-            If .PedMaxDose > 0 Then objFormRange.Cells(intN, constPICU_BovenIndx).Value2 = .PedMaxDose
+            If .PedNormDose > 0 Then objSheet.Cells(intN, constPICU_DoseIndx).Value2 = .PedNormDose
+            If .PedMinDose > 0 Then objSheet.Cells(intN, constPICU_OnderIndx).Value2 = .PedMinDose
+            If .PedMaxDose > 0 Then objSheet.Cells(intN, constPICU_BovenIndx).Value2 = .PedMaxDose
             
-            If .PedAbsMaxDose > 0 Then objFormRange.Cells(intN, constMaxDoseIndx).Value2 = .PedAbsMaxDose
+            If .PedAbsMaxDose > 0 Then objSheet.Cells(intN, constMaxDoseIndx).Value2 = .PedAbsMaxDose
             
-            If .PedMaxConc > 0 Then objFormRange.Cells(intN, constPICU_MaxConcIndx).Value2 = .PedMaxConc
-            If .PedSolutionVolume > 0 Then objFormRange.Cells(intN, constPICU_OplVolIndx).Value2 = .PedSolutionVolume
-            If Not .PedSolution = vbNullString Then objFormRange.Cells(intN, constPICU_OplVlstIndx).Value2 = .PedSolution
-            If .PedMinInfusionTime > 0 Then objFormRange.Cells(intN, constPICU_MinTijdIndx).Value2 = .PedMinInfusionTime
+            If .PedMaxConc > 0 Then objSheet.Cells(intN, constPICU_MaxConcIndx).Value2 = .PedMaxConc
+            If .PedSolutionVolume > 0 Then objSheet.Cells(intN, constPICU_OplVolIndx).Value2 = .PedSolutionVolume
+            If Not .PedSolution = vbNullString Then objSheet.Cells(intN, constPICU_OplVlstIndx).Value2 = .PedSolution
+            If .PedMinInfusionTime > 0 Then objSheet.Cells(intN, constPICU_MinTijdIndx).Value2 = .PedMinInfusionTime
         
-            If .NeoMaxConc > 0 Then objFormRange.Cells(intN, constNICU_MaxConcIndx).Value2 = .NeoMaxConc
-            If .NeoSoutionVolume > 0 Then objFormRange.Cells(intN, constNICU_OplVolIndx).Value2 = .NeoSoutionVolume
-            If Not .NeoSolution = vbNullString Then objFormRange.Cells(intN, constNICU_OplVlstIndx).Value2 = .NeoSolution
-            If .NeoMinInfustionTime > 0 Then objFormRange.Cells(intN, constNICU_MinTijdIndx).Value2 = .NeoMinInfustionTime
+            If .NeoMaxConc > 0 Then objSheet.Cells(intN, constNICU_MaxConcIndx).Value2 = .NeoMaxConc
+            If .NeoSoutionVolume > 0 Then objSheet.Cells(intN, constNICU_OplVolIndx).Value2 = .NeoSoutionVolume
+            If Not .NeoSolution = vbNullString Then objSheet.Cells(intN, constNICU_OplVlstIndx).Value2 = .NeoSolution
+            If .NeoMinInfustionTime > 0 Then objSheet.Cells(intN, constNICU_MinTijdIndx).Value2 = .NeoMinInfustionTime
         
         End With
         
-        m_FormConfig.AddMedicament objMed
-        
         If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", intC, intN
-    Next intN
+        intN = intN + 1
+    Next
     
-    Workbooks(strName).Save
-    Workbooks(strName).Close
+    objWbk.SaveAs strFile
+    objWbk.Close
     
     Set m_Formularium = Nothing
 
@@ -395,16 +410,22 @@ Public Sub Formularium_SaveMedDiscConfig(ByVal blnShowProgress As Boolean)
     
 GetMedicamentenError:
     
-    ModLog.LogError Err, "Could not retrieve medicament from: " & strFileName
+    ModLog.LogError Err, "Could not export medication to: " & strFile
     
     On Error Resume Next
     
-    Workbooks(strName).Close
+    objWbk.Close
 
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
     
     ModProgress.FinishProgress
+    
+End Sub
+
+Private Sub Test_Formularium_ExportMedDiscConfig()
+
+    Formularium_ExportMedDiscConfig True
     
 End Sub
 

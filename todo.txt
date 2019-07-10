@@ -95,13 +95,10 @@ NB PLANNEN FORMULIER LOOPT VAST INDIEN GEEN AFSPRAKEN!!
 Continue medicatie per kg vink om voor b.v. midazolam bij volwassen postuur in mg/uur te kunnen voorschrijven.
 
 versie 0.50.35-beta
-- fiks invoer keer dosering bij b.v. deelbaarheid 25
 - kan keer dosering niet invoeren zonder frequentie
-- fiks herberekening bij adjustment veranderingen of per dosis verandering.
-- TPN en infusen consequent naar totalen en berekende inloop
-- waarschuwing bij inloop > 24 uur
 - afronding discontinue medicatie gaat nog niet goed
-- versie nummber bij overige afspraken in balk toevoegen
+- NaCl 0,9% niet in de TPN brief
+
 
 
 

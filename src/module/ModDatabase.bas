@@ -320,7 +320,7 @@ Public Sub Database_SavePrescriber()
     strFN = WrapString(ModRange.GetRangeValue("_User_LastName", ""))
     strRole = WrapString(ModRange.GetRangeValue("_User_Type", ""))
         
-    arrSql = Array(strUser, strLN, strFN, strRole, 0)
+    arrSql = Array(strUser, strLN, strFN, strRole)
         
     InitConnection
     
@@ -339,7 +339,6 @@ Public Sub Database_SavePrescriber()
     objConn.Execute strSql
     
     objConn.Close
-    ModUtils.CopyToClipboard strSql
     
     Exit Sub
     
@@ -860,6 +859,7 @@ Public Sub Database_LoadNeoConfigMedCont()
     Dim strSql As String
     Dim objRs As Recordset
     Dim intC As Integer
+    Dim intT As Integer
     Dim intR As Integer
     Dim objSrc As Range
     
@@ -868,6 +868,7 @@ Public Sub Database_LoadNeoConfigMedCont()
     ModProgress.StartProgress "Configuratie voor Neonatologie Continue Medicatie laden"
     
     Set objSrc = ModRange.GetRange("Tbl_Admin_NeoMedCont")
+    intT = objSrc.Rows.Count
     
     InitConnection
     
@@ -876,9 +877,12 @@ Public Sub Database_LoadNeoConfigMedCont()
     objConn.Open
     Set objRs = objConn.Execute(strSql)
     
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    
     Do While Not objRs.EOF
         intR = intR + 1
-        If intR > 24 Then GoTo ErrorHandler
+        If intR > intT Then GoTo ErrorHandler
         
         objSrc.Cells(intR, 1).Value2 = objRs.Fields("Generic").Value
         objSrc.Cells(intR, 2).Value2 = objRs.Fields("GenericUnit").Value
@@ -910,6 +914,10 @@ Public Sub Database_LoadNeoConfigMedCont()
         objRs.MoveNext
     Loop
     
+    Application.Calculation = xlCalculationAutomatic
+    Application.Calculate
+    Application.ScreenUpdating = True
+    
     objConn.Close
     
     ModProgress.FinishProgress
@@ -917,6 +925,9 @@ Public Sub Database_LoadNeoConfigMedCont()
     Exit Sub
     
 ErrorHandler:
+    Application.Calculation = xlCalculationAutomatic
+    Application.Calculate
+    Application.ScreenUpdating = True
 
     ModProgress.FinishProgress
     objConn.Close
@@ -1175,6 +1186,7 @@ Public Sub Database_LoadPedConfigMedCont()
     Dim strSql As String
     Dim objRs As Recordset
     Dim intC As Integer
+    Dim intT As Integer
     Dim intR As Integer
     Dim objSrc As Range
     
@@ -1183,6 +1195,7 @@ Public Sub Database_LoadPedConfigMedCont()
     ModProgress.StartProgress "Configuratie voor Pediatrie Continue Medicatie"
     
     Set objSrc = ModRange.GetRange("Tbl_Admin_PedMedCont")
+    intT = objSrc.Rows.Count
     
     InitConnection
     
@@ -1191,9 +1204,12 @@ Public Sub Database_LoadPedConfigMedCont()
     objConn.Open
     Set objRs = objConn.Execute(strSql)
     
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    
     Do While Not objRs.EOF
         intR = intR + 1
-        If intR > 32 Then GoTo ErrorHandler
+        If intR > intT Then GoTo ErrorHandler
         
         objSrc.Cells(intR, 1).Value2 = objRs.Fields("Generic").Value
         objSrc.Cells(intR, 2).Value2 = objRs.Fields("GenericUnit").Value
@@ -1218,6 +1234,10 @@ Public Sub Database_LoadPedConfigMedCont()
         objRs.MoveNext
     Loop
     
+    Application.Calculation = xlCalculationAutomatic
+    Application.Calculate
+    Application.ScreenUpdating = True
+    
     objConn.Close
     
     ModProgress.FinishProgress
@@ -1225,6 +1245,9 @@ Public Sub Database_LoadPedConfigMedCont()
     Exit Sub
     
 ErrorHandler:
+    Application.Calculation = xlCalculationAutomatic
+    Application.Calculate
+    Application.ScreenUpdating = True
 
     ModProgress.FinishProgress
     objConn.Close
@@ -1415,6 +1438,9 @@ Public Sub Database_LoadConfigParEnt()
     
     Set objTable = ModRange.GetRange("Tbl_Admin_ParEnt")
     
+    Application.ScreenUpdating = False
+    Application.Calculation = xlCalculationManual
+    
     intC = objTable.Rows.Count
     Do While Not objRs.EOF
         intR = intR + 1
@@ -1439,13 +1465,20 @@ Public Sub Database_LoadConfigParEnt()
         objRs.MoveNext
     Loop
     
+    Application.Calculation = xlCalculationAutomatic
+    Application.Calculate
+    Application.ScreenUpdating = True
+    
     objConn.Close
     ModProgress.FinishProgress
 
     Exit Sub
     
 ErrorHandler:
-
+    Application.Calculation = xlCalculationAutomatic
+    Application.Calculate
+    Application.ScreenUpdating = True
+    
     ModProgress.FinishProgress
     objConn.Close
     ModLog.LogError Err, "Database_LoadConfigParEnt"
@@ -1713,7 +1746,7 @@ Private Sub Test_GetLogSQL()
 
 End Sub
 
-Public Sub Database_LogAction(ByVal strText As String, Optional strPrescriber As String, Optional ByVal strHospNum As String = "")
+Public Sub Database_LogAction(ByVal strText As String, ByVal strPrescriber As String, ByVal strHospNum As String)
 
     Dim strSql As String
     
@@ -1721,9 +1754,6 @@ Public Sub Database_LogAction(ByVal strText As String, Optional strPrescriber As
     
     If Not Setting_UseDatabase Then Exit Sub
         
-    strHospNum = IIf(strHospNum = vbNullString, ModPatient.Patient_GetHospitalNumber(), strHospNum)
-    strPrescriber = IIf(strPrescriber = vbNullString, ModMetaVision.MetaVision_GetUserLogin(), strPrescriber)
-
     strSql = GetLogSQL(strText, True, strHospNum, "")
     
     InitConnection
@@ -1743,7 +1773,7 @@ End Sub
 
 Private Sub Test_Database_LogAction()
 
-    Database_LogAction "Test"
+    Database_LogAction "Test", "Test User", "Test patient"
 
 End Sub
 
@@ -2190,6 +2220,7 @@ Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal bl
             .SubGroup = objRs.Fields("SubGroup").Value
             
             .ATC = objRs.Fields("ATC").Value
+            If Not IsNull(objRs.Fields("TallMan").Value) Then .SetTallMan objRs.Fields("TallMan").Value
             .Generic = objRs.Fields("Generic").Value
             .Product = objRs.Fields("Product").Value
             .Shape = objRs.Fields("Shape").Value

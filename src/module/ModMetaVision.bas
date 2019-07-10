@@ -282,7 +282,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     
     objConn.Close
     
-    Database_LogAction "Get MetaVision patient details"
+    Database_LogAction "Get MetaVision patient details", ModUser.User_GetCurrent().Login, ModPatient.Patient_GetHospitalNumber()
     
     Exit Sub
 
@@ -807,8 +807,8 @@ Private Function GetSumNumSignalInPeriod(ByVal intPatId As Long, ByVal strDescr 
     
     strSql = strSql & "DECLARE @descr AS NVARCHAR(MAX)" & vbNewLine
     strSql = strSql & "DECLARE @patId AS INTEGER" & vbNewLine
-    strSql = strSql & "DECLARE @fromTime AS DATE" & vbNewLine
-    strSql = strSql & "DECLARE @toTime AS DATE" & vbNewLine
+    strSql = strSql & "DECLARE @fromTime AS DATETIME" & vbNewLine
+    strSql = strSql & "DECLARE @toTime AS DATETIME" & vbNewLine
     strSql = strSql & "" & vbNewLine
     strSql = strSql & "SET @descr = '" & strDescr & "'" & vbNewLine
     strSql = strSql & "SET @patId = " & intPatId & vbNewLine
@@ -979,7 +979,6 @@ Private Sub Test_WrapDateTime()
 
 End Sub
 
-
 Public Function MetaVision_eGFRWarning() As String
 
     Dim intPatId As Long
@@ -1149,21 +1148,23 @@ Public Function MetaVision_eGFRWarning() As String
 
         strTime = FormatDateTime(dtmTime, vbShortDate)
         strResult = ""
-        If intEGFR < 60 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), beperkte nierfunctie!"
-        If intEGFR < 50 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), denk aan evt. dosering aanpassingen!"
-        If dblHeight = 0 And dblCreat > 0 And intEGFR = 0 Then strResult = "Geen lengte bekend, kan eGFR niet berekenen. Graag actuele lengte invoeren."
-
+        If intEGFR > 0 Then
+            If intEGFR < 60 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), beperkte nierfunctie!"
+            If intEGFR < 50 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), denk aan evt. dosering aanpassingen!"
+            If dblHeight = 0 And dblCreat > 0 And intEGFR = 0 Then strResult = "Geen lengte bekend, kan eGFR niet berekenen. Graag actuele lengte invoeren."
+        End If
     Else
         ' Calculate eGFR from the last known creat value
         ' The MDRD formule:
         If strGender = "Vrouw" Then dblGender = 0.742
         If strGender = "Man" Then dblGender = 1
         If dblCreat > 0 Then intEGFR = CInt((175 * ((dblCreat / 88.4) ^ (-1.154))) * ((intDays / 365) ^ -0.203) * (dblGender))
-
-        strTime = FormatDateTime(dtmTime, vbShortDate)
-        If intEGFR < 60 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), beperkte nierfunctie!"
-        If intEGFR < 50 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), denk aan evt. dosering aanpassingen!"
-
+        
+        If intEGFR > 0 Then
+            strTime = FormatDateTime(dtmTime, vbShortDate)
+            If intEGFR < 60 And intEGFR > 0 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), beperkte nierfunctie!"
+            If intEGFR < 50 Then strResult = "De eGFR = " & intEGFR & " ml/min/1,73 m2  (" & strTime & "), denk aan evt. dosering aanpassingen!"
+        End If
     End If
 
 
@@ -1279,10 +1280,12 @@ Public Sub MetaVision_SetUser()
     Dim objRs As Recordset
     Dim strServer As String
     Dim strDatabase As String
+    Dim objUser As ClassUser
     
     On Error GoTo SetUser_Error
     
     strLogin = MetaVision_GetUserLogin()
+    Set objUser = New ClassUser
 
     If strLogin = vbNullString Then Exit Sub
     
@@ -1310,12 +1313,15 @@ Public Sub MetaVision_SetUser()
     
     Set objRs = objConn.Execute(strSql)
 
-    ModRange.SetRangeValue "_User_Login", strLogin
-    If Not objRs.EOF Then
-        ModRange.SetRangeValue "_User_FirstName", objRs.Fields("FirstName")
-        ModRange.SetRangeValue "_User_LastName", objRs.Fields("LastName")
-        ModRange.SetRangeValue "_User_Type", objRs.Fields("UserTypeName")
-    End If
+    With objUser
+        .Login = strLogin
+        If Not objRs.EOF Then
+            .FirstName = objRs.Fields("FirstName")
+            .LastName = objRs.Fields("LastName")
+            .Role = objRs.Fields("UserTypeName")
+        End If
+    End With
+    ModUser.User_SetUser objUser
     
     objConn.Close
     Set objConn = Nothing
@@ -1360,6 +1366,7 @@ Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As Strin
     Dim strSecret As String
     Dim strUser As String
     Dim strPw As String
+    Dim strMsg As String
     
     On Error GoTo InitConnectionError
     
@@ -1389,8 +1396,10 @@ Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As Strin
     Exit Sub
     
 InitConnectionError:
-    MsgBox "Geen toegang tot de database!"
-    ModLog.LogError Err, "InitConnection Failed"
+
+    strMsg = "Geen toegang tot " & strServer & ": " & strDatabase & "!"
+    ModMessage.ShowMsgBoxExclam strMsg
+    ModLog.LogError Err, "InitConnection Failed: " & vbNewLine & strMsg
 
 End Sub
 

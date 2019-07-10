@@ -116,7 +116,7 @@ Public Sub Application_CloseApplication()
         Application.StatusBar = vbNullString
         Application.DisplayAlerts = False
         WbkAfspraken.blnCancelAfsprakenClose = False
-        Database_LogAction "Close application"
+        Database_LogAction "Close application", ModUser.User_GetCurrent().Login, ModPatient.Patient_GetHospitalNumber()
         Application.Quit
     End If
         
@@ -172,6 +172,7 @@ Public Sub Application_Initialize()
     Dim strPw As String
     Dim strParams() As Variant
     Dim objWind As Window
+    Dim objUser As ClassUser
     
     On Error GoTo ErrorHandler
     
@@ -184,16 +185,20 @@ Public Sub Application_Initialize()
           
     ClearLogin
     MetaVision_SetUser
-    If ModRange.GetRangeValue("_User_Login", vbNullString) = vbNullString Then
+    Set objUser = User_GetCurrent()
+    If Not objUser.IsValid Then
         strPw = ModMessage.ShowPasswordBox("Geef wachtwoord op om in te loggen, of start de applicatie op vanuit MetaVision")
         If Not strPw = ModConst.CONST_PASSWORD Then
             ModMessage.ShowMsgBoxExclam "Kan niet inloggen met dit wachtwoord"
             Application.Quit
         Else
-            ModRange.SetRangeValue "_User_Login", "Develop"
-            ModRange.SetRangeValue "_User_FirstName", "Ontwikkelaar"
-            ModRange.SetRangeValue "_User_LastName", "AfsprakenProgramma"
-            ModRange.SetRangeValue "_User_Type", "Beheerders"
+            With objUser
+                .Login = "system"
+                .LastName = "User"
+                .FirstName = "System"
+                .Role = "Beheerders"
+            End With
+            ModUser.User_SetUser objUser
         End If
     End If
     
@@ -240,7 +245,7 @@ Public Sub Application_Initialize()
     ModProgress.FinishProgress
     
     ModLog.LogActionEnd strAction
-    Database_LogAction "Initialize Application"
+    Database_LogAction "Initialize Application", objUser.Login, ModPatient.Patient_GetHospitalNumber()
     
     Application.ScreenUpdating = True
     

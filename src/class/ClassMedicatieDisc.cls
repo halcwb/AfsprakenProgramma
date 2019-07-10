@@ -14,6 +14,7 @@ Private m_ATC As String
 Private m_MainGroup As String
 Private m_SubGroup As String
 Private m_Generic As String
+Private m_TallMan As String
 Private m_Product As String
 Private m_Shape As String
 Private m_Label As String
@@ -156,6 +157,8 @@ End Property
 Public Property Let KeerDose(ByVal dblDose As Double)
 
     Dim objSubst As ClassSubstance
+    
+    If m_Substances Is Nothing Then Exit Property
     
     m_KeerDose = dblDose
     For Each objSubst In m_Substances
@@ -416,7 +419,11 @@ End Property
 
 Public Property Get Generic() As String
 
-    Generic = m_Generic
+    If m_TallMan = vbNullString Then
+        Generic = m_Generic
+    Else
+        Generic = m_TallMan
+    End If
 
 End Property
 
@@ -663,3 +670,9 @@ Public Function HasSubstance(ByVal strSubst As String) As Boolean
     HasSubstance = False
 
 End Function
+
+Public Sub SetTallMan(ByVal strTallMan As String)
+
+    m_TallMan = strTallMan
+
+End Sub
