@@ -137,7 +137,7 @@ Public Function GetToken(auth_Client As WebClient) As String
     
     Set auth_Response = auth_TokenClient.Execute(auth_Request)
     
-    If auth_Response.StatusCode = WebStatusCode.Ok Then
+    If auth_Response.StatusCode = WebStatusCode.OK Then
         GetToken = auth_Response.Data(Me.TokenKey)
     Else
         Err.Raise 11041 + vbObjectError, _

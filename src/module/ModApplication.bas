@@ -4,8 +4,7 @@ Option Explicit
 Private blnDontClose As Boolean
 Private blnCloseHaseRun As Boolean
 
-Private Const constVersie As String = "Var_Glob_AppVersie"
-Private Const constDate As String = "Var_AfspraakDatum"
+Public Const CONST_PRESCRIPTIONS_DATE As String = "Var_AfspraakDatum"
 
 Private Const constBarDel As String = " | "
 
@@ -14,19 +13,19 @@ Public Enum EnumAppLanguage
     English = 0
 End Enum
 
-Public Sub SetDontClose(ByVal blnClose As Boolean)
+Public Sub App_SetDontClose(ByVal blnClose As Boolean)
     
     blnDontClose = blnClose
 
 End Sub
 
-Public Function Application_GetVersion() As String
+Public Function App_GetApplicationVersion() As String
 
-    Application_GetVersion = ModRange.GetRangeValue(constVersie, vbNullString)
+    App_GetApplicationVersion = ModRange.GetRangeValue(CONST_APP_VERSION, vbNullString)
 
 End Function
 
-Public Sub ToggleDevelopmentMode()
+Public Sub App_ToggleDevelopmentMode()
 
     Dim blnDevelop As Boolean
     Dim objWindow As Window
@@ -44,7 +43,7 @@ Public Sub ToggleDevelopmentMode()
                 
         ModSetting.SetDevelopmentMode True
         For Each objWindow In WbkAfspraken.Windows
-            SetWindowToCloseApp objWindow
+            App_SetWindowToClose objWindow
         Next
         
         Application.ScreenUpdating = True
@@ -55,12 +54,12 @@ Public Sub ToggleDevelopmentMode()
         ModMessage.ShowMsgBoxInfo "Weer terug zetten in Gebruikers Modus"
         ModSetting.SetDevelopmentMode False
         
-        Application_Initialize
+        App_Initialize
     End If
 
 End Sub
 
-Public Sub Application_CloseApplication()
+Public Sub App_CloseApplication()
 
     Dim strAction As String
     Dim strParams() As Variant
@@ -72,7 +71,7 @@ Public Sub Application_CloseApplication()
     
     On Error GoTo ErrorHandler
     
-    If blnCloseHaseRun Then ' Second Application_CloseApplication triggert by WbkAfspraken.Workbook_BeforeClose
+    If blnCloseHaseRun Then ' Second App_CloseApplication triggert by WbkAfspraken.Workbook_BeforeClose
         Exit Sub
     End If
     
@@ -83,7 +82,7 @@ Public Sub Application_CloseApplication()
     End If
     
     shtGlobGuiFront.Select
-    strAction = "Application_CloseApplication"
+    strAction = "App_CloseApplication"
     
     ModLog.LogActionStart strAction, strParams
     
@@ -92,7 +91,7 @@ Public Sub Application_CloseApplication()
     intN = 1
     intC = WbkAfspraken.Windows.Count
     For Each objWindow In WbkAfspraken.Windows
-        SetWindowToCloseApp objWindow
+        App_SetWindowToClose objWindow
         ModProgress.SetJobPercentage "Windows Terugzetten", intC, intN
         intN = intN + 1
     Next
@@ -124,17 +123,17 @@ Public Sub Application_CloseApplication()
     
 ErrorHandler:
 
-    ModLog.LogError Err, "Application_CloseApplication"
+    ModLog.LogError Err, "App_CloseApplication"
 
 End Sub
 
-Private Sub TestCloseAfspraken()
+Private Sub Test_CloseAfspraken()
     blnDontClose = True
-    Application_CloseApplication
+    App_CloseApplication
     MsgBox Application.DisplayAlerts
 End Sub
 
-Private Sub SetWindow(objWindow As Window, ByVal blnDisplay As Boolean)
+Private Sub Util_SetWindow(objWindow As Window, ByVal blnDisplay As Boolean)
 
     With objWindow
         .DisplayWorkbookTabs = blnDisplay
@@ -152,19 +151,19 @@ Private Sub SetWindow(objWindow As Window, ByVal blnDisplay As Boolean)
     
 End Sub
 
-Public Sub SetWindowToCloseApp(objWindow As Window)
+Public Sub App_SetWindowToClose(objWindow As Window)
     
-    SetWindow objWindow, True
+    Util_SetWindow objWindow, True
 
 End Sub
 
-Public Sub SetWindowToOpenApp(objWindow As Window)
+Public Sub App_SetWindowToOpen(objWindow As Window)
     
-    SetWindow objWindow, False
+    Util_SetWindow objWindow, False
 
 End Sub
 
-Public Sub Application_Initialize()
+Public Sub App_Initialize()
 
     Dim strError As String
     Dim strAction As String
@@ -179,11 +178,11 @@ Public Sub Application_Initialize()
     shtGlobGuiFront.Select
     Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
     
-    strAction = "ModApplication.Application_Initialize"
+    strAction = "ModApplication.App_Initialize"
     
     ModLog.LogActionStart strAction, strParams
           
-    ClearLogin
+    Util_ClearLogin
     MetaVision_SetUser
     Set objUser = User_GetCurrent()
     If Not objUser.IsValid Then
@@ -202,10 +201,10 @@ Public Sub Application_Initialize()
         End If
     End If
     
-    SetCaptionAndHideBars              ' Setup Excel Application
+    Util_SetCaptionAndHideBars              ' Setup Excel Application
     
     For Each objWind In WbkAfspraken.Windows
-        SetWindowToOpenApp objWind
+        App_SetWindowToOpen objWind
     Next
         
     ModProgress.StartProgress "Start Afspraken Programma"
@@ -216,9 +215,9 @@ Public Sub Application_Initialize()
     
     ' Load config tables
     If Setting_UseDatabase Then
-        If Not LoadConfigTablesFromDatabase() Then Err.Raise ModConst.CONST_APP_ERROR, "Application_Initialize", "Kan config tabellen niet laden"
+        If Not Util_LoadConfigTablesFromDatabase() Then Err.Raise ModConst.CONST_APP_ERROR, "App_Initialize", "Kan config tabellen niet laden"
     Else
-        If Not LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "Application_Initialize", "Kan config tabellen niet laden"
+        If Not Util_LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "App_Initialize", "Kan config tabellen niet laden"
     End If
     
     ' Clean everything
@@ -226,14 +225,13 @@ Public Sub Application_Initialize()
     ModSetting.SetDevelopmentMode False    ' Default development mode is false
             
     strBed = ModMetaVision.MetaVision_GetCurrentBedName()
-    If strBed <> vbNullString Then
-        If Setting_UseDatabase Then
-            ModBed.SetBed strBed
-            Patient_OpenPatient
-        Else
-            ModBed.SetBed strBed
-            ModBed.OpenBedAsk False, True
-        End If
+    If Not Setting_UseDatabase And strBed <> vbNullString Then
+        Bed_SetBed strBed
+        Bed_OpenBedAndAsk False, True
+        MetaVision_SyncLab
+    ElseIf Setting_UseDatabase Then
+        ModPatient.Patient_SetHospitalNumber vbNullString
+        Patient_OpenPatient
         MetaVision_SyncLab
     Else
         Patient_ClearAll False, True ' Default start with no patient
@@ -249,7 +247,7 @@ Public Sub Application_Initialize()
     
     Application.ScreenUpdating = True
     
-    If CheckMedicationValidation() Then Application_CloseApplication
+    If Util_CheckMedicationValidation() Then App_CloseApplication
     
     Exit Sub
     
@@ -265,11 +263,11 @@ ErrorHandler:
     strError = strError & vbNewLine & strAction
     ModLog.LogError Err, strError
     
-    If ModSetting.IsProductionDir() Then Application_CloseApplication
+    If ModSetting.IsProductionDir() Then App_CloseApplication
     
 End Sub
 
-Public Sub UpdateStatusBar(ByVal strItem As String, ByVal strMessage As String)
+Public Sub App_UpdateStatusBar(ByVal strItem As String, ByVal strMessage As String)
 
     Dim varStatus() As String
     Dim strStatus As String
@@ -302,20 +300,20 @@ Public Sub UpdateStatusBar(ByVal strItem As String, ByVal strMessage As String)
 
 End Sub
 
-Public Sub TestUpdateStatusBar()
+Private Sub Test_UpdateStatusBar()
 
     Application.StatusBar = " "
-    UpdateStatusBar "Setting", "Test2"
+    App_UpdateStatusBar "Setting", "Test2"
     
 End Sub
 
-Public Sub SetDateToDayFormula()
+Public Sub App_SetPrescriptionsDate()
 
-    ModRange.SetRangeFormula constDate, GetToDayFormula()
+    ModRange.SetRangeFormula CONST_PRESCRIPTIONS_DATE, Util_GetToDayFormula()
 
 End Sub
 
-Private Sub SetCaptionAndHideBars()
+Private Sub Util_SetCaptionAndHideBars()
 
     Dim blnIsDevelop As Boolean
     
@@ -323,7 +321,7 @@ Private Sub SetCaptionAndHideBars()
     
     blnIsDevelop = ModSetting.IsDevelopmentMode()
     
-    SetApplicationTitle
+    App_SetApplicationTitle
     
     With Application
         .DisplayFormulaBar = blnIsDevelop
@@ -334,10 +332,10 @@ Private Sub SetCaptionAndHideBars()
     End With
     
     Application.StatusBar = ModConst.CONST_APPLICATION_NAME
-    UpdateStatusBar "Versie", ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
-    UpdateStatusBar "Omgeving", GetEnvironment()
-    UpdateStatusBar "Afdeling", IIf(IsPedDir, "Pediatrie", "Neonatologie")
-    UpdateStatusBar "Login", ModRange.GetRangeValue("_User_Login", vbNullString)
+    App_UpdateStatusBar "Versie", ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
+    App_UpdateStatusBar "Omgeving", Util_GetEnvironment()
+    App_UpdateStatusBar "Afdeling", IIf(Util_IsPedDir, "Pediatrie", "Neonatologie")
+    App_UpdateStatusBar "Login", ModRange.GetRangeValue("_User_Login", vbNullString)
     
     Exit Sub
     
@@ -347,7 +345,7 @@ SetCaptionAndHideBarsError:
     
 End Sub
 
-Private Function GetEnvironment() As String
+Private Function Util_GetEnvironment() As String
 
     Dim strEnv As String
     Dim strPath As String
@@ -357,11 +355,11 @@ Private Function GetEnvironment() As String
     strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Training"), "Training", strEnv)
     strEnv = IIf(ModString.ContainsCaseInsensitive(strPath, "Productie"), "Productie", strEnv)
     
-    GetEnvironment = strEnv
+    Util_GetEnvironment = strEnv
 
 End Function
 
-Public Sub SetApplicationTitle()
+Public Sub App_SetApplicationTitle()
 
     Dim strTitle As String
     Dim strBed As String
@@ -369,7 +367,7 @@ Public Sub SetApplicationTitle()
     Dim strAN As String
     
     strTitle = ModConst.CONST_APPLICATION_NAME
-    strBed = ModBed.GetBed()
+    strBed = Bed_GetBedName()
     strVN = ModPatient.Patient_GetFirstName()
     strAN = ModPatient.Patient_GetLastName()
     
@@ -382,7 +380,7 @@ Public Sub SetApplicationTitle()
 
 End Sub
 
-Public Function GetLanguage() As EnumAppLanguage
+Private Function Util_GetLanguage() As EnumAppLanguage
     
     Dim enmLanguage As EnumAppLanguage
     
@@ -391,45 +389,45 @@ Public Function GetLanguage() As EnumAppLanguage
     Case Else: enmLanguage = EnumAppLanguage.English
     End Select
     
-    GetLanguage = enmLanguage
+    Util_GetLanguage = enmLanguage
 
 End Function
 
-Private Sub TestGetLanguage()
+Private Sub Test_GetLanguage()
 
-    MsgBox GetLanguage()
+    MsgBox Util_GetLanguage()
 
 End Sub
 
-Private Function GetToDayFormula() As String
+Private Function Util_GetToDayFormula() As String
     
-    GetToDayFormula = "= ToDay()"
+    Util_GetToDayFormula = "= ToDay()"
 
 End Function
 
-Private Function HasInPath(ByVal strDir As String) As Boolean
+Private Function Util_HasInPath(ByVal strDir As String) As Boolean
 
     Dim strPath As String
 
     strPath = WbkAfspraken.Path
     
-    HasInPath = ModString.ContainsCaseInsensitive(strPath, strDir)
+    Util_HasInPath = ModString.ContainsCaseInsensitive(strPath, strDir)
 
 End Function
 
-Private Function IsPedDir() As Boolean
+Private Function Util_IsPedDir() As Boolean
 
-    IsPedDir = MetaVision_IsPediatrie()
+    Util_IsPedDir = MetaVision_IsPediatrie()
     
 End Function
 
-Private Function IsNeoDir() As Boolean
+Private Function Util_IsNeoDir() As Boolean
 
-    IsNeoDir = Not IsPedDir()
+    Util_IsNeoDir = Not Util_IsPedDir()
 
 End Function
 
-Private Function LoadConfigTables() As Boolean
+Private Function Util_LoadConfigTables() As Boolean
 
     Dim strFile As String
     Dim strTable As String
@@ -442,37 +440,37 @@ Private Function LoadConfigTables() As Boolean
     strSrc = "A2:S24"
     strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
     
-    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
+    blnLoaded = blnLoaded And Util_LoadConfigTable(strFile, strTable, strSrc)
     
     strTable = "Var_Neo_MedCont_VerdunningTekst"
     strSrc = "A1"
     strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
     
-    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
+    blnLoaded = blnLoaded And Util_LoadConfigTable(strFile, strTable, strSrc)
     
     strTable = "Tbl_Admin_PedMedCont"
     strSrc = "A4:R34"
     strFile = WbkAfspraken.Path & "\db\PedMedCont.xlsx"
     
-    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
+    blnLoaded = blnLoaded And Util_LoadConfigTable(strFile, strTable, strSrc)
 
     strTable = "Tbl_Admin_ParEnt"
     strSrc = "A6:N47"
     strFile = WbkAfspraken.Path & "\db\GlobParEnt.xlsx"
     
-    blnLoaded = blnLoaded And LoadConfigTable(strFile, strTable, strSrc)
+    blnLoaded = blnLoaded And Util_LoadConfigTable(strFile, strTable, strSrc)
     
-    LoadConfigTables = blnLoaded
+    Util_LoadConfigTables = blnLoaded
 
 End Function
 
-Private Sub Test_LoadConfigTables()
+Private Sub Test_Util_LoadConfigTables()
 
-    MsgBox LoadConfigTables()
+    MsgBox Util_LoadConfigTables()
 
 End Sub
 
-Private Function LoadConfigTablesFromDatabase() As Boolean
+Private Function Util_LoadConfigTablesFromDatabase() As Boolean
 
     On Error GoTo ErrorHandler
 
@@ -480,17 +478,18 @@ Private Function LoadConfigTablesFromDatabase() As Boolean
     ModDatabase.Database_LoadPedConfigMedCont
     ModDatabase.Database_LoadConfigParEnt
     
-    LoadConfigTablesFromDatabase = True
+    Util_LoadConfigTablesFromDatabase = True
     
     Exit Function
     
 ErrorHandler:
 
-    ModLog.LogError Err, "LoadConfigTablesFromDatabase"
+    ModLog.LogError Err, "Util_LoadConfigTablesFromDatabase"
 
 End Function
 
-Public Sub Application_SaveNeoMedContConfig()
+' ToDo check if this is not death code
+Public Sub App_SaveNeoMedContConfig()
 
     Dim strFile As String
     Dim strTable As String
@@ -503,20 +502,20 @@ Public Sub Application_SaveNeoMedContConfig()
     strDst = "A2:R24"
     strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
     
-    SaveConfigTable strFile, strTable, strDst
+    Util_SaveConfigTable strFile, strTable, strDst
     
     strTable = "Var_Neo_MedCont_VerdunningTekst"
     strDst = "A1"
     strFile = WbkAfspraken.Path & "\db\NeoMedCont.xlsx"
     
-    SaveConfigTable strFile, strTable, strDst
+    Util_SaveConfigTable strFile, strTable, strDst
     
     ModProgress.FinishProgress
     Application.ScreenUpdating = True
 
 End Sub
 
-Public Sub Application_SaveParEntConfig()
+Public Sub App_SaveParEntConfig()
 
     Dim strFile As String
     Dim strTable As String
@@ -529,15 +528,14 @@ Public Sub Application_SaveParEntConfig()
     strDst = "A5:N47"
     strFile = WbkAfspraken.Path & "\db\GlobParEnt.xlsx"
     
-    SaveConfigTable strFile, strTable, strDst
+    Util_SaveConfigTable strFile, strTable, strDst
         
     ModProgress.FinishProgress
     Application.ScreenUpdating = True
 
 End Sub
 
-
-Private Function LoadConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String) As Boolean
+Private Function Util_LoadConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String) As Boolean
     
     Dim objConfigWbk As Workbook
     Dim objSrc As Range
@@ -561,7 +559,7 @@ Private Function LoadConfigTable(ByVal strFile As String, ByVal strTable As Stri
     Set objConfigWbk = Nothing
     
     Application.DisplayAlerts = True
-    LoadConfigTable = True
+    Util_LoadConfigTable = True
     
     Exit Function
     
@@ -580,12 +578,11 @@ LoadConfigTableError:
     
     Application.DisplayAlerts = True
     
-    LoadConfigTable = False
+    Util_LoadConfigTable = False
     
 End Function
 
-
-Private Sub SaveConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)
+Private Sub Util_SaveConfigTable(ByVal strFile As String, ByVal strTable As String, ByVal strConfig As String)
     
     Dim objConfigWbk As Workbook
     Dim objSrc As Range
@@ -645,21 +642,15 @@ SaveConfigTableError:
     Application.DisplayAlerts = True
 End Sub
 
-Private Sub PrintScreen()
+' Check whether this is used and if not should be used
+Public Sub App_SendPrintScreen()
 
     Application.SendKeys "(%{1068})"
     DoEvents
-
-End Sub
-
-Public Sub Application_SendPrintScreen()
-
-'     Dim objClip
-    PrintScreen
     
 End Sub
 
-Private Sub ClearLogin()
+Private Sub Util_ClearLogin()
 
     ModRange.SetRangeValue "_User_Login", vbNullString
     ModRange.SetRangeValue "_User_FirstName", vbNullString
@@ -668,8 +659,8 @@ Private Sub ClearLogin()
     
 End Sub
 
-
-Private Function CheckMedicationValidation() As Boolean
+' Not sure if this function should be here
+Private Function Util_CheckMedicationValidation() As Boolean
 
     Dim blnCheck As Boolean
     Dim strRegPath As String
@@ -684,6 +675,6 @@ Private Function CheckMedicationValidation() As Boolean
         blnCheck = False
     End If
     
-    CheckMedicationValidation = blnCheck
+    Util_CheckMedicationValidation = blnCheck
 
 End Function

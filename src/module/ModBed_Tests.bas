@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModBed_Tests"
 Option Explicit
 
-Public Sub Test_CloseBed()
+Public Sub Test_Bed_CloseBed()
 
     Dim objDict As Dictionary
     Dim blnPass As Boolean
@@ -13,16 +13,16 @@ Public Sub Test_CloseBed()
     
     ModProgress.StartProgress "Test Bed Opslaan"
         
-    ModBed.OpenBed
+    ModBed.Bed_OpenBed
     blnPass = blnPass And ModNeoInfB_Tests.Test_NeoInfB_FillContMed(blnPass)
     If Not blnPass Then
-        Err.Raise CONST_TEST_ERROR, , "Test_CloseBed", "Medicatie vullen did not pass"
+        Err.Raise CONST_TEST_ERROR, , "Test_Bed_CloseBed", "Medicatie vullen did not pass"
     End If
     
     FillDictWithAfspr objDict
     
-    ModBed.CloseBed False
-    ModBed.OpenBed
+    ModBed.Bed_CloseBed False
+    ModBed.Bed_OpenBed
     
     blnPass = CheckAfsprDict(objDict, blnPass)
     

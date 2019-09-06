@@ -1,10 +1,10 @@
 Attribute VB_Name = "ModAssert"
 Option Explicit
 
-Public Sub TestAssert()
+Private Sub Test_Assert()
 
-    AssertEqual 1, 2, "TestAssert, One is not two", False
-    AssertNotEqual 1, 1, "TestAssert, One is not not blnEqual to one", False
+    AssertEqual 1, 2, "Test_Assert, One is not two", False
+    AssertNotEqual 1, 1, "Test_Assert, One is not not blnEqual to one", False
 
 End Sub
 
@@ -26,7 +26,7 @@ Public Sub AssertNotEqual(ByVal varV1 As Variant, ByVal varV2 As Variant, ByVal 
 
 End Sub
 
-Public Sub DisplayAssert(ByVal strMsg As String)
+Public Sub AssertDisplay(ByVal strMsg As String)
 
     ModMessage.ShowMsgBoxExclam strMsg
 
@@ -40,7 +40,7 @@ Private Sub ProcessAssert(ByVal varV1 As Variant, ByVal varV2 As Variant, ByVal 
             strMsg = strMsg + vbNewLine + "Value " + CStr(varV1) + " is not not equal to " + CStr(varV2)
         End If
         
-        If blnDisplay Then DisplayAssert strMsg
+        If blnDisplay Then AssertDisplay strMsg
         LogTest Warning, strMsg
     
 End Sub

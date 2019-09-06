@@ -2110,7 +2110,6 @@ _User_Login:	=PatDetails!$B$35
 _User_Type:	=PatDetails!$B$38
 _xlfn.CEILING.PRECISE:	=#NAME?
 _xlfn.IFERROR:	=#NAME?
-adrenaline:	=NeoTblMedIV!$B$4:$S$26
 GlobGuiMedDisc!Afdrukbereik:	=GlobGuiMedDisc!$C$1:$T$38
 GlobPrtMedDisc!Afdrukbereik:	=GlobPrtMedDisc!$A$1:$I$32
 NeoGuiAcuut!Afdrukbereik:	=NeoGuiAcuut!$B$2:$G$36

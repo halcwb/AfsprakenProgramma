@@ -55,7 +55,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
     
     Set objResponse = objClient.GetJson(strUrl)
     
-    If objResponse.StatusCode = Ok Then
+    If objResponse.StatusCode = OK Then
         ProcessJson objResponse, objMed
     Else
         ModMessage.ShowMsgBoxExclam "Kan de doseer informatie niet ophalen!. Probeer het nog een keer of neem anders contact op met de helpdesk"

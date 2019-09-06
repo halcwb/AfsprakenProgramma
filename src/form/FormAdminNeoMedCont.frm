@@ -77,7 +77,7 @@ Private Sub LoadMedicationCollection()
         
         Set m_MedCol = ModDatabase.Database_GetNeoConfigMedCont(m_SelectedVersion)
     Else
-        Set m_MedCol = ModAdmin.Admin_GetNeoMedCont()
+        Set m_MedCol = ModAdmin.Admin_MedContNeoGetCollection()
     End If
     
     lbxMedicamenten.Clear
@@ -168,13 +168,13 @@ Private Sub cmdImport_Click()
     Application.DisplayAlerts = False
         
     Set objConfigWbk = Workbooks.Open(strFile, True, True)
-    Set objSrc = objConfigWbk.Sheets(constNeoMedContTbl).Range(constNeoMedContTbl)
-    Set objDst = ModRange.GetRange(constNeoMedContTbl)
+    Set objSrc = objConfigWbk.Sheets(CONST_TBL_MEDCONT_NEO).Range(CONST_TBL_MEDCONT_NEO)
+    Set objDst = ModRange.GetRange(CONST_TBL_MEDCONT_NEO)
         
     Sheet_CopyRangeFormulaToDst objSrc, objDst
-    Sheet_CopyRangeFormulaToDst objConfigWbk.Sheets(constNeoMedVerdunning).Range("A1"), ModRange.GetRange(constNeoMedVerdunning)
+    Sheet_CopyRangeFormulaToDst objConfigWbk.Sheets(CONST_MEDCONTVERDUNNING_NEO).Range("A1"), ModRange.GetRange(CONST_MEDCONTVERDUNNING_NEO)
     
-    Set m_MedCol = ModAdmin.Admin_GetNeoMedCont()
+    Set m_MedCol = ModAdmin.Admin_MedContNeoGetCollection()
     
     lbxMedicamenten.Clear
     For Each objMed In m_MedCol
@@ -201,7 +201,7 @@ Private Sub cmdOK_Click()
     Me.Hide
     lblButton.Caption = "OK"
     lbxMedicamenten_Click
-    Admin_SetNeoMedCont m_MedCol, txtVerdunning.Value
+    Admin_MedContNeoSetCollection m_MedCol, txtVerdunning.Value
 
 End Sub
 
@@ -229,12 +229,12 @@ Private Sub cmdSave_Click()
     lblButton.Caption = "OK"
     lbxMedicamenten_Click
     
-    Admin_SetNeoMedCont m_MedCol, txtVerdunning
+    Admin_MedContNeoSetCollection m_MedCol, txtVerdunning
     
     If Setting_UseDatabase Then
         Database_SaveNeoConfigMedCont
     Else
-        Application_SaveNeoMedContConfig
+        App_SaveNeoMedContConfig
     End If
     
 End Sub
@@ -399,7 +399,7 @@ Private Sub UserForm_Initialize()
     optLastVersion.Value = True
     LoadSolution
     
-    If Not Setting_UseDatabase Then txtVerdunning.Text = Admin_GetNeoMedVerdunning()
+    If Not Setting_UseDatabase Then txtVerdunning.Text = Admin_MedContNeoGetVerdunning()
     lbxMedicamenten.ListIndex = 0
 
 End Sub

@@ -216,7 +216,7 @@ Private Function CreateTestWbkPath(wbkTest As Workbook) As String
     strName = Split(wbkTest.Name, ".")(0)
     strExt = Split(wbkTest.Name, ".")(1)
     
-    strPath = strPath & strName & "_" & Application_GetVersion() & "_" & strTS & "." & strExt
+    strPath = strPath & strName & "_" & App_GetApplicationVersion() & "_" & strTS & "." & strExt
     
     CreateTestWbkPath = strPath
 

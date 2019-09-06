@@ -100,7 +100,7 @@ Public Sub SendApotheekWerkBrief()
     If Setting_UseDatabase Then
         Patient_SavePatient
     Else
-        ModBed.CloseBed True
+        ModBed.Bed_CloseBed True
     End If
     
     ModProgress.StartProgress "Medicatie naar de apotheek verzenden"

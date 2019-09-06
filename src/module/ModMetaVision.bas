@@ -16,7 +16,7 @@ Private Const constUserLogin As String = "UserLogin"
 
 Private Const constCurrentPatient As String = "Current Patient"
 Private Const constPatientId As String = "PatientID"
-Private Const constHospNum As String = "__0_PatNum"
+Private Const CONST_PATHOSPNUM_RANGE As String = "__0_PatNum"
 
 Private Const constConnection As String = "Database Connect"
 
@@ -86,7 +86,11 @@ Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As Stri
         Do While Not objRs.EOF And Not blnFound
             strId = objRs.Fields("PatientId")
             If strId = strPatId Then
-                strBed = Trim(CStr(objRs.Fields("BedName")))
+                If Not IsNull(objRs.Fields("BedName")) Then
+                    strBed = Trim(CStr(objRs.Fields("BedName")))
+                Else
+                    strBed = ""
+                End If
                 blnFound = True
             End If
             objRs.MoveNext

@@ -46,6 +46,7 @@
 /docs/~*.*
 !/docs/img/
 !/docs/img/*.png
+/docs/AfsprakenProgramma Software Project Plan.docx
 
 # Add tests
 !/tests/

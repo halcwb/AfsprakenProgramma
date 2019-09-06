@@ -88,12 +88,12 @@ Private Sub cmdImport_Click()
     Application.DisplayAlerts = False
         
     Set objConfigWbk = Workbooks.Open(strFile, True, True)
-    Set objSrc = objConfigWbk.Sheets(constGlobParEntTbl).Range(constGlobParEntTbl)
-    Set objDst = ModRange.GetRange(constGlobParEntTbl)
+    Set objSrc = objConfigWbk.Sheets(CONST_TBL_PARENT).Range(CONST_TBL_PARENT)
+    Set objDst = ModRange.GetRange(CONST_TBL_PARENT)
         
     Sheet_CopyRangeFormulaToDst objSrc, objDst
     
-    Set m_ParEntCol = ModAdmin.Admin_GetParEnt()
+    Set m_ParEntCol = ModAdmin.Admin_ParEntGetCollection()
     
     lbxParenteralia.Clear
     For Each objParEnt In m_ParEntCol
@@ -142,7 +142,7 @@ Private Sub LoadParEntCollection()
 
         Set m_ParEntCol = ModDatabase.Database_GetConfigParEnt(m_SelectedVersion)
     Else
-        Set m_ParEntCol = ModAdmin.Admin_GetParEnt()
+        Set m_ParEntCol = ModAdmin.Admin_ParEntGetCollection()
     End If
     
     lbxParenteralia.Clear
@@ -274,7 +274,7 @@ Private Sub cmdOK_Click()
     
     lblButton.Caption = "OK"
     lbxParenteralia_Click
-    Admin_SetParEnt m_ParEntCol
+    Admin_ParEntSetCollection m_ParEntCol
 
 End Sub
 
@@ -284,12 +284,12 @@ Private Sub cmdSave_Click()
     
     lblButton.Caption = "OK"
     lbxParenteralia_Click
-    Admin_SetParEnt m_ParEntCol
+    Admin_ParEntSetCollection m_ParEntCol
     
     If Setting_UseDatabase() Then
         Database_SaveConfigParEnt
     Else
-        Application_SaveParEntConfig
+        App_SaveParEntConfig
     End If
     
 End Sub

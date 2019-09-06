@@ -1,18 +1,6 @@
 Attribute VB_Name = "ModPatient"
 Option Explicit
 
-Private Const constHospNum As String = "__0_PatNum"
-Private Const constAN As String = "__2_AchterNaam"
-Private Const constVN As String = "__3_VoorNaam"
-Private Const constGebDatum As String = "__4_GebDatum"
-Private Const constOpnDat As String = "_Pat_OpnDatum"
-Private Const constGewicht As String = "_Pat_Gewicht"
-Private Const constLengte As String = "_Pat_Lengte"
-Private Const constGeslacht As String = "_Pat_Geslacht"
-Private Const constDagen As String = "_Pat_GestDagen"
-Private Const constWeken As String = "_Pat_GestWeken"
-Private Const constGebGew As String = "_Pat_GebGew"
-
 Private Const constDateFormatDutch As String = "dd-mmm-jj"
 Private Const constDateFormatEnglish As String = "dd-mmm-yy"
 Private Const constDateReplace As String = "{DATEFORMAT}"
@@ -23,13 +11,13 @@ Private Const constStandardPrefix As String = "standaard_"
 
 Public Sub Patient_SetHospitalNumber(ByVal strHospNum As String)
 
-    ModRange.SetRangeValue constHospNum, strHospNum
+    ModRange.SetRangeValue CONST_PATHOSPNUM_RANGE, strHospNum
 
 End Sub
 
 Public Function Patient_BirthDate() As Date
 
-    Patient_BirthDate = ModRange.GetRangeValue(constGebDatum, DateTime.Now)
+    Patient_BirthDate = ModRange.GetRangeValue(CONST_BIRTHDATE_RANGE, DateTime.Now)
 
 End Function
 
@@ -42,8 +30,8 @@ Public Function Patient_CorrectedAgeInMo() As Double
     Dim dblAge As Double
     
     dtmBD = Patient_BirthDate()
-    intDays = ModRange.GetRangeValue(constDagen, 0)
-    intWeeks = ModRange.GetRangeValue(constWeken, 0)
+    intDays = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, 0)
+    intWeeks = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, 0)
     intDays = (40 * 7) - (intDays + (intWeeks * 7))
     
     If intDays > 0 Then
@@ -70,7 +58,7 @@ Public Function Patient_GetHospitalNumber() As String
 
     Dim strHospNum As String
     
-    strHospNum = ModRange.GetRangeValue(constHospNum, vbNullString)
+    strHospNum = ModRange.GetRangeValue(CONST_PATHOSPNUM_RANGE, vbNullString)
     
     Patient_GetHospitalNumber = strHospNum
 
@@ -78,13 +66,13 @@ End Function
 
 Public Function Patient_GetLastName() As String
 
-    Patient_GetLastName = ModRange.GetRangeValue(constAN, vbNullString)
+    Patient_GetLastName = ModRange.GetRangeValue(CONST_LASTNAME_RANGE, vbNullString)
 
 End Function
 
 Public Function Patient_GetFirstName() As String
 
-    Patient_GetFirstName = ModRange.GetRangeValue(constVN, vbNullString)
+    Patient_GetFirstName = ModRange.GetRangeValue(CONST_FIRSTNAME_RANGE, vbNullString)
 
 End Function
 
@@ -106,7 +94,7 @@ Public Sub Patient_EnterWeight()
             dblWeight = StringToDouble(.txtWaarde.Value)
             dblWeight = ModString.FixPrecision(dblWeight, 2)
 '            dblWeight = dblWeight * 10
-            ModRange.SetRangeValue constGewicht, dblWeight
+            ModRange.SetRangeValue CONST_WEIGHT_RANGE, dblWeight
         End If
     End With
     
@@ -119,12 +107,12 @@ Public Sub Patient_EnterLength()
     Dim frmInvoer As FormInvoerNumeriek
     Dim dblLength As Double
     
-    dblLength = ModRange.GetRangeValue(constLengte, 0)
+    dblLength = ModRange.GetRangeValue(CONST_HEIGHT_RANGE, 0)
     Set frmInvoer = New FormInvoerNumeriek
     
     With frmInvoer
         .lblText.Caption = "Voer lengte in"
-        .SetValue constLengte, "Lengte:", dblLength, "cm", "Lengte"
+        .SetValue CONST_HEIGHT_RANGE, "Lengte:", dblLength, "cm", "Lengte"
         .Show
         
     End With
@@ -133,13 +121,13 @@ End Sub
 
 Public Function Patient_GetWeight() As Double
 
-    Patient_GetWeight = StringToDouble(ModRange.GetRangeValue(constGewicht, 0)) ' / 10
+    Patient_GetWeight = StringToDouble(ModRange.GetRangeValue(CONST_WEIGHT_RANGE, 0)) ' / 10
 
 End Function
 
 Public Function Patient_GetHeight() As Double
 
-    Patient_GetHeight = StringToDouble(ModRange.GetRangeValue(constLengte, 0)) ' / 10
+    Patient_GetHeight = StringToDouble(ModRange.GetRangeValue(CONST_HEIGHT_RANGE, 0)) ' / 10
 
 End Function
 
@@ -165,9 +153,9 @@ Public Function GetPatientString() As String
 
     Dim strPat As String
     
-    strPat = "Num: " & ModRange.GetRangeValue(constHospNum, vbNullString)
-    strPat = "Naam: " & ModRange.GetRangeValue(constAN, vbNullString)
-    strPat = ", " & ModRange.GetRangeValue(constVN, vbNullString)
+    strPat = "Num: " & ModRange.GetRangeValue(CONST_PATHOSPNUM_RANGE, vbNullString)
+    strPat = "Naam: " & ModRange.GetRangeValue(CONST_LASTNAME_RANGE, vbNullString)
+    strPat = ", " & ModRange.GetRangeValue(CONST_FIRSTNAME_RANGE, vbNullString)
     
     GetPatientString = strPat
 
@@ -311,45 +299,45 @@ Private Sub GetPatientDetails(objPat As ClassPatientDetails)
     Dim dtmBD As Date
     Dim dtmAdm As Date
     
-    objPat.HospitalNumber = ModRange.GetRangeValue(constHospNum, vbNullString)
-    objPat.Bed = ModBed.GetBed()
-    objPat.AchterNaam = ModRange.GetRangeValue(constAN, vbNullString)
-    objPat.VoorNaam = ModRange.GetRangeValue(constVN, vbNullString)
-    objPat.Gewicht = ModRange.GetRangeValue(constGewicht, 0) ' / 10
-    objPat.Lengte = ModRange.GetRangeValue(constLengte, 0)
-    objPat.Geslacht = ModRange.GetRangeValue(constGeslacht, vbNullString)
-    objPat.GeboorteGewicht = ModRange.GetRangeValue(constGebGew, 0)
-    objPat.Weeks = ModRange.GetRangeValue(constWeken, 0)
-    objPat.Days = ModRange.GetRangeValue(constDagen, 0)
+    objPat.HospitalNumber = ModRange.GetRangeValue(CONST_PATHOSPNUM_RANGE, vbNullString)
+    objPat.Bed = ModBed.Bed_GetBedName()
+    objPat.AchterNaam = ModRange.GetRangeValue(CONST_LASTNAME_RANGE, vbNullString)
+    objPat.VoorNaam = ModRange.GetRangeValue(CONST_FIRSTNAME_RANGE, vbNullString)
+    objPat.Gewicht = ModRange.GetRangeValue(CONST_WEIGHT_RANGE, 0) ' / 10
+    objPat.Lengte = ModRange.GetRangeValue(CONST_HEIGHT_RANGE, 0)
+    objPat.Geslacht = ModRange.GetRangeValue(CONST_GENDER_RANGE, vbNullString)
+    objPat.GeboorteGewicht = ModRange.GetRangeValue(CONST_BIRTHWEIGHT_RANGE, 0)
+    objPat.Weeks = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, 0)
+    objPat.Days = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, 0)
     
-    dtmAdm = ModRange.GetRangeValue(constOpnDat, ModDate.EmptyDate)
-    dtmBD = ModRange.GetRangeValue(constGebDatum, ModDate.EmptyDate)
+    dtmAdm = ModRange.GetRangeValue(CONST_ADMISSIONDATE_RANGE, ModDate.EmptyDate)
+    dtmBD = ModRange.GetRangeValue(CONST_BIRTHDATE_RANGE, ModDate.EmptyDate)
     objPat.SetAdmissionAndBirthDate dtmAdm, dtmBD
     
 End Sub
 
 Private Sub WritePatientDetails(objPat As ClassPatientDetails)
 
-    ModRange.SetRangeValue constHospNum, objPat.HospitalNumber
-    ModRange.SetRangeValue constAN, objPat.AchterNaam
-    ModRange.SetRangeValue constVN, objPat.VoorNaam
+    ModRange.SetRangeValue CONST_PATHOSPNUM_RANGE, objPat.HospitalNumber
+    ModRange.SetRangeValue CONST_LASTNAME_RANGE, objPat.AchterNaam
+    ModRange.SetRangeValue CONST_FIRSTNAME_RANGE, objPat.VoorNaam
         
     If Not ModDate.IsEmptyDate(objPat.GeboorteDatum) Then
-        ModRange.SetRangeValue constGebDatum, objPat.GeboorteDatum
+        ModRange.SetRangeValue CONST_BIRTHDATE_RANGE, objPat.GeboorteDatum
     End If
     
     If Not ModDate.IsEmptyDate(objPat.OpnameDatum) Then
-        ModRange.SetRangeValue constOpnDat, objPat.OpnameDatum
+        ModRange.SetRangeValue CONST_ADMISSIONDATE_RANGE, objPat.OpnameDatum
     End If
     
-    ModRange.SetRangeValue constGewicht, objPat.Gewicht ' * 10
-    ModRange.SetRangeValue constLengte, objPat.Lengte
-    ModRange.SetRangeValue constGeslacht, objPat.Geslacht
-    ModRange.SetRangeValue constGebGew, objPat.GeboorteGewicht
-    ModRange.SetRangeValue constWeken, objPat.Weeks
-    ModRange.SetRangeValue constDagen, objPat.Days
+    ModRange.SetRangeValue CONST_WEIGHT_RANGE, objPat.Gewicht ' * 10
+    ModRange.SetRangeValue CONST_HEIGHT_RANGE, objPat.Lengte
+    ModRange.SetRangeValue CONST_GENDER_RANGE, objPat.Geslacht
+    ModRange.SetRangeValue CONST_BIRTHWEIGHT_RANGE, objPat.GeboorteGewicht
+    ModRange.SetRangeValue CONST_GESTWEEKS_RANGE, objPat.Weeks
+    ModRange.SetRangeValue CONST_GESTDAYS_RANGE, objPat.Days
     
-    ModBed.SetBed objPat.Bed
+    ModBed.Bed_SetBed objPat.Bed
 
 End Sub
 
@@ -441,8 +429,8 @@ Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As 
         
         ModRange.SetRangeValue "Var_Neo_PrintApothNo", 0
         
-        ModApplication.SetDateToDayFormula
-        ModApplication.SetApplicationTitle
+        ModApplication.App_SetPrescriptionsDate
+        ModApplication.App_SetApplicationTitle
     End If
     
     With Application
@@ -464,8 +452,8 @@ Public Sub Patient_ClearPedData()
     Patient_ClearData "_Glob", False, True
     ModProgress.FinishProgress
     
-    ModApplication.SetDateToDayFormula
-    ModApplication.SetApplicationTitle
+    ModApplication.App_SetPrescriptionsDate
+    ModApplication.App_SetApplicationTitle
 
 End Sub
 
@@ -482,8 +470,8 @@ Public Sub Patient_ClearNeoData()
     Patient_ClearData "_Glob", False, True
     ModProgress.FinishProgress
     
-    ModApplication.SetDateToDayFormula
-    ModApplication.SetApplicationTitle
+    ModApplication.App_SetPrescriptionsDate
+    ModApplication.App_SetApplicationTitle
 
 End Sub
 
@@ -497,8 +485,8 @@ Public Sub Patient_ClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress 
     
     Patient_ClearData vbNullString, blnShowWarn, blnShowProgress
     
-    ModApplication.SetDateToDayFormula
-    ModApplication.SetApplicationTitle
+    ModApplication.App_SetPrescriptionsDate
+    ModApplication.App_SetApplicationTitle
         
 End Sub
 
@@ -648,8 +636,8 @@ Private Sub CreateStandardPatient()
             strHospNum = IIf(intHospNum < 10, constStandardPrefix & "00" & intHospNum, strHospNum)
             
             ModPatient.Patient_SetHospitalNumber strHospNum
-            ModRange.SetRangeValue constAN, "Patient"
-            ModRange.SetRangeValue constVN, strName
+            ModRange.SetRangeValue CONST_LASTNAME_RANGE, "Patient"
+            ModRange.SetRangeValue CONST_FIRSTNAME_RANGE, strName
             
         End If
         
@@ -715,7 +703,7 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     ' Guard for invalid bed name
     ' If Not IsValidBed(strBed) Then GoTo SaveBedToDatabaseError
     
-    intCurrent = ModBed.GetDatabaseVersie()
+    intCurrent = ModBed.Bed_PrescriptionsVersionGet()
     strHospNum = Patient_GetHospitalNumber()
     intLatest = ModDatabase.Database_GetLatestPrescriptionVersion(strHospNum)
             
@@ -742,7 +730,7 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     Set objUser = ModUser.User_GetCurrent()
     
     ModDatabase.Database_SaveData strHospNum, objUser.Login, shtPatData.Range("A1").CurrentRegion, shtPatText.Range("A1").CurrentRegion, blnShowProgress
-    ModBed.SetDatabaseVersie Database_GetLatestPrescriptionVersion(strHospNum)
+    ModBed.Bed_PrescriptionsVersionSet Database_GetLatestPrescriptionVersion(strHospNum)
     
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
@@ -801,8 +789,8 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
     strHospNum = Patient_GetHospitalNumber()
     strHospNum = IIf(strHospNum = vbNullString, objPat.HospitalNumber, strHospNum)
-    intVersion = ModBed.GetDatabaseVersie()
-    ModBed.SetDatabaseVersie 0
+    intVersion = ModBed.Bed_PrescriptionsVersionGet()
+    ModBed.Bed_PrescriptionsVersionSet 0
     If blnAsk Then
         If blnShowProgress Then
             strTitle = FormProgress.Caption
@@ -811,9 +799,9 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
         If Patient_OpenDatabaseList("Selecteer een patient") Then
             If Patient_GetHospitalNumber() = vbNullString Then  ' No patient was selected
-                Patient_SetHospitalNumber strHospNum ' Put back the old hospital number
-                SetDatabaseVersie intVersion         ' Put back current version
-                Exit Sub                             ' And exit sub
+                Patient_SetHospitalNumber strHospNum            ' Put back the old hospital number
+                Bed_PrescriptionsVersionSet intVersion          ' Put back current version
+                Exit Sub                                        ' And exit sub
             Else
                 If Patient_IsStandard(Patient_GetHospitalNumber()) Then
                     strStandard = Patient_GetHospitalNumber()
@@ -821,21 +809,22 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
                     strHospNum = vbNullString
                 Else
                     strHospNum = Patient_GetHospitalNumber()
-                    intVersion = ModBed.GetDatabaseVersie()
+                    intVersion = ModBed.Bed_PrescriptionsVersionGet()
                     
                     If blnShowProgress Then ModProgress.StartProgress strTitle
                 End If
             End If
-        Else                                      ' Patientlist has been canceled so do nothing
-            Patient_SetHospitalNumber strHospNum  ' Put back the old hospital number
-            SetDatabaseVersie intVersion          ' Put back current version
+        Else                                                ' Patientlist has been canceled so do nothing
+            Patient_SetHospitalNumber strHospNum            ' Put back the old hospital number
+            Bed_PrescriptionsVersionSet intVersion          ' Put back current version
             
             If blnShowProgress Then ModProgress.FinishProgress
-            Exit Sub                              ' And exit sub
+            Exit Sub                                        ' And exit sub
         End If
     End If
     
     If Not strHospNum = vbNullString Then
+        Patient_ClearAll False, True
         GetPatientDataFromDatabase strHospNum, ModDatabase.Database_GetLatestPrescriptionVersion(strHospNum)
     End If
     
@@ -896,11 +885,11 @@ Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVa
     Else
         ModDatabase.Database_GetPatientDataForVersion strHospNum, intVersion
     End If
-    If Not Patient_IsStandard(strHospNum) Then ModRange.SetRangeValue constHospNum, strHospNum 'Have to set hospitalnumber if leading zero got lost from transfer from database
+    If Not Patient_IsStandard(strHospNum) Then ModRange.SetRangeValue CONST_PATHOSPNUM_RANGE, strHospNum 'Have to set hospitalnumber if leading zero got lost from transfer from database
     
     If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True ' Make sure that infuusbrief data is updated
             
-    ModApplication.SetApplicationTitle
+    ModApplication.App_SetApplicationTitle
 
     If Not Patient_IsStandard(strHospNum) Then ModMetaVision.MetaVision_SyncLab
     ModSheet.SelectPedOrNeoStartSheet True

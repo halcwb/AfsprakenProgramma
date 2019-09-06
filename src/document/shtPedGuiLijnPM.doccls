@@ -12,9 +12,9 @@ Option Explicit
 Private Sub Worksheet_Activate()
     
     If ModSetting.IsDevelopmentMode() Then
-        ModApplication.SetWindowToCloseApp WbkAfspraken.Windows(1)
+        ModApplication.App_SetWindowToClose WbkAfspraken.Windows(1)
     Else
-        ModApplication.SetWindowToOpenApp WbkAfspraken.Windows(1)
+        ModApplication.App_SetWindowToOpen WbkAfspraken.Windows(1)
     End If
     
 End Sub

@@ -38,7 +38,7 @@ Private Sub SetSelectedHospNumAndVersion()
             ModMessage.ShowMsgBoxExclam "Selecteer eerst een afspraken versie"
             Exit Sub
         Else
-            ModBed.SetDatabaseVersie Database_GetVersionIDFromString(cboVersions.Value)
+            ModBed.Bed_PrescriptionsVersionSet Database_GetVersionIDFromString(cboVersions.Value)
         End If
     End If
     
@@ -212,7 +212,7 @@ End Sub
 
 Private Sub SetSelectedVersion()
 
-    ModBed.SetDatabaseVersie IIf(cboVersions.Value = vbNullString, 0, cboVersions.Value)
+    ModBed.Bed_PrescriptionsVersionSet IIf(cboVersions.Value = vbNullString, 0, cboVersions.Value)
 
 End Sub
 
@@ -226,7 +226,7 @@ Public Sub SetSelectedBed()
         strBed = objPat.Bed
     End If
     
-    ModBed.SetBed strBed
+    ModBed.Bed_SetBed strBed
 
 End Sub
 

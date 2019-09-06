@@ -72,7 +72,7 @@ Private Sub SetRangeColor(objTarget As Range, objSetting As Range, ByVal blnShee
 
 End Sub
 
-Private Sub TestRowsCount()
+Private Sub Test_RowsCount()
 
     MsgBox shtPedGuiEntTPN.Range("D14:E16").Rows.Count
 
@@ -246,7 +246,7 @@ Public Function GetFontNames() As Variant()
 
 End Function
 
-Private Sub TestGetFontNames()
+Private Sub Test_GetFontNames()
 
     Dim varN As Variant
     
@@ -256,7 +256,7 @@ Private Sub TestGetFontNames()
 
 End Sub
 
-Private Sub TestShowColorDialog()
+Private Sub Test_ShowColorDialog()
 
     MsgBox ShowColorDialog(979)
 

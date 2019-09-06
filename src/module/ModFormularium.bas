@@ -310,6 +310,7 @@ GetMedicamentenError:
     
 End Sub
 
+' ToDo add headings
 Public Sub Formularium_ExportMedDiscConfig(ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer

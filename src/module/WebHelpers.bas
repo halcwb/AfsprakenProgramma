@@ -328,7 +328,7 @@ Private web_pConverters As Dictionary
 ' @param GatewayTimeout `504`
 ''
 Public Enum WebStatusCode
-    Ok = 200
+    OK = 200
     Created = 201
     NoContent = 204
     NotModified = 304

@@ -27,7 +27,7 @@ Private Const constActMedicamentVolume As String = "AG"
 Private Const constActOplossingVolume As String = "AH"
 
 Private Const constPatNum As String = "__0_PatNum"
-Private Const constGewicht As String = "_Pat_Gewicht"
+Private Const CONST_WEIGHT_RANGE As String = "_Pat_Gewicht"
 Private Const constMedicament As String = "Var_Neo_InfB_Cont_MedKeuze_"
 Private Const constHoeveelheid As String = "Var_Neo_InfB_Cont_MedSterkte_"
 Private Const constOplosmiddel As String = "Var_Neo_InfB_Cont_Oplossing_"
@@ -112,7 +112,7 @@ Public Sub Test_NeoInfB_ContMed()
     If CStr(varFile) = vbNullString Then Exit Sub
     
     blnDevelop = ModSetting.IsDevelopmentMode()
-    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
     
     shtGlobGuiFront.Activate
 
@@ -138,7 +138,7 @@ Public Sub Test_NeoInfB_ContMed()
         
         ' Gewicht
         dblGew = ModString.StringToDouble(shtTests.Range(constSetupGewicht & intN).Value2)
-        blnPass = blnPass And ModRange.SetRangeValue(constGewicht, dblGew)
+        blnPass = blnPass And ModRange.SetRangeValue(CONST_WEIGHT_RANGE, dblGew)
         
         ' Medicament
         varVal = shtTests.Range(constSetupMedicament & intN).Value2
@@ -175,7 +175,7 @@ Public Sub Test_NeoInfB_ContMed()
         Next
         
         ' Schrijf gewicht
-        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(constGewicht, 0)
+        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(CONST_WEIGHT_RANGE, 0)
         
         
         ' ================ Check medicament ================
@@ -451,7 +451,7 @@ Public Sub Test_NeoInfB_ContMed()
         
     ModPatient.Patient_ClearData "_Neo", False, True
     
-    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
     
     With Application
         .DisplayAlerts = True
@@ -481,7 +481,7 @@ Test_NeoInfB_ContMedError:
         .Calculation = xlCalculationAutomatic
     End With
     
-    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
 
 End Sub
 
@@ -503,7 +503,7 @@ Private Function CreateTestWbkPath(wbkTest As Workbook) As String
     strPath = Replace(wbkTest.FullName, wbkTest.Name, vbNullString)
     strName = Split(wbkTest.Name, ".")(0)
     
-    strPath = strPath & strName & "_" & Application_GetVersion() & "_" & strTS
+    strPath = strPath & strName & "_" & App_GetApplicationVersion() & "_" & strTS
     
     CreateTestWbkPath = strPath
 
@@ -690,7 +690,7 @@ Public Sub Test_NeoInfB_Print()
     If CStr(varFile) = vbNullString Then Exit Sub
     
     blnDevelop = ModSetting.IsDevelopmentMode()
-    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
     
     ModNeoInfB.NeoInfB_SelectInfB True, True
 
@@ -720,7 +720,7 @@ Public Sub Test_NeoInfB_Print()
         
         ' Gewicht
         dblGew = ModString.StringToDouble(shtTests.Range(constSetupGewicht & intN).Value2)
-        blnPass = blnPass And ModRange.SetRangeValue(constGewicht, dblGew)
+        blnPass = blnPass And ModRange.SetRangeValue(CONST_WEIGHT_RANGE, dblGew)
         
         ' Pat No
         blnPass = blnPass And ModRange.SetRangeValue(constPatNum, "123456")
@@ -758,7 +758,7 @@ Public Sub Test_NeoInfB_Print()
         blnPass = blnPass And Test_NeoInfB_EnterContMed(blnPass, intM, strM, intMed, dblMedQty, intOpl, dblOplHoev, dblStand, dblDose)
         
         ' Schrijf gewicht
-        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(constGewicht, 0)
+        shtTests.Range(constActGewicht & intN).Value2 = ModRange.GetRangeValue(CONST_WEIGHT_RANGE, 0)
         
         
         ' ================ Check medicament ================
@@ -1011,7 +1011,7 @@ Public Sub Test_NeoInfB_Print()
         
     ModPatient.Patient_ClearData "_Neo", False, True
     
-    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
     
     With Application
         .DisplayAlerts = True
@@ -1033,7 +1033,7 @@ Test_NeoInfB_Print:
     Set shtTests = Nothing
     Set wbkTests = Nothing
 
-    If Not blnDevelop Then ModApplication.ToggleDevelopmentMode
+    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
 
     With Application
         .DisplayAlerts = True

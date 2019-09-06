@@ -12,14 +12,14 @@ Public Sub RunTests()
     ' Make sure that error messages are not displayed and
     ' program is not closed
     blnDontDisplay = True
-    ModApplication.SetDontClose True
+    ModApplication.App_SetDontClose True
     
     ' Run the tests
     Test_Open
     Test_GetPatientDataPath
     Test_GetPatientDataFile
     Test_GetPatientWorkBookName
-    Test_OpenBed
+    Test_Bed_OpenBed
     Test_CountInterfaceSheets
     Test_CountCalculationSheets
     Test_CanReadFormulariumDb
@@ -30,10 +30,10 @@ Public Sub RunTests()
     MsgBox "All tests ran!", vbExclamation
     
     ' Set the program to the initial state
-    ModApplication.Application_Initialize
+    ModApplication.App_Initialize
     
     ' Set program to close and messages to display again
-    ModApplication.SetDontClose False
+    ModApplication.App_SetDontClose False
     blnDontDisplay = False
 
 End Sub
@@ -51,7 +51,7 @@ Private Sub Test_Open()
 
     On Error GoTo Assert:
     
-    Application_Initialize
+    App_Initialize
     
     Exit Sub
     
@@ -65,7 +65,7 @@ End Sub
 Private Sub Test_Sluit()
 
     On Error GoTo Assert:
-    Application_CloseApplication
+    App_CloseApplication
     
     Exit Sub
 
@@ -125,13 +125,13 @@ Private Sub Test_GetPatientWorkBookName()
 
 End Sub
 
-Private Sub Test_OpenBed()
+Private Sub Test_Bed_OpenBed()
 
     Dim strBed As String
     
-    ModBed.SetBed "Unit 2.9"
-    ModBed.OpenBed
-    strBed = ModBed.GetBed
+    ModBed.Bed_SetBed "Unit 2.9"
+    ModBed.Bed_OpenBed
+    strBed = ModBed.Bed_GetBedName
     
     AssertEqual "Unit 2.9", strBed, "Bed 2.9 should be opened, but strBed: " + strBed + " was open", Not blnDontDisplay
 
@@ -140,7 +140,7 @@ End Sub
 Private Sub Test_SluitBed()
 
     On Error GoTo Assert:
-    ModBed.CloseBed (False)
+    ModBed.Bed_CloseBed (False)
     
     Exit Sub
 

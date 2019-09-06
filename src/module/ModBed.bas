@@ -1,89 +1,86 @@
 Attribute VB_Name = "ModBed"
 Option Explicit
 
-Private Const constVersie As String = "Var_Glob_Versie"
 Private Const constBusy As String = "DB_DatabaseBusy"
-
 Private Const constBed As String = "__1_Bed"
 
-Public Sub SetBed(ByVal strBed As String)
+Public Sub Bed_SetBed(ByVal strBed As String)
 
     ModRange.SetRangeValue constBed, strBed
 
 End Sub
 
-Public Sub SetFileVersie(ByVal dtmVersie As Date)
+Public Sub Bed_SetFileVersion(ByVal dtmVersion As Date)
 
-    ModRange.SetRangeValue constVersie, dtmVersie
+    ModRange.SetRangeValue CONST_PRESCRIPTIONS_VERSION, dtmVersion
 
 End Sub
 
-Public Function GetFileVersie() As Date
+Public Function Bed_GetFileVersion() As Date
 
-    GetFileVersie = ModRange.GetRangeValue(constVersie, Now())
+    Bed_GetFileVersion = ModRange.GetRangeValue(CONST_PRESCRIPTIONS_VERSION, Now())
 
 End Function
 
-Public Function GetDatabaseVersie() As Integer
+Public Function Bed_PrescriptionsVersionGet() As Integer
 
     Dim intVersion As String
     
-    intVersion = IIf(ModRange.GetRangeValue(constVersie, 0) = vbNullString, 0, ModRange.GetRangeValue(constVersie, 0))
+    intVersion = IIf(ModRange.GetRangeValue(CONST_PRESCRIPTIONS_VERSION, 0) = vbNullString, 0, ModRange.GetRangeValue(CONST_PRESCRIPTIONS_VERSION, 0))
     
-    GetDatabaseVersie = intVersion
+    Bed_PrescriptionsVersionGet = intVersion
 
 End Function
 
-Private Sub Test_GetDatabaseVersie()
+Private Sub Test_Bed_PrescriptionsVersionGet()
 
-    ModMessage.ShowMsgBoxOK GetDatabaseVersie()
-
-End Sub
-
-Public Sub SetDatabaseVersie(intVersion As Integer)
-
-    ModRange.SetRangeValue constVersie, intVersion
+    ModMessage.ShowMsgBoxOK Bed_PrescriptionsVersionGet()
 
 End Sub
 
-Public Function GetBed() As String
+Public Sub Bed_PrescriptionsVersionSet(intVersion As Integer)
 
-    GetBed = ModRange.GetRangeValue(constBed, vbNullString)
+    ModRange.SetRangeValue CONST_PRESCRIPTIONS_VERSION, intVersion
+
+End Sub
+
+Public Function Bed_GetBedName() As String
+
+    Bed_GetBedName = ModRange.GetRangeValue(constBed, vbNullString)
 
 End Function
 
-Public Sub OpenBed()
+Public Sub Bed_OpenBed()
 
     ModProgress.StartProgress "Open Bed"
-    OpenBedAsk True, True
+    Bed_OpenBedAndAsk True, True
     ModProgress.FinishProgress
 
 End Sub
 
-
-Private Function IsValidBed(ByVal strBed As String) As Boolean
+Private Function Util_IsValidBed(ByVal strBed As String) As Boolean
 
     Dim varItem As Variant
     
     For Each varItem In ModSetting.GetPedBeds()
         If CStr(varItem) = strBed Then
-            IsValidBed = True
+            Util_IsValidBed = True
             Exit Function
         End If
     Next varItem
     
     For Each varItem In ModSetting.GetNeoBeds()
         If CStr(varItem) = strBed Then
-            IsValidBed = True
+            Util_IsValidBed = True
             Exit Function
         End If
     Next varItem
     
-    IsValidBed = False
+    Util_IsValidBed = False
 
 End Function
 
-Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
+Public Sub Bed_OpenBedAndAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     
     On Error GoTo ErrorOpenBed
 
@@ -97,7 +94,7 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     Dim blnAll As Boolean
     Dim blnNeo As Boolean
     
-    strBed = GetBed()
+    strBed = Bed_GetBedName()
     blnNeo = MetaVision_IsNeonatologie()
     
     If blnAsk Then
@@ -107,19 +104,19 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
         End If
     
         ModPatient.Patient_OpenFileList "Selecteer een patient"
-        If GetBed() = vbNullString Then ' No bed was selected
-            SetBed strBed               ' Put back the old bed
+        If Bed_GetBedName() = vbNullString Then ' No bed was selected
+            Bed_SetBed strBed               ' Put back the old bed
             Exit Sub                    ' And exit sub
         Else
-            strBed = GetBed()
+            strBed = Bed_GetBedName()
             
             If blnShowProgress Then ModProgress.StartProgress strTitle
         End If
     End If
     
-    If Not IsValidBed(strBed) Then Exit Sub
+    If Not Util_IsValidBed(strBed) Then Exit Sub
             
-    strAction = "ModBed.OpenBed"
+    strAction = "ModBed.Bed_OpenBed"
     strParams = Array(strBed)
     
     ModLog.LogActionStart strAction, strParams
@@ -129,12 +126,12 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     strRange = "A1"
     
     If ModWorkBook.CopyWorkbookRangeToSheet(strFileName, strBookName, strRange, shtGlobTemp, True) Then
-        SetFileVersie FileSystem.FileDateTime(strFileName)
-        SetBed strBed
+        Bed_SetFileVersion FileSystem.FileDateTime(strFileName)
+        Bed_SetBed strBed
         
         If shtGlobTemp.Range("A1").CurrentRegion.Rows.Count <= 1 Then
             ModPatient.Patient_ClearData vbNullString, False, True               ' Patient data was empty so clean all current data
-            SetBed strBed
+            Bed_SetBed strBed
         End If
         
         blnAll = ModRange.CopyTempSheetToNamedRanges(True)
@@ -150,7 +147,7 @@ Public Sub OpenBedAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
         
             If blnShowProgress Then ModProgress.StartProgress strTitle
             
-            ModApplication.SetApplicationTitle
+            ModApplication.App_SetApplicationTitle
         End If
     End If
 
@@ -168,13 +165,13 @@ ErrorOpenBed:
     
 End Sub
 
-Private Sub TestOpenBed()
+Private Sub Test_Bed_OpenBed()
 
-    OpenBed
+    Bed_OpenBed
 
 End Sub
 
-Public Sub CloseBed(ByVal blnAsk As Boolean)
+Public Sub Bed_CloseBed(ByVal blnAsk As Boolean)
 
     Dim strBed As String
     Dim strNew As String
@@ -189,17 +186,17 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
 
     On Error GoTo CloseBedError
     
-    strBed = GetBed()
+    strBed = Bed_GetBedName()
     blnNeo = MetaVision_IsNeonatologie()
     
-    strAction = "ModBed.CloseBed"
+    strAction = "ModBed.Bed_CloseBed"
     strParams = Array(blnAsk, strBed)
     LogActionStart strAction, strParams
     
     If strBed = vbNullString Then
         If blnAsk Then     ' No bed selected so ask for a bed
             ModPatient.Patient_OpenFileList "Selecteer een bed"
-            CloseBed False ' And try again, but do not ask again
+            Bed_CloseBed False ' And try again, but do not ask again
             Exit Sub
         Else               ' No bed selected do not ask, so exit
             Exit Sub
@@ -222,7 +219,7 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
             ModNeoInfB.CopyCurrentInfVarToData True   ' Make sure that neo data is updated with latest current infuusbrief
         End If
     
-        If SaveBedToFile(strBed, False, True) Then
+        If Util_SaveBedToFile(strBed, False, True) Then
             ModProgress.FinishProgress
             ModMessage.ShowMsgBoxInfo "Patient is opgeslagen op bed: " & strBed
         Else
@@ -235,19 +232,19 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
         If varReply = vbYes Then
             ModPatient.Patient_OpenFileList "Selecteer een bed"
             
-            strNew = GetBed()
+            strNew = Bed_GetBedName()
             ModProgress.StartProgress "Verplaats Patient Naar Bed: " & strNew
             
-            If Not strNew = vbNullString And SaveBedToFile(strNew, True, True) Then
+            If Not strNew = vbNullString And Util_SaveBedToFile(strNew, True, True) Then
                 If strBed <> vbNullString And strBed <> strNew Then
-                    SetBed strBed
-                    OpenBedAsk False, True
+                    Bed_SetBed strBed
+                    Bed_OpenBedAndAsk False, True
                     
                     Patient_ClearAll False, True
-                    SaveBedToFile strBed, True, True
+                    Util_SaveBedToFile strBed, True, True
                     
-                    SetBed strNew
-                    OpenBedAsk False, True
+                    Bed_SetBed strNew
+                    Bed_OpenBedAndAsk False, True
                     
                     ModProgress.FinishProgress
                     ModMessage.ShowMsgBoxInfo "Patient is overgeplaatst van bed: " & strBed & " naar bed: " & strNew
@@ -260,7 +257,7 @@ Public Sub CloseBed(ByVal blnAsk As Boolean)
                 ModProgress.FinishProgress
                 
                 If strNew = vbNullString Then
-                    SetBed strBed
+                    Bed_SetBed strBed
                     ModMessage.ShowMsgBoxExclam "Patient werd niet opgeslagen"
                 Else
                     ModMessage.ShowMsgBoxExclam "Patient kon niet worden opgeslagen op bed: " & strNew
@@ -282,7 +279,7 @@ CloseBedError:
 
 End Sub
 
-Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean, ByVal blnShowProgress As Boolean) As Boolean
+Private Function Util_SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean, ByVal blnShowProgress As Boolean) As Boolean
 
     Dim strDataRange As String
     Dim strTextRange As String
@@ -301,7 +298,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     On Error GoTo SaveBedToFileError
     
     ' Guard for invalid bed name
-    If Not IsValidBed(strBed) Then GoTo SaveBedToFileError
+    If Not Util_IsValidBed(strBed) Then GoTo SaveBedToFileError
     
     strDataFile = ModSetting.GetPatientDataFile(strBed)
     strTextFile = ModSetting.GetPatientTextFile(strBed)
@@ -313,7 +310,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     strTextName = ModSetting.GetPatientTextWorkBookName(strBed)
     
     dtmVersion = FileSystem.FileDateTime(strDataFile)
-    dtmCurrent = ModBed.GetFileVersie()
+    dtmCurrent = ModBed.Bed_GetFileVersion()
     
     If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 33
     
@@ -348,7 +345,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
         .Save
         .Close
     End With
-    SetFileVersie FileSystem.FileDateTime(strDataFile)
+    Bed_SetFileVersion FileSystem.FileDateTime(strDataFile)
     
     If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 66
     
@@ -368,7 +365,7 @@ Private Function SaveBedToFile(ByVal strBed As String, ByVal blnForce As Boolean
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
         
-    SaveBedToFile = True
+    Util_SaveBedToFile = True
         
     Exit Function
     
@@ -377,7 +374,7 @@ SaveBedToFileError:
     ModLog.LogError Err, "Could not save bed to files with: " & Join(Array(strBed, strDataFile, strTextFile), ", ")
 
     Application.DisplayAlerts = True
-    SaveBedToFile = False
+    Util_SaveBedToFile = False
 
 End Function
 

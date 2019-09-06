@@ -1,13 +1,13 @@
 Attribute VB_Name = "ModAdmin"
 Option Explicit
 
-Public Const constNeoMedContTbl As String = "Tbl_Admin_NeoMedCont"
-Public Const constGlobParEntTbl As String = "Tbl_Admin_ParEnt"
-Public Const constPedMedContTbl As String = "Tbl_Admin_PedMedCont"
+Private Enum ConfigTable
+    PedCont = 1
+    NeoCont = 2
+    Parent = 3
+End Enum
 
-Public Const constNeoMedVerdunning As String = "Var_Neo_MedCont_VerdunningTekst"
-
-Private Function CheckPassword() As Boolean
+Private Function Util_CheckPassword() As Boolean
     
     Dim blnValidPw As Boolean
     
@@ -17,15 +17,15 @@ Private Function CheckPassword() As Boolean
         blnValidPw = False
     End If
     
-    CheckPassword = blnValidPw
+    Util_CheckPassword = blnValidPw
 
 End Function
 
-Public Sub ShowColorPicker()
+Public Sub Admin_ShowColorPicker()
 
     Dim frmPicker As FormColorPicker
     
-    If Not CheckPassword Then Exit Sub
+    If Not Util_CheckPassword Then Exit Sub
     
     Set frmPicker = New FormColorPicker
     
@@ -35,7 +35,7 @@ End Sub
 
 ' ToDo add methods to setup data files and refresh patient data admin jobs
 
-Private Sub SetUpDataDir(ByVal strBedsFilePath As String, arrBeds() As Variant)
+Private Sub Util_SetUpDataDir(ByVal strBedsFilePath As String, arrBeds() As Variant)
     
     Dim strPath As String
     Dim enmRes As VbMsgBoxResult
@@ -55,39 +55,39 @@ Private Sub SetUpDataDir(ByVal strBedsFilePath As String, arrBeds() As Variant)
     
 End Sub
 
-Public Sub SetUpPedDataDir()
+Public Sub Admin_SetUpPedDataDir()
     
     Dim arrBeds() As Variant
     Dim strBedsFilePath As String
         
-    If Not CheckPassword Then Exit Sub
+    If Not Util_CheckPassword Then Exit Sub
     
     arrBeds = ModSetting.GetPedBeds()
     strBedsFilePath = ModSetting.GetPatientDataPath() & ModSetting.CONST_PICU_BEDS
     
-    SetUpDataDir strBedsFilePath, arrBeds
+    Util_SetUpDataDir strBedsFilePath, arrBeds
     
     ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling Pediatrie"
 
 End Sub
 
-Public Sub SetUpNeoDataDir()
+Public Sub Admin_SetUpNeoDataDir()
     
     Dim arrBeds() As Variant
     Dim strBedsFilePath As String
     
-    If Not CheckPassword Then Exit Sub
+    If Not Util_CheckPassword Then Exit Sub
     
     arrBeds = ModSetting.GetNeoBeds()
     strBedsFilePath = ModSetting.GetPatientDataPath() & ModSetting.CONST_NICU_BEDS
     
-    SetUpDataDir strBedsFilePath, arrBeds
+    Util_SetUpDataDir strBedsFilePath, arrBeds
     
     ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling Neonatologie"
 
 End Sub
 
-Public Sub ModAdmin_OpenLogFiles()
+Public Sub Admin_OpenLogFiles()
 
     Dim objForm As FormLog
     
@@ -97,7 +97,7 @@ Public Sub ModAdmin_OpenLogFiles()
     
 End Sub
 
-Private Sub SelectAdminSheet(objSheet As Worksheet, objRange As Range, strTitle As String)
+Private Sub Util_SelectAdminSheet(objSheet As Worksheet, objRange As Range, strTitle As String)
 
     Dim objEdit As AllowEditRange
     Dim blnEdit As Boolean
@@ -129,7 +129,7 @@ Private Sub SelectAdminSheet(objSheet As Worksheet, objRange As Range, strTitle 
 
 End Sub
 
-Public Sub Admin_TblNeoMedCont()
+Public Sub Admin_MedContNeoConfig()
     
     Dim frmConfig As FormAdminNeoMedCont
     
@@ -139,13 +139,8 @@ Public Sub Admin_TblNeoMedCont()
     
 End Sub
 
-Public Sub Admin_TblPedMedCont()
 
-    Admin_ImportContPedContMed
-
-End Sub
-
-Public Sub Admin_TblGlobParEnt()
+Public Sub Admin_ParEntConfig()
     
     Dim frmConfig As FormAdminParent
     
@@ -155,13 +150,13 @@ Public Sub Admin_TblGlobParEnt()
     
 End Sub
 
-Public Function Admin_GetNeoMedVerdunning() As String
+Public Function Admin_MedContNeoGetVerdunning() As String
 
-    Admin_GetNeoMedVerdunning = ModRange.GetRangeValue(constNeoMedVerdunning, vbNullString)
+    Admin_MedContNeoGetVerdunning = ModRange.GetRangeValue(CONST_MEDCONTVERDUNNING_NEO, vbNullString)
 
 End Function
 
-Public Function Admin_GetNeoMedCont() As Collection
+Public Function Admin_MedContNeoGetCollection() As Collection
 
     Dim objCol As Collection
     Dim objMed As ClassNeoMedCont
@@ -196,16 +191,16 @@ Public Function Admin_GetNeoMedCont() As Collection
         objMed.ShelfLife = objTable.Cells(intN, 16)
         objMed.ShelfCondition = objTable.Cells(intN, 17)
         objMed.PreparationText = objTable.Cells(intN, 18)
-        objMed.DilutionText = ModRange.GetRangeValue(constNeoMedVerdunning, vbNullString)
+        objMed.DilutionText = ModRange.GetRangeValue(CONST_MEDCONTVERDUNNING_NEO, vbNullString)
         
         objCol.Add objMed, objMed.Generic
     Next
     
-    Set Admin_GetNeoMedCont = objCol
+    Set Admin_MedContNeoGetCollection = objCol
 
 End Function
 
-Public Sub Admin_SetNeoMedCont(objNeoMedContCol As Collection, ByVal strVerdunning As String)
+Public Sub Admin_MedContNeoSetCollection(objNeoMedContCol As Collection, ByVal strVerdunning As String)
 
     Dim objMed As ClassNeoMedCont
     Dim objTable As Range
@@ -247,13 +242,13 @@ Public Sub Admin_SetNeoMedCont(objNeoMedContCol As Collection, ByVal strVerdunni
         
     Next
     
-    ModRange.SetRangeValue constNeoMedVerdunning, strVerdunning
+    ModRange.SetRangeValue CONST_MEDCONTVERDUNNING_NEO, strVerdunning
     
     ModProgress.FinishProgress
     
 End Sub
 
-Public Function Admin_GetParEnt() As Collection
+Public Function Admin_ParEntGetCollection() As Collection
 
     Dim objCol As Collection
     Dim objParEnt As ClassParent
@@ -287,11 +282,11 @@ Public Function Admin_GetParEnt() As Collection
         objCol.Add objParEnt, objParEnt.Name
     Next
     
-    Set Admin_GetParEnt = objCol
+    Set Admin_ParEntGetCollection = objCol
 
 End Function
 
-Public Sub Admin_SetParEnt(objParEntCol As Collection)
+Public Sub Admin_ParEntSetCollection(objParEntCol As Collection)
 
     Dim objParEnt As ClassParent
     Dim objTable As Range
@@ -330,7 +325,7 @@ Public Sub Admin_SetParEnt(objParEntCol As Collection)
     
 End Sub
 
-Private Sub ExportContMed(ByVal strName As String, ByVal strTable As String, ByVal objHeading As Range, ByVal objSrc As Range)
+Private Sub Util_ExportContMed(ByVal strName As String, ByVal strTable As String, ByVal objHeading As Range, ByVal objSrc As Range)
     
     Dim objWbk As Workbook
     Dim strFile As String
@@ -385,7 +380,29 @@ ErrorHandler:
 
 End Sub
 
-Public Sub Admin_ExportPedContMed()
+Public Sub Admin_ParentImport()
+    
+
+End Sub
+
+Public Sub Admin_ParentExport()
+
+
+End Sub
+
+Public Sub Admin_MedDiscImport()
+
+    Database_ImportConfigMedDisc
+
+End Sub
+
+Public Sub Admin_MedDiscExport()
+
+    Formularium_ExportMedDiscConfig True
+
+End Sub
+
+Public Sub Admin_MedContPedExport()
     
     Dim objHeading As Range
     Dim objSrc As Range
@@ -395,13 +412,14 @@ Public Sub Admin_ExportPedContMed()
     strName = "PedMedCont"
     
     Set objHeading = shtPedTblMedIV.Range("B1:S3")
-    Set objSrc = shtPedTblMedIV.Range(constPedMedContTbl)
+    Set objSrc = shtPedTblMedIV.Range(CONST_TBL_MEDCONT_PED)
 
-    ExportContMed strName, constPedMedContTbl, objHeading, objSrc
+    Util_ExportContMed strName, CONST_TBL_MEDCONT_PED, objHeading, objSrc
 
 End Sub
 
-Public Sub Admin_ExportNeoContMed()
+' ToDo add dilution text
+Public Sub Admin_MedContNeoExport()
     
     Dim objHeading As Range
     Dim objSrc As Range
@@ -411,13 +429,13 @@ Public Sub Admin_ExportNeoContMed()
     strName = "NeoMedCont"
     
     Set objHeading = shtNeoTblMedIV.Range("B2:T2")
-    Set objSrc = shtNeoTblMedIV.Range(constNeoMedContTbl)
+    Set objSrc = shtNeoTblMedIV.Range(CONST_TBL_MEDCONT_NEO)
 
-    ExportContMed strName, constNeoMedContTbl, objHeading, objSrc
+    Util_ExportContMed strName, CONST_TBL_MEDCONT_NEO, objHeading, objSrc
 
 End Sub
 
-Public Sub Admin_ImportContPedContMed()
+Public Sub Admin_MedContPedImport()
 
     Dim objConfigWbk As Workbook
     Dim objSrc As Range
@@ -443,8 +461,8 @@ Public Sub Admin_ImportContPedContMed()
     Application.DisplayAlerts = False
         
     Set objConfigWbk = Workbooks.Open(strFile, True, True)
-    Set objSrc = objConfigWbk.Sheets(constPedMedContTbl).Range(constPedMedContTbl)
-    Set objDst = ModRange.GetRange(constPedMedContTbl)
+    Set objSrc = objConfigWbk.Sheets(CONST_TBL_MEDCONT_PED).Range(CONST_TBL_MEDCONT_PED)
+    Set objDst = ModRange.GetRange(CONST_TBL_MEDCONT_PED)
         
     Sheet_CopyRangeFormulaToDst objSrc, objDst
     Database_SavePedConfigMedCont
@@ -466,3 +484,108 @@ HandleError:
 
 End Sub
 
+
+Public Sub Admin_MedContNeoImport()
+
+'    Dim objConfigWbk As Workbook
+'    Dim objSrc As Range
+'    Dim objDst As Range
+'    Dim lngErr As Long
+'    Dim strFile As String
+'
+'    Dim objMed As ClassNeoMedCont
+'
+'    strFile = ModFile.GetFileWithDialog
+'
+'    Dim strMsg As String
+'
+'    On Error GoTo HandleError
+'
+'    Application.DisplayAlerts = False
+'
+'    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+'    Set objSrc = objConfigWbk.Sheets(CONST_TBL_MEDCONT_NEO).Range(CONST_TBL_MEDCONT_NEO)
+'    Set objDst = ModRange.GetRange(CONST_TBL_MEDCONT_NEO)
+'
+'    Sheet_CopyRangeFormulaToDst objSrc, objDst
+'    Sheet_CopyRangeFormulaToDst objConfigWbk.Sheets(CONST_MEDCONTVERDUNNING_NEO).Range("A1"), ModRange.GetRange(CONST_MEDCONTVERDUNNING_NEO)
+'
+'    Set m_MedCol = ModAdmin.Admin_MedContNeoGetCollection()
+'
+'    lbxMedicamenten.Clear
+'    For Each objMed In m_MedCol
+'        lbxMedicamenten.AddItem objMed.Generic
+'    Next
+'
+'    ClearMedDetails
+'
+'    objConfigWbk.Close
+'    Application.DisplayAlerts = True
+'
+'    Exit Sub
+'
+'HandleError:
+'
+'    objConfigWbk.Close
+'    Application.DisplayAlerts = True
+'    ModLog.LogError Err, "Could not import: " & strFile
+
+End Sub
+
+Private Sub Util_ConfigImport(ByVal strTable, ByVal intTable As ConfigTable, ByVal strMsg As String)
+
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim objDst As Range
+    Dim lngErr As Long
+    Dim strFile As String
+    Dim intVersion As Integer
+    Dim vbAnswer
+        
+    On Error GoTo HandleError
+    
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    strFile = ModFile.GetFileWithDialog
+        
+    strMsg = "Dit bestand importeren?" & vbNewLine & strFile
+    If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
+       
+    Application.DisplayAlerts = False
+        
+    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+    Set objSrc = objConfigWbk.Sheets(strTable).Range(strTable)
+    Set objDst = ModRange.GetRange(strTable)
+        
+    Sheet_CopyRangeFormulaToDst objSrc, objDst
+    Select Case intTable
+    
+        Case PedCont
+            Database_SavePedConfigMedCont
+            intVersion = Database_GetLatestConfigMedContVersion("Pediatrie")
+        
+        Case NeoCont
+            Sheet_CopyRangeFormulaToDst objConfigWbk.Sheets(CONST_MEDCONTVERDUNNING_NEO).Range("A1"), ModRange.GetRange(CONST_MEDCONTVERDUNNING_NEO)
+            Database_SaveNeoConfigMedCont
+            intVersion = Database_GetLatestConfigMedContVersion("Neonatologie")
+        
+        Case Parent
+            Database_SaveConfigParEnt
+            
+    End Select
+    
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    
+    strMsg = "De meest recente versie van de configuratie is nu: " & intVersion
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    Exit Sub
+    
+HandleError:
+
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not import: " & strFile
+
+End Sub

@@ -99,7 +99,9 @@ versie 0.50.35-beta
 - afronding discontinue medicatie gaat nog niet goed
 - NaCl 0,9% niet in de TPN brief
 
+- Verder: de hyperhydratievloeistof bij chemotherapie die ze in het Máxima gebruiken is NaCl 0.45%/Gluc 2.5%. 
 
-
+- bugje: kan niet eerdere versie openen, gaat weer naar de meest recente
+- export discontinue medicatie ontbreekt nog
 
 

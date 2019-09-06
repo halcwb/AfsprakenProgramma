@@ -17,7 +17,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             shtGlobGuiFront.Select
         
         Case "btnClose"                                     ' -> Programma Afsluiten
-            Application_CloseApplication
+            App_CloseApplication
         
         Case "btnClear"                                     ' -> Alles Verwijderen
             ModProgress.StartProgress "Patient Data Verwijderen"
@@ -30,7 +30,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             If Setting_UseDatabase Then
                 Patient_OpenPatientAndAsk
             Else
-                ModBed.OpenBed
+                ModBed.Bed_OpenBed
             End If
             ModSheet.SelectPedOrNeoStartSheet True
         
@@ -38,7 +38,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
             If Setting_UseDatabase Then
                 Patient_SavePatient
             Else
-                ModBed.CloseBed True
+                ModBed.Bed_CloseBed True
             End If
             ModSheet.SelectPedOrNeoStartSheet True
         
@@ -153,7 +153,7 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpDevelopment                                     ' -- DEVELOPMENT --
         
         Case "btnDevMode"                                   ' -> Development Mode
-            ModApplication.ToggleDevelopmentMode
+            ModApplication.App_ToggleDevelopmentMode
         
         Case "btnToggleLogging"                             ' -> Toggle Logging
             ModSetting.ToggleLogging
@@ -179,16 +179,16 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
              ModMessage.ShowMsgBoxExclam "Nog niet geimplementeerd"
         
         Case "btnSetColors"                                 ' -> Kleuren Instellen
-             ModAdmin.ShowColorPicker
+             ModAdmin.Admin_ShowColorPicker
         
         Case "btnCreatePedData"                             ' -> Pediatrie DataFiles
-             ModAdmin.SetUpPedDataDir
+             ModAdmin.Admin_SetUpPedDataDir
         
         Case "btnCreateNeoData"                             ' -> Neonatologie DataFiles
-             ModAdmin.SetUpNeoDataDir
+             ModAdmin.Admin_SetUpNeoDataDir
         
         Case "btnOpenLogFiles"                              ' -> Log files openen
-             ModAdmin.ModAdmin_OpenLogFiles
+             ModAdmin.Admin_OpenLogFiles
         
         Case "btnRefreshMedOpdr"                            ' -> MetaVision Medicatie Opdrachten Verversen
              ModMetaVision.MetaVision_GetMedicatieOpdrachten
@@ -196,22 +196,37 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         'grpFB                                              ' -- ADMISTRATION APOTHEEK --
         
         Case "btnNeoMedCont"                                ' -> Beheer Continue Medicatie Neo
-             ModAdmin.Admin_TblNeoMedCont
+             ModAdmin.Admin_MedContNeoConfig
              
-        Case "btnNeoMedContExport"                          ' -> Beheer Continue Medicatie Neo Exporteren
-            ModAdmin.Admin_ExportNeoContMed
-        
-        Case "btnPedMedCont"                                ' -> Beheer Continue Medicatie Ped
-             ModAdmin.Admin_TblPedMedCont
-        
-        Case "btnPedMedContExport"                          ' -> Beheer Continue Medicatie Ped Exporteren
-            ModAdmin.Admin_ExportPedContMed
-        
         Case "btnParent"                                    ' -> Beheer ParEnterale Vloeistoffen
-             ModAdmin.Admin_TblGlobParEnt
+             ModAdmin.Admin_ParEntConfig
         
         Case "btnMedDisc"                                   ' -> Beheer Discontinue medicatie
              ModDatabase.Database_ImportConfigMedDisc
+                
+        Case "btnNeoMedContImport"                          ' -> Beheer Continue Medicatie Neo Exporteren
+            ModAdmin.Admin_MedContNeoImport
+        
+        Case "btnNeoMedContExport"                          ' -> Beheer Continue Medicatie Neo Exporteren
+            ModAdmin.Admin_MedContNeoExport
+        
+        Case "btnPedMedContImport"                          ' -> Beheer Continue Medicatie Ped Importeren
+             ModAdmin.Admin_MedContPedImport
+        
+        Case "btnPedMedContExport"                          ' -> Beheer Continue Medicatie Ped Exporteren
+            ModAdmin.Admin_MedContPedExport
+                
+        Case "btnParentImport"                              ' -> Beheer Parenteralia Ped Importeren
+             ModAdmin.Admin_ParentImport
+        
+        Case "btnParentExport"                              ' -> Beheer Parenteralia Ped Exporteren
+            ModAdmin.Admin_ParentExport
+        
+        Case "btnDiscMedImport"                             ' -> Beheer Discontinue Medicatie Ped Importeren
+             ModAdmin.Admin_MedDiscImport
+        
+        Case "btnPedMedContExport"                          ' -> Beheer Discontinue Medicatie Ped Exporteren
+            ModAdmin.Admin_MedDiscExport
         
         'grpFB                                              ' -- ACCEPTATIE TESTS --
         

@@ -5,53 +5,39 @@ Private objConn As ADODB.Connection
 
 Private Const constSecret As String = "secret"
 
-Private Const constVersie As String = "Var_Glob_Versie"
+Private Const CONST_CLEARDATABASE = "dbo.ClearDatabase"
 
-Private Const constPatNum As String = "__0_PatNum"
-Private Const constAN As String = "__2_AchterNaam"
-Private Const constVN As String = "__3_VoorNaam"
-Private Const constGebDatum As String = "__4_GebDatum"
-Private Const constOpnDat As String = "_Pat_OpnDatum"
-Private Const constGewicht As String = "_Pat_Gewicht"
-Private Const constLengte As String = "_Pat_Lengte"
-Private Const constGeslacht As String = "_Pat_Geslacht"
-Private Const constDagen As String = "_Pat_GestDagen"
-Private Const constWeken As String = "_Pat_GestWeken"
-Private Const constGebGew As String = "_Pat_GebGew"
+Private Const CONST_GET_CONFIG_MEDCONT_VERSIONS = "[dbo].[GetConfigMedContVersionsForDepartment]"
+Private Const CONST_GET_VERSION_CONFIG_MEDCONT = "[dbo].[GetConfigMedContForDepartmentWithVersion]"
+Private Const CONST_GET_LATEST_CONFIG_MEDCONT = "[dbo].[GetConfigMedContForDepartmentLatest]"
+Private Const CONST_INSERT_CONFIG_MEDCONT = "[dbo].[InsertConfigMedCont]"
 
-Public Const CONST_CLEARDATABASE = "dbo.ClearDatabase"
+Private Const CONST_GET_CONFIG_PARENT_VERSIONS = "[dbo].[GetConfigParEntVersions]"
+Private Const CONST_GET_VERSION_CONFIG_PARENT = "dbo.GetConfigParEntForVersion"
+Private Const CONST_GET_LATEST_CONFIG_PARENT = "[dbo].[GetConfigParEntLatest]"
+Private Const CONST_INSERT_CONFIG_PARENT = "[dbo].[InsertConfigParEnt]"
 
-Public Const CONST_GET_CONFIG_MEDCONT_VERSIONS = "[dbo].[GetConfigMedContVersionsForDepartment]"
-Public Const CONST_GET_VERSION_CONFIG_MEDCONT = "[dbo].[GetConfigMedContForDepartmentWithVersion]"
-Public Const CONST_GET_LATEST_CONFIG_MEDCONT = "[dbo].[GetConfigMedContForDepartmentLatest]"
-Public Const CONST_INSERT_CONFIG_MEDCONT = "[dbo].[InsertConfigMedCont]"
+Private Const CONST_GET_PRESCRIPTION_VERSIONS = "[dbo].[GetPrescriptionVersionsForHospitalNumber]"
+Private Const CONST_GET_LATEST_PRESCRIPTION_VERSION = "dbo.GetLatestPrescriptionVersionForHospitalNumber"
+Private Const CONST_GET_VERSION_PRESCRIPTIONDATA = "dbo.GetPrescriptionDataForVersion"
+Private Const CONST_GET_LATEST_PRESCRIPTIONDATA = "dbo.GetPrescriptionDataLatest"
+Private Const CONST_INSERT_PRESCRIPTIONDATA = "dbo.InsertPrescriptionData"
 
-Public Const CONST_GET_CONFIG_PARENT_VERSIONS = "[dbo].[GetConfigParEntVersions]"
-Public Const CONST_GET_VERSION_CONFIG_PARENT = "dbo.GetConfigParEntForVersion"
-Public Const CONST_GET_LATEST_CONFIG_PARENT = "[dbo].[GetConfigParEntLatest]"
-Public Const CONST_INSERT_CONFIG_PARENT = "[dbo].[InsertConfigParEnt]"
+Private Const CONST_INSERT_PRESCRIPTIONTEXT = "dbo.InsertPrescriptionText"
 
-Public Const CONST_GET_PRESCRIPTION_VERSIONS = "[dbo].[GetPrescriptionVersionsForHospitalNumber]"
-Public Const CONST_GET_LATEST_PRESCRIPTION_VERSION = "dbo.GetLatestPrescriptionVersionForHospitalNumber"
-Public Const CONST_GET_VERSION_PRESCRIPTIONDATA = "dbo.GetPrescriptionDataForVersion"
-Public Const CONST_GET_LATEST_PRESCRIPTIONDATA = "dbo.GetPrescriptionDataLatest"
-Public Const CONST_INSERT_PRESCRIPTIONDATA = "dbo.InsertPrescriptionData"
+Private Const CONST_INSERT_LOG = "dbo.InsertLog"
 
-Public Const CONST_INSERT_PRESCRIPTIONTEXT = "dbo.InsertPrescriptionText"
+Private Const CONST_GET_PRESCRIBERS = "dbo.GetPrescribers"
+Private Const CONST_INSERT_PRESCRIBER = "InsertPrescriber"
+Private Const CONST_UPDATE_PRESCRIBER = "UpdatePrescriber"
 
-Public Const CONST_INSERT_LOG = "dbo.InsertLog"
+Private Const CONST_GET_PATIENTS = "dbo.GetPatients"
+Private Const CONST_INSERT_PATIENT = "InsertPatient"
+Private Const CONST_UPDATE_PATIENT = "UpdatePatient"
 
-Public Const CONST_GET_PRESCRIBERS = "dbo.GetPrescribers"
-Public Const CONST_INSERT_PRESCRIBER = "InsertPrescriber"
-Public Const CONST_UPDATE_PRESCRIBER = "UpdatePrescriber"
+Private Const constMedDiscTbl = "Table"
 
-Public Const CONST_GET_PATIENTS = "dbo.GetPatients"
-Public Const CONST_INSERT_PATIENT = "InsertPatient"
-Public Const CONST_UPDATE_PATIENT = "UpdatePatient"
-
-Public Const constMedDiscTbl = "Table"
-
-Private Sub InitConnection()
+Private Sub Util_InitConnection()
 
     Dim strSecret As String
     Dim strUser As String
@@ -92,13 +78,13 @@ Private Sub InitConnection()
     
 InitConnectionError:
     MsgBox "Geen toegang tot de database!"
-    ModLog.LogError Err, "InitConnection Failed"
+    ModLog.LogError Err, "Util_InitConnection Failed"
 
 End Sub
 
 Private Sub Test_InitConnectionWithAPDB()
 
-    InitConnection
+    Util_InitConnection
 
 End Sub
 
@@ -116,7 +102,7 @@ Public Function Database_GetPatients() As Collection
     
     Set colPatienten = New Collection
 
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     
@@ -147,59 +133,59 @@ Private Sub Test_GetPatients()
 
 End Sub
 
-Private Function PatientExists(strHospN As String) As Boolean
+Private Function Util_PatientExists(strHospN As String) As Boolean
 
     Dim strSql As String
     
     strSql = "SELECT * FROM " & CONST_GET_PATIENTS & " ('" & strHospN & "')"
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
 
-    PatientExists = Not objConn.Execute(strSql).EOF
+    Util_PatientExists = Not objConn.Execute(strSql).EOF
 
 End Function
 
-Private Sub Test_PatientExists()
+Private Sub Test_Util_PatientExists()
 
-    MsgBox PatientExists("000")
+    MsgBox Util_PatientExists("000")
 
 End Sub
 
-Private Function PrescriberExists(strUser As String) As Boolean
+Private Function Util_PrescriberExists(strUser As String) As Boolean
 
     Dim strSql As String
     
     strSql = "SELECT * FROM " & CONST_GET_PRESCRIBERS & " (" & strUser & ")"
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
 
-    PrescriberExists = Not objConn.Execute(strSql).EOF
+    Util_PrescriberExists = Not objConn.Execute(strSql).EOF
 
 End Function
 
-Private Sub Test_PrescriberExists()
+Private Sub Test_Util_PrescriberExists()
 
-    MsgBox PrescriberExists("000")
+    MsgBox Util_PrescriberExists("000")
 
 End Sub
 
-Private Function WrapString(varItem As Variant) As Variant
+Private Function Util_WrapString(varItem As Variant) As Variant
 
-    WrapString = "'" & varItem & "'"
-
-End Function
-
-Private Function WrapDateTime(strDateTime As String) As String
-
-    WrapDateTime = "{ts'" & strDateTime & "'}"
+    Util_WrapString = "'" & varItem & "'"
 
 End Function
 
-Public Function WrapTransaction(ByVal strSql As String, ByVal strName As String) As String
+Private Function Util_WrapDateTime(strDateTime As String) As String
+
+    Util_WrapDateTime = "{ts'" & strDateTime & "'}"
+
+End Function
+
+Private Function Util_WrapTransaction(ByVal strSql As String, ByVal strName As String) As String
 
     Dim strTrans As String
     
@@ -212,7 +198,7 @@ Public Function WrapTransaction(ByVal strSql As String, ByVal strName As String)
     strTrans = strTrans & "ROLLBACK TRANSACTION [" & strName & "]" & vbNewLine
     strTrans = strTrans & "END CATCH"
     
-    WrapTransaction = strTrans
+    Util_WrapTransaction = strTrans
 
 End Function
 
@@ -232,29 +218,29 @@ Public Sub Database_SavePatient()
     
     On Error GoTo SavePatientError
     
-    strHN = WrapString(ModPatient.Patient_GetHospitalNumber)
-    strBD = WrapString(ModDate.FormatDateYearMonthDay(ModPatient.Patient_BirthDate))
-    strAN = WrapString(ModPatient.Patient_GetLastName)
-    strVN = WrapString(ModPatient.Patient_GetFirstName)
-    strGN = WrapString(ModRange.GetRangeValue(constGeslacht, Null))
-    intGW = ModRange.GetRangeValue(constWeken, Null)
-    intGD = ModRange.GetRangeValue(constDagen, Null)
-    dblBW = ModRange.GetRangeValue(constGebGew, Null)
+    strHN = Util_WrapString(ModPatient.Patient_GetHospitalNumber)
+    strBD = Util_WrapString(ModDate.FormatDateYearMonthDay(ModPatient.Patient_BirthDate))
+    strAN = Util_WrapString(ModPatient.Patient_GetLastName)
+    strVN = Util_WrapString(ModPatient.Patient_GetFirstName)
+    strGN = Util_WrapString(ModRange.GetRangeValue(CONST_GENDER_RANGE, Null))
+    intGW = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, Null)
+    intGD = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, Null)
+    dblBW = ModRange.GetRangeValue(CONST_BIRTHWEIGHT_RANGE, Null)
         
     arrSql = Array(strHN, strBD, strAN, strVN, strGN, intGW, intGD, dblBW)
         
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     
-    If PatientExists(ModPatient.Patient_GetHospitalNumber()) Then
+    If Util_PatientExists(ModPatient.Patient_GetHospitalNumber()) Then
         strSql = "EXEC " & CONST_UPDATE_PATIENT & " "
     Else
         strSql = "EXEC " & CONST_INSERT_PATIENT & " "
     End If
     
     strSql = strSql + (Join(arrSql, ", "))
-    strSql = WrapTransaction(strSql, "save_patient")
+    strSql = Util_WrapTransaction(strSql, "save_patient")
     
     objConn.Execute strSql
     
@@ -279,7 +265,7 @@ Public Function Database_GetLastStandardPatientHospNum() As String
     
     strSql = "SELECT dbo.GetLastStandardPatientHospNum()"
 
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
@@ -315,25 +301,25 @@ Public Sub Database_SavePrescriber()
     
     On Error GoTo SavePrescriberError
     
-    strUser = WrapString(ModRange.GetRangeValue("_User_Login", ""))
-    strLN = WrapString(ModRange.GetRangeValue("_User_FirstName", ""))
-    strFN = WrapString(ModRange.GetRangeValue("_User_LastName", ""))
-    strRole = WrapString(ModRange.GetRangeValue("_User_Type", ""))
+    strUser = Util_WrapString(ModRange.GetRangeValue("_User_Login", ""))
+    strLN = Util_WrapString(ModRange.GetRangeValue("_User_FirstName", ""))
+    strFN = Util_WrapString(ModRange.GetRangeValue("_User_LastName", ""))
+    strRole = Util_WrapString(ModRange.GetRangeValue("_User_Type", ""))
         
     arrSql = Array(strUser, strLN, strFN, strRole)
         
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     
-    If PrescriberExists(strUser) Then
+    If Util_PrescriberExists(strUser) Then
         strSql = "EXEC " & CONST_UPDATE_PRESCRIBER & " "
     Else
         strSql = "EXEC " & CONST_INSERT_PRESCRIBER & " "
     End If
     
     strSql = strSql & (Join(arrSql, ", "))
-    strSql = WrapTransaction(strSql, "save_prescriber")
+    strSql = Util_WrapTransaction(strSql, "save_prescriber")
     
     ModUtils.CopyToClipboard strSql
     objConn.Execute strSql
@@ -351,13 +337,13 @@ SavePrescriberError:
     
 End Sub
 
-Private Sub ClearTestDatabase()
+Public Sub Database_ClearTestDatabase()
 
     Dim strSql As String
     
     strSql = "EXEC " & CONST_CLEARDATABASE & "  'UMCU_WKZ_AP_Test'"
 
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -377,7 +363,7 @@ End Sub
 Private Sub Test_SavePrescriber()
 
     Database_SavePrescriber
-    ModMessage.ShowMsgBoxOK PrescriberExists(ModMetaVision.MetaVision_GetUserLogin())
+    ModMessage.ShowMsgBoxOK Util_PrescriberExists(ModMetaVision.MetaVision_GetUserLogin())
 
 End Sub
 
@@ -391,7 +377,7 @@ Public Function Database_GetLatestPrescriptionVersion(strHospNum) As String
     
     strSql = "SELECT " & CONST_GET_LATEST_PRESCRIPTION_VERSION & "('" & strHospNum & "')"
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     
@@ -424,7 +410,7 @@ Private Sub Test_Database_GetLatestPrescriptionVersion()
 
 End Sub
 
-Private Sub SaveData(ByVal strHospNum As String, ByVal strPrescriber As String, objData As Range, objText As Range, ByVal blnProgress As Boolean)
+Public Sub Database_SaveData(ByVal strHospNum As String, ByVal strPrescriber As String, objData As Range, objText As Range, ByVal blnProgress As Boolean)
 
     Dim strParam As String
     Dim strSql As String
@@ -444,7 +430,7 @@ Private Sub SaveData(ByVal strHospNum As String, ByVal strPrescriber As String, 
     strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
     
     strLatest = "SELECT @versionID = " & CONST_GET_LATEST_PRESCRIPTION_VERSION & "('" & strHospNum & "')"
-    strLatest = GetVersionSQL(strLatest) & vbNewLine
+    strLatest = Util_GetVersionSQL(strLatest) & vbNewLine
     strSql = strSql & vbNewLine & strLatest
        
     intC = objData.Rows.Count
@@ -460,7 +446,7 @@ Private Sub SaveData(ByVal strHospNum As String, ByVal strPrescriber As String, 
         If blnProgress Then ModProgress.SetJobPercentage "Data wegschrijven", intC, intN
     Next intN
     
-    strSql = strSql & GetLogSQL("Save patient data", False, strHospNum, "PrescriptionData")
+    strSql = strSql & Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionData")
     strSql = strSql & vbNewLine
     strSql = strSql & vbNewLine
     
@@ -475,17 +461,17 @@ Private Sub SaveData(ByVal strHospNum As String, ByVal strPrescriber As String, 
         If blnProgress Then ModProgress.SetJobPercentage "Text wegschrijven naar de database", intC, intN
     Next intN
     
-    strSql = strSql & GetLogSQL("Save patient data", False, strHospNum, "PrescriptionText")
+    strSql = strSql & Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionText")
     strSql = strSql & vbNewLine
     strSql = strSql & vbNewLine
     
-    strSql = ModDatabase.WrapTransaction(strSql, "save_data")
+    strSql = ModDatabase.Util_WrapTransaction(strSql, "save_data")
     ModUtils.CopyToClipboard strSql
     objConn.Open
     objConn.Execute strSql, adExecuteNoRecords
     objConn.Close
     
-    ModBed.SetDatabaseVersie Database_GetLatestPrescriptionVersion(strHospNum)
+    ModBed.Bed_PrescriptionsVersionSet Database_GetLatestPrescriptionVersion(strHospNum)
     
     Exit Sub
 
@@ -499,19 +485,13 @@ SaveDataError:
     
 End Sub
 
-Public Sub Database_SaveData(strHospNum, strPrescriber As String, objData As Range, objText As Range, blnProgress As Boolean)
+Private Function Util_IsLogical(ByVal varVal As Variant) As Boolean
 
-    SaveData strHospNum, strPrescriber, objData, objText, blnProgress
-    
-End Sub
-
-Private Function IsLogical(ByVal varVal As Variant) As Boolean
-
-    IsLogical = LCase(varVal) = "waar" Or LCase(varVal) = "onwaar"
+    Util_IsLogical = LCase(varVal) = "waar" Or LCase(varVal) = "onwaar"
     
 End Function
 
-Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Integer = 0)
+Private Sub Util_GetPatientDataForHospNumAndVersion(ByVal strHospNum, Optional ByVal intVersion As Integer = 0)
 
     Dim strSql As String
     Dim intC As Long
@@ -534,7 +514,7 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
         strSql = strSql & CONST_GET_VERSION_PRESCRIPTIONDATA & "('" & strHospNum & "', " & intVersion & ")"
     End If
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     
@@ -546,7 +526,7 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
     blnVersionSet = Patient_IsStandard(strHospNum) And Not blnIsStandard ' Patient standard is applied, keep the current version
     Do While Not objRs.EOF
         If Not blnVersionSet Then
-            ModRange.SetRangeValue constVersie, objRs.Fields("VersionID").Value
+            ModRange.SetRangeValue CONST_PRESCRIPTIONS_VERSION, objRs.Fields("VersionID").Value
             blnVersionSet = True
         End If
         
@@ -554,7 +534,7 @@ Private Sub GetPatientData(ByVal strHospNum, Optional ByVal intVersion As Intege
         varVal = Trim(objRs.Fields("Data").Value)
         
         If IsNumeric(varVal) Then varVal = CDbl(varVal)
-        If IsLogical(varVal) Then varVal = CBool(varVal)
+        If Util_IsLogical(varVal) Then varVal = CBool(varVal)
         
         If Patient_IsStandard(strHospNum) And ModString.StartsWith(strPar, "__") And Not blnIsStandard Then
             'Do not change patient details for loading standard data
@@ -586,13 +566,13 @@ End Sub
 
 Public Sub Database_GetPatientDataForVersion(strHospNum As String, intVersion)
 
-    GetPatientData strHospNum, intVersion
+    Util_GetPatientDataForHospNumAndVersion strHospNum, intVersion
     
 End Sub
 
 Public Sub Database_GetPatientData(strHospNum As String)
 
-    GetPatientData strHospNum
+    Util_GetPatientDataForHospNumAndVersion strHospNum
     
 End Sub
 
@@ -604,7 +584,7 @@ Private Sub Test_DatabaseGetPatientData()
 
 End Sub
 
-Private Function GetVersionSQL(strGetLatest As String) As String
+Private Function Util_GetVersionSQL(strGetLatest As String) As String
 
     Dim strSql As String
     
@@ -614,11 +594,11 @@ Private Function GetVersionSQL(strGetLatest As String) As String
     strSql = strSql & "SET @versionDate = GETDATE()" & vbNewLine
     strSql = strSql & "" & vbNewLine
 
-    GetVersionSQL = strSql
+    Util_GetVersionSQL = strSql
 
 End Function
 
-Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
+Private Function Util_GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
 
     Dim strTable As String
     
@@ -710,7 +690,7 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
     strLatest = "SET @department  = '" & strDepartment & "'" & vbNewLine
     strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigMedContVersionForDepartment(@department)"
     
-    strSql = strSql & GetVersionSQL(strLatest)
+    strSql = strSql & Util_GetVersionSQL(strLatest)
         
         
     intC = objSrc.Rows.Count
@@ -809,15 +789,15 @@ Private Function GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As String
     Next
     
     strSql = strSql & vbNewLine
-    strSql = strSql & GetLogSQL("Save neonatal configuration for continuous medication", False, , "ConfigMedCont")
+    strSql = strSql & Util_GetLogSQL("Save neonatal configuration for continuous medication", False, , "ConfigMedCont")
 
-    GetSaveNeoConfigMedContSql = strSql
+    Util_GetSaveNeoConfigMedContSql = strSql
     
 End Function
 
-Private Sub Test_GetSaveNeoConfigMedContSql()
+Private Sub Test_Util_GetSaveNeoConfigMedContSql()
 
-    ModUtils.CopyToClipboard GetSaveNeoConfigMedContSql(False)
+    ModUtils.CopyToClipboard Util_GetSaveNeoConfigMedContSql(False)
 
 End Sub
 
@@ -829,10 +809,10 @@ Public Sub Database_SaveNeoConfigMedCont()
      
     ModProgress.StartProgress "Neo Continue Medicatie Configuratie Opslaan"
 
-    strSql = GetSaveNeoConfigMedContSql(False)
-    strSql = ModDatabase.WrapTransaction(strSql, "insert_neoconfigmedcont")
+    strSql = Util_GetSaveNeoConfigMedContSql(False)
+    strSql = ModDatabase.Util_WrapTransaction(strSql, "insert_neoconfigmedcont")
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -870,7 +850,7 @@ Public Sub Database_LoadNeoConfigMedCont()
     Set objSrc = ModRange.GetRange("Tbl_Admin_NeoMedCont")
     intT = objSrc.Rows.Count
     
-    InitConnection
+    Util_InitConnection
     
     strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('Neonatologie')"
 
@@ -938,7 +918,7 @@ ErrorHandler:
 
 End Sub
 
-Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) As String
+Private Function Util_GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) As String
 
     Dim strSql As String
     Dim strLatest As String
@@ -1023,7 +1003,7 @@ Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) A
     strLatest = "SET @department  = '" & strDepartment & "'" & vbNewLine
     strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigMedContVersionForDepartment(@department)"
     
-    strSql = strSql & GetVersionSQL(strLatest)
+    strSql = strSql & Util_GetVersionSQL(strLatest)
         
     intC = objSrc.Rows.Count
     For intR = 1 To intC
@@ -1136,15 +1116,15 @@ Private Function GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boolean) A
     Next
     
     strSql = strSql & vbNewLine
-    strSql = strSql & GetLogSQL("Save Pediatric Continuous Medication Configuration", False, , "ConfigMedCont")
+    strSql = strSql & Util_GetLogSQL("Save Pediatric Continuous Medication Configuration", False, , "ConfigMedCont")
     
-    GetSavePediatrieConfigMedContSql = strSql
+    Util_GetSavePediatrieConfigMedContSql = strSql
 
 End Function
 
-Private Sub Test_GetSavePediatrieConfigMedContSql()
+Private Sub Test_Util_GetSavePediatrieConfigMedContSql()
 
-    ModUtils.CopyToClipboard GetSavePediatrieConfigMedContSql(False)
+    ModUtils.CopyToClipboard Util_GetSavePediatrieConfigMedContSql(False)
 
 End Sub
 
@@ -1156,10 +1136,10 @@ Public Sub Database_SavePedConfigMedCont()
      
     ModProgress.StartProgress "Pediatrie Continue Medicatie Configuratie Opslaan"
     
-    strSql = GetSavePediatrieConfigMedContSql(False)
-    strSql = ModDatabase.WrapTransaction(strSql, "insert_pedconfigmedcont")
+    strSql = Util_GetSavePediatrieConfigMedContSql(False)
+    strSql = ModDatabase.Util_WrapTransaction(strSql, "insert_pedconfigmedcont")
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     ModUtils.CopyToClipboard strSql
@@ -1197,7 +1177,7 @@ Public Sub Database_LoadPedConfigMedCont()
     Set objSrc = ModRange.GetRange("Tbl_Admin_PedMedCont")
     intT = objSrc.Rows.Count
     
-    InitConnection
+    Util_InitConnection
     
     strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('Pediatrie')"
 
@@ -1258,7 +1238,7 @@ ErrorHandler:
 
 End Sub
 
-Private Function GetSaveConfigParentSql() As String
+Private Function Util_GetSaveConfigParentSql() As String
 
     Dim strSql As String
     Dim strLatest As String
@@ -1307,7 +1287,7 @@ Private Function GetSaveConfigParentSql() As String
     strSql = strSql & "" & vbNewLine
     
     strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigParEntVersion()"
-    strLatest = strLatest & GetVersionSQL(strLatest) & vbNewLine
+    strLatest = strLatest & Util_GetVersionSQL(strLatest) & vbNewLine
     strSql = strSql & strLatest
     
     For intR = 1 To intC
@@ -1373,15 +1353,15 @@ Private Function GetSaveConfigParentSql() As String
     Next
     
     strSql = strSql & vbNewLine
-    strSql = strSql & GetLogSQL("Save configuration for parentaral fluids", False, , "ConfigParEnt")
+    strSql = strSql & Util_GetLogSQL("Save configuration for parentaral fluids", False, , "ConfigParEnt")
  
-    GetSaveConfigParentSql = strSql
+    Util_GetSaveConfigParentSql = strSql
     
 End Function
 
 Private Sub Test_GetSaveConfigParEntSql()
 
-    ModUtils.CopyToClipboard GetSaveConfigParentSql()
+    ModUtils.CopyToClipboard Util_GetSaveConfigParentSql()
 
 End Sub
 
@@ -1393,10 +1373,10 @@ Public Sub Database_SaveConfigParEnt()
     
     ModProgress.StartProgress "Configuratie voor parenteralia"
     
-    strSql = GetSaveConfigParentSql()
-    strSql = WrapTransaction(strSql, "insert_configparent")
+    strSql = Util_GetSaveConfigParentSql()
+    strSql = Util_WrapTransaction(strSql, "insert_configparent")
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -1431,7 +1411,7 @@ Public Sub Database_LoadConfigParEnt()
     
     strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_PARENT & " ()"
 
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
@@ -1484,7 +1464,7 @@ ErrorHandler:
     ModLog.LogError Err, "Database_LoadConfigParEnt"
 End Sub
 
-Private Sub LoadVersions(colVersions As Collection, objRs As Recordset)
+Private Sub Util_LoadVersions(colVersions As Collection, objRs As Recordset)
 
     Dim objVersion As ClassVersion
 
@@ -1512,13 +1492,13 @@ Public Function Database_GetConfigParEntVersions() As Collection
     strSql = "SELECT * FROM " & CONST_GET_CONFIG_PARENT_VERSIONS & " ()" & vbNewLine
     strSql = strSql & "ORDER BY [VersionID] DESC "
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
     Set colVersions = New Collection
     
-    LoadVersions colVersions, objRs
+    Util_LoadVersions colVersions, objRs
     
     objConn.Close
     
@@ -1551,7 +1531,7 @@ Public Function Database_GetConfigParEnt(Optional ByVal intVersion As Integer = 
         strSql = "SELECT * FROM " & CONST_GET_VERSION_CONFIG_PARENT & "(" & intVersion & ")"
     End If
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
@@ -1606,7 +1586,7 @@ Public Function Database_GetDataVersions(ByVal strHospNum As String) As Collecti
     strSql = "SELECT * FROM " & CONST_GET_PRESCRIPTION_VERSIONS & " ('" & strHospNum & "')"
     strSql = strSql & "ORDER BY [VersionID] Desc"
 
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
@@ -1666,16 +1646,16 @@ Public Sub Database_ClearDatabase(blnClearLog As Boolean)
         If ModMessage.ShowMsgBoxYesNo("Weet u het zeker dat " & strDatabase & " leeggemaakt moet worden?") Then
             ModProgress.StartProgress "Clear Database"
                         
-            strSql = "EXEC " & CONST_CLEARDATABASE & "   " & WrapString(strDatabase) & ", " & IIf(blnClearLog, 1, 0)
-            strSql = strSql & vbNewLine & GetSaveConfigParentSql()
-            strSql = strSql & vbNewLine & GetSavePediatrieConfigMedContSql(True)
-            strSql = strSql & vbNewLine & GetSaveNeoConfigMedContSql(True)
+            strSql = "EXEC " & CONST_CLEARDATABASE & "   " & Util_WrapString(strDatabase) & ", " & IIf(blnClearLog, 1, 0)
+            strSql = strSql & vbNewLine & Util_GetSaveConfigParentSql()
+            strSql = strSql & vbNewLine & Util_GetSavePediatrieConfigMedContSql(True)
+            strSql = strSql & vbNewLine & Util_GetSaveNeoConfigMedContSql(True)
             
-            strSql = strSql & GetLogSQL("Clear database", False)
+            strSql = strSql & Util_GetLogSQL("Clear database", False)
             
-            strSql = WrapTransaction(strSql, "cleardatabase_trans")
+            strSql = Util_WrapTransaction(strSql, "cleardatabase_trans")
             
-            InitConnection
+            Util_InitConnection
             objConn.Open
             objConn.Execute strSql
             objConn.Close
@@ -1698,7 +1678,7 @@ Private Sub Test_Database_ClearDatabase()
 
 End Sub
 
-Private Function GetLogSQL(ByVal strText As String, ByVal blnDeclare As Boolean, Optional ByVal strHospNum As String = "", Optional ByVal strTable As String = "") As String
+Private Function Util_GetLogSQL(ByVal strText As String, ByVal blnDeclare As Boolean, Optional ByVal strHospNum As String = "", Optional ByVal strTable As String = "") As String
 
     Dim strSql As String
     Dim strUser As String
@@ -1708,15 +1688,15 @@ Private Function GetLogSQL(ByVal strText As String, ByVal blnDeclare As Boolean,
         strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
         strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
         
-        strSql = strSql & GetVersionSQL("")
+        strSql = strSql & Util_GetVersionSQL("")
     
     End If
     
     strUser = ModMetaVision.MetaVision_GetUserLogin()
-    strUser = WrapString(strUser)
-    strHospNum = WrapString(strHospNum)
-    strTable = WrapString(strTable)
-    strText = WrapString(strText)
+    strUser = Util_WrapString(strUser)
+    strHospNum = Util_WrapString(strHospNum)
+    strTable = Util_WrapString(strTable)
+    strText = Util_WrapString(strText)
     
     strSql = strSql & vbNewLine
     strSql = strSql & "INSERT INTO [dbo].[Log]" & vbNewLine
@@ -1736,13 +1716,13 @@ Private Function GetLogSQL(ByVal strText As String, ByVal blnDeclare As Boolean,
     strSql = strSql & ", " & strTable & vbNewLine
     strSql = strSql & ", " & strText & ")" & vbNewLine
     
-    GetLogSQL = strSql
+    Util_GetLogSQL = strSql
 
 End Function
 
-Private Sub Test_GetLogSQL()
+Private Sub Test_Util_GetLogSQL()
 
-    ModUtils.CopyToClipboard GetLogSQL("Testing", True, "1234", "Test Table")
+    ModUtils.CopyToClipboard Util_GetLogSQL("Testing", True, "1234", "Test Table")
 
 End Sub
 
@@ -1754,9 +1734,9 @@ Public Sub Database_LogAction(ByVal strText As String, ByVal strPrescriber As St
     
     If Not Setting_UseDatabase Then Exit Sub
         
-    strSql = GetLogSQL(strText, True, strHospNum, "")
+    strSql = Util_GetLogSQL(strText, True, strHospNum, "")
     
-    InitConnection
+    Util_InitConnection
     objConn.Open
     objConn.Execute strSql
     objConn.Close
@@ -1786,7 +1766,7 @@ Public Function Database_GetNeoConfigMedCont(Optional ByVal intVersion As Intege
     
     On Error GoTo ErrorHandler
        
-    InitConnection
+    Util_InitConnection
     
     If intVersion = 0 Then
         strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('Neonatologie')"
@@ -1860,13 +1840,13 @@ Public Function Database_GetConfigMedContVersions(ByVal strDepartment As String)
     strSql = "SELECT * FROM " & CONST_GET_CONFIG_MEDCONT_VERSIONS & "  ('" & strDepartment & "')" & vbNewLine
     strSql = strSql & "ORDER BY [VersionID] DESC "
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
     
     Set colVersions = New Collection
-    LoadVersions colVersions, objRs
+    Util_LoadVersions colVersions, objRs
     
     objConn.Close
     
@@ -1895,19 +1875,19 @@ Private Sub Test_Database_GetConfigMedContVersions()
 
 End Sub
 
-Private Function RemoveQuotes(ByVal strString As String) As String
+Private Function Util_RemoveQuotes(ByVal strString As String) As String
 
-    RemoveQuotes = Replace(strString, "'", "")
+    Util_RemoveQuotes = Replace(strString, "'", "")
 
 End Function
 
-Private Sub Test_RemoveQuotes()
+Private Sub Test_Util_RemoveQuotes()
 
-    ModMessage.ShowMsgBoxInfo RemoveQuotes("Geen 'quotes'")
+    ModMessage.ShowMsgBoxInfo Util_RemoveQuotes("Geen 'quotes'")
 
 End Sub
 
-Private Function GetSaveConfigMedDiscSql(objTable As Range) As String
+Private Function Util_GetSaveConfigMedDiscSql(objTable As Range) As String
 
     Dim strSql As String
     Dim strLatest As String
@@ -1952,8 +1932,8 @@ Private Function GetSaveConfigMedDiscSql(objTable As Range) As String
     strSql = strSql & "DECLARE @IsActive bit" & vbNewLine
     strSql = strSql & "" & vbNewLine
     
-    strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigMedDiscVersion()"
-    strLatest = strLatest & GetVersionSQL(strLatest) & vbNewLine
+    strLatest = strLatest & "SELECT @versionID = dbo.Util_GetLatestConfigMedDiscVersion()"
+    strLatest = strLatest & Util_GetVersionSQL(strLatest) & vbNewLine
     strSql = strSql & strLatest
     
     For intR = 3 To intC
@@ -1964,18 +1944,18 @@ Private Function GetSaveConfigMedDiscSql(objTable As Range) As String
         
         strGPK = objTable.Cells(intR, 1).Value2
         strATC = objTable.Cells(intR, 2).Value2
-        strMainGroup = RemoveQuotes(objTable.Cells(intR, 3).Value2)
-        strSubGroup = RemoveQuotes(objTable.Cells(intR, 4).Value2)
-        strGeneric = RemoveQuotes(objTable.Cells(intR, 5).Value2)
-        strProduct = RemoveQuotes(objTable.Cells(intR, 6).Value2)
-        strLabel = RemoveQuotes(objTable.Cells(intR, 7).Value2)
+        strMainGroup = Util_RemoveQuotes(objTable.Cells(intR, 3).Value2)
+        strSubGroup = Util_RemoveQuotes(objTable.Cells(intR, 4).Value2)
+        strGeneric = Util_RemoveQuotes(objTable.Cells(intR, 5).Value2)
+        strProduct = Util_RemoveQuotes(objTable.Cells(intR, 6).Value2)
+        strLabel = Util_RemoveQuotes(objTable.Cells(intR, 7).Value2)
         strShape = objTable.Cells(intR, 8).Value2
         strRoutes = objTable.Cells(intR, 9).Value2
         dblGenericQuantity = objTable.Cells(intR, 10).Value2
         strGenericUnit = objTable.Cells(intR, 11).Value2
         dblMultipleQuantity = objTable.Cells(intR, 12).Value2
         strMultipleUnit = objTable.Cells(intR, 13).Value2
-        strIndications = RemoveQuotes(objTable.Cells(intR, 14).Value2)
+        strIndications = Util_RemoveQuotes(objTable.Cells(intR, 14).Value2)
         
         strSql = strSql & "SET @GPK  = " & strGPK & "" & vbNewLine
         strSql = strSql & "SET @ATC  = '" & strATC & "'" & vbNewLine
@@ -2020,24 +2000,25 @@ Private Function GetSaveConfigMedDiscSql(objTable As Range) As String
     Next
     
     strSql = strSql & vbNewLine
-    strSql = strSql & GetLogSQL("Save configuration for discontinuous medication", False, , "ConfigMedDisc")
+    strSql = strSql & Util_GetLogSQL("Save configuration for discontinuous medication", False, , "ConfigMedDisc")
  
-    GetSaveConfigMedDiscSql = strSql
+    Util_GetSaveConfigMedDiscSql = strSql
 
 
 End Function
 
-Private Sub SaveConfigMedDisc(objSrc As Range)
+Private Sub Util_SaveConfigMedDisc(objSrc As Range)
+    
     Dim strSql As String
     
     On Error GoTo ErrorHandler
     
     ModProgress.StartProgress "Configuratie voor medicatie discontinue opslaan"
     
-    strSql = GetSaveConfigMedDiscSql(objSrc)
-    strSql = WrapTransaction(strSql, "insert_med_disc_config")
+    strSql = Util_GetSaveConfigMedDiscSql(objSrc)
+    strSql = Util_WrapTransaction(strSql, "insert_med_disc_config")
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     objConn.Execute strSql
@@ -2053,21 +2034,22 @@ ErrorHandler:
     
     ModUtils.CopyToClipboard strSql
     ModProgress.FinishProgress
-    ModLog.LogError Err, "SaveConfigMedDisc"
+    ModLog.LogError Err, "Util_SaveConfigMedDisc"
     
 
 End Sub
 
-Private Function GetLatestConfigMedDiscVersion() As Integer
+Private Function Util_GetLatestConfigMedDiscVersion() As Integer
+
     Dim intVersion As Integer
     Dim objRs As Recordset
     Dim strSql As String
     
     On Error GoTo ErrorHandler
     
-    strSql = "SELECT [dbo].[GetLatestConfigMedDiscVersion] ()"
+    strSql = "SELECT [dbo].[Util_GetLatestConfigMedDiscVersion] ()"
     
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
@@ -2079,19 +2061,19 @@ Private Function GetLatestConfigMedDiscVersion() As Integer
     
     objConn.Close
     
-    GetLatestConfigMedDiscVersion = intVersion
+    Util_GetLatestConfigMedDiscVersion = intVersion
     
     Exit Function
     
 ErrorHandler:
 
-    ModLog.LogError Err, "GetLatestConfigMedDiscVersion"
+    ModLog.LogError Err, "Util_GetLatestConfigMedDiscVersion"
     objConn.Close
 End Function
 
-Private Sub Test_GetLatestConfigMedDiscVersion()
+Private Sub Test_Util_GetLatestConfigMedDiscVersion()
 
-    ModMessage.ShowMsgBoxInfo GetLatestConfigMedDiscVersion()
+    ModMessage.ShowMsgBoxInfo Util_GetLatestConfigMedDiscVersion()
 
 End Sub
 
@@ -2133,12 +2115,12 @@ Public Sub Database_ImportConfigMedDisc()
         Exit Sub
     End If
         
-    SaveConfigMedDisc objSrc
+    Util_SaveConfigMedDisc objSrc
     
     objConfigWbk.Close
     Application.DisplayAlerts = True
     
-    intVersion = GetLatestConfigMedDiscVersion()
+    intVersion = Util_GetLatestConfigMedDiscVersion()
     strMsg = "De meest recente versie van de configuratie van disccontinue medicatie is nu: " & intVersion
     ModMessage.ShowMsgBoxInfo strMsg
     
@@ -2205,7 +2187,7 @@ Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal bl
     strSql = "SELECT * FROM [dbo].[GetConfigMedDiscLatest] () AS md" & vbNewLine
     strSql = strSql & "ORDER BY md.Generic, md.Shape, md.GenericQuantity"
 
-    InitConnection
+    Util_InitConnection
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
@@ -2279,7 +2261,7 @@ Public Function Database_GetStandardPatients() As Collection
     Set colPats = New Collection
     strSql = "SELECT * FROM dbo.GetStandardPatients()"
     
-    InitConnection
+    Util_InitConnection
     objConn.Open
     
     Set objRs = objConn.Execute(strSql)

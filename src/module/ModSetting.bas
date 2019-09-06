@@ -153,7 +153,7 @@ End Sub
 Public Sub SetDevelopmentMode(ByVal blnMode As Boolean)
 
     SetSetting constDevMode, blnMode
-    ModApplication.UpdateStatusBar "DevelopmentMode", IIf(blnMode, "Aan", "Uit")
+    ModApplication.App_UpdateStatusBar "DevelopmentMode", IIf(blnMode, "Aan", "Uit")
 
 End Sub
 
@@ -166,7 +166,7 @@ End Function
 Public Sub SetEnableLogging(ByVal blnMode As Boolean)
 
     SetSetting constLogging, blnMode
-    ModApplication.UpdateStatusBar "Logging", IIf(blnMode, "Aan", "Uit")
+    ModApplication.App_UpdateStatusBar "Logging", IIf(blnMode, "Aan", "Uit")
 
 End Sub
 
