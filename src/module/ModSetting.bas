@@ -1,13 +1,6 @@
 Attribute VB_Name = "ModSetting"
 Option Explicit
 
-Public Const CONST_DATA_SHEET As String = "Data"
-Public Const CONST_PATIENTS_SHEET As String = "Patienten"
-
-Public Const CONST_PICU_BEDS As String = "PICU.xlsx"
-Public Const CONST_NICU_BEDS As String = "NICU.xlsx"
-Public Const CONST_BEDS_SHEET As String = "Beds"
-
 Private Const constPatientsFile As String = "Patienten.xlsx"
 
 Private Const constExt As String = ".xlsx"
@@ -316,27 +309,27 @@ Private Function GetAbsolutePath(ByVal strPath As String) As String
 
 End Function
 
-Public Function GetPatientTextWorkBookName(ByVal strBed As String) As String
+Public Function Setting_GetPatientTextWorkBookName(ByVal strBed As String) As String
 
-    GetPatientTextWorkBookName = constPreText & strBed & constPostText & constExt
+    Setting_GetPatientTextWorkBookName = constPreText & strBed & constPostText & constExt
 
 End Function
 
-Public Function GetPatientDataWorkBookName(ByVal strBed As String) As String
+Public Function Setting_GetPatientDataWorkBookName(ByVal strBed As String) As String
 
-    GetPatientDataWorkBookName = constPreData & strBed & constPostData + constExt
+    Setting_GetPatientDataWorkBookName = constPreData & strBed & constPostData + constExt
 
 End Function
 
 Public Function GetPatientDataFile(ByVal strBed As String) As String
 
-    GetPatientDataFile = GetPatientDataPath() & GetPatientDataWorkBookName(strBed)
+    GetPatientDataFile = GetPatientDataPath() & Setting_GetPatientDataWorkBookName(strBed)
 
 End Function
 
 Public Function GetPatientTextFile(ByVal strBed As String) As String
 
-    GetPatientTextFile = GetPatientDataPath() & GetPatientTextWorkBookName(strBed)
+    GetPatientTextFile = GetPatientDataPath() & Setting_GetPatientTextWorkBookName(strBed)
 
 End Function
 
@@ -374,8 +367,8 @@ Public Function GetPatientsFileName() As String
     Dim blnPed As Boolean
     Dim strDep As String
     
-    blnPed = MetaVision_IsPediatrie()
-    If IsDevelopmentDir() Then blnPed = ModMessage.ShowMsgBoxYesNo("Ja(Yes) voor Pediatrie anders Neonatologie") = vbYes
+    blnPed = MetaVision_IsPICU()
+    If IsDevelopmentDir() Then blnPed = ModMessage.ShowMsgBoxYesNo("Ja(Yes) voor PICU anders NICU") = vbYes
     
     GetPatientsFileName = IIf(blnPed, CONST_PICU_BEDS, CONST_NICU_BEDS)
 

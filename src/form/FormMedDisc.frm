@@ -15,7 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Private m_Med As ClassMedicatieDisc
+Private m_Med As ClassMedDisc
 Private m_TherapieGroep As String
 Private m_SubGroep As String
 Private m_Etiket As String
@@ -28,8 +28,6 @@ Private m_Freq As Dictionary
 Private m_Keer As Boolean
 Private m_Conc As Boolean
 Private m_Mail As Boolean
-
-
 
 Public Property Get Mail() As Boolean
 
@@ -99,7 +97,7 @@ Public Function HasSelectedMedicament() As Boolean
 
 End Function
 
-Public Function GetSelectedMedicament() As ClassMedicatieDisc
+Public Function GetSelectedMedicament() As ClassMedDisc
 
     Set GetSelectedMedicament = m_Med
 
@@ -127,9 +125,9 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
         lblGPK.Caption = vbNullString
         lblATC.Caption = vbNullString
         
-        FillCombo cboVorm, Formularium_GetFormularium().GetVormen()
-        FillCombo cboSterkteEenheid, Formularium_GetFormularium().GetSterkteEenheden()
-        FillCombo cboDosisEenheid, Formularium_GetFormularium.GetDosisEenheden()
+        FillCombo cboVorm, Formularium_GetFormularium().GetShapeCollection()
+        FillCombo cboSterkteEenheid, Formularium_GetFormularium().GetGenericQuantityUnitCollection()
+        FillCombo cboDosisEenheid, Formularium_GetFormularium.GetDoseUnitCollection()
         FillCombo cboRoute, Formularium_GetFormularium.GetRoutes()
         
         cboIndicatie.Clear
@@ -175,56 +173,59 @@ Private Sub SelectDoseRule()
     Dim strTime As String
     Dim strFreq As String
     
-    ClearDose
     
-    For Each objRule In m_Med.DoseRules
-        strFreq = objRule.Freq
-        If strFreq = "antenoctum" Then
-            strTime = "dag"
-        Else
-            strFreq = Replace(strFreq, "antenoctum||", "")
-        End If
-        
-        strTime = Replace(strTime, "antenoctum||", "")
-        strTime = Trim(Split(Split(strFreq, "||")(0), "/")(1))
-        
-        If cboFreqTime.Value = vbNullString Then cboFreqTime.Value = strTime
-        If cboFreqTime.Value = strTime And cboSubstance.Value = objRule.Substance Then
-            With m_Med
-                .PerKg = objRule.PerKg
-                .PerM2 = objRule.PerM2
-                
-                .SetFreqList objRule.Freq
-                
-                .NormDose = objRule.NormDose
-                .MinDose = objRule.MinDose
-                .MaxDose = objRule.MaxDose
-                .MaxPerDose = objRule.MaxPerDose
-                .AbsMaxDose = objRule.AbsMaxDose
-                
-                If Not .GetFreqListString = vbNullString Then
-                    FillCombo cboFreq, .GetFreqList()
-                Else
-                    LoadFreq
-                End If
-                
-                If Not .Freq = vbNullString Then cboFreq.Value = .Freq
-                
-                optNone = True
-                optKg = .PerKg
-                optM2 = .PerM2
-                
-                chkPerDosis = .PerDose
-                
-                SetTextBoxNumericValue txtNormDose, .NormDose
-                SetTextBoxNumericValue txtMinDose, .MinDose
-                SetTextBoxNumericValue txtMaxDose, .MaxDose
-                SetTextBoxNumericValue txtAbsMax, .AbsMaxDose
-                SetTextBoxNumericValue txtMaxPerDose, .MaxPerDose
-            End With
+    If m_Med.DoseRules.Count > 0 Then
+    
+        ClearDose
+        For Each objRule In m_Med.DoseRules
+            strFreq = objRule.Freq
+            If strFreq = "antenoctum" Then
+                strTime = "dag"
+            Else
+                strFreq = Replace(strFreq, "antenoctum||", "")
+            End If
             
-        End If
-    Next
+            strTime = Replace(strTime, "antenoctum||", "")
+            strTime = Trim(Split(Split(strFreq, "||")(0), "/")(1))
+            
+            If cboFreqTime.Value = vbNullString Then cboFreqTime.Value = strTime
+            If cboFreqTime.Value = strTime And cboSubstance.Value = objRule.Substance Then
+                With m_Med
+                    .PerKg = objRule.PerKg
+                    .PerM2 = objRule.PerM2
+                    
+                    .SetFreqList objRule.Freq
+                    
+                    .NormDose = objRule.NormDose
+                    .MinDose = objRule.MinDose
+                    .MaxDose = objRule.MaxDose
+                    .MaxPerDose = objRule.MaxPerDose
+                    .AbsMaxDose = objRule.AbsMaxDose
+                    
+                    If Not .GetFreqListString = vbNullString Then
+                        FillCombo cboFreq, .GetFreqList()
+                    Else
+                        LoadFreq
+                    End If
+                    
+                    If Not .Freq = vbNullString Then cboFreq.Value = .Freq
+                    
+                    optNone = True
+                    optKg = .PerKg
+                    optM2 = .PerM2
+                    
+                    chkPerDosis = .PerDose
+                    
+                    SetTextBoxNumericValue txtNormDose, .NormDose
+                    SetTextBoxNumericValue txtMinDose, .MinDose
+                    SetTextBoxNumericValue txtMaxDose, .MaxDose
+                    SetTextBoxNumericValue txtAbsMax, .AbsMaxDose
+                    SetTextBoxNumericValue txtMaxPerDose, .MaxPerDose
+                End With
+                
+            End If
+        Next
+    End If
     
     CalculateDose
 
@@ -378,7 +379,7 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
         
         txtDeelDose.Text = .MultipleQuantity
         
-        FillCombo cboDosisEenheid, GetDosisEenheden()
+        FillCombo cboDosisEenheid, GetDoseUnitCollection()
         cboDosisEenheid.Text = .MultipleUnit
         
         If Not .GetFreqListString = vbNullString Then
@@ -482,9 +483,9 @@ Private Sub TextBoxStringNumericValue(txtBox As MSForms.TextBox)
 
 End Sub
 
-Private Function GetDosisEenheden() As Collection
+Private Function GetDoseUnitCollection() As Collection
 
-    Set GetDosisEenheden = Formularium_GetFormularium.GetDosisEenheden()
+    Set GetDoseUnitCollection = Formularium_GetFormularium.GetDoseUnitCollection()
 
 End Function
 
@@ -583,9 +584,41 @@ End Function
 Private Sub cboIndicatie_Change()
 
     Dim strValid As String
-    
     ' strValid = ValidateCombo(cboIndicatie, False)
     Validate vbNullString
+    ApplyDoseRule
+
+End Sub
+
+Private Sub ApplyDoseRule()
+
+    Dim objDose As ClassDose
+    Dim dblAge As Double
+    Dim dblWeight As Double
+    Dim intGest As Integer
+    
+    dblAge = Patient_CorrectedAgeInMo()
+    dblWeight = Patient_GetWeight()
+    
+    Set objDose = m_Med.GetDose("", "", dblAge, intGest, dblWeight)
+    
+    If Not objDose Is Nothing Then
+    
+        With objDose
+            m_Med.NormDose = objDose.NormDose
+            m_Med.MinDose = objDose.MinDose
+            m_Med.MaxDose = objDose.MaxDose
+            m_Med.AbsMaxDose = objDose.AbsMaxDose
+            m_Med.MaxPerDose = objDose.MaxPerDose
+            
+            m_Med.PerKg = objDose.IsDosePerKg
+            m_Med.PerM2 = objDose.IsDosePerM2
+            m_Med.SetFreqList objDose.Frequencies
+        End With
+        
+        LoadMedicament False
+    
+    End If
 
 End Sub
 
@@ -593,8 +626,10 @@ Private Sub cboRoute_Change()
 
     Dim strValid As String
     
+    m_Med.Route = cboRoute.Text
     strValid = ValidateCombo(cboRoute)
     Validate strValid
+    ApplyDoseRule
 
 End Sub
 
@@ -674,7 +709,7 @@ Private Sub CalculateDose()
     
     End If
         
-    If m_Med Is Nothing Then Set m_Med = New ClassMedicatieDisc
+    If m_Med Is Nothing Then Set m_Med = New ClassMedDisc
     m_Med.CalcDose = dblCalc
     m_Med.Freq = cboFreq.Text
     
@@ -1011,7 +1046,7 @@ Private Sub cmdOK_Click()
 
     If Not m_IsGPK Then
     
-        Set m_Med = New ClassMedicatieDisc
+        Set m_Med = New ClassMedDisc
         
         m_Med.Generic = cboGeneriek.Value
         m_Med.GenericQuantity = StringToDouble(txtSterkte.Value)
@@ -1368,7 +1403,7 @@ Private Sub LoadFreq()
     cboFreq.Clear
     
     If m_Freq Is Nothing Then
-        Set m_Freq = ModMedDisc.GetMedicationFreqs()
+        Set m_Freq = ModMedDisc.MedDisc_GetMedicationFreqs()
     End If
     
     For Each varKey In m_Freq.Keys
@@ -1386,9 +1421,9 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
-    Dim intN As Integer
-    Dim intC As Integer
     Dim strTitle As String
+    Dim objMedCol As Collection
+    Dim objMed As ClassMedDisc
 
     m_LoadGPK = False
     m_Keer = False
@@ -1398,12 +1433,11 @@ Private Sub UserForm_Initialize()
     m_SubGroep = lblSubGroep.Caption
     m_Etiket = lblEtiket.Caption
     m_Product = lblProduct.Caption
-    
-    intC = Formularium_GetFormularium.MedicamentCount + 1
-    
-    For intN = 1 To intC
-        cboGeneriek.AddItem Formularium_GetFormularium.Item(intN).Generic
-    Next intN
+        
+    Set objMedCol = Formularium_GetFormularium.GetMedicationCollection(False)
+    For Each objMed In objMedCol
+        cboGeneriek.AddItem objMed.Generic
+    Next
     
     LoadFreq
     FillCombo cboOplVlst, MedDisc_GetOplVlstCol()

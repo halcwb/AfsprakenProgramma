@@ -1,12 +1,12 @@
 "$H$5: 	=IF(C5>1,IF(D5>0,D5,IF(Medicatie_IsEpiduraal(AF5),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C5,H$2))),"""")
 $I$5: 	=IF(C5>1,IF(E5>0,E5,IF(Medicatie_IsEpiduraal(AF5),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C5,I$2))),"""")
-$J$5: 	=IF(AND(C5>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C5,1),""EPI ""),G5/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C5,J$2)*(G5/10)*(H5/I5)/(_Pat_Gewicht),2)),"""")
+$J$5: 	=IF(AND(C5>1,_Pat_Gewicht>0,I5>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C5,1),""EPI ""),G5/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C5,J$2)*(G5/10)*(H5/I5)/(_Pat_Gewicht),2)),"""")
 $M$5: 	=IF(PedGuiMedIV!E9<>0,24*G5/10,0)
 $N$5: 	=IF($F5=3,M5*0.05,0)
 $O$5: 	=IF($F5=4,M5*0.1,0)
 $P$5: 	=IF($F5=2,M5*0.155,0)
 $Q$5: 	=IFERROR( VLOOKUP(AF5,Tbl_Glob_ParEnt,6,FALSE),0)*M5
-$R$5: 	=SUM(P5:Q5)
+$R$5: 	=IFERROR( VLOOKUP(AF5,Tbl_Glob_ParEnt,13,FALSE),0)*M5
 $S$5: 	=IF(OR($C5=19),0,0)
 $T$5: 	=IFERROR( VLOOKUP(AF5,Tbl_Glob_ParEnt,3,FALSE),0)*M5
 $U$5: 	=IF((C5=28),0.1*M5,IF((C5=29),0.2*M5,0))
@@ -31,13 +31,13 @@ $AM$5: 	=IF(C5>1,24*G5/10&"" ml"","""")
 $AN$5: 	=IF(C5>1,INDEX(Tbl_Ped_MedContIV,C5,AN$2),"""")
 $H$6: 	=IF(C6>1,IF(D6>0,D6,IF(Medicatie_IsEpiduraal(AF6),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C6,H$2))),"""")
 $I$6: 	=IF(C6>1,IF(E6>0,E6,IF(Medicatie_IsEpiduraal(AF6),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C6,I$2))),"""")
-$J$6: 	=IF(AND(C6>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C6,1),""EPI ""),G6/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C6,J$2)*(G6/10)*(H6/I6)/(_Pat_Gewicht),2)),"""")
+$J$6: 	=IF(AND(C6>1,_Pat_Gewicht>0,I6>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C6,1),""EPI ""),G6/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C6,J$2)*(G6/10)*(H6/I6)/(_Pat_Gewicht),2)),"""")
 $M$6: 	=IF(PedGuiMedIV!E10<>0,24*G6/10,0)
 $N$6: 	=IF($F6=3,M6*0.05,0)
 $O$6: 	=IF($F6=4,M6*0.1,0)
 $P$6: 	=IF($F6=2,M6*0.155,0)
 $Q$6: 	=IFERROR( VLOOKUP(AF6,Tbl_Glob_ParEnt,6,FALSE),0)*M6
-$R$6: 	=SUM(P6:Q6)
+$R$6: 	=IFERROR( VLOOKUP(AF6,Tbl_Glob_ParEnt,13,FALSE),0)*M6
 $S$6: 	=IF(OR($C6=19),0,0)
 $T$6: 	=IFERROR( VLOOKUP(AF6,Tbl_Glob_ParEnt,3,FALSE),0)*M6
 $U$6: 	=IF((C6=28),0.1*M6,IF((C6=29),0.2*M6,0))
@@ -62,13 +62,13 @@ $AM$6: 	=IF(C6>1,24*G6/10&"" ml"","""")
 $AN$6: 	=IF(C6>1,INDEX(Tbl_Ped_MedContIV,C6,AN$2),"""")
 $H$7: 	=IF(C7>1,IF(D7>0,D7,IF(Medicatie_IsEpiduraal(AF7),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C7,H$2))),"""")
 $I$7: 	=IF(C7>1,IF(E7>0,E7,IF(Medicatie_IsEpiduraal(AF7),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C7,I$2))),"""")
-$J$7: 	=IF(AND(C7>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C7,1),""EPI ""),G7/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C7,J$2)*(G7/10)*(H7/I7)/(_Pat_Gewicht),2)),"""")
+$J$7: 	=IF(AND(C7>1,_Pat_Gewicht>0,I7>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C7,1),""EPI ""),G7/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C7,J$2)*(G7/10)*(H7/I7)/(_Pat_Gewicht),2)),"""")
 $M$7: 	=IF(PedGuiMedIV!E11<>0,24*G7/10,0)
 $N$7: 	=IF($F7=3,M7*0.05,0)
 $O$7: 	=IF($F7=4,M7*0.1,0)
 $P$7: 	=IF($F7=2,M7*0.155,0)
 $Q$7: 	=IFERROR( VLOOKUP(AF7,Tbl_Glob_ParEnt,6,FALSE),0)*M7
-$R$7: 	=SUM(P7:Q7)
+$R$7: 	=IFERROR( VLOOKUP(AF7,Tbl_Glob_ParEnt,13,FALSE),0)*M7
 $S$7: 	=IF(OR($C7=19),0,0)
 $T$7: 	=IFERROR( VLOOKUP(AF7,Tbl_Glob_ParEnt,3,FALSE),0)*M7
 $U$7: 	=IF((C7=28),0.1*M7,IF((C7=29),0.2*M7,0))
@@ -99,7 +99,7 @@ $N$8: 	=IF($F8=3,M8*0.05,0)
 $O$8: 	=IF($F8=4,M8*0.1,0)
 $P$8: 	=IF($F8=2,M8*0.155,0)
 $Q$8: 	=IFERROR( VLOOKUP(AF8,Tbl_Glob_ParEnt,6,FALSE),0)*M8
-$R$8: 	=SUM(P8:Q8)
+$R$8: 	=IFERROR( VLOOKUP(AF8,Tbl_Glob_ParEnt,13,FALSE),0)*M8
 $S$8: 	=IF(OR($C8=19),0,0)
 $T$8: 	=IFERROR( VLOOKUP(AF8,Tbl_Glob_ParEnt,3,FALSE),0)*M8
 $U$8: 	=IF((C8=28),0.1*M8,IF((C8=29),0.2*M8,0))
@@ -124,13 +124,13 @@ $AM$8: 	=IF(C8>1,24*G8/10&"" ml"","""")
 $AN$8: 	=IF(C8>1,INDEX(Tbl_Ped_MedContIV,C8,AN$2),"""")
 $H$9: 	=IF(C9>1,IF(D9>0,D9,IF(Medicatie_IsEpiduraal(AF9),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C9,H$2))),"""")
 $I$9: 	=IF(C9>1,IF(E9>0,E9,IF(Medicatie_IsEpiduraal(AF9),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C9,I$2))),"""")
-$J$9: 	=IF(AND(C9>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C9,1),""EPI ""),G9/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C9,J$2)*(G9/10)*(H9/I9)/(_Pat_Gewicht),2)),"""")
+$J$9: 	=IF(AND(C9>1,_Pat_Gewicht>0,I9>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C9,1),""EPI ""),G9/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C9,J$2)*(G9/10)*(H9/I9)/(_Pat_Gewicht),2)),"""")
 $M$9: 	=IF(PedGuiMedIV!E13<>0,24*G9/10,0)
 $N$9: 	=IF($F9=3,M9*0.05,0)
 $O$9: 	=IF($F9=4,M9*0.1,0)
 $P$9: 	=IF($F9=2,M9*0.155,0)
 $Q$9: 	=IFERROR( VLOOKUP(AF9,Tbl_Glob_ParEnt,6,FALSE),0)*M9
-$R$9: 	=SUM(P9:Q9)
+$R$9: 	=IFERROR( VLOOKUP(AF9,Tbl_Glob_ParEnt,13,FALSE),0)*M9
 $S$9: 	=IF(OR($C9=19),0,0)
 $T$9: 	=IFERROR( VLOOKUP(AF9,Tbl_Glob_ParEnt,3,FALSE),0)*M9
 $U$9: 	=IF((C9=28),0.1*M9,IF((C9=29),0.2*M9,0))
@@ -155,13 +155,13 @@ $AM$9: 	=IF(C9>1,24*G9/10&"" ml"","""")
 $AN$9: 	=IF(C9>1,INDEX(Tbl_Ped_MedContIV,C9,AN$2),"""")
 $H$10: 	=IF(C10>1,IF(D10>0,D10,IF(Medicatie_IsEpiduraal(AF10),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C10,H$2))),"""")
 $I$10: 	=IF(C10>1,IF(E10>0,E10,IF(Medicatie_IsEpiduraal(AF10),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C10,I$2))),"""")
-$J$10: 	=IF(AND(C10>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C10,1),""EPI ""),G10/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C10,J$2)*(G10/10)*(H10/I10)/(_Pat_Gewicht),2)),"""")
+$J$10: 	=IF(AND(C10>1,_Pat_Gewicht>0,I10>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C10,1),""EPI ""),G10/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C10,J$2)*(G10/10)*(H10/I10)/(_Pat_Gewicht),2)),"""")
 $M$10: 	=IF(PedGuiMedIV!E14<>0,24*G10/10,0)
 $N$10: 	=IF($F10=3,M10*0.05,0)
 $O$10: 	=IF($F10=4,M10*0.1,0)
 $P$10: 	=IF($F10=2,M10*0.155,0)
 $Q$10: 	=IFERROR( VLOOKUP(AF10,Tbl_Glob_ParEnt,6,FALSE),0)*M10
-$R$10: 	=SUM(P10:Q10)
+$R$10: 	=IFERROR( VLOOKUP(AF10,Tbl_Glob_ParEnt,13,FALSE),0)*M10
 $S$10: 	=IF(OR($C10=19),0,0)
 $T$10: 	=IFERROR( VLOOKUP(AF10,Tbl_Glob_ParEnt,3,FALSE),0)*M10
 $U$10: 	=IF((C10=28),0.1*M10,IF((C10=29),0.2*M10,0))
@@ -186,13 +186,13 @@ $AM$10: 	=IF(C10>1,24*G10/10&"" ml"","""")
 $AN$10: 	=IF(C10>1,INDEX(Tbl_Ped_MedContIV,C10,AN$2),"""")
 $H$11: 	=IF(C11>1,IF(D11>0,D11,IF(Medicatie_IsEpiduraal(AF11),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C11,H$2))),"""")
 $I$11: 	=IF(C11>1,IF(E11>0,E11,IF(Medicatie_IsEpiduraal(AF11),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C11,I$2))),"""")
-$J$11: 	=IF(AND(C11>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C11,1),""EPI ""),G11/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C11,J$2)*(G11/10)*(H11/I11)/(_Pat_Gewicht),2)),"""")
+$J$11: 	=IF(AND(C11>1,_Pat_Gewicht>0,I11>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C11,1),""EPI ""),G11/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C11,J$2)*(G11/10)*(H11/I11)/(_Pat_Gewicht),2)),"""")
 $M$11: 	=IF(PedGuiMedIV!E15<>0,24*G11/10,0)
 $N$11: 	=IF($F11=3,M11*0.05,0)
 $O$11: 	=IF($F11=4,M11*0.1,0)
 $P$11: 	=IF($F11=2,M11*0.155,0)
 $Q$11: 	=IFERROR( VLOOKUP(AF11,Tbl_Glob_ParEnt,6,FALSE),0)*M11
-$R$11: 	=SUM(P11:Q11)
+$R$11: 	=IFERROR( VLOOKUP(AF11,Tbl_Glob_ParEnt,13,FALSE),0)*M11
 $S$11: 	=IF(OR($C11=19),0,0)
 $T$11: 	=IFERROR( VLOOKUP(AF11,Tbl_Glob_ParEnt,3,FALSE),0)*M11
 $U$11: 	=IF((C11=28),0.1*M11,IF((C11=29),0.2*M11,0))
@@ -217,13 +217,13 @@ $AM$11: 	=IF(C11>1,24*G11/10&"" ml"","""")
 $AN$11: 	=IF(C11>1,INDEX(Tbl_Ped_MedContIV,C11,AN$2),"""")
 $H$12: 	=IF(C12>1,IF(D12>0,D12,IF(Medicatie_IsEpiduraal(AF12),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C12,H$2))),"""")
 $I$12: 	=IF(C12>1,IF(E12>0,E12,IF(Medicatie_IsEpiduraal(AF12),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C12,I$2))),"""")
-$J$12: 	=IF(AND(C12>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C12,1),""EPI ""),G12/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C12,J$2)*(G12/10)*(H12/I12)/(_Pat_Gewicht),2)),"""")
+$J$12: 	=IF(AND(C12>1,_Pat_Gewicht>0,I12>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C12,1),""EPI ""),G12/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C12,J$2)*(G12/10)*(H12/I12)/(_Pat_Gewicht),2)),"""")
 $M$12: 	=IF(PedGuiMedIV!E16<>0,24*G12/10,0)
 $N$12: 	=IF($F12=3,M12*0.05,0)
 $O$12: 	=IF($F12=4,M12*0.1,0)
 $P$12: 	=IF($F12=2,M12*0.155,0)
 $Q$12: 	=IFERROR( VLOOKUP(AF12,Tbl_Glob_ParEnt,6,FALSE),0)*M12
-$R$12: 	=SUM(P12:Q12)
+$R$12: 	=IFERROR( VLOOKUP(AF12,Tbl_Glob_ParEnt,13,FALSE),0)*M12
 $S$12: 	=IF(OR($C12=19),0,0)
 $T$12: 	=IFERROR( VLOOKUP(AF12,Tbl_Glob_ParEnt,3,FALSE),0)*M12
 $U$12: 	=IF((C12=28),0.1*M12,IF((C12=29),0.2*M12,0))
@@ -248,13 +248,13 @@ $AM$12: 	=IF(C12>1,24*G12/10&"" ml"","""")
 $AN$12: 	=IF(C12>1,INDEX(Tbl_Ped_MedContIV,C12,AN$2),"""")
 $H$13: 	=IF(C13>1,IF(D13>0,D13,IF(Medicatie_IsEpiduraal(AF13),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C13,H$2))),"""")
 $I$13: 	=IF(C13>1,IF(E13>0,E13,IF(Medicatie_IsEpiduraal(AF13),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C13,I$2))),"""")
-$J$13: 	=IF(AND(C13>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C13,1),""EPI ""),G13/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C13,J$2)*(G13/10)*(H13/I13)/(_Pat_Gewicht),2)),"""")
+$J$13: 	=IF(AND(C13>1,_Pat_Gewicht>0,I13>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C13,1),""EPI ""),G13/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C13,J$2)*(G13/10)*(H13/I13)/(_Pat_Gewicht),2)),"""")
 $M$13: 	=IF(PedGuiMedIV!E17<>0,24*G13/10,0)
 $N$13: 	=IF($F13=3,M13*0.05,0)
 $O$13: 	=IF($F13=4,M13*0.1,0)
 $P$13: 	=IF($F13=2,M13*0.155,0)
 $Q$13: 	=IFERROR( VLOOKUP(AF13,Tbl_Glob_ParEnt,6,FALSE),0)*M13
-$R$13: 	=SUM(P13:Q13)
+$R$13: 	=IFERROR( VLOOKUP(AF13,Tbl_Glob_ParEnt,13,FALSE),0)*M13
 $S$13: 	=IF(OR($C13=19),0,0)
 $T$13: 	=IFERROR( VLOOKUP(AF13,Tbl_Glob_ParEnt,3,FALSE),0)*M13
 $U$13: 	=IF((C13=28),0.1*M13,IF((C13=29),0.2*M13,0))
@@ -279,13 +279,13 @@ $AM$13: 	=IF(C13>1,24*G13/10&"" ml"","""")
 $AN$13: 	=IF(C13>1,INDEX(Tbl_Ped_MedContIV,C13,AN$2),"""")
 $H$14: 	=IF(C14>1,IF(D14>0,D14,IF(Medicatie_IsEpiduraal(AF14),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C14,H$2))),"""")
 $I$14: 	=IF(C14>1,IF(E14>0,E14,IF(Medicatie_IsEpiduraal(AF14),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C14,I$2))),"""")
-$J$14: 	=IF(AND(C14>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C14,1),""EPI ""),G14/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C14,J$2)*(G14/10)*(H14/I14)/(_Pat_Gewicht),2)),"""")
+$J$14: 	=IF(AND(C14>1,_Pat_Gewicht>0,I14>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C14,1),""EPI ""),G14/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C14,J$2)*(G14/10)*(H14/I14)/(_Pat_Gewicht),2)),"""")
 $M$14: 	=IF(PedGuiMedIV!E18<>0,24*G14/10,0)
 $N$14: 	=IF($F14=3,M14*0.05,0)
 $O$14: 	=IF($F14=4,M14*0.1,0)
 $P$14: 	=IF($F14=2,M14*0.155,0)
 $Q$14: 	=IFERROR( VLOOKUP(AF14,Tbl_Glob_ParEnt,6,FALSE),0)*M14
-$R$14: 	=SUM(P14:Q14)
+$R$14: 	=IFERROR( VLOOKUP(AF14,Tbl_Glob_ParEnt,13,FALSE),0)*M14
 $S$14: 	=IF(OR($C14=19),0,0)
 $T$14: 	=IFERROR( VLOOKUP(AF14,Tbl_Glob_ParEnt,3,FALSE),0)*M14
 $U$14: 	=IF((C14=28),0.1*M14,IF((C14=29),0.2*M14,0))
@@ -310,13 +310,13 @@ $AM$14: 	=IF(C14>1,24*G14/10&"" ml"","""")
 $AN$14: 	=IF(C14>1,INDEX(Tbl_Ped_MedContIV,C14,AN$2),"""")
 $H$15: 	=IF(C15>1,IF(D15>0,D15,IF(Medicatie_IsEpiduraal(AF15),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C15,H$2))),"""")
 $I$15: 	=IF(C15>1,IF(E15>0,E15,IF(Medicatie_IsEpiduraal(AF15),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C15,I$2))),"""")
-$J$15: 	=IF(AND(C15>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C15,1),""EPI ""),G15/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C15,J$2)*(G15/10)*(H15/I15)/(_Pat_Gewicht),2)),"""")
+$J$15: 	=IF(AND(C15>1,_Pat_Gewicht>0,I15>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C15,1),""EPI ""),G15/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C15,J$2)*(G15/10)*(H15/I15)/(_Pat_Gewicht),2)),"""")
 $M$15: 	=IF(PedGuiMedIV!E19<>0,24*G15/10,0)
 $N$15: 	=IF($F15=3,M15*0.05,0)
 $O$15: 	=IF($F15=4,M15*0.1,0)
 $P$15: 	=IF($F15=2,M15*0.155,0)
 $Q$15: 	=IFERROR( VLOOKUP(AF15,Tbl_Glob_ParEnt,6,FALSE),0)*M15
-$R$15: 	=SUM(P15:Q15)
+$R$15: 	=IFERROR( VLOOKUP(AF15,Tbl_Glob_ParEnt,13,FALSE),0)*M15
 $S$15: 	=IF(OR($C15=19),0,0)
 $T$15: 	=IFERROR( VLOOKUP(AF15,Tbl_Glob_ParEnt,3,FALSE),0)*M15
 $U$15: 	=IF((C15=28),0.1*M15,IF((C15=29),0.2*M15,0))
@@ -341,13 +341,13 @@ $AM$15: 	=IF(C15>1,24*G15/10&"" ml"","""")
 $AN$15: 	=IF(C15>1,INDEX(Tbl_Ped_MedContIV,C15,AN$2),"""")
 $H$16: 	=IF(C16>1,IF(D16>0,D16,IF(Medicatie_IsEpiduraal(AF16),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C16,H$2))),"""")
 $I$16: 	=IF(C16>1,IF(E16>0,E16,IF(Medicatie_IsEpiduraal(AF16),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C16,I$2))),"""")
-$J$16: 	=IF(AND(C16>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C16,1),""EPI ""),G16/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C16,J$2)*(G16/10)*(H16/I16)/(_Pat_Gewicht),2)),"""")
+$J$16: 	=IF(AND(C16>1,_Pat_Gewicht>0,I16>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C16,1),""EPI ""),G16/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C16,J$2)*(G16/10)*(H16/I16)/(_Pat_Gewicht),2)),"""")
 $M$16: 	=IF(PedGuiMedIV!E20<>0,24*G16/10,0)
 $N$16: 	=IF($F16=3,M16*0.05,0)
 $O$16: 	=IF($F16=4,M16*0.1,0)
 $P$16: 	=IF($F16=2,M16*0.155,0)
 $Q$16: 	=IFERROR( VLOOKUP(AF16,Tbl_Glob_ParEnt,6,FALSE),0)*M16
-$R$16: 	=SUM(P16:Q16)
+$R$16: 	=IFERROR( VLOOKUP(AF16,Tbl_Glob_ParEnt,13,FALSE),0)*M16
 $S$16: 	=IF(OR($C16=19),0,0)
 $T$16: 	=IFERROR( VLOOKUP(AF16,Tbl_Glob_ParEnt,3,FALSE),0)*M16
 $U$16: 	=IF((C16=28),0.1*M16,IF((C16=29),0.2*M16,0))
@@ -372,13 +372,13 @@ $AM$16: 	=IF(C16>1,24*G16/10&"" ml"","""")
 $AN$16: 	=IF(C16>1,INDEX(Tbl_Ped_MedContIV,C16,AN$2),"""")
 $H$17: 	=IF(C17>1,IF(D17>0,D17,IF(Medicatie_IsEpiduraal(AF17),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C17,H$2))),"""")
 $I$17: 	=IF(C17>1,IF(E17>0,E17,IF(Medicatie_IsEpiduraal(AF17),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C17,I$2))),"""")
-$J$17: 	=IF(AND(C17>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C17,1),""EPI ""),G17/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C17,J$2)*(G17/10)*(H17/I17)/(_Pat_Gewicht),2)),"""")
+$J$17: 	=IF(AND(C17>1,_Pat_Gewicht>0,I17>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C17,1),""EPI ""),G17/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C17,J$2)*(G17/10)*(H17/I17)/(_Pat_Gewicht),2)),"""")
 $M$17: 	=IF(PedGuiMedIV!E21<>0,24*G17/10,0)
 $N$17: 	=IF($F17=3,M17*0.05,0)
 $O$17: 	=IF($F17=4,M17*0.1,0)
 $P$17: 	=IF($F17=2,M17*0.155,0)
 $Q$17: 	=IFERROR( VLOOKUP(AF17,Tbl_Glob_ParEnt,6,FALSE),0)*M17
-$R$17: 	=SUM(P17:Q17)
+$R$17: 	=IFERROR( VLOOKUP(AF17,Tbl_Glob_ParEnt,13,FALSE),0)*M17
 $S$17: 	=IF(OR($C17=19),0,0)
 $T$17: 	=IFERROR( VLOOKUP(AF17,Tbl_Glob_ParEnt,3,FALSE),0)*M17
 $U$17: 	=IF((C17=28),0.1*M17,IF((C17=29),0.2*M17,0))
@@ -403,13 +403,13 @@ $AM$17: 	=IF(C17>1,24*G17/10&"" ml"","""")
 $AN$17: 	=IF(C17>1,INDEX(Tbl_Ped_MedContIV,C17,AN$2),"""")
 $H$18: 	=IF(C18>1,IF(D18>0,D18,IF(Medicatie_IsEpiduraal(AF18),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C18,H$2))),"""")
 $I$18: 	=IF(C18>1,IF(E18>0,E18,IF(Medicatie_IsEpiduraal(AF18),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C18,I$2))),"""")
-$J$18: 	=IF(AND(C18>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C18,1),""EPI ""),G18/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C18,J$2)*(G18/10)*(H18/I18)/(_Pat_Gewicht),2)),"""")
+$J$18: 	=IF(AND(C18>1,_Pat_Gewicht>0,I18>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C18,1),""EPI ""),G18/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C18,J$2)*(G18/10)*(H18/I18)/(_Pat_Gewicht),2)),"""")
 $M$18: 	=IF(PedGuiMedIV!E22<>0,24*G18/10,0)
 $N$18: 	=IF($F18=3,M18*0.05,0)
 $O$18: 	=IF($F18=4,M18*0.1,0)
 $P$18: 	=IF($F18=2,M18*0.155,0)
 $Q$18: 	=IFERROR( VLOOKUP(AF18,Tbl_Glob_ParEnt,6,FALSE),0)*M18
-$R$18: 	=SUM(P18:Q18)
+$R$18: 	=IFERROR( VLOOKUP(AF18,Tbl_Glob_ParEnt,13,FALSE),0)*M18
 $S$18: 	=IF(OR($C18=19),0,0)
 $T$18: 	=IFERROR( VLOOKUP(AF18,Tbl_Glob_ParEnt,3,FALSE),0)*M18
 $U$18: 	=IF((C18=28),0.1*M18,IF((C18=29),0.2*M18,0))
@@ -434,13 +434,13 @@ $AM$18: 	=IF(C18>1,24*G18/10&"" ml"","""")
 $AN$18: 	=IF(C18>1,INDEX(Tbl_Ped_MedContIV,C18,AN$2),"""")
 $H$19: 	=IF(C19>1,IF(D19>0,D19,IF(Medicatie_IsEpiduraal(AF19),Medicatie_CalcEpiQty(_Pat_Gewicht),INDEX(Tbl_Ped_MedContIV,C19,H$2))),"""")
 $I$19: 	=IF(C19>1,IF(E19>0,E19,IF(Medicatie_IsEpiduraal(AF19),Medicatie_CalcEpiVol(_Pat_Gewicht), INDEX(Tbl_Ped_MedContIV,C19,I$2))),"""")
-$J$19: 	=IF(AND(C19>1,_Pat_Gewicht>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C19,1),""EPI ""),G19/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C19,J$2)*(G19/10)*(H19/I19)/(_Pat_Gewicht),2)),"""")
+$J$19: 	=IF(AND(C19>1,_Pat_Gewicht>0,I19>0),IF(ContainsCaseInsensitive(INDEX(Tbl_Ped_MedContIV,C19,1),""EPI ""),G19/10,FixPrecision(INDEX(Tbl_Ped_MedContIV,C19,J$2)*(G19/10)*(H19/I19)/(_Pat_Gewicht),2)),"""")
 $M$19: 	=IF(PedGuiMedIV!E23<>0,24*G19/10,0)
 $N$19: 	=IF($F19=3,M19*0.05,0)
 $O$19: 	=IF($F19=4,M19*0.1,0)
 $P$19: 	=IF($F19=2,M19*0.155,0)
 $Q$19: 	=IFERROR( VLOOKUP(AF19,Tbl_Glob_ParEnt,6,FALSE),0)*M19
-$R$19: 	=SUM(P19:Q19)
+$R$19: 	=IFERROR( VLOOKUP(AF19,Tbl_Glob_ParEnt,13,FALSE),0)*M19
 $S$19: 	=IF(OR($C19=19),0,0)
 $T$19: 	=IFERROR( VLOOKUP(AF19,Tbl_Glob_ParEnt,3,FALSE),0)*M19
 $U$19: 	=IF((C19=28),0.1*M19,IF((C19=29),0.2*M19,0))

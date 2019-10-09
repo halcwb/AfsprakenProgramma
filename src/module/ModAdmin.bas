@@ -63,11 +63,11 @@ Public Sub Admin_SetUpPedDataDir()
     If Not Util_CheckPassword Then Exit Sub
     
     arrBeds = ModSetting.GetPedBeds()
-    strBedsFilePath = ModSetting.GetPatientDataPath() & ModSetting.CONST_PICU_BEDS
+    strBedsFilePath = ModSetting.GetPatientDataPath() & CONST_PICU_BEDS
     
     Util_SetUpDataDir strBedsFilePath, arrBeds
     
-    ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling Pediatrie"
+    ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling PICU"
 
 End Sub
 
@@ -79,11 +79,11 @@ Public Sub Admin_SetUpNeoDataDir()
     If Not Util_CheckPassword Then Exit Sub
     
     arrBeds = ModSetting.GetNeoBeds()
-    strBedsFilePath = ModSetting.GetPatientDataPath() & ModSetting.CONST_NICU_BEDS
+    strBedsFilePath = ModSetting.GetPatientDataPath() & CONST_NICU_BEDS
     
     Util_SetUpDataDir strBedsFilePath, arrBeds
     
-    ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling Neonatologie"
+    ModMessage.ShowMsgBoxInfo "Data bestanden aangemaakt voor afdeling NICU"
 
 End Sub
 
@@ -138,7 +138,6 @@ Public Sub Admin_MedContNeoConfig()
     frmConfig.Show
     
 End Sub
-
 
 Public Sub Admin_ParEntConfig()
     
@@ -325,12 +324,13 @@ Public Sub Admin_ParEntSetCollection(objParEntCol As Collection)
     
 End Sub
 
-Private Sub Util_ExportContMed(ByVal strName As String, ByVal strTable As String, ByVal objHeading As Range, ByVal objSrc As Range)
+Private Sub Util_ExportContMed(ByVal isNICU As Boolean, ByVal strName As String, ByVal strTable As String, ByVal objHeading As Range, ByVal objSrc As Range)
     
     Dim objWbk As Workbook
     Dim strFile As String
     Dim objDst As Range
     Dim shtDst As Worksheet
+    Dim shtDil As Worksheet
     Dim intHeading As Integer
     Dim intTableRows As Integer
     Dim intTableColumns As Integer
@@ -338,7 +338,7 @@ Private Sub Util_ExportContMed(ByVal strName As String, ByVal strTable As String
     
     On Error GoTo ErrorHandler
     
-    varDir = ModFile.GetFolderWithDialog()
+    varDir = ModFile.GetFolderWithDialog(WbkAfspraken.Path)
     
     If CStr(varDir) = vbNullString Then Exit Sub
     
@@ -349,6 +349,12 @@ Private Sub Util_ExportContMed(ByVal strName As String, ByVal strTable As String
     Set objWbk = Workbooks.Add()
     Set shtDst = objWbk.Sheets(1)
     shtDst.Name = strTable
+    
+    If isNICU Then
+        Set shtDil = objWbk.Sheets(2)
+        shtDil.Name = CONST_MEDCONTVERDUNNING_NEO
+        shtDil.Cells(1, 1).Value2 = Admin_MedContNeoGetVerdunning()
+    End If
     
     objHeading.Copy
     shtDst.Range("A1").PasteSpecial xlPasteValues
@@ -381,24 +387,78 @@ ErrorHandler:
 End Sub
 
 Public Sub Admin_ParentImport()
-    
 
+    Dim objConfigWbk As Workbook
+    Dim objSrc As Range
+    Dim objDst As Range
+    Dim lngErr As Long
+    Dim strFile As String
+    
+    strFile = ModFile.GetFileWithDialog
+    If strFile = "" Then Exit Sub
+    
+    Dim strMsg As String
+    
+    On Error GoTo HandleError
+       
+    Application.DisplayAlerts = False
+        
+    Set objConfigWbk = Workbooks.Open(strFile, True, True)
+    Set objSrc = objConfigWbk.Sheets(CONST_TBL_PARENT).Range(CONST_TBL_PARENT)
+    Set objDst = ModRange.GetRange(CONST_TBL_PARENT)
+        
+    Sheet_CopyRangeFormulaToDst objSrc, objDst
+            
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    
+    Exit Sub
+    
+HandleError:
+
+    objConfigWbk.Close
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not import: " & strFile
+    
 End Sub
 
 Public Sub Admin_ParentExport()
 
+    Dim objHeading As Range
+    Dim objSrc As Range
+    Dim strName As String
+    Dim varDir As Variant
+    
+    strName = "Parenteralia"
+    
+    Set objHeading = shtGlobTblParEnt.Range("A3:N4")
+    Set objSrc = shtGlobTblParEnt.Range(CONST_TBL_PARENT)
+
+    Util_ExportContMed False, strName, CONST_TBL_PARENT, objHeading, objSrc
 
 End Sub
 
 Public Sub Admin_MedDiscImport()
 
-    Database_ImportConfigMedDisc
+    Dim objForm As ClassFormularium
+    Dim strFile As String
+    Dim strMsg As String
+    
+    strFile = ModFile.GetFileWithDialog
+    If strFile = "" Then Exit Sub
+        
+    strMsg = "Dit bestand importeren?" & vbNewLine & strFile
+    If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
+        
+    Set objForm = Formularium_GetNewFormularium()
+    objForm.Reset
+    Formularium_Import objForm, strFile, True
 
 End Sub
 
 Public Sub Admin_MedDiscExport()
 
-    Formularium_ExportMedDiscConfig True
+    Formularium_Export True
 
 End Sub
 
@@ -414,7 +474,7 @@ Public Sub Admin_MedContPedExport()
     Set objHeading = shtPedTblMedIV.Range("B1:S3")
     Set objSrc = shtPedTblMedIV.Range(CONST_TBL_MEDCONT_PED)
 
-    Util_ExportContMed strName, CONST_TBL_MEDCONT_PED, objHeading, objSrc
+    Util_ExportContMed False, strName, CONST_TBL_MEDCONT_PED, objHeading, objSrc
 
 End Sub
 
@@ -431,7 +491,7 @@ Public Sub Admin_MedContNeoExport()
     Set objHeading = shtNeoTblMedIV.Range("B2:T2")
     Set objSrc = shtNeoTblMedIV.Range(CONST_TBL_MEDCONT_NEO)
 
-    Util_ExportContMed strName, CONST_TBL_MEDCONT_NEO, objHeading, objSrc
+    Util_ExportContMed True, strName, CONST_TBL_MEDCONT_NEO, objHeading, objSrc
 
 End Sub
 
@@ -450,7 +510,7 @@ Public Sub Admin_MedContPedImport()
     
     On Error GoTo HandleError
     
-    strMsg = "Kies een Excel bestand met de Pediatrie configuratie voor continue medicatie"
+    strMsg = "Kies een Excel bestand met de PICU configuratie voor continue medicatie"
     ModMessage.ShowMsgBoxInfo strMsg
     
     strFile = ModFile.GetFileWithDialog
@@ -465,15 +525,10 @@ Public Sub Admin_MedContPedImport()
     Set objDst = ModRange.GetRange(CONST_TBL_MEDCONT_PED)
         
     Sheet_CopyRangeFormulaToDst objSrc, objDst
-    Database_SavePedConfigMedCont
     
     objConfigWbk.Close
     Application.DisplayAlerts = True
-    
-    intVersion = Database_GetLatestConfigMedContVersion("Pediatrie")
-    strMsg = "De meest recente versie van de pediatrie configuratie van continue medicatie is nu: " & intVersion
-    ModMessage.ShowMsgBoxInfo strMsg
-    
+        
     Exit Sub
     
 HandleError:
@@ -484,55 +539,17 @@ HandleError:
 
 End Sub
 
-
 Public Sub Admin_MedContNeoImport()
+    
+    Dim strMsg As String
 
-'    Dim objConfigWbk As Workbook
-'    Dim objSrc As Range
-'    Dim objDst As Range
-'    Dim lngErr As Long
-'    Dim strFile As String
-'
-'    Dim objMed As ClassNeoMedCont
-'
-'    strFile = ModFile.GetFileWithDialog
-'
-'    Dim strMsg As String
-'
-'    On Error GoTo HandleError
-'
-'    Application.DisplayAlerts = False
-'
-'    Set objConfigWbk = Workbooks.Open(strFile, True, True)
-'    Set objSrc = objConfigWbk.Sheets(CONST_TBL_MEDCONT_NEO).Range(CONST_TBL_MEDCONT_NEO)
-'    Set objDst = ModRange.GetRange(CONST_TBL_MEDCONT_NEO)
-'
-'    Sheet_CopyRangeFormulaToDst objSrc, objDst
-'    Sheet_CopyRangeFormulaToDst objConfigWbk.Sheets(CONST_MEDCONTVERDUNNING_NEO).Range("A1"), ModRange.GetRange(CONST_MEDCONTVERDUNNING_NEO)
-'
-'    Set m_MedCol = ModAdmin.Admin_MedContNeoGetCollection()
-'
-'    lbxMedicamenten.Clear
-'    For Each objMed In m_MedCol
-'        lbxMedicamenten.AddItem objMed.Generic
-'    Next
-'
-'    ClearMedDetails
-'
-'    objConfigWbk.Close
-'    Application.DisplayAlerts = True
-'
-'    Exit Sub
-'
-'HandleError:
-'
-'    objConfigWbk.Close
-'    Application.DisplayAlerts = True
-'    ModLog.LogError Err, "Could not import: " & strFile
+    strMsg = "Kies een Excel bestand met de NICU configuratie voor continue medicatie"
+    Util_ParentContMedNeoPedImport CONST_TBL_MEDCONT_NEO, NeoCont, strMsg
+    
 
 End Sub
 
-Private Sub Util_ConfigImport(ByVal strTable, ByVal intTable As ConfigTable, ByVal strMsg As String)
+Private Sub Util_ParentContMedNeoPedImport(ByVal strTable, ByVal intTable As ConfigTable, ByVal strMsg As String)
 
     Dim objConfigWbk As Workbook
     Dim objSrc As Range
@@ -561,25 +578,17 @@ Private Sub Util_ConfigImport(ByVal strTable, ByVal intTable As ConfigTable, ByV
     Select Case intTable
     
         Case PedCont
-            Database_SavePedConfigMedCont
-            intVersion = Database_GetLatestConfigMedContVersion("Pediatrie")
         
         Case NeoCont
-            Sheet_CopyRangeFormulaToDst objConfigWbk.Sheets(CONST_MEDCONTVERDUNNING_NEO).Range("A1"), ModRange.GetRange(CONST_MEDCONTVERDUNNING_NEO)
-            Database_SaveNeoConfigMedCont
-            intVersion = Database_GetLatestConfigMedContVersion("Neonatologie")
+            ModRange.SetRangeValue CONST_MEDCONTVERDUNNING_NEO, objConfigWbk.Sheets(CONST_MEDCONTVERDUNNING_NEO).Range("A1").Value2
         
         Case Parent
-            Database_SaveConfigParEnt
             
     End Select
-    
+        
     objConfigWbk.Close
     Application.DisplayAlerts = True
-    
-    strMsg = "De meest recente versie van de configuratie is nu: " & intVersion
-    ModMessage.ShowMsgBoxInfo strMsg
-    
+        
     Exit Sub
     
 HandleError:
@@ -588,4 +597,78 @@ HandleError:
     Application.DisplayAlerts = True
     ModLog.LogError Err, "Could not import: " & strFile
 
+End Sub
+
+Public Sub Admin_MedContNeoSave()
+
+    Dim intVersion As Integer
+    Dim strMsg As String
+
+    On Error GoTo HandleError
+    
+    Database_SaveNeoConfigMedCont
+    intVersion = Database_GetLatestConfigMedContVersion(CONST_DEP_NICU)
+
+    strMsg = "De meest recente versie van de neonatologie configuratie van continue medicatie is nu: " & intVersion
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    Exit Sub
+    
+HandleError:
+
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not Save Neo Cont Med"
+
+End Sub
+
+Public Sub Admin_MedContPedSave()
+
+    Dim intVersion As Integer
+    Dim strMsg As String
+
+    On Error GoTo HandleError
+
+    Database_SavePedConfigMedCont
+
+    intVersion = Database_GetLatestConfigMedContVersion(CONST_DEP_PICU)
+    strMsg = "De meest recente versie van de pediatrie configuratie van continue medicatie is nu: " & intVersion
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    Exit Sub
+    
+HandleError:
+
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not Save Ped Cont Med"
+
+
+End Sub
+
+Public Sub Admin_ParentSave()
+    
+    Dim intVersion As Integer
+    Dim strMsg As String
+
+    On Error GoTo HandleError
+
+    Database_SaveConfigParEnt
+
+    intVersion = Database_GetLatestConfigParentVersion()
+    strMsg = "De meest recente versie van de parenterialia configuratie van is nu: " & intVersion
+    ModMessage.ShowMsgBoxInfo strMsg
+    
+    Exit Sub
+    
+HandleError:
+
+    Application.DisplayAlerts = True
+    ModLog.LogError Err, "Could not Save Parenteralia"
+
+
+End Sub
+
+Public Sub Admin_MedDiscSave()
+        
+    Database_SaveConfigMedDisc
+        
 End Sub

@@ -118,6 +118,8 @@ Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, ByV
     
     strStartsWith = IIf(bln1700, constInfBData1700, constInfBDataAct)
     
+    ImprovePerf True
+    
     intN = 1
     intC = WbkAfspraken.Names.Count
     For Each objName In WbkAfspraken.Names
@@ -141,6 +143,8 @@ Private Sub CopyVarData(ByVal bln1700 As Boolean, ByVal blnToVar As Boolean, ByV
             
         End If
     Next
+    
+    ImprovePerf False
 
 End Sub
 

@@ -121,7 +121,7 @@ Private Sub Test_GetPatientWorkBookName()
     Dim strBed As String
     strBed = "2.9"
 
-    AssertEqual GetPatientDataWorkBookName(strBed), "Patient" + strBed + ".xls", "Could not get correct CONST_WORKBOOKNAME", Not blnDontDisplay
+    AssertEqual Setting_GetPatientDataWorkBookName(strBed), "Patient" + strBed + ".xls", "Could not get correct CONST_WORKBOOKNAME", Not blnDontDisplay
 
 End Sub
 
@@ -154,7 +154,7 @@ Private Sub Test_CanReadFormulariumDb()
 
     Dim objForm As ClassFormularium
     Dim intCount As Integer
-    Dim objMed As ClassMedicatieDisc
+    Dim objMed As ClassMedDisc
     
     intCount = 2284
     Set objForm = New ClassFormularium

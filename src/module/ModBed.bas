@@ -122,7 +122,7 @@ Public Sub Bed_OpenBedAndAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As B
     ModLog.LogActionStart strAction, strParams
     
     strFileName = ModSetting.GetPatientDataFile(strBed)
-    strBookName = ModSetting.GetPatientDataWorkBookName(strBed)
+    strBookName = Setting_GetPatientDataWorkBookName(strBed)
     strRange = "A1"
     
     If ModWorkBook.CopyWorkbookRangeToSheet(strFileName, strBookName, strRange, shtGlobTemp, True) Then
@@ -306,8 +306,8 @@ Private Function Util_SaveBedToFile(ByVal strBed As String, ByVal blnForce As Bo
     ' Guard for non existing files
     If Not ModFile.FileExists(strDataFile) Or Not ModFile.FileExists(strTextFile) Then GoTo SaveBedToFileError
     
-    strDataName = ModSetting.GetPatientDataWorkBookName(strBed)
-    strTextName = ModSetting.GetPatientTextWorkBookName(strBed)
+    strDataName = Setting_GetPatientDataWorkBookName(strBed)
+    strTextName = Setting_GetPatientTextWorkBookName(strBed)
     
     dtmVersion = FileSystem.FileDateTime(strDataFile)
     dtmCurrent = ModBed.Bed_GetFileVersion()
@@ -330,7 +330,7 @@ Private Function Util_SaveBedToFile(ByVal strBed As String, ByVal blnForce As Bo
     End If
     
     Application.DisplayAlerts = False
-    Application.ScreenUpdating = False
+    ImprovePerf True
         
     strDataRange = "A1:B" + CStr(shtPatData.Range("B1").CurrentRegion.Rows.Count)
     strTextRange = "A1:C" + CStr(shtPatText.Range("C1").CurrentRegion.Rows.Count)
@@ -363,7 +363,7 @@ Private Function Util_SaveBedToFile(ByVal strBed As String, ByVal blnForce As Bo
     If blnShowProgress Then ModProgress.SetJobPercentage "Bestand Opslaan", 100, 100
     
     Application.DisplayAlerts = True
-    Application.ScreenUpdating = True
+    ImprovePerf False
         
     Util_SaveBedToFile = True
         

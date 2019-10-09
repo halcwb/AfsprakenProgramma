@@ -9,57 +9,64 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private m_lngCount As Integer
-Private m_colMedicamenten As Collection
-Private m_colGeneriek As Collection
-Private m_colVorm As Collection
-Private m_colSterkteEenheden As Collection
-Private m_colDosisEenheden As Collection
-Private m_colRoutes As Collection
+Private m_MedicationCollection As Collection
+Private m_SolutionCollection As Collection
+Private m_DoseCollection As Collection
+Private m_GenericCollection As Collection
+Private m_ShapeCollection As Collection
+Private m_GenericQuantityUnitCollection As Collection
+Private m_MultipeQuantityUnitCollection As Collection
+Private m_RouteCollection As Collection
 
-Public Function HasSterkteEenheid(ByVal strEenheid As String) As Boolean
+Public Function Reset()
+
+    Init
+
+End Function
+
+Public Function HasGenericQuantityUnit(ByVal strUnit As String) As Boolean
 
     Dim varItem As Variant
     Dim blnExists As Boolean
     
     blnExists = False
-    For Each varItem In m_colSterkteEenheden
-        If varItem = strEenheid Then
+    For Each varItem In m_GenericQuantityUnitCollection
+        If varItem = strUnit Then
             blnExists = True
             Exit For
         End If
     Next
     
-    HasSterkteEenheid = blnExists
+    HasGenericQuantityUnit = blnExists
 
 End Function
 
-Public Function GetSterkteEenheden() As Collection
+Public Function GetGenericQuantityUnitCollection() As Collection
 
-    Set GetSterkteEenheden = m_colSterkteEenheden
+    Set GetGenericQuantityUnitCollection = m_GenericQuantityUnitCollection
 
 End Function
 
-Public Function HasDosisEenheid(ByVal strEenheid As String) As Boolean
+Public Function HasMultipleQuantityUnit(ByVal strUnit As String) As Boolean
 
     Dim varItem As Variant
     Dim blnExists As Boolean
     
     blnExists = False
-    For Each varItem In m_colDosisEenheden
-        If varItem = strEenheid Then
+    For Each varItem In m_MultipeQuantityUnitCollection
+        If varItem = strUnit Then
             blnExists = True
             Exit For
         End If
     Next
     
-    HasDosisEenheid = blnExists
+    HasMultipleQuantityUnit = blnExists
 
 End Function
 
-Public Function GetDosisEenheden() As Collection
+Public Function GetDoseUnitCollection() As Collection
 
-    Set GetDosisEenheden = m_colDosisEenheden
+    Set GetDoseUnitCollection = m_MultipeQuantityUnitCollection
 
 End Function
 
@@ -69,7 +76,7 @@ Public Function HasRoute(ByVal strRoute As String) As Boolean
     Dim blnExists As Boolean
     
     blnExists = False
-    For Each varItem In m_colRoutes
+    For Each varItem In m_RouteCollection
         If varItem = strRoute Then
             blnExists = True
             Exit For
@@ -82,34 +89,34 @@ End Function
 
 Public Function GetRoutes() As Collection
 
-    Set GetRoutes = m_colRoutes
+    Set GetRoutes = m_RouteCollection
 
 End Function
 
-Public Function HasVorm(ByVal strVorm As String) As Boolean
+Public Function HasShape(ByVal strShape As String) As Boolean
 
     Dim varItem As Variant
     Dim blnExists As Boolean
     
     blnExists = False
-    For Each varItem In m_colVorm
-        If varItem = strVorm Then
+    For Each varItem In m_ShapeCollection
+        If varItem = strShape Then
             blnExists = True
             Exit For
         End If
     Next
     
-    HasVorm = blnExists
+    HasShape = blnExists
 
 End Function
 
-Public Function GetVormen() As Collection
+Public Function GetShapeCollection() As Collection
 
-    Set GetVormen = m_colVorm
+    Set GetShapeCollection = m_ShapeCollection
 
 End Function
 
-Public Sub AddMedicament(ByVal objMed As ClassMedicatieDisc)
+Public Sub AddMedication(ByVal objMed As ClassMedDisc)
 
     Dim varRoute As Variant
     
@@ -117,27 +124,25 @@ Public Sub AddMedicament(ByVal objMed As ClassMedicatieDisc)
         Exit Sub
     End If
     
-    m_colMedicamenten.Add objMed
+    m_MedicationCollection.Add objMed
     
-    CollectionAddDistinctStringNotEmpty m_colGeneriek, objMed.Generic
-    CollectionAddDistinctStringNotEmpty m_colVorm, objMed.Shape
-    CollectionAddDistinctStringNotEmpty m_colSterkteEenheden, objMed.GenericUnit
-    CollectionAddDistinctStringNotEmpty m_colDosisEenheden, objMed.MultipleUnit
+    CollectionAddDistinctStringNotEmpty m_GenericCollection, objMed.Generic
+    CollectionAddDistinctStringNotEmpty m_ShapeCollection, objMed.Shape
+    CollectionAddDistinctStringNotEmpty m_GenericQuantityUnitCollection, objMed.GenericUnit
+    CollectionAddDistinctStringNotEmpty m_MultipeQuantityUnitCollection, objMed.MultipleUnit
     
     For Each varRoute In objMed.GetRouteList()
-        CollectionAddDistinctStringNotEmpty m_colRoutes, varRoute
+        CollectionAddDistinctStringNotEmpty m_RouteCollection, varRoute
     Next
-    
-    m_lngCount = m_lngCount + 1
-    
+        
 End Sub
 
-Public Function GPK(ByVal v_GPK As String) As ClassMedicatieDisc
+Public Function GPK(ByVal v_GPK As String) As ClassMedDisc
 
-    Dim objMed As ClassMedicatieDisc
+    Dim objMed As ClassMedDisc
 '    Dim objRes As ClassMedicatieDisc
 
-    For Each objMed In m_colMedicamenten
+    For Each objMed In m_MedicationCollection
         If objMed.GPK = v_GPK Then
 '            Set objRes = objMed
             Exit For
@@ -148,50 +153,54 @@ Public Function GPK(ByVal v_GPK As String) As ClassMedicatieDisc
 
 End Function
 
-Public Function Item(ByVal v_intIndex As Integer) As ClassMedicatieDisc
+Public Function Item(ByVal v_intIndex As Integer) As ClassMedDisc
 
-    Set Item = m_colMedicamenten.Item(v_intIndex)
+    Set Item = m_MedicationCollection.Item(v_intIndex)
     
 End Function
 
-Private Sub Class_Initialize()
+Private Sub Init()
 
-    Set m_colMedicamenten = New Collection
-    Set m_colGeneriek = New Collection
-    Set m_colVorm = New Collection
-    Set m_colSterkteEenheden = New Collection
-    Set m_colDosisEenheden = New Collection
-    Set m_colRoutes = New Collection
+    Set m_MedicationCollection = New Collection
+    Set m_GenericCollection = New Collection
+    Set m_ShapeCollection = New Collection
+    Set m_GenericQuantityUnitCollection = New Collection
+    Set m_MultipeQuantityUnitCollection = New Collection
+    Set m_RouteCollection = New Collection
     
-    m_colDosisEenheden.Add "mmol"
+    m_MultipeQuantityUnitCollection.Add "mmol"
 
 End Sub
 
-Public Function GetMedicamenten(ByVal blnShowProgress As Boolean) As Collection
+Private Sub Class_Initialize()
+
+    Init
+
+End Sub
+
+Public Function GetMedicationCollection(ByVal blnShowProgress As Boolean) As Collection
 
     Dim objC As ClassStringComparer
     
-    If Not m_colMedicamenten Is Nothing Then
+    If m_MedicationCollection Is Nothing Then Set m_MedicationCollection = New Collection
     
-        If Not m_colMedicamenten.Count > 0 Then
+    If Not m_MedicationCollection.Count > 0 Then
 
-            Database_GetMedicamenten Me, blnShowProgress
-            
-            Set objC = New ClassStringComparer
-            ModCollection.CollectionSort m_colVorm, objC
-            ModCollection.CollectionSort m_colSterkteEenheden, objC
+        Database_LoadFormularium Me, blnShowProgress
         
-        End If
+        Set objC = New ClassStringComparer
+        ModCollection.CollectionSort m_ShapeCollection, objC
+        ModCollection.CollectionSort m_GenericQuantityUnitCollection, objC
     
     End If
-    
-    Set GetMedicamenten = m_colMedicamenten
+        
+    Set GetMedicationCollection = m_MedicationCollection
 
 End Function
 
 Public Property Get MedicamentCount() As Variant
 
-    MedicamentCount = m_lngCount - 1
+    MedicamentCount = m_MedicationCollection.Count
 
 End Property
 
@@ -201,7 +210,7 @@ Public Function HasGeneriek(ByVal strGeneriek As String) As Boolean
     Dim blnExists As Boolean
     
     blnExists = False
-    For Each varItem In m_colGeneriek
+    For Each varItem In m_GenericCollection
         If varItem = strGeneriek Then
             blnExists = True
             Exit For
@@ -214,6 +223,6 @@ End Function
 
 Public Function GetGenerieken() As Collection
 
-    Set GetGenerieken = m_colGeneriek
+    Set GetGenerieken = m_GenericCollection
 
 End Function

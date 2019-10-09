@@ -33,15 +33,39 @@ Public Const CONST_PRESCRIPTIONS_VERSION As String = "Var_Glob_Versie"
 Public Const CONST_PRESCRIPTIONS_DATE As String = "Var_AfspraakDatum"
 
 Public Const CONST_PATHOSPNUM_RANGE As String = "__0_PatNum"
+
 Public Const CONST_LASTNAME_RANGE As String = "__2_AchterNaam"
+
 Public Const CONST_FIRSTNAME_RANGE As String = "__3_VoorNaam"
+
 Public Const CONST_BIRTHDATE_RANGE As String = "__4_GebDatum"
+
 Public Const CONST_ADMISSIONDATE_RANGE As String = "_Pat_OpnDatum"
+
 Public Const CONST_WEIGHT_RANGE As String = "_Pat_Gewicht"
+
 Public Const CONST_HEIGHT_RANGE As String = "_Pat_Lengte"
+
 Public Const CONST_GENDER_RANGE As String = "_Pat_Geslacht"
+
 Public Const CONST_GESTDAYS_RANGE As String = "_Pat_GestDagen"
+
 Public Const CONST_GESTWEEKS_RANGE As String = "_Pat_GestWeken"
+
 Public Const CONST_BIRTHWEIGHT_RANGE As String = "_Pat_GebGew"
+
+Public Const CONST_DEP_PICU As String = "PICU"
+
+Public Const CONST_DEP_NICU As String = "NICU"
+
+Public Const CONST_DATA_SHEET As String = "Data"
+
+Public Const CONST_PATIENTS_SHEET As String = "Patienten"
+
+Public Const CONST_PICU_BEDS As String = "PICU.xlsx"
+
+Public Const CONST_NICU_BEDS As String = "NICU.xlsx"
+
+Public Const CONST_BEDS_SHEET As String = "Beds"
 
 

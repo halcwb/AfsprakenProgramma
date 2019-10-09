@@ -367,15 +367,14 @@ Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As 
     Dim strJob As String
     Dim strHospNum As String
     Dim objResult As VbMsgBoxResult
+    Dim arrData As Variant
             
     Dim blnInfB As Boolean
     
-    With Application
-        .DisplayAlerts = False
-        .ScreenUpdating = False
-        .EnableEvents = False
-        .Calculation = xlCalculationManual
-    End With
+    Application.DisplayAlerts = False
+    ImprovePerf True
+    
+    On Error GoTo ErrorHandler
     
     blnInfB = (MetaVision_IsNeonatologie() Or ModSetting.IsDevelopmentDir()) And Not (strStartWith = "_Ped" Or strStartWith = "_Glob")
             
@@ -400,27 +399,26 @@ Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As 
             ModProgress.StartProgress strTitle
         End If
                 
-        With shtPatData
-            strJob = "Patient gegevens verwijderen"
-            intC = .Range("A1").CurrentRegion.Rows.Count
-            
-            For intN = 2 To intC
-                strRange = .Cells(intN, 1).Value2
-                If Not ModString.StartsWith(strRange, "_User") Then
-                    If strStartWith = vbNullString Then
-                        varValue = .Cells(intN, 3).Value2
+        strJob = "Patient gegevens verwijderen"
+        arrData = shtPatData.Range("A1").CurrentRegion.Value
+        
+        intC = UBound(arrData, 1)
+        For intN = 2 To intC
+            strRange = arrData(intN, 1)
+            If Not ModString.StartsWith(strRange, "_User") Then
+                If strStartWith = vbNullString Then
+                    varValue = arrData(intN, 3)
+                    ModRange.SetRangeValue strRange, varValue
+                Else
+                    If ModString.StartsWith(strRange, strStartWith) Then
+                        varValue = arrData(intN, 3)
                         ModRange.SetRangeValue strRange, varValue
-                    Else
-                        If ModString.StartsWith(strRange, strStartWith) Then
-                            varValue = .Cells(intN, 3).Value2
-                            ModRange.SetRangeValue strRange, varValue
-                        End If
                     End If
                 End If
-                
-                If blnShowProgress Then ModProgress.SetJobPercentage strJob, intC, intN
-            Next intN
-        End With
+            End If
+            
+            If blnShowProgress Then ModProgress.SetJobPercentage strJob, intC, intN
+        Next intN
         
         If blnInfB Then
             ModNeoInfB.CopyCurrentInfDataToVar blnShowProgress
@@ -433,21 +431,25 @@ Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As 
         ModApplication.App_SetApplicationTitle
     End If
     
-    With Application
-        .DisplayAlerts = True
-        .ScreenUpdating = True
-        .EnableEvents = True
-        .Calculation = xlCalculationAutomatic
-    End With
+    Application.DisplayAlerts = False
+    ImprovePerf False
     
     Database_LogAction "Clear patient data", ModUser.User_GetCurrent().Login, strHospNum
 
+    Exit Sub
+    
+ErrorHandler:
+
+    Application.DisplayAlerts = True
+    ImprovePerf False
+    
+    ModLog.LogError Err, "Could not clear patient data for" & strHospNum
 
 End Sub
 
 Public Sub Patient_ClearPedData()
 
-    ModProgress.StartProgress "Verwijder Pediatrie Data"
+    ModProgress.StartProgress "Verwijder PICU Data"
     Patient_ClearData "_Ped", False, True
     Patient_ClearData "_Glob", False, True
     ModProgress.FinishProgress
@@ -722,7 +724,7 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     End If
     
     Application.DisplayAlerts = False
-    Application.ScreenUpdating = False
+    ImprovePerf True
 
     ModDatabase.Database_SavePatient
     ModDatabase.Database_SavePrescriber
@@ -733,7 +735,7 @@ Private Function SavePatientToDatabase(ByVal blnShowProgress As Boolean) As Bool
     ModBed.Bed_PrescriptionsVersionSet Database_GetLatestPrescriptionVersion(strHospNum)
     
     Application.DisplayAlerts = True
-    Application.ScreenUpdating = True
+    ImprovePerf False
         
     SavePatientToDatabase = True
         

@@ -9,11 +9,6 @@ Niet testen
 - Fiks formatting ranges in settings
 
 - Config formulier voor beheerders
-- Config formulier voor pediatrie continue medicamenten
-- Logging configuratie wijzigingen door apotheek
-- Koppeling met Kinderformularium, doseer regels
-- Doseer regels uit de G-Standaard toepassen
-- Naamgeving en conventies medicatie opschonen
 
 - Inplannen van continue medicatie
 - Koppeling met VTGM parenteralia apotheek
@@ -53,29 +48,16 @@ Niet testen
 - Indicatie bij continue medicatie
 - Help menu item toevoegen
 
-- TPN pediatrie herzien.
-
-- Max dosering midazolam nicu 5 mg/kg/uur??
-- Epiduraal wijzigingen doorvoeren
-
-- Medicatie bestelbonnen doormailen
-- Discontinue medicatie sorteren op indicatie
 
 - TPN waarschuwing bij keuze zonder TPN dagkeuze
 - TPN formulier markeren dagkeuze
 
 - Neo octreotide toevoegen aan continue medicatie
-- Morfine doserng naar microg/kg/min
-- Neo insuline in glucose?
 
 - Naam SettingServer weghalen
 - Schoonmaken van de database met wegschrijven van configuratie
 - NaBic inhalatie toevoegen
 - Fiks patientlijst cancel en OK logica
-
-- Refactoring
-	- Code in Engels
-	- Publieke functies in modules met module naam als prefix
 
 Known issues
 - Voeding bij GI script status voering
@@ -83,7 +65,6 @@ Known issues
 
 Form diff script aanpassen check op parameter instellingen (laatste waarde)
 Medische status import scripts aanpassen
-Copy functie voor de gehele afspraken tekst (voor invoer in HIX).
 Config versies opslaan in data set
 Min en max dosering tussen haakjes achter de dosering
 
@@ -104,4 +85,10 @@ versie 0.50.35-beta
 - bugje: kan niet eerdere versie openen, gaat weer naar de meest recente
 - export discontinue medicatie ontbreekt nog
 
+Daniel
+1. Bij het kies medicijnen overzicht werkt de scroll van de muis niet, niet onoverkomelijk, maar wel lastig.
+4. Bij een maximale dosering van bijvoorbeeld 5 mg/kg/dag is een dosering van 5mg/kg/dag al rood, daarnaast wil je soms afronden naar iets hoger. Het lijkt me dat dit lastig anders is te organiseren, maar het valt op.
+5. Paracetamol IV komt de gstandaard niet met het kinderformularium overeen, daarnaast is er een aanpassing op gewicht en niet op zwangerschapsduur. Deze zit ook niet in de g-standaard.
+
+benzyl penicilline niet het juiste dosering advies (MIU vs IU)
 

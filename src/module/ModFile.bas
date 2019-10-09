@@ -232,7 +232,7 @@ Private Sub Test_GetFileWithDialog()
 
 End Sub
     
-Public Function GetFolderWithDialog() As String
+Public Function GetFolderWithDialog(ByVal strInitFile As String) As String
     
     Dim dlbFolder As FileDialog
     Dim varFile As Variant
@@ -255,6 +255,6 @@ End Function
 
 Private Sub Test_GetFolderWithDialog()
 
-    ModMessage.ShowMsgBoxInfo "Folder choosen: " & GetFolderWithDialog()
+    ModMessage.ShowMsgBoxInfo "Folder choosen: " & GetFolderWithDialog(IIf(ModSetting.IsDevelopmentDir, WbkAfspraken.Path & "\tests\", WbkAfspraken.Path & "\..\Tests\"))
 
 End Sub

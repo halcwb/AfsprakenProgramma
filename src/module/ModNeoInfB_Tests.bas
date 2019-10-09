@@ -45,6 +45,10 @@ Private Const constBereidingTekst As String = "AY"
 
 Private Const constTestResult As String = "AI"
 
+Private Const constTbl_Neo_MedIV_MedicationIndx As Integer = 22
+Private Const constTbl_Neo_OplVlst_SolutionIndx As Integer = 2
+
+
 Public Function Test_NeoInfB_FillContMed(ByVal blnPass As Boolean) As Boolean
 
     Dim intN As Integer
@@ -105,7 +109,7 @@ Public Sub Test_NeoInfB_ContMed()
     
     Dim varFile As Variant
     
-    On Error GoTo Test_NeoInfB_ContMedError
+    On Error GoTo ErrorHandler
     
     varFile = ModFile.GetFileWithDialog()
     
@@ -122,7 +126,7 @@ Public Sub Test_NeoInfB_ContMed()
         .DisplayAlerts = False
         .ScreenUpdating = False
     End With
-    
+        
     Set wbkTests = Workbooks.Open(varFile)
     Set shtTests = wbkTests.Sheets("NICU_ContMed")
     shtTests.Unprotect ModConst.CONST_PASSWORD
@@ -145,7 +149,7 @@ Public Sub Test_NeoInfB_ContMed()
         If IsEmpty(varVal) Then
             intMed = 1
         Else
-            intMed = ModExcel.Excel_VLookup(varVal, constTblMedIV, 21)
+            intMed = ModExcel.Excel_VLookup(varVal, constTblMedIV, constTbl_Neo_MedIV_MedicationIndx)
         End If
         
         ' Hoeveelheid
@@ -156,7 +160,7 @@ Public Sub Test_NeoInfB_ContMed()
         If IsEmpty(varVal) Then
             intOpl = 1
         Else
-            intOpl = ModExcel.Excel_VLookup(varVal, constTblOpl, 2)
+            intOpl = ModExcel.Excel_VLookup(varVal, constTblOpl, constTbl_Neo_OplVlst_SolutionIndx)
         End If
         
         ' Totale volume
@@ -187,7 +191,9 @@ Public Sub Test_NeoInfB_ContMed()
             shtNeoDataInfB.Range("Var_Neo_PrintApothNo").Value2 = intM + 1
             blnPass = blnPass And ModString.StartsWith(shtNeoPrtApoth.Range("D5").Value2, varVal)
             'Check afspraken print
-            If Not (IsEmpty(varVal) Or varVal = vbNullString) Then blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
+            If Not (IsEmpty(varVal) Or varVal = vbNullString) Then
+                blnPass = blnPass And ModString.ContainsCaseInsensitive(shtNeoPrtAfspr.Range("B" & intM + 33).Value2, varVal)
+            End If
         Next
         ' Schrijf actuele medicament
         shtTests.Range(constActMedicament & intN).Value2 = varVal
@@ -460,11 +466,11 @@ Public Sub Test_NeoInfB_ContMed()
     
     Exit Sub
     
-Test_NeoInfB_ContMedError:
+ErrorHandler:
 
     ModProgress.FinishProgress
     ModMessage.ShowMsgBoxExclam "Kan tests niet uitvoeren: " & Err.Source & " " & Err.Description
-    ModLog.LogError Err, "Test_NeoInfB_ContMedError: " & Err.Description
+    ModLog.LogError Err, "ErrorHandler: " & Err.Description
     
     On Error Resume Next
         
@@ -473,15 +479,13 @@ Test_NeoInfB_ContMedError:
     wbkTests.Close
     Set shtTests = Nothing
     Set wbkTests = Nothing
-
+    
+    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
+    
     With Application
         .DisplayAlerts = True
         .ScreenUpdating = True
-        .EnableEvents = True
-        .Calculation = xlCalculationAutomatic
     End With
-    
-    If Not blnDevelop Then ModApplication.App_ToggleDevelopmentMode
 
 End Sub
 
@@ -730,7 +734,7 @@ Public Sub Test_NeoInfB_Print()
         If IsEmpty(varVal) Then
             intMed = 1
         Else
-            intMed = ModExcel.Excel_VLookup(varVal, constTblMedIV, 21)
+            intMed = ModExcel.Excel_VLookup(varVal, constTblMedIV, constTbl_Neo_MedIV_MedicationIndx)
         End If
         
         ' Hoeveelheid
@@ -741,7 +745,7 @@ Public Sub Test_NeoInfB_Print()
         If IsEmpty(varVal) Then
             intOpl = 1
         Else
-            intOpl = ModExcel.Excel_VLookup(varVal, constTblOpl, 2)
+            intOpl = ModExcel.Excel_VLookup(varVal, constTblOpl, constTbl_Neo_OplVlst_SolutionIndx)
         End If
         
         ' Totale volume

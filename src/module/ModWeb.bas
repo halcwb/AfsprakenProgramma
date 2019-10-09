@@ -5,7 +5,7 @@ Option Explicit
 Private Const constHost = "http://vpxap-meta01.ds.umcutrecht.nl"
 Private Const constUrl As String = "/request?age=AGE&wth=WTH&hgt=HGT&gpk=GPK&gen=GEN&shp=SHP&rte=RTE&unt=UNT"
 
-Public Sub Web_RetrieveMedicationRules(objMed As ClassMedicatieDisc)
+Public Sub Web_RetrieveMedicationRules(objMed As ClassMedDisc)
 
     If objMed.GPK = "" Then Exit Sub
 
@@ -68,7 +68,7 @@ Private Sub Test_GetJson()
 
     Dim objClient As New WebClient
     Dim objResponse As WebResponse
-    Dim objMed As New ClassMedicatieDisc
+    Dim objMed As New ClassMedDisc
     
     objClient.BaseUrl = "http://iis2503.ds.umcutrecht.nl/genform"
     
@@ -80,7 +80,7 @@ Private Sub Test_GetJson()
 
 End Sub
 
-Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedicatieDisc)
+Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedDisc)
 
     Dim colRules As Collection
     Dim objRule As ClassDoseRule

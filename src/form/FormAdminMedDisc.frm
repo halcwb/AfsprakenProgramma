@@ -93,7 +93,7 @@ Public Function HasSelectedMedicament() As Boolean
 
 End Function
 
-Public Function GetSelectedMedicament() As ClassMedicatieDisc
+Public Function GetSelectedMedicament() As ClassMedDisc
 
     Set GetSelectedMedicament = m_Med
 
@@ -498,10 +498,10 @@ End Sub
 
 Private Sub SetConfig(objConfig As ClassMedDiscConfig)
 
-    Dim objMed As ClassMedicatieDisc
+    Dim objMed As ClassMedDisc
     Dim blnIsPed As Boolean
 
-    blnIsPed = MetaVision_IsPediatrie()
+    blnIsPed = MetaVision_IsPICU()
     
     objConfig.Generic = txtSynon.Value
     txtSynon.Value = objConfig.Generic
@@ -610,7 +610,7 @@ Private Sub cmdSave_Click()
     Me.Hide
     
     ModProgress.StartProgress "Medicatie configuratie opslaan"
-    ModFormularium.Formularium_ExportMedDiscConfig (True)
+    ModFormularium.Formularium_Export True
     ModProgress.FinishProgress
 
 End Sub
@@ -827,7 +827,7 @@ Private Sub LoadFreq()
     lbxFreq.Clear
 
     If m_Freq Is Nothing Then
-        Set m_Freq = ModMedDisc.GetMedicationFreqs()
+        Set m_Freq = ModMedDisc.MedDisc_GetMedicationFreqs()
     End If
 
     For Each varKey In m_Freq.Keys

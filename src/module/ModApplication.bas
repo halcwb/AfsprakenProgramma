@@ -36,7 +36,7 @@ Public Sub App_ToggleDevelopmentMode()
     
     If blnDevelop Then
         ModProgress.StartProgress "Zet in Ontwikkel Modus"
-        Application.ScreenUpdating = False
+        ImprovePerf True
         
         ModSheet.UnprotectUserInterfaceSheets True
         ModSheet.UnhideNonUserInterfaceSheets True
@@ -46,7 +46,7 @@ Public Sub App_ToggleDevelopmentMode()
             App_SetWindowToClose objWindow
         Next
         
-        Application.ScreenUpdating = True
+        ImprovePerf False
         ModProgress.FinishProgress
         
         Application.DisplayFormulaBar = True
@@ -87,6 +87,7 @@ Public Sub App_CloseApplication()
     ModLog.LogActionStart strAction, strParams
     
     ModProgress.StartProgress "Afspraken Programma Afsluiten"
+    ImprovePerf True
     
     intN = 1
     intC = WbkAfspraken.Windows.Count
@@ -110,10 +111,13 @@ Public Sub App_CloseApplication()
     ModLog.LogActionEnd strAction
     
     blnCloseHaseRun = True
-            
+    ImprovePerf False
+    
     If Not blnDontClose Then
         Application.StatusBar = vbNullString
         Application.DisplayAlerts = False
+        Application.DisplayFormulaBar = True
+        
         WbkAfspraken.blnCancelAfsprakenClose = False
         Database_LogAction "Close application", ModUser.User_GetCurrent().Login, ModPatient.Patient_GetHospitalNumber()
         Application.Quit
@@ -123,6 +127,7 @@ Public Sub App_CloseApplication()
     
 ErrorHandler:
 
+    ImprovePerf False
     ModLog.LogError Err, "App_CloseApplication"
 
 End Sub
@@ -176,7 +181,7 @@ Public Sub App_Initialize()
     On Error GoTo ErrorHandler
     
     shtGlobGuiFront.Select
-    Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
+    ImprovePerf True
     
     strAction = "ModApplication.App_Initialize"
     
@@ -245,7 +250,7 @@ Public Sub App_Initialize()
     ModLog.LogActionEnd strAction
     Database_LogAction "Initialize Application", objUser.Login, ModPatient.Patient_GetHospitalNumber()
     
-    Application.ScreenUpdating = True
+    ImprovePerf False
     
     If Util_CheckMedicationValidation() Then App_CloseApplication
     
@@ -253,6 +258,7 @@ Public Sub App_Initialize()
     
 ErrorHandler:
     
+    ImprovePerf False
     ModProgress.FinishProgress
     Application.Visible = True
 
@@ -334,7 +340,7 @@ Private Sub Util_SetCaptionAndHideBars()
     Application.StatusBar = ModConst.CONST_APPLICATION_NAME
     App_UpdateStatusBar "Versie", ModRange.GetRangeValue("Var_Glob_AppVersie", vbNullString)
     App_UpdateStatusBar "Omgeving", Util_GetEnvironment()
-    App_UpdateStatusBar "Afdeling", IIf(Util_IsPedDir, "Pediatrie", "Neonatologie")
+    App_UpdateStatusBar "Afdeling", IIf(Util_IsPedDir, "PICU", "NICU")
     App_UpdateStatusBar "Login", ModRange.GetRangeValue("_User_Login", vbNullString)
     
     Exit Sub
@@ -417,7 +423,7 @@ End Function
 
 Private Function Util_IsPedDir() As Boolean
 
-    Util_IsPedDir = MetaVision_IsPediatrie()
+    Util_IsPedDir = MetaVision_IsPICU()
     
 End Function
 
@@ -495,7 +501,7 @@ Public Sub App_SaveNeoMedContConfig()
     Dim strTable As String
     Dim strDst As String
     
-    Application.ScreenUpdating = False
+    ImprovePerf True
     ModProgress.StartProgress "Neo Continue Medicatie Configuratie Opslaan"
     
     strTable = "Tbl_Admin_NeoMedCont"
@@ -511,7 +517,7 @@ Public Sub App_SaveNeoMedContConfig()
     Util_SaveConfigTable strFile, strTable, strDst
     
     ModProgress.FinishProgress
-    Application.ScreenUpdating = True
+    ImprovePerf False
 
 End Sub
 
@@ -521,7 +527,7 @@ Public Sub App_SaveParEntConfig()
     Dim strTable As String
     Dim strDst As String
     
-    Application.ScreenUpdating = False
+    ImprovePerf True
     ModProgress.StartProgress "Parenteralia Configuratie Opslaan"
     
     strTable = "Tbl_Admin_ParEnt"
@@ -531,7 +537,7 @@ Public Sub App_SaveParEntConfig()
     Util_SaveConfigTable strFile, strTable, strDst
         
     ModProgress.FinishProgress
-    Application.ScreenUpdating = True
+    ImprovePerf False
 
 End Sub
 

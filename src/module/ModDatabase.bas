@@ -35,7 +35,7 @@ Private Const CONST_GET_PATIENTS = "dbo.GetPatients"
 Private Const CONST_INSERT_PATIENT = "InsertPatient"
 Private Const CONST_UPDATE_PATIENT = "UpdatePatient"
 
-Private Const constMedDiscTbl = "Table"
+Private Const constMedDiscTbl = "Medicatie"
 
 Private Sub Util_InitConnection()
 
@@ -421,17 +421,21 @@ Public Sub Database_SaveData(ByVal strHospNum As String, ByVal strPrescriber As 
     
     Dim intC As Integer
     Dim intN As Integer
+    
+    Dim objBuilder As ClassStringBuilder
         
     On Error GoTo SaveDataError
     
-    strSql = strSql & "DECLARE @RC int" & vbNewLine
-    strSql = strSql & "DECLARE @versionID int" & vbNewLine
-    strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
-    strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
+    Set objBuilder = New ClassStringBuilder
+    
+    objBuilder.Append "DECLARE @RC int" & vbNewLine
+    objBuilder.Append "DECLARE @versionID int" & vbNewLine
+    objBuilder.Append "DECLARE @versionUTC datetime" & vbNewLine
+    objBuilder.Append "DECLARE @versionDate datetime" & vbNewLine
     
     strLatest = "SELECT @versionID = " & CONST_GET_LATEST_PRESCRIPTION_VERSION & "('" & strHospNum & "')"
     strLatest = Util_GetVersionSQL(strLatest) & vbNewLine
-    strSql = strSql & vbNewLine & strLatest
+    objBuilder.Append vbNewLine & strLatest
        
     intC = objData.Rows.Count
     For intN = 2 To intC
@@ -440,33 +444,35 @@ Public Sub Database_SaveData(ByVal strHospNum As String, ByVal strPrescriber As 
         varEmp = objData.Cells(intN, 3).Value2
         
         If Not varVal = varEmp Then
-            strSql = strSql & vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONDATA & " '" & strHospNum & "', @versionID, @versionUTC, @versionDate, '" & strPrescriber & "', 0, ' " & strParam & " ', '" & varVal & " '"
+            objBuilder.Append vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONDATA & " '" & strHospNum & "', @versionID, @versionUTC, @versionDate, '" & strPrescriber & "', 0, ' " & strParam & " ', '" & varVal & " '"
         End If
         
         If blnProgress Then ModProgress.SetJobPercentage "Data wegschrijven", intC, intN
     Next intN
     
-    strSql = strSql & Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionData")
-    strSql = strSql & vbNewLine
-    strSql = strSql & vbNewLine
+    objBuilder.Append Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionData")
+    objBuilder.Append vbNewLine
+    objBuilder.Append vbNewLine
     
     intC = objText.Rows.Count
     For intN = 2 To intC
         If Not (Format(objText.Cells(intN, 2).Value2) = vbNullString Or Format(objText.Cells(intN, 2).Value2) = "0") Then
             strParam = objText.Cells(intN, 1).Value2
             varVal = objText.Cells(intN, 2).Value2
-            strSql = strSql & vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONTEXT & " '" & strHospNum & "', @versionID, @versionUTC, @versionDate, '" & strPrescriber & "', 0, ' " & strParam & " ', '" & varVal & " '"
+            objBuilder.Append vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONTEXT & " '" & strHospNum & "', @versionID, @versionUTC, @versionDate, '" & strPrescriber & "', 0, ' " & strParam & " ', '" & varVal & " '"
         End If
         
         If blnProgress Then ModProgress.SetJobPercentage "Text wegschrijven naar de database", intC, intN
     Next intN
     
-    strSql = strSql & Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionText")
-    strSql = strSql & vbNewLine
-    strSql = strSql & vbNewLine
+    objBuilder.Append Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionText")
+    objBuilder.Append vbNewLine
+    objBuilder.Append vbNewLine
     
+    strSql = objBuilder.ToString()
     strSql = ModDatabase.Util_WrapTransaction(strSql, "save_data")
     ModUtils.CopyToClipboard strSql
+    
     objConn.Open
     objConn.Execute strSql, adExecuteNoRecords
     objConn.Close
@@ -505,7 +511,7 @@ Private Sub Util_GetPatientDataForHospNumAndVersion(ByVal strHospNum, Optional B
     
     On Error GoTo Database_GetPatientDataError
     
-    Application.ScreenUpdating = False
+    ImprovePerf True
     
     strSql = strSql & "SELECT * FROM "
     If intVersion = 0 Then
@@ -549,7 +555,7 @@ Private Sub Util_GetPatientDataForHospNumAndVersion(ByVal strHospNum, Optional B
     Loop
     
     objConn.Close
-    Application.ScreenUpdating = True
+    ImprovePerf False
     
     Exit Sub
 
@@ -559,7 +565,7 @@ Database_GetPatientDataError:
     
     ModLog.LogError Err, "Could not get patient data with hospitalnumber " & strHospNum & " with SQL: " & vbNewLine & strSql
     objConn.Close
-    Application.ScreenUpdating = True
+    ImprovePerf False
 
 End Sub
 
@@ -639,58 +645,60 @@ Private Function Util_GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As Strin
     Dim intC As Integer
     
     Dim objSrc As Range
+    Dim objBuilder As ClassStringBuilder
     Dim strSql
         
     strTable = "Tbl_Admin_NeoMedCont"
-    strDepartment = "Neonatologie"
+    strDepartment = CONST_DEP_NICU
     strDilutionText = ModRange.GetRangeValue("Var_Neo_MedCont_VerdunningTekst", vbNullString)
     
+    Set objBuilder = New ClassStringBuilder
     Set objSrc = ModRange.GetRange(strTable)
     If Not blnIsBatch Then
     
-        strSql = strSql & "DECLARE @RC int" & vbNewLine
-        strSql = strSql & "DECLARE @versionID int" & vbNewLine
-        strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
-        strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
+        objBuilder.Append "DECLARE @RC int" & vbNewLine
+        objBuilder.Append "DECLARE @versionID int" & vbNewLine
+        objBuilder.Append "DECLARE @versionUTC datetime" & vbNewLine
+        objBuilder.Append "DECLARE @versionDate datetime" & vbNewLine
         
-        strSql = strSql & "DECLARE @department nvarchar(60)" & vbNewLine
-        strSql = strSql & "DECLARE @generic nvarchar(300)" & vbNewLine
-        strSql = strSql & "DECLARE @genericUnit nvarchar(50)" & vbNewLine
-        strSql = strSql & "DECLARE @genericQuantity float" & vbNewLine
-        strSql = strSql & "DECLARE @genericVolume float" & vbNewLine
-        strSql = strSql & "DECLARE @solutionVolume float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_2_6_Quantity float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_2_6_Volume float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_6_11_Quantity float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_6_11_Volume float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_11_40_Quantity float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_11_40_Volume float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_40_Quantity float" & vbNewLine
-        strSql = strSql & "DECLARE @solution_40_Volume float" & vbNewLine
-        strSql = strSql & "DECLARE @minConcentration float" & vbNewLine
-        strSql = strSql & "DECLARE @maxConcentration float" & vbNewLine
-        strSql = strSql & "DECLARE @solution nvarchar(300)" & vbNewLine
-        strSql = strSql & "DECLARE @solutionRequired bit" & vbNewLine
-        strSql = strSql & "DECLARE @dripQuantity float" & vbNewLine
-        strSql = strSql & "DECLARE @doseUnit nvarchar(50)" & vbNewLine
-        strSql = strSql & "DECLARE @minDose float" & vbNewLine
-        strSql = strSql & "DECLARE @maxDose float" & vbNewLine
-        strSql = strSql & "DECLARE @absMaxDose float" & vbNewLine
-        strSql = strSql & "DECLARE @doseAdvice nvarchar(max)" & vbNewLine
-        strSql = strSql & "DECLARE @product nvarchar(max)" & vbNewLine
-        strSql = strSql & "DECLARE @shelfLife float" & vbNewLine
-        strSql = strSql & "DECLARE @shelfCondition nvarchar(50)" & vbNewLine
-        strSql = strSql & "DECLARE @preparationText nvarchar(max)" & vbNewLine
-        strSql = strSql & "DECLARE @signed bit" & vbNewLine
-        strSql = strSql & "DECLARE @dilutionText nvarchar(max)" & vbNewLine
-        strSql = strSql & "" & vbNewLine
+        objBuilder.Append "DECLARE @department nvarchar(60)" & vbNewLine
+        objBuilder.Append "DECLARE @generic nvarchar(300)" & vbNewLine
+        objBuilder.Append "DECLARE @genericUnit nvarchar(50)" & vbNewLine
+        objBuilder.Append "DECLARE @genericQuantity float" & vbNewLine
+        objBuilder.Append "DECLARE @genericVolume float" & vbNewLine
+        objBuilder.Append "DECLARE @solutionVolume float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_2_6_Quantity float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_2_6_Volume float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_6_11_Quantity float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_6_11_Volume float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_11_40_Quantity float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_11_40_Volume float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_40_Quantity float" & vbNewLine
+        objBuilder.Append "DECLARE @solution_40_Volume float" & vbNewLine
+        objBuilder.Append "DECLARE @minConcentration float" & vbNewLine
+        objBuilder.Append "DECLARE @maxConcentration float" & vbNewLine
+        objBuilder.Append "DECLARE @solution nvarchar(300)" & vbNewLine
+        objBuilder.Append "DECLARE @solutionRequired bit" & vbNewLine
+        objBuilder.Append "DECLARE @dripQuantity float" & vbNewLine
+        objBuilder.Append "DECLARE @doseUnit nvarchar(50)" & vbNewLine
+        objBuilder.Append "DECLARE @minDose float" & vbNewLine
+        objBuilder.Append "DECLARE @maxDose float" & vbNewLine
+        objBuilder.Append "DECLARE @absMaxDose float" & vbNewLine
+        objBuilder.Append "DECLARE @doseAdvice nvarchar(max)" & vbNewLine
+        objBuilder.Append "DECLARE @product nvarchar(max)" & vbNewLine
+        objBuilder.Append "DECLARE @shelfLife float" & vbNewLine
+        objBuilder.Append "DECLARE @shelfCondition nvarchar(50)" & vbNewLine
+        objBuilder.Append "DECLARE @preparationText nvarchar(max)" & vbNewLine
+        objBuilder.Append "DECLARE @signed bit" & vbNewLine
+        objBuilder.Append "DECLARE @dilutionText nvarchar(max)" & vbNewLine
+        objBuilder.Append "" & vbNewLine
     
     End If
         
     strLatest = "SET @department  = '" & strDepartment & "'" & vbNewLine
     strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigMedContVersionForDepartment(@department)"
     
-    strSql = strSql & Util_GetVersionSQL(strLatest)
+    objBuilder.Append Util_GetVersionSQL(strLatest)
         
         
     intC = objSrc.Rows.Count
@@ -717,80 +725,81 @@ Private Function Util_GetSaveNeoConfigMedContSql(blnIsBatch As Boolean) As Strin
         strShelfCondition = objSrc.Cells(intR, 17).Value2
         strPreparationText = objSrc.Cells(intR, 18).Value2
             
-        strSql = strSql & "SET @generic  = '" & strGeneric & "'" & vbNewLine
-        strSql = strSql & "SET @genericUnit  = '" & strGenericUnit & "'" & vbNewLine
-        strSql = strSql & "SET @genericQuantity  =  " & DoubleToString(dblGenericQuantity) & vbNewLine
-        strSql = strSql & "SET @genericVolume  =  " & DoubleToString(dblGenericVolume) & vbNewLine
-        strSql = strSql & "SET @solutionVolume  =  " & DoubleToString(dblSolutionVolume) & vbNewLine
-        strSql = strSql & "SET @solution_2_6_Quantity  =  0" & vbNewLine
-        strSql = strSql & "SET @solution_2_6_Volume  =  0" & vbNewLine
-        strSql = strSql & "SET @solution_6_11_Quantity  =  0" & vbNewLine
-        strSql = strSql & "SET @solution_6_11_Volume  =  0" & vbNewLine
-        strSql = strSql & "SET @solution_11_40_Quantity  =  0" & vbNewLine
-        strSql = strSql & "SET @solution_11_40_Volume  =  0" & vbNewLine
-        strSql = strSql & "SET @solution_40_Quantity  =  0" & vbNewLine
-        strSql = strSql & "SET @solution_40_Volume  =  0" & vbNewLine
-        strSql = strSql & "SET @minConcentration  = " & DoubleToString(dblMinConcentration) & vbNewLine
-        strSql = strSql & "SET @maxConcentration  = " & DoubleToString(dblMaxConcentration) & vbNewLine
-        strSql = strSql & "SET @solution  = '" & strSolution & "'" & vbNewLine
-        strSql = strSql & "SET @solutionRequired  = " & intSolutionRequired & vbNewLine
-        strSql = strSql & "SET @dripQuantity  =  " & DoubleToString(dblDripQuantity) & vbNewLine
-        strSql = strSql & "SET @doseUnit  = '" & strDoseUnit & "'" & vbNewLine
-        strSql = strSql & "SET @minDose  =  " & DoubleToString(dblMinDose) & vbNewLine
-        strSql = strSql & "SET @maxDose  =  " & DoubleToString(dblMaxDose) & vbNewLine
-        strSql = strSql & "SET @absMaxDose  =  " & DoubleToString(dblAbsMaxDose) & vbNewLine
-        strSql = strSql & "SET @doseAdvice  = '" & strDoseAdvice & "'" & vbNewLine
-        strSql = strSql & "SET @product  =  '" & strProduct & "'" & vbNewLine
-        strSql = strSql & "SET @shelfLife  =  " & DoubleToString(dblShelfLife) & vbNewLine
-        strSql = strSql & "SET @shelfCondition  = '" & strShelfCondition & "'" & vbNewLine
-        strSql = strSql & "SET @preparationText  =  '" & strPreparationText & "'" & vbNewLine
-        strSql = strSql & "SET @signed = 1" & vbNewLine
-        strSql = strSql & "SET @dilutionText  = '" & strDilutionText & "'" & vbNewLine
+        objBuilder.Append "SET @generic  = '" & strGeneric & "'" & vbNewLine
+        objBuilder.Append "SET @genericUnit  = '" & strGenericUnit & "'" & vbNewLine
+        objBuilder.Append "SET @genericQuantity  =  " & DoubleToString(dblGenericQuantity) & vbNewLine
+        objBuilder.Append "SET @genericVolume  =  " & DoubleToString(dblGenericVolume) & vbNewLine
+        objBuilder.Append "SET @solutionVolume  =  " & DoubleToString(dblSolutionVolume) & vbNewLine
+        objBuilder.Append "SET @solution_2_6_Quantity  =  0" & vbNewLine
+        objBuilder.Append "SET @solution_2_6_Volume  =  0" & vbNewLine
+        objBuilder.Append "SET @solution_6_11_Quantity  =  0" & vbNewLine
+        objBuilder.Append "SET @solution_6_11_Volume  =  0" & vbNewLine
+        objBuilder.Append "SET @solution_11_40_Quantity  =  0" & vbNewLine
+        objBuilder.Append "SET @solution_11_40_Volume  =  0" & vbNewLine
+        objBuilder.Append "SET @solution_40_Quantity  =  0" & vbNewLine
+        objBuilder.Append "SET @solution_40_Volume  =  0" & vbNewLine
+        objBuilder.Append "SET @minConcentration  = " & DoubleToString(dblMinConcentration) & vbNewLine
+        objBuilder.Append "SET @maxConcentration  = " & DoubleToString(dblMaxConcentration) & vbNewLine
+        objBuilder.Append "SET @solution  = '" & strSolution & "'" & vbNewLine
+        objBuilder.Append "SET @solutionRequired  = " & intSolutionRequired & vbNewLine
+        objBuilder.Append "SET @dripQuantity  =  " & DoubleToString(dblDripQuantity) & vbNewLine
+        objBuilder.Append "SET @doseUnit  = '" & strDoseUnit & "'" & vbNewLine
+        objBuilder.Append "SET @minDose  =  " & DoubleToString(dblMinDose) & vbNewLine
+        objBuilder.Append "SET @maxDose  =  " & DoubleToString(dblMaxDose) & vbNewLine
+        objBuilder.Append "SET @absMaxDose  =  " & DoubleToString(dblAbsMaxDose) & vbNewLine
+        objBuilder.Append "SET @doseAdvice  = '" & strDoseAdvice & "'" & vbNewLine
+        objBuilder.Append "SET @product  =  '" & strProduct & "'" & vbNewLine
+        objBuilder.Append "SET @shelfLife  =  " & DoubleToString(dblShelfLife) & vbNewLine
+        objBuilder.Append "SET @shelfCondition  = '" & strShelfCondition & "'" & vbNewLine
+        objBuilder.Append "SET @preparationText  =  '" & strPreparationText & "'" & vbNewLine
+        objBuilder.Append "SET @signed = 1" & vbNewLine
+        objBuilder.Append "SET @dilutionText  = '" & strDilutionText & "'" & vbNewLine
     
-        strSql = strSql & "" & vbNewLine
-        strSql = strSql & "" & vbNewLine
-        strSql = strSql & "EXECUTE @RC = " & CONST_INSERT_CONFIG_MEDCONT & vbNewLine
-        strSql = strSql & "   @versionID" & vbNewLine
-        strSql = strSql & "  ,@versionUTC" & vbNewLine
-        strSql = strSql & "  ,@versionDate" & vbNewLine
-        strSql = strSql & "  ,@department" & vbNewLine
-        strSql = strSql & "  ,@generic" & vbNewLine
-        strSql = strSql & "  ,@genericUnit" & vbNewLine
-        strSql = strSql & "  ,@genericQuantity" & vbNewLine
-        strSql = strSql & "  ,@genericVolume" & vbNewLine
-        strSql = strSql & "  ,@solutionVolume" & vbNewLine
-        strSql = strSql & "  ,@solution_2_6_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_2_6_Volume" & vbNewLine
-        strSql = strSql & "  ,@solution_6_11_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_6_11_Volume" & vbNewLine
-        strSql = strSql & "  ,@solution_11_40_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_11_40_Volume" & vbNewLine
-        strSql = strSql & "  ,@solution_40_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_40_Volume" & vbNewLine
-        strSql = strSql & "  ,@minConcentration" & vbNewLine
-        strSql = strSql & "  ,@maxConcentration" & vbNewLine
-        strSql = strSql & "  ,@solution" & vbNewLine
-        strSql = strSql & "  ,@solutionRequired" & vbNewLine
-        strSql = strSql & "  ,@dripQuantity" & vbNewLine
-        strSql = strSql & "  ,@doseUnit" & vbNewLine
-        strSql = strSql & "  ,@minDose" & vbNewLine
-        strSql = strSql & "  ,@maxDose" & vbNewLine
-        strSql = strSql & "  ,@absMaxDose" & vbNewLine
-        strSql = strSql & "  ,@doseAdvice" & vbNewLine
-        strSql = strSql & "  ,@product" & vbNewLine
-        strSql = strSql & "  ,@shelfLife" & vbNewLine
-        strSql = strSql & "  ,@shelfCondition" & vbNewLine
-        strSql = strSql & "  ,@preparationText" & vbNewLine
-        strSql = strSql & "  ,@signed" & vbNewLine
-        strSql = strSql & "  ,@dilutionText" & vbNewLine
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "EXECUTE @RC = " & CONST_INSERT_CONFIG_MEDCONT & vbNewLine
+        objBuilder.Append "   @versionID" & vbNewLine
+        objBuilder.Append "  ,@versionUTC" & vbNewLine
+        objBuilder.Append "  ,@versionDate" & vbNewLine
+        objBuilder.Append "  ,@department" & vbNewLine
+        objBuilder.Append "  ,@generic" & vbNewLine
+        objBuilder.Append "  ,@genericUnit" & vbNewLine
+        objBuilder.Append "  ,@genericQuantity" & vbNewLine
+        objBuilder.Append "  ,@genericVolume" & vbNewLine
+        objBuilder.Append "  ,@solutionVolume" & vbNewLine
+        objBuilder.Append "  ,@solution_2_6_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_2_6_Volume" & vbNewLine
+        objBuilder.Append "  ,@solution_6_11_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_6_11_Volume" & vbNewLine
+        objBuilder.Append "  ,@solution_11_40_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_11_40_Volume" & vbNewLine
+        objBuilder.Append "  ,@solution_40_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_40_Volume" & vbNewLine
+        objBuilder.Append "  ,@minConcentration" & vbNewLine
+        objBuilder.Append "  ,@maxConcentration" & vbNewLine
+        objBuilder.Append "  ,@solution" & vbNewLine
+        objBuilder.Append "  ,@solutionRequired" & vbNewLine
+        objBuilder.Append "  ,@dripQuantity" & vbNewLine
+        objBuilder.Append "  ,@doseUnit" & vbNewLine
+        objBuilder.Append "  ,@minDose" & vbNewLine
+        objBuilder.Append "  ,@maxDose" & vbNewLine
+        objBuilder.Append "  ,@absMaxDose" & vbNewLine
+        objBuilder.Append "  ,@doseAdvice" & vbNewLine
+        objBuilder.Append "  ,@product" & vbNewLine
+        objBuilder.Append "  ,@shelfLife" & vbNewLine
+        objBuilder.Append "  ,@shelfCondition" & vbNewLine
+        objBuilder.Append "  ,@preparationText" & vbNewLine
+        objBuilder.Append "  ,@signed" & vbNewLine
+        objBuilder.Append "  ,@dilutionText" & vbNewLine
         
         ModProgress.SetJobPercentage "Opslaan", intC, intR
     
     Next
     
-    strSql = strSql & vbNewLine
-    strSql = strSql & Util_GetLogSQL("Save neonatal configuration for continuous medication", False, , "ConfigMedCont")
+    objBuilder.Append vbNewLine
+    objBuilder.Append Util_GetLogSQL("Save neonatal configuration for continuous medication", False, , "ConfigMedCont")
 
+    strSql = objBuilder.ToString()
     Util_GetSaveNeoConfigMedContSql = strSql
     
 End Function
@@ -833,7 +842,6 @@ ErrorHandler:
     
 End Sub
 
-
 Public Sub Database_LoadNeoConfigMedCont()
 
     Dim strSql As String
@@ -845,19 +853,19 @@ Public Sub Database_LoadNeoConfigMedCont()
     
     On Error GoTo ErrorHandler
     
-    ModProgress.StartProgress "Configuratie voor Neonatologie Continue Medicatie laden"
+    ModProgress.StartProgress "Configuratie voor NICU Continue Medicatie laden"
     
     Set objSrc = ModRange.GetRange("Tbl_Admin_NeoMedCont")
     intT = objSrc.Rows.Count
     
     Util_InitConnection
     
-    strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('Neonatologie')"
+    strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('" & CONST_DEP_NICU & "')"
 
     objConn.Open
     Set objRs = objConn.Execute(strSql)
     
-    Application.ScreenUpdating = False
+    ImprovePerf True
     Application.Calculation = xlCalculationManual
     
     Do While Not objRs.EOF
@@ -896,7 +904,7 @@ Public Sub Database_LoadNeoConfigMedCont()
     
     Application.Calculation = xlCalculationAutomatic
     Application.Calculate
-    Application.ScreenUpdating = True
+    ImprovePerf False
     
     objConn.Close
     
@@ -907,7 +915,7 @@ Public Sub Database_LoadNeoConfigMedCont()
 ErrorHandler:
     Application.Calculation = xlCalculationAutomatic
     Application.Calculate
-    Application.ScreenUpdating = True
+    ImprovePerf False
 
     ModProgress.FinishProgress
     objConn.Close
@@ -958,52 +966,55 @@ Private Function Util_GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boole
     Dim intC As Integer
     
     Dim objSrc As Range
+    Dim objBuilder As ClassStringBuilder
+    
+    Set objBuilder = New ClassStringBuilder
     
     strTable = "Tbl_Admin_PedMedCont"
-    strDepartment = "Pediatrie"
+    strDepartment = CONST_DEP_PICU
     strDilutionText = ""
     
     Set objSrc = ModRange.GetRange(strTable)
-    If Not blnIsBatch Then strSql = strSql & "DECLARE @RC int" & vbNewLine
-    If Not blnIsBatch Then strSql = strSql & "DECLARE @versionID int" & vbNewLine
-    If Not blnIsBatch Then strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
-    If Not blnIsBatch Then strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
-    strSql = strSql & "DECLARE @department nvarchar(60)" & vbNewLine
-    strSql = strSql & "DECLARE @generic nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @genericUnit nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @genericQuantity float" & vbNewLine
-    strSql = strSql & "DECLARE @genericVolume float" & vbNewLine
-    strSql = strSql & "DECLARE @solutionVolume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_2_6_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_2_6_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_6_11_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_6_11_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_11_40_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_11_40_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_40_Quantity float" & vbNewLine
-    strSql = strSql & "DECLARE @solution_40_Volume float" & vbNewLine
-    strSql = strSql & "DECLARE @minConcentration float" & vbNewLine
-    strSql = strSql & "DECLARE @maxConcentration float" & vbNewLine
-    strSql = strSql & "DECLARE @solution nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @solutionRequired bit" & vbNewLine
-    strSql = strSql & "DECLARE @dripQuantity float" & vbNewLine
-    strSql = strSql & "DECLARE @doseUnit nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @minDose float" & vbNewLine
-    strSql = strSql & "DECLARE @maxDose float" & vbNewLine
-    strSql = strSql & "DECLARE @absMaxDose float" & vbNewLine
-    strSql = strSql & "DECLARE @doseAdvice nvarchar(max)" & vbNewLine
-    If Not blnIsBatch Then strSql = strSql & "DECLARE @product nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @shelfLife float" & vbNewLine
-    strSql = strSql & "DECLARE @shelfCondition nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @preparationText nvarchar(max)" & vbNewLine
-    If Not blnIsBatch Then strSql = strSql & "DECLARE @signed bit" & vbNewLine
-    strSql = strSql & "DECLARE @dilutionText nvarchar(max)" & vbNewLine
-    strSql = strSql & "" & vbNewLine
+    If Not blnIsBatch Then objBuilder.Append "DECLARE @RC int" & vbNewLine
+    If Not blnIsBatch Then objBuilder.Append "DECLARE @versionID int" & vbNewLine
+    If Not blnIsBatch Then objBuilder.Append "DECLARE @versionUTC datetime" & vbNewLine
+    If Not blnIsBatch Then objBuilder.Append "DECLARE @versionDate datetime" & vbNewLine
+    objBuilder.Append "DECLARE @department nvarchar(60)" & vbNewLine
+    objBuilder.Append "DECLARE @generic nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @genericUnit nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @genericQuantity float" & vbNewLine
+    objBuilder.Append "DECLARE @genericVolume float" & vbNewLine
+    objBuilder.Append "DECLARE @solutionVolume float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_2_6_Quantity float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_2_6_Volume float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_6_11_Quantity float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_6_11_Volume float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_11_40_Quantity float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_11_40_Volume float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_40_Quantity float" & vbNewLine
+    objBuilder.Append "DECLARE @solution_40_Volume float" & vbNewLine
+    objBuilder.Append "DECLARE @minConcentration float" & vbNewLine
+    objBuilder.Append "DECLARE @maxConcentration float" & vbNewLine
+    objBuilder.Append "DECLARE @solution nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @solutionRequired bit" & vbNewLine
+    objBuilder.Append "DECLARE @dripQuantity float" & vbNewLine
+    objBuilder.Append "DECLARE @doseUnit nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @minDose float" & vbNewLine
+    objBuilder.Append "DECLARE @maxDose float" & vbNewLine
+    objBuilder.Append "DECLARE @absMaxDose float" & vbNewLine
+    objBuilder.Append "DECLARE @doseAdvice nvarchar(max)" & vbNewLine
+    If Not blnIsBatch Then objBuilder.Append "DECLARE @product nvarchar(max)" & vbNewLine
+    objBuilder.Append "DECLARE @shelfLife float" & vbNewLine
+    objBuilder.Append "DECLARE @shelfCondition nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @preparationText nvarchar(max)" & vbNewLine
+    If Not blnIsBatch Then objBuilder.Append "DECLARE @signed bit" & vbNewLine
+    objBuilder.Append "DECLARE @dilutionText nvarchar(max)" & vbNewLine
+    objBuilder.Append "" & vbNewLine
     
     strLatest = "SET @department  = '" & strDepartment & "'" & vbNewLine
     strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigMedContVersionForDepartment(@department)"
     
-    strSql = strSql & Util_GetVersionSQL(strLatest)
+    objBuilder.Append Util_GetVersionSQL(strLatest)
         
     intC = objSrc.Rows.Count
     For intR = 1 To intC
@@ -1043,81 +1054,82 @@ Private Function Util_GetSavePediatrieConfigMedContSql(ByVal blnIsBatch As Boole
         strShelfCondition = ""
         strPreparationText = ""
             
-        strSql = strSql & "SET @department  = '" & strDepartment & "'" & vbNewLine
-        strSql = strSql & "SET @generic  = '" & strGeneric & "'" & vbNewLine
-        strSql = strSql & "SET @genericUnit  = '" & strGenericUnit & "'" & vbNewLine
-        strSql = strSql & "SET @genericQuantity  =  " & DoubleToString(dblGenericQuantity) & vbNewLine
-        strSql = strSql & "SET @genericVolume  =  " & DoubleToString(dblGenericVolume) & vbNewLine
-        strSql = strSql & "SET @solutionVolume  =  " & DoubleToString(dblSolutionVolume) & vbNewLine
-        strSql = strSql & "SET @solution_2_6_Quantity  =  " & DoubleToString(dblSolution_2_6_Quantity) & vbNewLine
-        strSql = strSql & "SET @solution_2_6_Volume  =  " & DoubleToString(dblSolution_2_6_Volume) & vbNewLine
-        strSql = strSql & "SET @solution_6_11_Quantity  =  " & DoubleToString(dblSolution_6_11_Quantity) & vbNewLine
-        strSql = strSql & "SET @solution_6_11_Volume  =  " & DoubleToString(dblSolution_6_11_Volume) & vbNewLine
-        strSql = strSql & "SET @solution_11_40_Quantity  =  " & DoubleToString(dblSolution_11_40_Quantity) & vbNewLine
-        strSql = strSql & "SET @solution_11_40_Volume  =  " & DoubleToString(dblSolution_11_40_Volume) & vbNewLine
-        strSql = strSql & "SET @solution_40_Quantity  =  " & DoubleToString(dblSolution_40_Quantity) & vbNewLine
-        strSql = strSql & "SET @solution_40_Volume  =  " & DoubleToString(dblSolution_40_Volume) & vbNewLine
-        strSql = strSql & "SET @minConcentration  = " & DoubleToString(dblMinConcentration) & vbNewLine
-        strSql = strSql & "SET @maxConcentration  = " & DoubleToString(dblMaxConcentration) & vbNewLine
-        strSql = strSql & "SET @solution  = '" & strSolution & "'" & vbNewLine
-        strSql = strSql & "SET @solutionRequired  = 0" & vbNewLine
-        strSql = strSql & "SET @dripQuantity  =  " & DoubleToString(dblDripQuantity) & vbNewLine
-        strSql = strSql & "SET @doseUnit  = '" & strDoseUnit & "'" & vbNewLine
-        strSql = strSql & "SET @minDose  =  " & DoubleToString(dblMinDose) & vbNewLine
-        strSql = strSql & "SET @maxDose  =  " & DoubleToString(dblMaxDose) & vbNewLine
-        strSql = strSql & "SET @absMaxDose  =  " & DoubleToString(dblAbsMaxDose) & vbNewLine
-        strSql = strSql & "SET @doseAdvice  = '" & strDoseAdvice & "'" & vbNewLine
-        strSql = strSql & "SET @product  =  '" & strProduct & "'" & vbNewLine
-        strSql = strSql & "SET @shelfLife  =  " & DoubleToString(dblShelfLife) & vbNewLine
-        strSql = strSql & "SET @shelfCondition  = '" & strShelfCondition & "'" & vbNewLine
-        strSql = strSql & "SET @preparationText  =  '" & strPreparationText & "'" & vbNewLine
-        strSql = strSql & "SET @signed = 1" & vbNewLine
-        strSql = strSql & "SET @dilutionText  = '" & strDilutionText & "'" & vbNewLine
+        objBuilder.Append "SET @department  = '" & strDepartment & "'" & vbNewLine
+        objBuilder.Append "SET @generic  = '" & strGeneric & "'" & vbNewLine
+        objBuilder.Append "SET @genericUnit  = '" & strGenericUnit & "'" & vbNewLine
+        objBuilder.Append "SET @genericQuantity  =  " & DoubleToString(dblGenericQuantity) & vbNewLine
+        objBuilder.Append "SET @genericVolume  =  " & DoubleToString(dblGenericVolume) & vbNewLine
+        objBuilder.Append "SET @solutionVolume  =  " & DoubleToString(dblSolutionVolume) & vbNewLine
+        objBuilder.Append "SET @solution_2_6_Quantity  =  " & DoubleToString(dblSolution_2_6_Quantity) & vbNewLine
+        objBuilder.Append "SET @solution_2_6_Volume  =  " & DoubleToString(dblSolution_2_6_Volume) & vbNewLine
+        objBuilder.Append "SET @solution_6_11_Quantity  =  " & DoubleToString(dblSolution_6_11_Quantity) & vbNewLine
+        objBuilder.Append "SET @solution_6_11_Volume  =  " & DoubleToString(dblSolution_6_11_Volume) & vbNewLine
+        objBuilder.Append "SET @solution_11_40_Quantity  =  " & DoubleToString(dblSolution_11_40_Quantity) & vbNewLine
+        objBuilder.Append "SET @solution_11_40_Volume  =  " & DoubleToString(dblSolution_11_40_Volume) & vbNewLine
+        objBuilder.Append "SET @solution_40_Quantity  =  " & DoubleToString(dblSolution_40_Quantity) & vbNewLine
+        objBuilder.Append "SET @solution_40_Volume  =  " & DoubleToString(dblSolution_40_Volume) & vbNewLine
+        objBuilder.Append "SET @minConcentration  = " & DoubleToString(dblMinConcentration) & vbNewLine
+        objBuilder.Append "SET @maxConcentration  = " & DoubleToString(dblMaxConcentration) & vbNewLine
+        objBuilder.Append "SET @solution  = '" & strSolution & "'" & vbNewLine
+        objBuilder.Append "SET @solutionRequired  = 0" & vbNewLine
+        objBuilder.Append "SET @dripQuantity  =  " & DoubleToString(dblDripQuantity) & vbNewLine
+        objBuilder.Append "SET @doseUnit  = '" & strDoseUnit & "'" & vbNewLine
+        objBuilder.Append "SET @minDose  =  " & DoubleToString(dblMinDose) & vbNewLine
+        objBuilder.Append "SET @maxDose  =  " & DoubleToString(dblMaxDose) & vbNewLine
+        objBuilder.Append "SET @absMaxDose  =  " & DoubleToString(dblAbsMaxDose) & vbNewLine
+        objBuilder.Append "SET @doseAdvice  = '" & strDoseAdvice & "'" & vbNewLine
+        objBuilder.Append "SET @product  =  '" & strProduct & "'" & vbNewLine
+        objBuilder.Append "SET @shelfLife  =  " & DoubleToString(dblShelfLife) & vbNewLine
+        objBuilder.Append "SET @shelfCondition  = '" & strShelfCondition & "'" & vbNewLine
+        objBuilder.Append "SET @preparationText  =  '" & strPreparationText & "'" & vbNewLine
+        objBuilder.Append "SET @signed = 1" & vbNewLine
+        objBuilder.Append "SET @dilutionText  = '" & strDilutionText & "'" & vbNewLine
     
-        strSql = strSql & "" & vbNewLine
-        strSql = strSql & "" & vbNewLine
-        strSql = strSql & "EXECUTE @RC = " & CONST_INSERT_CONFIG_MEDCONT & vbNewLine
-        strSql = strSql & "   @versionID" & vbNewLine
-        strSql = strSql & "  ,@versionUTC" & vbNewLine
-        strSql = strSql & "  ,@versionDate" & vbNewLine
-        strSql = strSql & "  ,@department" & vbNewLine
-        strSql = strSql & "  ,@generic" & vbNewLine
-        strSql = strSql & "  ,@genericUnit" & vbNewLine
-        strSql = strSql & "  ,@genericQuantity" & vbNewLine
-        strSql = strSql & "  ,@genericVolume" & vbNewLine
-        strSql = strSql & "  ,@solutionVolume" & vbNewLine
-        strSql = strSql & "  ,@solution_2_6_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_2_6_Volume" & vbNewLine
-        strSql = strSql & "  ,@solution_6_11_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_6_11_Volume" & vbNewLine
-        strSql = strSql & "  ,@solution_11_40_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_11_40_Volume" & vbNewLine
-        strSql = strSql & "  ,@solution_40_Quantity" & vbNewLine
-        strSql = strSql & "  ,@solution_40_Volume" & vbNewLine
-        strSql = strSql & "  ,@minConcentration" & vbNewLine
-        strSql = strSql & "  ,@maxConcentration" & vbNewLine
-        strSql = strSql & "  ,@solution" & vbNewLine
-        strSql = strSql & "  ,@solutionRequired" & vbNewLine
-        strSql = strSql & "  ,@dripQuantity" & vbNewLine
-        strSql = strSql & "  ,@doseUnit" & vbNewLine
-        strSql = strSql & "  ,@minDose" & vbNewLine
-        strSql = strSql & "  ,@maxDose" & vbNewLine
-        strSql = strSql & "  ,@absMaxDose" & vbNewLine
-        strSql = strSql & "  ,@doseAdvice" & vbNewLine
-        strSql = strSql & "  ,@product" & vbNewLine
-        strSql = strSql & "  ,@shelfLife" & vbNewLine
-        strSql = strSql & "  ,@shelfCondition" & vbNewLine
-        strSql = strSql & "  ,@preparationText" & vbNewLine
-        strSql = strSql & "  ,@signed" & vbNewLine
-        strSql = strSql & "  ,@dilutionText" & vbNewLine
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "EXECUTE @RC = " & CONST_INSERT_CONFIG_MEDCONT & vbNewLine
+        objBuilder.Append "   @versionID" & vbNewLine
+        objBuilder.Append "  ,@versionUTC" & vbNewLine
+        objBuilder.Append "  ,@versionDate" & vbNewLine
+        objBuilder.Append "  ,@department" & vbNewLine
+        objBuilder.Append "  ,@generic" & vbNewLine
+        objBuilder.Append "  ,@genericUnit" & vbNewLine
+        objBuilder.Append "  ,@genericQuantity" & vbNewLine
+        objBuilder.Append "  ,@genericVolume" & vbNewLine
+        objBuilder.Append "  ,@solutionVolume" & vbNewLine
+        objBuilder.Append "  ,@solution_2_6_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_2_6_Volume" & vbNewLine
+        objBuilder.Append "  ,@solution_6_11_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_6_11_Volume" & vbNewLine
+        objBuilder.Append "  ,@solution_11_40_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_11_40_Volume" & vbNewLine
+        objBuilder.Append "  ,@solution_40_Quantity" & vbNewLine
+        objBuilder.Append "  ,@solution_40_Volume" & vbNewLine
+        objBuilder.Append "  ,@minConcentration" & vbNewLine
+        objBuilder.Append "  ,@maxConcentration" & vbNewLine
+        objBuilder.Append "  ,@solution" & vbNewLine
+        objBuilder.Append "  ,@solutionRequired" & vbNewLine
+        objBuilder.Append "  ,@dripQuantity" & vbNewLine
+        objBuilder.Append "  ,@doseUnit" & vbNewLine
+        objBuilder.Append "  ,@minDose" & vbNewLine
+        objBuilder.Append "  ,@maxDose" & vbNewLine
+        objBuilder.Append "  ,@absMaxDose" & vbNewLine
+        objBuilder.Append "  ,@doseAdvice" & vbNewLine
+        objBuilder.Append "  ,@product" & vbNewLine
+        objBuilder.Append "  ,@shelfLife" & vbNewLine
+        objBuilder.Append "  ,@shelfCondition" & vbNewLine
+        objBuilder.Append "  ,@preparationText" & vbNewLine
+        objBuilder.Append "  ,@signed" & vbNewLine
+        objBuilder.Append "  ,@dilutionText" & vbNewLine
         
         ModProgress.SetJobPercentage "Opslaan", intC, intR
     
     Next
     
-    strSql = strSql & vbNewLine
-    strSql = strSql & Util_GetLogSQL("Save Pediatric Continuous Medication Configuration", False, , "ConfigMedCont")
+    objBuilder.Append vbNewLine
+    objBuilder.Append Util_GetLogSQL("Save Pediatric Continuous Medication Configuration", False, , "ConfigMedCont")
     
+    strSql = objBuilder.ToString()
     Util_GetSavePediatrieConfigMedContSql = strSql
 
 End Function
@@ -1134,7 +1146,7 @@ Public Sub Database_SavePedConfigMedCont()
 
     On Error GoTo ErrorHandler
      
-    ModProgress.StartProgress "Pediatrie Continue Medicatie Configuratie Opslaan"
+    ModProgress.StartProgress "PICU Continue Medicatie Configuratie Opslaan"
     
     strSql = Util_GetSavePediatrieConfigMedContSql(False)
     strSql = ModDatabase.Util_WrapTransaction(strSql, "insert_pedconfigmedcont")
@@ -1172,19 +1184,19 @@ Public Sub Database_LoadPedConfigMedCont()
     
     On Error GoTo ErrorHandler
     
-    ModProgress.StartProgress "Configuratie voor Pediatrie Continue Medicatie"
+    ModProgress.StartProgress "Configuratie voor PICU Continue Medicatie"
     
     Set objSrc = ModRange.GetRange("Tbl_Admin_PedMedCont")
     intT = objSrc.Rows.Count
     
     Util_InitConnection
     
-    strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('Pediatrie')"
+    strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('" & CONST_DEP_PICU & "')"
 
     objConn.Open
     Set objRs = objConn.Execute(strSql)
     
-    Application.ScreenUpdating = False
+    ImprovePerf True
     Application.Calculation = xlCalculationManual
     
     Do While Not objRs.EOF
@@ -1216,7 +1228,7 @@ Public Sub Database_LoadPedConfigMedCont()
     
     Application.Calculation = xlCalculationAutomatic
     Application.Calculate
-    Application.ScreenUpdating = True
+    ImprovePerf False
     
     objConn.Close
     
@@ -1227,7 +1239,7 @@ Public Sub Database_LoadPedConfigMedCont()
 ErrorHandler:
     Application.Calculation = xlCalculationAutomatic
     Application.Calculate
-    Application.ScreenUpdating = True
+    ImprovePerf False
 
     ModProgress.FinishProgress
     objConn.Close
@@ -1262,39 +1274,43 @@ Private Function Util_GetSaveConfigParentSql() As String
     Dim strProduct As String
     Dim intSigned As Integer
     
+    Dim objBuilder As ClassStringBuilder
+    
+    Set objBuilder = New ClassStringBuilder
+    
     Set objTable = ModRange.GetRange("Tbl_Admin_ParEnt")
     intC = objTable.Rows.Count
     
-    strSql = strSql & "DECLARE @RC int" & vbNewLine
-    strSql = strSql & "DECLARE @versionID int" & vbNewLine
-    strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
-    strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
-    strSql = strSql & "DECLARE @name nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @energy float" & vbNewLine
-    strSql = strSql & "DECLARE @protein float" & vbNewLine
-    strSql = strSql & "DECLARE @carbohydrate float" & vbNewLine
-    strSql = strSql & "DECLARE @lipid float" & vbNewLine
-    strSql = strSql & "DECLARE @sodium float" & vbNewLine
-    strSql = strSql & "DECLARE @potassium float" & vbNewLine
-    strSql = strSql & "DECLARE @calcium float" & vbNewLine
-    strSql = strSql & "DECLARE @phosphor float" & vbNewLine
-    strSql = strSql & "DECLARE @magnesium float" & vbNewLine
-    strSql = strSql & "DECLARE @iron float" & vbNewLine
-    strSql = strSql & "DECLARE @vitD float" & vbNewLine
-    strSql = strSql & "DECLARE @chloride float" & vbNewLine
-    strSql = strSql & "DECLARE @product nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @signed bit" & vbNewLine
-    strSql = strSql & "" & vbNewLine
+    objBuilder.Append "DECLARE @RC int" & vbNewLine
+    objBuilder.Append "DECLARE @versionID int" & vbNewLine
+    objBuilder.Append "DECLARE @versionUTC datetime" & vbNewLine
+    objBuilder.Append "DECLARE @versionDate datetime" & vbNewLine
+    objBuilder.Append "DECLARE @name nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @energy float" & vbNewLine
+    objBuilder.Append "DECLARE @protein float" & vbNewLine
+    objBuilder.Append "DECLARE @carbohydrate float" & vbNewLine
+    objBuilder.Append "DECLARE @lipid float" & vbNewLine
+    objBuilder.Append "DECLARE @sodium float" & vbNewLine
+    objBuilder.Append "DECLARE @potassium float" & vbNewLine
+    objBuilder.Append "DECLARE @calcium float" & vbNewLine
+    objBuilder.Append "DECLARE @phosphor float" & vbNewLine
+    objBuilder.Append "DECLARE @magnesium float" & vbNewLine
+    objBuilder.Append "DECLARE @iron float" & vbNewLine
+    objBuilder.Append "DECLARE @vitD float" & vbNewLine
+    objBuilder.Append "DECLARE @chloride float" & vbNewLine
+    objBuilder.Append "DECLARE @product nvarchar(max)" & vbNewLine
+    objBuilder.Append "DECLARE @signed bit" & vbNewLine
+    objBuilder.Append "" & vbNewLine
     
     strLatest = strLatest & "SELECT @versionID = dbo.GetLatestConfigParEntVersion()"
     strLatest = strLatest & Util_GetVersionSQL(strLatest) & vbNewLine
-    strSql = strSql & strLatest
+    objBuilder.Append strLatest
     
     For intR = 1 To intC
     
-        strSql = strSql & "SET @versionID  = @versionID" & vbNewLine
-        strSql = strSql & "SET @versionUTC  = @versionUTC" & vbNewLine
-        strSql = strSql & "SET @versionDate  = @versionDate" & vbNewLine
+        objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
+        objBuilder.Append "SET @versionUTC  = @versionUTC" & vbNewLine
+        objBuilder.Append "SET @versionDate  = @versionDate" & vbNewLine
         
         strName = objTable.Cells(intR, 1).Value2
         dblEnergy = objTable.Cells(intR, 2).Value2
@@ -1311,50 +1327,51 @@ Private Function Util_GetSaveConfigParentSql() As String
         dblChloride = objTable.Cells(intR, 13).Value2
         strProduct = objTable.Cells(intR, 14).Value2
         
-        strSql = strSql & "SET @name  = '" & strName & "'" & vbNewLine
-        strSql = strSql & "SET @energy  = " & DoubleToString(dblEnergy) & vbNewLine
-        strSql = strSql & "SET @protein  = " & DoubleToString(dblProtein) & vbNewLine
-        strSql = strSql & "SET @carbohydrate  = " & DoubleToString(dblCarbohydrate) & vbNewLine
-        strSql = strSql & "SET @lipid  = " & DoubleToString(dblLipid) & vbNewLine
-        strSql = strSql & "SET @sodium  = " & DoubleToString(dblSodium) & vbNewLine
-        strSql = strSql & "SET @potassium  = " & DoubleToString(dblPotassium) & vbNewLine
-        strSql = strSql & "SET @calcium  = " & DoubleToString(dblCalcium) & vbNewLine
-        strSql = strSql & "SET @phosphor  = " & DoubleToString(dblPhosphor) & vbNewLine
-        strSql = strSql & "SET @magnesium  = " & DoubleToString(dblMagnesium) & vbNewLine
-        strSql = strSql & "SET @iron  = " & DoubleToString(dblIron) & vbNewLine
-        strSql = strSql & "SET @vitD  = " & DoubleToString(dblVitD) & vbNewLine
-        strSql = strSql & "SET @chloride  = " & DoubleToString(dblChloride) & vbNewLine
-        strSql = strSql & "SET @product  = '" & strProduct & "'" & vbNewLine
-        strSql = strSql & "SET @signed = 1" & vbNewLine
-        strSql = strSql & "" & vbNewLine
-        strSql = strSql & "EXECUTE @RC =  " & CONST_INSERT_CONFIG_PARENT & vbNewLine
-        strSql = strSql & "   @versionID" & vbNewLine
-        strSql = strSql & "  , @versionUTC" & vbNewLine
-        strSql = strSql & "  , @versionDate" & vbNewLine
-        strSql = strSql & "  ,@name" & vbNewLine
-        strSql = strSql & "  ,@energy" & vbNewLine
-        strSql = strSql & "  ,@protein" & vbNewLine
-        strSql = strSql & "  ,@carbohydrate" & vbNewLine
-        strSql = strSql & "  ,@lipid" & vbNewLine
-        strSql = strSql & "  ,@sodium" & vbNewLine
-        strSql = strSql & "  ,@potassium" & vbNewLine
-        strSql = strSql & "  ,@calcium" & vbNewLine
-        strSql = strSql & "  ,@phosphor" & vbNewLine
-        strSql = strSql & "  ,@magnesium" & vbNewLine
-        strSql = strSql & "  ,@iron" & vbNewLine
-        strSql = strSql & "  ,@vitD" & vbNewLine
-        strSql = strSql & "  ,@chloride" & vbNewLine
-        strSql = strSql & "  ,@product" & vbNewLine
-        strSql = strSql & "  ,@signed" & vbNewLine
-        strSql = strSql & "" & vbNewLine
+        objBuilder.Append "SET @name  = '" & strName & "'" & vbNewLine
+        objBuilder.Append "SET @energy  = " & DoubleToString(dblEnergy) & vbNewLine
+        objBuilder.Append "SET @protein  = " & DoubleToString(dblProtein) & vbNewLine
+        objBuilder.Append "SET @carbohydrate  = " & DoubleToString(dblCarbohydrate) & vbNewLine
+        objBuilder.Append "SET @lipid  = " & DoubleToString(dblLipid) & vbNewLine
+        objBuilder.Append "SET @sodium  = " & DoubleToString(dblSodium) & vbNewLine
+        objBuilder.Append "SET @potassium  = " & DoubleToString(dblPotassium) & vbNewLine
+        objBuilder.Append "SET @calcium  = " & DoubleToString(dblCalcium) & vbNewLine
+        objBuilder.Append "SET @phosphor  = " & DoubleToString(dblPhosphor) & vbNewLine
+        objBuilder.Append "SET @magnesium  = " & DoubleToString(dblMagnesium) & vbNewLine
+        objBuilder.Append "SET @iron  = " & DoubleToString(dblIron) & vbNewLine
+        objBuilder.Append "SET @vitD  = " & DoubleToString(dblVitD) & vbNewLine
+        objBuilder.Append "SET @chloride  = " & DoubleToString(dblChloride) & vbNewLine
+        objBuilder.Append "SET @product  = '" & strProduct & "'" & vbNewLine
+        objBuilder.Append "SET @signed = 1" & vbNewLine
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "EXECUTE @RC =  " & CONST_INSERT_CONFIG_PARENT & vbNewLine
+        objBuilder.Append "   @versionID" & vbNewLine
+        objBuilder.Append "  , @versionUTC" & vbNewLine
+        objBuilder.Append "  , @versionDate" & vbNewLine
+        objBuilder.Append "  ,@name" & vbNewLine
+        objBuilder.Append "  ,@energy" & vbNewLine
+        objBuilder.Append "  ,@protein" & vbNewLine
+        objBuilder.Append "  ,@carbohydrate" & vbNewLine
+        objBuilder.Append "  ,@lipid" & vbNewLine
+        objBuilder.Append "  ,@sodium" & vbNewLine
+        objBuilder.Append "  ,@potassium" & vbNewLine
+        objBuilder.Append "  ,@calcium" & vbNewLine
+        objBuilder.Append "  ,@phosphor" & vbNewLine
+        objBuilder.Append "  ,@magnesium" & vbNewLine
+        objBuilder.Append "  ,@iron" & vbNewLine
+        objBuilder.Append "  ,@vitD" & vbNewLine
+        objBuilder.Append "  ,@chloride" & vbNewLine
+        objBuilder.Append "  ,@product" & vbNewLine
+        objBuilder.Append "  ,@signed" & vbNewLine
+        objBuilder.Append "" & vbNewLine
         
         ModProgress.SetJobPercentage "Opslaan", intC, intR
     
     Next
     
-    strSql = strSql & vbNewLine
-    strSql = strSql & Util_GetLogSQL("Save configuration for parentaral fluids", False, , "ConfigParEnt")
+    objBuilder.Append vbNewLine
+    objBuilder.Append Util_GetLogSQL("Save configuration for parentaral fluids", False, , "ConfigParEnt")
  
+    strSql = objBuilder.ToString()
     Util_GetSaveConfigParentSql = strSql
     
 End Function
@@ -1418,7 +1435,7 @@ Public Sub Database_LoadConfigParEnt()
     
     Set objTable = ModRange.GetRange("Tbl_Admin_ParEnt")
     
-    Application.ScreenUpdating = False
+    ImprovePerf True
     Application.Calculation = xlCalculationManual
     
     intC = objTable.Rows.Count
@@ -1447,7 +1464,7 @@ Public Sub Database_LoadConfigParEnt()
     
     Application.Calculation = xlCalculationAutomatic
     Application.Calculate
-    Application.ScreenUpdating = True
+    ImprovePerf False
     
     objConn.Close
     ModProgress.FinishProgress
@@ -1457,7 +1474,7 @@ Public Sub Database_LoadConfigParEnt()
 ErrorHandler:
     Application.Calculation = xlCalculationAutomatic
     Application.Calculate
-    Application.ScreenUpdating = True
+    ImprovePerf False
     
     ModProgress.FinishProgress
     objConn.Close
@@ -1512,6 +1529,7 @@ ErrorHandler:
     objConn.Close
     
 End Function
+
 
 Public Function Database_GetConfigParEnt(Optional ByVal intVersion As Integer = 0) As Collection
 
@@ -1682,13 +1700,16 @@ Private Function Util_GetLogSQL(ByVal strText As String, ByVal blnDeclare As Boo
 
     Dim strSql As String
     Dim strUser As String
+    Dim objBuilder As ClassStringBuilder
+    
+    Set objBuilder = New ClassStringBuilder
     
     If blnDeclare Then
-        strSql = strSql & "DECLARE @versionID int" & vbNewLine
-        strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
-        strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
+        objBuilder.Append "DECLARE @versionID int" & vbNewLine
+        objBuilder.Append "DECLARE @versionUTC datetime" & vbNewLine
+        objBuilder.Append "DECLARE @versionDate datetime" & vbNewLine
         
-        strSql = strSql & Util_GetVersionSQL("")
+        objBuilder.Append Util_GetVersionSQL("")
     
     End If
     
@@ -1698,24 +1719,25 @@ Private Function Util_GetLogSQL(ByVal strText As String, ByVal blnDeclare As Boo
     strTable = Util_WrapString(strTable)
     strText = Util_WrapString(strText)
     
-    strSql = strSql & vbNewLine
-    strSql = strSql & "INSERT INTO [dbo].[Log]" & vbNewLine
-    strSql = strSql & "( [Prescriber]" & vbNewLine
-    strSql = strSql & ", [HospitalNumber]" & vbNewLine
-    strSql = strSql & ", [VersionID]" & vbNewLine
-    strSql = strSql & ", [VersionUTC]" & vbNewLine
-    strSql = strSql & ", [VersionDate]" & vbNewLine
-    strSql = strSql & ", [Table]" & vbNewLine
-    strSql = strSql & ", [Text])" & vbNewLine
-    strSql = strSql & "VALUES" & vbNewLine
-    strSql = strSql & "( " & strUser & vbNewLine
-    strSql = strSql & ", " & strHospNum & vbNewLine
-    strSql = strSql & ", @VersionID" & vbNewLine
-    strSql = strSql & ", @versionUTC" & vbNewLine
-    strSql = strSql & ", @versionDate " & vbNewLine
-    strSql = strSql & ", " & strTable & vbNewLine
-    strSql = strSql & ", " & strText & ")" & vbNewLine
+    objBuilder.Append vbNewLine
+    objBuilder.Append "INSERT INTO [dbo].[Log]" & vbNewLine
+    objBuilder.Append "( [Prescriber]" & vbNewLine
+    objBuilder.Append ", [HospitalNumber]" & vbNewLine
+    objBuilder.Append ", [VersionID]" & vbNewLine
+    objBuilder.Append ", [VersionUTC]" & vbNewLine
+    objBuilder.Append ", [VersionDate]" & vbNewLine
+    objBuilder.Append ", [Table]" & vbNewLine
+    objBuilder.Append ", [Text])" & vbNewLine
+    objBuilder.Append "VALUES" & vbNewLine
+    objBuilder.Append "( " & strUser & vbNewLine
+    objBuilder.Append ", " & strHospNum & vbNewLine
+    objBuilder.Append ", @VersionID" & vbNewLine
+    objBuilder.Append ", @versionUTC" & vbNewLine
+    objBuilder.Append ", @versionDate " & vbNewLine
+    objBuilder.Append ", " & strTable & vbNewLine
+    objBuilder.Append ", " & strText & ")" & vbNewLine
     
+    strSql = objBuilder.ToString()
     Util_GetLogSQL = strSql
 
 End Function
@@ -1769,9 +1791,9 @@ Public Function Database_GetNeoConfigMedCont(Optional ByVal intVersion As Intege
     Util_InitConnection
     
     If intVersion = 0 Then
-        strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('Neonatologie')"
+        strSql = "SELECT * FROM " & CONST_GET_LATEST_CONFIG_MEDCONT & " ('" & CONST_DEP_NICU & "')"
     Else
-        strSql = "SELECT * FROM " & CONST_GET_VERSION_CONFIG_MEDCONT & " ('Neonatologie', " & intVersion & ")"
+        strSql = "SELECT * FROM " & CONST_GET_VERSION_CONFIG_MEDCONT & " ('" & CONST_DEP_NICU & "', " & intVersion & ")"
         ModUtils.CopyToClipboard strSql
     End If
     
@@ -1866,7 +1888,7 @@ Private Sub Test_Database_GetConfigMedContVersions()
     Dim colVersions As Collection
     Dim objVersion As ClassVersion
     
-    Set colVersions = Database_GetConfigMedContVersions("Neonatologie")
+    Set colVersions = Database_GetConfigMedContVersions(CONST_DEP_NICU)
     
     For Each objVersion In colVersions
         ModMessage.ShowMsgBoxInfo objVersion.VersionID & " : " & objVersion.VersionDate
@@ -1887,137 +1909,32 @@ Private Sub Test_Util_RemoveQuotes()
 
 End Sub
 
-Private Function Util_GetSaveConfigMedDiscSql(objTable As Range) As String
-
-    Dim strSql As String
-    Dim strLatest As String
-    Dim intC As Integer
-    Dim intR As Integer
-    
-    Dim strGPK As String
-    Dim strATC As String
-    Dim strMainGroup As String
-    Dim strSubGroup As String
-    Dim strGeneric As String
-    Dim strProduct As String
-    Dim strLabel As String
-    Dim strShape As String
-    Dim strRoutes As String
-    Dim dblGenericQuantity As Double
-    Dim strGenericUnit As String
-    Dim dblMultipleQuantity As Double
-    Dim strMultipleUnit As String
-    Dim strIndications As String
-    
-    intC = objTable.Rows.Count
-    
-    strSql = strSql & "DECLARE @RC int" & vbNewLine
-    strSql = strSql & "DECLARE @versionID int" & vbNewLine
-    strSql = strSql & "DECLARE @versionUTC datetime" & vbNewLine
-    strSql = strSql & "DECLARE @versionDate datetime" & vbNewLine
-    strSql = strSql & "DECLARE @GPK int" & vbNewLine
-    strSql = strSql & "DECLARE @ATC nvarchar(10)" & vbNewLine
-    strSql = strSql & "DECLARE @MainGroup nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @SubGroup nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @Generic nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @Product nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @Label nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @Shape nvarchar(150)" & vbNewLine
-    strSql = strSql & "DECLARE @Routes nvarchar(300)" & vbNewLine
-    strSql = strSql & "DECLARE @GenericQuantity float" & vbNewLine
-    strSql = strSql & "DECLARE @GenericUnit nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @MultipleQuantity float" & vbNewLine
-    strSql = strSql & "DECLARE @MultipleUnit nvarchar(50)" & vbNewLine
-    strSql = strSql & "DECLARE @Indications nvarchar(max)" & vbNewLine
-    strSql = strSql & "DECLARE @IsActive bit" & vbNewLine
-    strSql = strSql & "" & vbNewLine
-    
-    strLatest = strLatest & "SELECT @versionID = dbo.Util_GetLatestConfigMedDiscVersion()"
-    strLatest = strLatest & Util_GetVersionSQL(strLatest) & vbNewLine
-    strSql = strSql & strLatest
-    
-    For intR = 3 To intC
-    
-        strSql = strSql & "SET @versionID  = @versionID" & vbNewLine
-        strSql = strSql & "SET @versionUTC  = @versionUTC" & vbNewLine
-        strSql = strSql & "SET @versionDate  = @versionDate" & vbNewLine
-        
-        strGPK = objTable.Cells(intR, 1).Value2
-        strATC = objTable.Cells(intR, 2).Value2
-        strMainGroup = Util_RemoveQuotes(objTable.Cells(intR, 3).Value2)
-        strSubGroup = Util_RemoveQuotes(objTable.Cells(intR, 4).Value2)
-        strGeneric = Util_RemoveQuotes(objTable.Cells(intR, 5).Value2)
-        strProduct = Util_RemoveQuotes(objTable.Cells(intR, 6).Value2)
-        strLabel = Util_RemoveQuotes(objTable.Cells(intR, 7).Value2)
-        strShape = objTable.Cells(intR, 8).Value2
-        strRoutes = objTable.Cells(intR, 9).Value2
-        dblGenericQuantity = objTable.Cells(intR, 10).Value2
-        strGenericUnit = objTable.Cells(intR, 11).Value2
-        dblMultipleQuantity = objTable.Cells(intR, 12).Value2
-        strMultipleUnit = objTable.Cells(intR, 13).Value2
-        strIndications = Util_RemoveQuotes(objTable.Cells(intR, 14).Value2)
-        
-        strSql = strSql & "SET @GPK  = " & strGPK & "" & vbNewLine
-        strSql = strSql & "SET @ATC  = '" & strATC & "'" & vbNewLine
-        strSql = strSql & "SET @MainGroup  = '" & strMainGroup & "'" & vbNewLine
-        strSql = strSql & "SET @SubGroup  = '" & strSubGroup & "'" & vbNewLine
-        strSql = strSql & "SET @Generic  = '" & strGeneric & "'" & vbNewLine
-        strSql = strSql & "SET @Product  = '" & strProduct & "'" & vbNewLine
-        strSql = strSql & "SET @Label  = '" & strLabel & "'" & vbNewLine
-        strSql = strSql & "SET @Shape  = '" & strShape & "'" & vbNewLine
-        strSql = strSql & "SET @Routes  = '" & strRoutes & "'" & vbNewLine
-        strSql = strSql & "SET @GenericQuantity  = " & DoubleToString(dblGenericQuantity) & vbNewLine
-        strSql = strSql & "SET @GenericUnit  = '" & strGenericUnit & "'" & vbNewLine
-        strSql = strSql & "SET @MultipleQuantity  = " & DoubleToString(dblMultipleQuantity) & vbNewLine
-        strSql = strSql & "SET @MultipleUnit  = '" & strMultipleUnit & "'" & vbNewLine
-        strSql = strSql & "SET @Indications  = '" & strIndications & "'" & vbNewLine
-        strSql = strSql & "SET @IsActive = 1" & vbNewLine
-        strSql = strSql & "" & vbNewLine
-        
-        strSql = strSql & "" & vbNewLine
-        strSql = strSql & "EXECUTE @RC = [dbo].[InsertConfigMedDisc] " & vbNewLine
-        strSql = strSql & "   @versionID" & vbNewLine
-        strSql = strSql & "  ,@versionUTC" & vbNewLine
-        strSql = strSql & "  ,@versionDate" & vbNewLine
-        strSql = strSql & "  ,@GPK" & vbNewLine
-        strSql = strSql & "  ,@ATC" & vbNewLine
-        strSql = strSql & "  ,@MainGroup" & vbNewLine
-        strSql = strSql & "  ,@SubGroup" & vbNewLine
-        strSql = strSql & "  ,@Generic" & vbNewLine
-        strSql = strSql & "  ,@Product" & vbNewLine
-        strSql = strSql & "  ,@Label" & vbNewLine
-        strSql = strSql & "  ,@Shape" & vbNewLine
-        strSql = strSql & "  ,@Routes" & vbNewLine
-        strSql = strSql & "  ,@GenericQuantity" & vbNewLine
-        strSql = strSql & "  ,@GenericUnit" & vbNewLine
-        strSql = strSql & "  ,@MultipleQuantity" & vbNewLine
-        strSql = strSql & "  ,@MultipleUnit" & vbNewLine
-        strSql = strSql & "  ,@Indications" & vbNewLine
-        strSql = strSql & "  ,@IsActive" & vbNewLine
-        
-        ModProgress.SetJobPercentage "Opslaan", intC, intR
-    
-    Next
-    
-    strSql = strSql & vbNewLine
-    strSql = strSql & Util_GetLogSQL("Save configuration for discontinuous medication", False, , "ConfigMedDisc")
- 
-    Util_GetSaveConfigMedDiscSql = strSql
-
-
-End Function
-
-Private Sub Util_SaveConfigMedDisc(objSrc As Range)
+Public Sub Database_SaveConfigMedDisc()
     
     Dim strSql As String
+    Dim intVersion As Integer
+    
+    Dim objMedCol As Collection
+    
+    Dim objPICUSolCol As Collection
+    Dim objNICUSolCol As Collection
+    
+    Dim objDoseCol As Collection
     
     On Error GoTo ErrorHandler
+      
+    Set objMedCol = Formularium_GetFormularium.GetMedicationCollection(False)
+    Set objPICUSolCol = Formularium_GetSolutions(True, objMedCol)
+    Set objNICUSolCol = Formularium_GetSolutions(False, objMedCol)
+    
+    Set objDoseCol = Formularium_GetDoses(objMedCol, False)
     
     ModProgress.StartProgress "Configuratie voor medicatie discontinue opslaan"
     
-    strSql = Util_GetSaveConfigMedDiscSql(objSrc)
+    strSql = Util_GetSaveConfigMedDiscSql(objMedCol, objPICUSolCol, objNICUSolCol, objDoseCol)
     strSql = Util_WrapTransaction(strSql, "insert_med_disc_config")
     
+    ModUtils.CopyToClipboard strSql
     Util_InitConnection
     
     objConn.Open
@@ -2025,6 +1942,9 @@ Private Sub Util_SaveConfigMedDisc(objSrc As Range)
     objConn.Close
     
     ModProgress.FinishProgress
+    
+    intVersion = Util_GetLatestConfigMedDiscVersion
+    ModMessage.ShowMsgBoxInfo "De discontinue medicatie is opgeslagen en de laatste versie is nu: " & intVersion
     
     Exit Sub
     
@@ -2034,7 +1954,7 @@ ErrorHandler:
     
     ModUtils.CopyToClipboard strSql
     ModProgress.FinishProgress
-    ModLog.LogError Err, "Util_SaveConfigMedDisc"
+    ModLog.LogError Err, "Database_SaveConfigMedDisc"
     
 
 End Sub
@@ -2047,7 +1967,7 @@ Private Function Util_GetLatestConfigMedDiscVersion() As Integer
     
     On Error GoTo ErrorHandler
     
-    strSql = "SELECT [dbo].[Util_GetLatestConfigMedDiscVersion] ()"
+    strSql = "SELECT [dbo].[GetLatestConfigMedDiscVersion] ()"
     
     Util_InitConnection
     
@@ -2077,70 +1997,6 @@ Private Sub Test_Util_GetLatestConfigMedDiscVersion()
 
 End Sub
 
-Public Sub Database_ImportConfigMedDisc()
-
-    Dim objConfigWbk As Workbook
-    Dim objSrc As Range
-    Dim lngErr As Long
-    Dim strFile As String
-    Dim intVersion As Integer
-    Dim strMsg As String
-    Dim vbAnswer
-        
-    Dim objMed As ClassNeoMedCont
-    
-    On Error GoTo ErrorHandler
-    
-    strMsg = "Kies een Excel bestand met de configuratie voor discontinue medicatie"
-    ModMessage.ShowMsgBoxInfo strMsg
-    
-    strFile = ModFile.GetFileWithDialog
-        
-    strMsg = "Dit bestand importeren?" & vbNewLine & strFile
-    If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
-       
-    Application.DisplayAlerts = False
-        
-    Set objConfigWbk = Workbooks.Open(strFile, True, True)
-    Set objSrc = objConfigWbk.Sheets(constMedDiscTbl).Range("A2").CurrentRegion()
-    
-    If objSrc.Columns.Count < 14 Then
-        objConfigWbk.Close
-        Application.DisplayAlerts = True
-        
-        strMsg = "Kan dit bestand niet importeren, er moeten minstens 14 kolommen zijn." & vbNewLine
-        strMsg = "Dit bestand bevat slechts " & objSrc.Columns.Count & " kolommen."
-        ModMessage.ShowMsgBoxExclam strMsg
-        
-        Exit Sub
-    End If
-        
-    Util_SaveConfigMedDisc objSrc
-    
-    objConfigWbk.Close
-    Application.DisplayAlerts = True
-    
-    intVersion = Util_GetLatestConfigMedDiscVersion()
-    strMsg = "De meest recente versie van de configuratie van disccontinue medicatie is nu: " & intVersion
-    ModMessage.ShowMsgBoxInfo strMsg
-    
-    Exit Sub
-        
-ErrorHandler:
-
-    objConfigWbk.Close
-    Application.DisplayAlerts = True
-
-    ModLog.LogError Err, "Database_ImportConfigMedDisc"
-
-End Sub
-
-Private Sub Test_Database_ImportConfigMedDisc()
-
-    Database_ImportConfigMedDisc
-
-End Sub
-
 Public Function Database_GetVersionIDFromString(ByVal strText As String) As Integer
 
     Database_GetVersionIDFromString = CInt(Split(strText, " : ")(0))
@@ -2164,25 +2020,46 @@ Public Function Database_GetLatestConfigMedContVersion(ByVal strDepartment As St
 
 End Function
 
+Public Function Database_GetLatestConfigParentVersion() As Integer
+
+    Dim colVersions As Collection
+    Dim objVersion As ClassVersion
+    Dim intVersion As Integer
+    
+    Set colVersions = Database_GetConfigParEntVersions()
+    
+    intVersion = 0
+    For Each objVersion In colVersions
+        intVersion = IIf(objVersion.VersionID > intVersion, objVersion.VersionID, intVersion)
+    Next
+
+    Database_GetLatestConfigParentVersion = intVersion
+
+End Function
+
 Private Sub Test_GetLatestConfigMedContVersion()
 
-    ModMessage.ShowMsgBoxInfo Database_GetLatestConfigMedContVersion("Pediatrie")
+    ModMessage.ShowMsgBoxInfo Database_GetLatestConfigMedContVersion(CONST_DEP_PICU)
 
 End Sub
 
-Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
-
+Public Sub Database_LoadFormularium(objFormularium As ClassFormularium, ByVal blnShowProgress As Boolean)
 
     Dim strSql As String
     Dim objRs As Recordset
     Dim intC As Integer
-    Dim objMed As ClassMedicatieDisc
+    Dim objMed As ClassMedDisc
+    Dim objPICUSol As ClassSolution
+    Dim objNICUSol As ClassSolution
+    Dim objDose As ClassDose
     Dim arrSubst() As String
     Dim intN As Integer
+    Dim blnIsPICU As Boolean
+    Dim blnMoved As Boolean
     
     On Error GoTo ErrorHandler
     
-    ModProgress.StartProgress "Formularium"
+    If blnShowProgress Then ModProgress.StartProgress "Formularium"
     
     strSql = "SELECT * FROM [dbo].[GetConfigMedDiscLatest] () AS md" & vbNewLine
     strSql = strSql & "ORDER BY md.Generic, md.Shape, md.GenericQuantity"
@@ -2191,9 +2068,9 @@ Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal bl
     
     objConn.Open
     Set objRs = objConn.Execute(strSql)
-    
+    blnIsPICU = MetaVision_IsPICU()
     Do While Not objRs.EOF
-        Set objMed = New ClassMedicatieDisc
+        Set objMed = New ClassMedDisc
         
         With objMed
             
@@ -2214,7 +2091,74 @@ Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal bl
             
             .SetRouteList objRs.Fields("Routes").Value
             .SetIndicationList objRs.Fields("Indications").Value
-        
+            
+            Set objPICUSol = New ClassSolution
+            With objPICUSol
+                .Generic = objMed.Generic
+                .Shape = objMed.Shape
+                If Not IsNull(objRs.Fields("PICUSolution")) Then .Solution = objRs.Fields("PICUSolution").Value
+                If Not IsNull(objRs.Fields("PICUSolutionVolume")) Then .SolutionVolume = objRs.Fields("PICUSolutionVolume").Value
+                If Not IsNull(objRs.Fields("PICUMinConc")) Then .MinConc = objRs.Fields("PICUMinConc").Value
+                If Not IsNull(objRs.Fields("PICUMaxConc")) Then .MaxConc = objRs.Fields("PICUMaxConc").Value
+                If Not IsNull(objRs.Fields("PICUMinInfusionTime")) Then .MinInfusionTime = objRs.Fields("PICUMinInfusionTime").Value
+            End With
+            
+            Set objNICUSol = New ClassSolution
+            With objNICUSol
+                .Generic = objMed.Generic
+                .Shape = objMed.Shape
+                If Not IsNull(objRs.Fields("NICUSolution")) Then .Solution = objRs.Fields("NICUSolution").Value
+                If Not IsNull(objRs.Fields("NICUSolutionVolume")) Then .SolutionVolume = objRs.Fields("NICUSolutionVolume").Value
+                If Not IsNull(objRs.Fields("NICUMinConc")) Then .MinConc = objRs.Fields("NICUMinConc").Value
+                If Not IsNull(objRs.Fields("NICUMaxConc")) Then .MaxConc = objRs.Fields("NICUMaxConc").Value
+                If Not IsNull(objRs.Fields("NICUMinInfusionTime")) Then .MinInfusionTime = objRs.Fields("NICUMinInfusionTime").Value
+            End With
+                        
+            If blnIsPICU Then
+                .Solution = objPICUSol.Solution
+                .SolutionVolume = objPICUSol.SolutionVolume
+                .MaxConc = objPICUSol.MaxConc
+                .MinInfusionTime = objPICUSol.MinInfusionTime
+            Else
+                .Solution = objNICUSol.Solution
+                .SolutionVolume = objNICUSol.SolutionVolume
+                .MaxConc = objNICUSol.MaxConc
+                .MinInfusionTime = objNICUSol.MinInfusionTime
+            End If
+            
+            blnMoved = False
+            Do While objRs.Fields("GPK").Value = .GPK And Not objRs.EOF
+            
+                Set objDose = New ClassDose
+                With objDose
+                    .Generic = objMed.Generic
+                    .Shape = objMed.Shape
+                    If Not IsNull(objRs.Fields("Route")) Then .Route = objRs.Fields("Route").Value
+                    If Not IsNull(objRs.Fields("Indication")) Then .Indication = objRs.Fields("Indication").Value
+                    
+                    If Not IsNull(objRs.Fields("Gender")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("MinAge")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("MaxAge")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("MinWeight")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("MaxWeight")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("MinGestAge")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("MaxGestAge")) Then .NormDose = objRs.Fields("NormDose").Value
+                    
+                    
+                    If Not IsNull(objRs.Fields("NormDose")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("MinDose")) Then .MinDose = objRs.Fields("MinDose").Value
+                    If Not IsNull(objRs.Fields("MaxDose")) Then .MaxDose = objRs.Fields("MaxDose").Value
+                    If Not IsNull(objRs.Fields("AbsMaxDose")) Then .AbsMaxDose = objRs.Fields("AbsMaxDose").Value
+                    If Not IsNull(objRs.Fields("MaxPerDose")) Then .AbsMaxDose = objRs.Fields("AbsMaxDose").Value
+                End With
+                
+                objMed.AddDose objDose
+                
+                objRs.MoveNext
+                blnMoved = True
+            Loop
+            
+                        
         End With
                 
         arrSubst = Split(objMed.Generic, "+")
@@ -2226,30 +2170,40 @@ Public Sub Database_GetMedicamenten(objFormularium As ClassFormularium, ByVal bl
             objMed.Substances(1).Concentration = objMed.GenericQuantity
         End If
         
-        objFormularium.AddMedicament objMed
+        objFormularium.AddMedication objMed
         
         intC = intC + 1
         If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", 1600, intC
         
-        objRs.MoveNext
+        If Not blnMoved Then objRs.MoveNext
     Loop
     
     objConn.Close
-    ModProgress.FinishProgress
+    If blnShowProgress Then ModProgress.FinishProgress
 
     Exit Sub
     
 ErrorHandler:
 
-    ModProgress.FinishProgress
+    If blnShowProgress Then ModProgress.FinishProgress
     objConn.Close
     ModLog.LogError Err, "Database_GetMedicamenten"
 
 
     Application.DisplayAlerts = True
-    Application.ScreenUpdating = True
+    ImprovePerf False
 
 End Sub
+
+Private Sub Test_LoadFormularium()
+    Dim objForm As ClassFormularium
+    
+    Set objForm = New ClassFormularium
+
+    Database_LoadFormularium objForm, True
+
+End Sub
+
 
 Public Function Database_GetStandardPatients() As Collection
 
@@ -2281,4 +2235,294 @@ Public Function Database_GetStandardPatients() As Collection
     
     Set Database_GetStandardPatients = colPats
     
+End Function
+
+Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSolCol As Collection, objNICUSolCol As Collection, objDoseCol As Collection) As String
+
+    Dim strSql As String
+    Dim strLatest As String
+    Dim intC As Integer
+    Dim intR As Integer
+    
+    Dim strGPK As String
+    Dim strATC As String
+    Dim strMainGroup As String
+    Dim strSubGroup As String
+    Dim strGeneric As String
+    Dim strProduct As String
+    Dim strLabel As String
+    Dim strShape As String
+    Dim strRoutes As String
+    Dim dblGenericQuantity As Double
+    Dim strGenericUnit As String
+    Dim dblMultipleQuantity As Double
+    Dim strMultipleUnit As String
+    Dim strIndications As String
+    
+    Dim objMed As ClassMedDisc
+    Dim objSol As ClassSolution
+    Dim objDose As ClassDose
+    
+    Dim objBuilder As ClassStringBuilder
+
+    Set objBuilder = New ClassStringBuilder
+    intC = objMedCol.Count() + objPICUSolCol.Count() + objNICUSolCol.Count() + objDoseCol.Count()
+    
+    objBuilder.Append "DECLARE @RC int" & vbNewLine
+    objBuilder.Append "DECLARE @versionID int" & vbNewLine
+    objBuilder.Append "DECLARE @versionUTC datetime" & vbNewLine
+    objBuilder.Append "DECLARE @versionDate datetime" & vbNewLine
+    objBuilder.Append "DECLARE @GPK int" & vbNewLine
+    objBuilder.Append "DECLARE @ATC nvarchar(10)" & vbNewLine
+    objBuilder.Append "DECLARE @MainGroup nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @SubGroup nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @Generic nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @Product nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @Label nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @Shape nvarchar(150)" & vbNewLine
+    objBuilder.Append "DECLARE @Routes nvarchar(300)" & vbNewLine
+    objBuilder.Append "DECLARE @GenericQuantity float" & vbNewLine
+    objBuilder.Append "DECLARE @GenericUnit nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @MultipleQuantity float" & vbNewLine
+    objBuilder.Append "DECLARE @MultipleUnit nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @Indications nvarchar(max)" & vbNewLine
+    objBuilder.Append "DECLARE @IsActive bit" & vbNewLine
+    
+    objBuilder.Append "DECLARE @Department nvarchar(60)" & vbNewLine
+    objBuilder.Append "DECLARE @Solution nvarchar(150)" & vbNewLine
+    objBuilder.Append "DECLARE @SolutionVolume float" & vbNewLine
+    objBuilder.Append "DECLARE @MinConc float" & vbNewLine
+    objBuilder.Append "DECLARE @MaxConc float" & vbNewLine
+    objBuilder.Append "DECLARE @MinInfusionTime int" & vbNewLine
+    
+    objBuilder.Append "DECLARE @Route nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @Indication nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @Gender nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @MinAge float" & vbNewLine
+    objBuilder.Append "DECLARE @MaxAge float" & vbNewLine
+    objBuilder.Append "DECLARE @MinWeight float" & vbNewLine
+    objBuilder.Append "DECLARE @MaxWeight float" & vbNewLine
+    objBuilder.Append "DECLARE @MinGestAge float" & vbNewLine
+    objBuilder.Append "DECLARE @MaxGestAge float" & vbNewLine
+    objBuilder.Append "DECLARE @Frequencies nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @DoseUnit nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @NormDose float" & vbNewLine
+    objBuilder.Append "DECLARE @MinDose float" & vbNewLine
+    objBuilder.Append "DECLARE @MaxDose float" & vbNewLine
+    objBuilder.Append "DECLARE @MaxPerDose float" & vbNewLine
+    objBuilder.Append "DECLARE @StartDose float" & vbNewLine
+    objBuilder.Append "DECLARE @IsDosePerKg bit" & vbNewLine
+    objBuilder.Append "DECLARE @IsDosePerM2 bit" & vbNewLine
+    objBuilder.Append "DECLARE @AbsMaxDose float" & vbNewLine
+    
+    objBuilder.Append "" & vbNewLine
+    
+    strLatest = "SELECT @versionID = dbo.GetLatestConfigMedDiscVersion()"
+    strLatest = Util_GetVersionSQL(strLatest) & vbNewLine
+    objBuilder.Append strLatest & vbNewLine
+    
+    For Each objMed In objMedCol
+    
+        intR = intR + 1
+    
+        objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
+        objBuilder.Append "SET @versionUTC  = @versionUTC" & vbNewLine
+        objBuilder.Append "SET @versionDate  = @versionDate" & vbNewLine
+        
+        strGPK = objMed.GPK
+        strATC = objMed.ATC
+        strMainGroup = Util_RemoveQuotes(objMed.MainGroup)
+        strSubGroup = Util_RemoveQuotes(objMed.SubGroup)
+        strGeneric = Util_RemoveQuotes(objMed.Generic)
+        strProduct = Util_RemoveQuotes(objMed.Product)
+        strLabel = Util_RemoveQuotes(objMed.Label)
+        strShape = objMed.Shape
+        strRoutes = objMed.Routes
+        dblGenericQuantity = objMed.GenericQuantity
+        strGenericUnit = objMed.GenericUnit
+        dblMultipleQuantity = objMed.MultipleQuantity
+        strMultipleUnit = objMed.MultipleUnit
+        strIndications = Util_RemoveQuotes(objMed.Indications)
+        
+        objBuilder.Append "SET @GPK  = " & strGPK & "" & vbNewLine
+        objBuilder.Append "SET @ATC  = '" & strATC & "'" & vbNewLine
+        objBuilder.Append "SET @MainGroup  = '" & strMainGroup & "'" & vbNewLine
+        objBuilder.Append "SET @SubGroup  = '" & strSubGroup & "'" & vbNewLine
+        objBuilder.Append "SET @Generic  = '" & strGeneric & "'" & vbNewLine
+        objBuilder.Append "SET @Product  = '" & strProduct & "'" & vbNewLine
+        objBuilder.Append "SET @Label  = '" & strLabel & "'" & vbNewLine
+        objBuilder.Append "SET @Shape  = '" & strShape & "'" & vbNewLine
+        objBuilder.Append "SET @Routes  = '" & strRoutes & "'" & vbNewLine
+        objBuilder.Append "SET @GenericQuantity  = " & DoubleToString(dblGenericQuantity) & vbNewLine
+        objBuilder.Append "SET @GenericUnit  = '" & strGenericUnit & "'" & vbNewLine
+        objBuilder.Append "SET @MultipleQuantity  = " & DoubleToString(dblMultipleQuantity) & vbNewLine
+        objBuilder.Append "SET @MultipleUnit  = '" & strMultipleUnit & "'" & vbNewLine
+        objBuilder.Append "SET @Indications  = '" & strIndications & "'" & vbNewLine
+        objBuilder.Append "SET @IsActive = 1" & vbNewLine
+        objBuilder.Append "" & vbNewLine
+        
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "EXECUTE @RC = [dbo].[InsertConfigMedDisc] " & vbNewLine
+        objBuilder.Append "   @versionID" & vbNewLine
+        objBuilder.Append "  ,@versionUTC" & vbNewLine
+        objBuilder.Append "  ,@versionDate" & vbNewLine
+        objBuilder.Append "  ,@GPK" & vbNewLine
+        objBuilder.Append "  ,@ATC" & vbNewLine
+        objBuilder.Append "  ,@MainGroup" & vbNewLine
+        objBuilder.Append "  ,@SubGroup" & vbNewLine
+        objBuilder.Append "  ,@Generic" & vbNewLine
+        objBuilder.Append "  ,@Product" & vbNewLine
+        objBuilder.Append "  ,@Label" & vbNewLine
+        objBuilder.Append "  ,@Shape" & vbNewLine
+        objBuilder.Append "  ,@Routes" & vbNewLine
+        objBuilder.Append "  ,@GenericQuantity" & vbNewLine
+        objBuilder.Append "  ,@GenericUnit" & vbNewLine
+        objBuilder.Append "  ,@MultipleQuantity" & vbNewLine
+        objBuilder.Append "  ,@MultipleUnit" & vbNewLine
+        objBuilder.Append "  ,@Indications" & vbNewLine
+        objBuilder.Append "  ,@IsActive" & vbNewLine
+        
+        ModProgress.SetJobPercentage "Opslaan", intC, intR
+    
+    Next
+    
+    objBuilder.Append vbNewLine
+    
+    For Each objSol In objPICUSolCol
+        intR = intR + 1
+    
+        objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
+        objBuilder.Append "SET @versionUTC  = @versionUTC" & vbNewLine
+        objBuilder.Append "SET @versionDate  = @versionDate" & vbNewLine
+        
+        objBuilder.Append "SET @Department  = 'PICU'" & vbNewLine
+        objBuilder.Append "SET @Generic  = '" & Util_RemoveQuotes(objSol.Generic) & "'" & vbNewLine
+        objBuilder.Append "SET @Shape  = '" & Util_RemoveQuotes(objSol.Shape) & "'" & vbNewLine
+        objBuilder.Append "SET @Solution  = '" & Util_RemoveQuotes(objSol.Solution) & "'" & vbNewLine
+        objBuilder.Append "SET @SolutionVolume  = " & DoubleToString(objSol.SolutionVolume) & vbNewLine
+        objBuilder.Append "SET @MinConc  = " & DoubleToString(objSol.MinConc) & vbNewLine
+        objBuilder.Append "SET @MaxConc  = " & DoubleToString(objSol.MaxConc) & vbNewLine
+        objBuilder.Append "SET @MinInfusionTime  = " & DoubleToString(objSol.MinInfusionTime) & vbNewLine
+    
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "EXECUTE @RC = [dbo].[InsertConfigMedDiscSolution] " & vbNewLine
+        objBuilder.Append "   @versionID" & vbNewLine
+        objBuilder.Append "  ,@versionUTC" & vbNewLine
+        objBuilder.Append "  ,@versionDate" & vbNewLine
+        objBuilder.Append "  ,@Department" & vbNewLine
+        objBuilder.Append "  ,@Generic" & vbNewLine
+        objBuilder.Append "  ,@Shape" & vbNewLine
+        objBuilder.Append "  ,@Solution" & vbNewLine
+        objBuilder.Append "  ,@SolutionVolume" & vbNewLine
+        objBuilder.Append "  ,@MinConc" & vbNewLine
+        objBuilder.Append "  ,@MaxConc" & vbNewLine
+        objBuilder.Append "  ,@MinInfusionTime" & vbNewLine
+    
+        ModProgress.SetJobPercentage "Opslaan", intC, intR
+    Next
+    
+    objBuilder.Append vbNewLine
+        
+    For Each objSol In objNICUSolCol
+        intR = intR + 1
+    
+        objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
+        objBuilder.Append "SET @versionUTC  = @versionUTC" & vbNewLine
+        objBuilder.Append "SET @versionDate  = @versionDate" & vbNewLine
+        
+        objBuilder.Append "SET @Department  = 'NICU'" & vbNewLine
+        
+        objBuilder.Append "SET @Generic  = '" & Util_RemoveQuotes(objSol.Generic) & "'" & vbNewLine
+        objBuilder.Append "SET @Shape  = '" & Util_RemoveQuotes(objSol.Shape) & "'" & vbNewLine
+        objBuilder.Append "SET @Solution  = '" & Util_RemoveQuotes(objSol.Solution) & "'" & vbNewLine
+        objBuilder.Append "SET @SolutionVolume  = " & DoubleToString(objSol.SolutionVolume) & vbNewLine
+        objBuilder.Append "SET @MinConc  = " & DoubleToString(objSol.MinConc) & vbNewLine
+        objBuilder.Append "SET @MaxConc  = " & DoubleToString(objSol.MaxConc) & vbNewLine
+        objBuilder.Append "SET @MinInfusionTime  = " & DoubleToString(objSol.MinInfusionTime) & vbNewLine
+    
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "EXECUTE @RC = [dbo].[InsertConfigMedDiscSolution] " & vbNewLine
+        objBuilder.Append "   @versionID" & vbNewLine
+        objBuilder.Append "  ,@versionUTC" & vbNewLine
+        objBuilder.Append "  ,@versionDate" & vbNewLine
+        objBuilder.Append "  ,@Department" & vbNewLine
+        objBuilder.Append "  ,@Generic" & vbNewLine
+        objBuilder.Append "  ,@Shape" & vbNewLine
+        objBuilder.Append "  ,@Solution" & vbNewLine
+        objBuilder.Append "  ,@SolutionVolume" & vbNewLine
+        objBuilder.Append "  ,@MinConc" & vbNewLine
+        objBuilder.Append "  ,@MaxConc" & vbNewLine
+        objBuilder.Append "  ,@MinInfusionTime" & vbNewLine
+    
+        ModProgress.SetJobPercentage "Opslaan", intC, intR
+    Next
+    
+    objBuilder.Append vbNewLine
+    
+    For Each objDose In objDoseCol
+        intR = intR + 1
+    
+        objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
+        objBuilder.Append "SET @versionUTC  = @versionUTC" & vbNewLine
+        objBuilder.Append "SET @versionDate  = @versionDate" & vbNewLine
+        
+        objBuilder.Append "SET @Department  = '" & Util_RemoveQuotes(objDose.Department) & "'" & vbNewLine
+        objBuilder.Append "SET @Generic  = '" & Util_RemoveQuotes(objDose.Generic) & "'" & vbNewLine
+        objBuilder.Append "SET @Shape  = '" & Util_RemoveQuotes(objDose.Shape) & "'" & vbNewLine
+        objBuilder.Append "SET @Route  = '" & Util_RemoveQuotes(objDose.Route) & "'" & vbNewLine
+        objBuilder.Append "SET @Indication  = '" & Util_RemoveQuotes(objDose.Indication) & "'" & vbNewLine
+        
+        objBuilder.Append "SET @Gender  = '" & Util_RemoveQuotes(objDose.Gender) & "'" & vbNewLine
+        objBuilder.Append "SET @MinAge = " & DoubleToString(objDose.MinAgeMo) & vbNewLine
+        objBuilder.Append "SET @MaxAge = " & DoubleToString(objDose.MinAgeMo) & vbNewLine
+        objBuilder.Append "SET @MinWeight = " & DoubleToString(objDose.MinWeightKg) & vbNewLine
+        objBuilder.Append "SET @MaxWeight = " & DoubleToString(objDose.MaxWeightKg) & vbNewLine
+        objBuilder.Append "SET @MinGestAge = " & objDose.MinGestDays & vbNewLine
+        objBuilder.Append "SET @MaxGestAge = " & objDose.MaxGestDays & vbNewLine
+        
+        objBuilder.Append "SET @Frequencies = '" & Util_RemoveQuotes(objDose.Frequencies) & "'" & vbNewLine
+        objBuilder.Append "SET @DoseUnit = '" & Util_RemoveQuotes(objDose.Unit) & "'" & vbNewLine
+        
+        objBuilder.Append "SET @NormDose = " & DoubleToString(objDose.NormDose) & vbNewLine
+        objBuilder.Append "SET @MinDose = " & DoubleToString(objDose.MinDose) & vbNewLine
+        objBuilder.Append "SET @MaxDose = " & DoubleToString(objDose.MaxDose) & vbNewLine
+        objBuilder.Append "SET @AbsMaxDose = " & DoubleToString(objDose.AbsMaxDose) & vbNewLine
+        
+        objBuilder.Append "" & vbNewLine
+        objBuilder.Append "EXECUTE @RC = [dbo].[InsertConfigMedDiscDose]" & vbNewLine
+        objBuilder.Append "      @VersionID" & vbNewLine
+        objBuilder.Append "     ,@VersionUTC" & vbNewLine
+        objBuilder.Append "     ,@VersionDate" & vbNewLine
+        objBuilder.Append "     ,@Department" & vbNewLine
+        objBuilder.Append "     ,@Generic" & vbNewLine
+        objBuilder.Append "     ,@Shape" & vbNewLine
+        objBuilder.Append "     ,@Route" & vbNewLine
+        objBuilder.Append "     ,@Indication" & vbNewLine
+        objBuilder.Append "     ,@Gender" & vbNewLine
+        objBuilder.Append "     ,@MinAge" & vbNewLine
+        objBuilder.Append "     ,@MaxAge" & vbNewLine
+        objBuilder.Append "     ,@MinWeight" & vbNewLine
+        objBuilder.Append "     ,@MaxWeight" & vbNewLine
+        objBuilder.Append "     ,@MinGestAge" & vbNewLine
+        objBuilder.Append "     ,@MaxGestAge" & vbNewLine
+        objBuilder.Append "     ,@Frequencies" & vbNewLine
+        objBuilder.Append "     ,@DoseUnit" & vbNewLine
+        objBuilder.Append "     ,@NormDose" & vbNewLine
+        objBuilder.Append "     ,@MinDose" & vbNewLine
+        objBuilder.Append "     ,@MaxDose" & vbNewLine
+        objBuilder.Append "     ,@MaxPerDose" & vbNewLine
+        objBuilder.Append "     ,@StartDose" & vbNewLine
+        objBuilder.Append "     ,@IsDosePerKg" & vbNewLine
+        objBuilder.Append "     ,@IsDosePerM2" & vbNewLine
+        objBuilder.Append "     ,@AbsMaxDose" & vbNewLine
+        
+        ModProgress.SetJobPercentage "Opslaan", intC, intR
+    Next
+    
+    objBuilder.Append vbNewLine
+    
+    objBuilder.Append Util_GetLogSQL("Save configuration for discontinuous medication", False, , "ConfigMedDisc")
+ 
+    Util_GetSaveConfigMedDiscSql = objBuilder.ToString()
+
 End Function

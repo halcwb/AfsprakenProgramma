@@ -189,7 +189,7 @@ End Function
 
 Public Sub SelectNeoOrPedSheet(shtPed As Worksheet, shtNeo As Worksheet, ByVal blnStartProgress As Boolean)
 
-    If MetaVision_IsPediatrie() Then
+    If MetaVision_IsPICU() Then
         GoToSheet shtPed, "A1"
     Else
         If shtNeo.Name = shtNeoGuiInfB.Name Then

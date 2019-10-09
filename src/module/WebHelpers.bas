@@ -663,22 +663,22 @@ End Function
 ' @param {Dictionary|Collection|Variant} Obj Value to convert to Url-Encoded string
 ' @return {String} UrlEncoded string (e.g. a=123&b=456&...)
 ''
-Public Function ConvertToUrlEncoded(Obj As Variant, Optional EncodingMode As UrlEncodingMode = UrlEncodingMode.FormUrlEncoding) As String
+Public Function ConvertToUrlEncoded(obj As Variant, Optional EncodingMode As UrlEncodingMode = UrlEncodingMode.FormUrlEncoding) As String
     Dim web_Encoded As String
 
-    If TypeOf Obj Is Collection Then
+    If TypeOf obj Is Collection Then
         Dim web_KeyValue As Dictionary
 
-        For Each web_KeyValue In Obj
+        For Each web_KeyValue In obj
             If VBA.Len(web_Encoded) > 0 Then: web_Encoded = web_Encoded & "&"
             web_Encoded = web_Encoded & web_GetUrlEncodedKeyValue(web_KeyValue("Key"), web_KeyValue("Value"), EncodingMode)
         Next web_KeyValue
     Else
         Dim web_Key As Variant
 
-        For Each web_Key In Obj.Keys()
+        For Each web_Key In obj.Keys()
             If Len(web_Encoded) > 0 Then: web_Encoded = web_Encoded & "&"
-            web_Encoded = web_Encoded & web_GetUrlEncodedKeyValue(web_Key, Obj(web_Key), EncodingMode)
+            web_Encoded = web_Encoded & web_GetUrlEncodedKeyValue(web_Key, obj(web_Key), EncodingMode)
         Next web_Key
     End If
 
@@ -723,7 +723,7 @@ End Function
 ' @return {String} XML string
 ' @throws 11099 / 80042b5b / -2147210405 - XML format is not currently supported
 ''
-Public Function ConvertToXml(Obj As Variant) As String
+Public Function ConvertToXml(obj As Variant) As String
     Dim web_ErrorMsg As String
 
     web_ErrorMsg = "XML is not currently supported (An updated parser is being created that supports Mac and Windows)." & vbNewLine & _
@@ -816,16 +816,16 @@ End Function
 ' @return {Variant}
 ' @throws 11001 - Error during conversion
 ''
-Public Function ConvertToFormat(Obj As Variant, Format As WebFormat, Optional CustomFormat As String = "") As Variant
+Public Function ConvertToFormat(obj As Variant, Format As WebFormat, Optional CustomFormat As String = "") As Variant
     On Error GoTo web_ErrorHandling
 
     Select Case Format
     Case WebFormat.Json
-        ConvertToFormat = ConvertToJson(Obj)
+        ConvertToFormat = ConvertToJson(obj)
     Case WebFormat.FormUrlEncoded
-        ConvertToFormat = ConvertToUrlEncoded(Obj)
+        ConvertToFormat = ConvertToUrlEncoded(obj)
     Case WebFormat.Xml
-        ConvertToFormat = ConvertToXml(Obj)
+        ConvertToFormat = ConvertToXml(obj)
     Case WebFormat.Custom
 #If EnableCustomFormatting Then
         Dim web_Converter As Dictionary
@@ -837,17 +837,17 @@ Public Function ConvertToFormat(Obj As Variant, Format As WebFormat, Optional Cu
         If web_Converter.Exists("Instance") Then
             Dim web_Instance As Object
             Set web_Instance = web_Converter("Instance")
-            ConvertToFormat = VBA.CallByName(web_Instance, web_Callback, VBA.vbMethod, Obj)
+            ConvertToFormat = VBA.CallByName(web_Instance, web_Callback, VBA.vbMethod, obj)
         Else
-            ConvertToFormat = Application.Run(web_Callback, Obj)
+            ConvertToFormat = Application.Run(web_Callback, obj)
         End If
 #Else
     LogWarning "Custom formatting is disabled. To use WebFormat.Custom, enable custom formatting with the EnableCustomFormatting flag in WebHelpers"
 #End If
     Case Else
-        If VBA.VarType(Obj) = vbString Then
+        If VBA.VarType(obj) = vbString Then
             ' Plain text
-            ConvertToFormat = Obj
+            ConvertToFormat = obj
         End If
     End Select
     Exit Function

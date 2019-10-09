@@ -336,14 +336,14 @@ End Sub
 
 Public Sub WriteNamesToGlobNames()
 
-    Application.ScreenUpdating = False
+    ImprovePerf True
     ModProgress.StartProgress "Schrijf Namen naar GlobNames Blad"
 
     WriteNamesToSheet shtGlobNames, True
     
     ModProgress.FinishProgress
     
-    Application.ScreenUpdating = True
+    ImprovePerf False
 
 End Sub
 

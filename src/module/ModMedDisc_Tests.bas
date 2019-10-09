@@ -56,7 +56,7 @@ Public Sub Test_MedDisc()
     Dim shtTests As Worksheet
 
     Dim objForm As ClassFormularium
-    Dim objMed As ClassMedicatieDisc
+    Dim objMed As ClassMedDisc
     Dim colMed As Collection
     Dim intN As Integer
     Dim intC As Integer
@@ -75,7 +75,7 @@ Public Sub Test_MedDisc()
     If CStr(strTestFile) = vbNullString Then Exit Sub
     
     Set objForm = New ClassFormularium
-    Set colMed = objForm.GetMedicamenten(False)
+    Set colMed = objForm.GetMedicationCollection(False)
     
     Set wbkTests = Workbooks.Open(strTestFile)
     Set shtTests = wbkTests.Sheets("DiscMed")

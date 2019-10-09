@@ -32,15 +32,15 @@ Public Sub CreateDataWorkBooks(ByVal strBedsFilePath As String, arrBeds() As Var
     
     On Error GoTo CreatePatientsWorkBookError
     
-    strPatNum = Replace(constPatNum, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strAchterNaam = Replace(constAchterNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strVoorNaam = Replace(constVoorNaam, constSheetReplace, ModSetting.CONST_DATA_SHEET)
-    strGebDat = Replace(constGebDat, constSheetReplace, ModSetting.CONST_DATA_SHEET)
+    strPatNum = Replace(constPatNum, constSheetReplace, CONST_DATA_SHEET)
+    strAchterNaam = Replace(constAchterNaam, constSheetReplace, CONST_DATA_SHEET)
+    strVoorNaam = Replace(constVoorNaam, constSheetReplace, CONST_DATA_SHEET)
+    strGebDat = Replace(constGebDat, constSheetReplace, CONST_DATA_SHEET)
     
     Set objWb = Workbooks.Add
     
     Set shtBeds = objWb.Sheets(1)
-    shtBeds.Name = ModSetting.CONST_BEDS_SHEET
+    shtBeds.Name = CONST_BEDS_SHEET
     
     shtBeds.Range("A1").Value2 = "Bed"
     shtBeds.Range("B1").Value2 = "PatientNummer"
@@ -54,13 +54,13 @@ Public Sub CreateDataWorkBooks(ByVal strBedsFilePath As String, arrBeds() As Var
                 
         strDataFile = ModSetting.GetPatientDataFile(CStr(varBed))
         strTextFile = ModSetting.GetPatientTextFile(CStr(varBed))
-        strDataName = ModSetting.GetPatientDataWorkBookName(CStr(varBed))
+        strDataName = Setting_GetPatientDataWorkBookName(CStr(varBed))
         
         Set objDataWb = Workbooks.Add
         Set objTextWb = Workbooks.Add
         
-        objDataWb.Sheets(1).Name = ModSetting.CONST_DATA_SHEET
-        objTextWb.Sheets(1).Name = ModSetting.CONST_DATA_SHEET
+        objDataWb.Sheets(1).Name = CONST_DATA_SHEET
+        objTextWb.Sheets(1).Name = CONST_DATA_SHEET
                 
         If Not ModFile.FileExists(strDataFile) Then
             SaveWorkBookAsShared objDataWb, strDataFile

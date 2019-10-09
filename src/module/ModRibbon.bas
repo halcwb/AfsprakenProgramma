@@ -181,10 +181,10 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnSetColors"                                 ' -> Kleuren Instellen
              ModAdmin.Admin_ShowColorPicker
         
-        Case "btnCreatePedData"                             ' -> Pediatrie DataFiles
+        Case "btnCreatePedData"                             ' -> PICU DataFiles
              ModAdmin.Admin_SetUpPedDataDir
         
-        Case "btnCreateNeoData"                             ' -> Neonatologie DataFiles
+        Case "btnCreateNeoData"                             ' -> NICU DataFiles
              ModAdmin.Admin_SetUpNeoDataDir
         
         Case "btnOpenLogFiles"                              ' -> Log files openen
@@ -202,31 +202,46 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
              ModAdmin.Admin_ParEntConfig
         
         Case "btnMedDisc"                                   ' -> Beheer Discontinue medicatie
-             ModDatabase.Database_ImportConfigMedDisc
+             ModAdmin.Admin_MedDiscImport
                 
-        Case "btnNeoMedContImport"                          ' -> Beheer Continue Medicatie Neo Exporteren
-            ModAdmin.Admin_MedContNeoImport
-        
         Case "btnNeoMedContExport"                          ' -> Beheer Continue Medicatie Neo Exporteren
             ModAdmin.Admin_MedContNeoExport
         
-        Case "btnPedMedContImport"                          ' -> Beheer Continue Medicatie Ped Importeren
-             ModAdmin.Admin_MedContPedImport
+        Case "btnNeoMedContImport"                          ' -> Beheer Continue Medicatie Neo Exporteren
+            ModAdmin.Admin_MedContNeoImport
+        
+        Case "btnNeoMedContSave"                            ' -> Beheer Continue Medicatie Neo Opslaan
+            ModAdmin.Admin_MedContNeoSave
         
         Case "btnPedMedContExport"                          ' -> Beheer Continue Medicatie Ped Exporteren
             ModAdmin.Admin_MedContPedExport
                 
-        Case "btnParentImport"                              ' -> Beheer Parenteralia Ped Importeren
-             ModAdmin.Admin_ParentImport
+        Case "btnPedMedContImport"                          ' -> Beheer Continue Medicatie Ped Importeren
+             ModAdmin.Admin_MedContPedImport
+        
+        Case "btnPedMedContSave"                            ' -> Beheer Continue Medicatie Ped Opslaan
+             ModAdmin.Admin_MedContPedSave
         
         Case "btnParentExport"                              ' -> Beheer Parenteralia Ped Exporteren
             ModAdmin.Admin_ParentExport
         
-        Case "btnDiscMedImport"                             ' -> Beheer Discontinue Medicatie Ped Importeren
-             ModAdmin.Admin_MedDiscImport
+        Case "btnParentImport"                              ' -> Beheer Parenteralia Ped Importeren
+             ModAdmin.Admin_ParentImport
+        
+        Case "btnParentSave"                                ' -> Beheer Parenteralia Ped Opslaan
+             ModAdmin.Admin_ParentSave
         
         Case "btnPedMedContExport"                          ' -> Beheer Discontinue Medicatie Ped Exporteren
             ModAdmin.Admin_MedDiscExport
+        
+        Case "btnMedDiscExport"                             ' -> Beheer Discontinue Medicatie Ped Importeren
+             ModAdmin.Admin_MedDiscExport
+        
+        Case "btnMedDiscImport"                             ' -> Beheer Discontinue Medicatie Ped Importeren
+             ModAdmin.Admin_MedDiscImport
+        
+        Case "btnMedDiscSave"                               ' -> Beheer Discontinue Medicatie Ped Opslaan
+             ModAdmin.Admin_MedDiscSave
         
         'grpFB                                              ' -- ACCEPTATIE TESTS --
         
@@ -255,7 +270,7 @@ Public Sub GetVisiblePed(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     Dim blnIsPed As Boolean
     
     blnIsDevelop = ModSetting.IsDevelopmentDir()
-    blnIsPed = MetaVision_IsPediatrie()
+    blnIsPed = MetaVision_IsPICU()
     
     If blnIsPed Or blnIsDevelop Then
         blnVisible = True
@@ -306,7 +321,7 @@ Private Sub ClearAll()
         ModPatient.Patient_ClearPedData
     Else
         If MetaVision_IsNeonatologie() Then ModPatient.Patient_ClearNeoData
-        If MetaVision_IsPediatrie() Then ModPatient.Patient_ClearPedData
+        If MetaVision_IsPICU() Then ModPatient.Patient_ClearPedData
     End If
     
 End Sub
@@ -318,7 +333,7 @@ Private Sub ClearLab()
         ModPedLab.PedLab_Clear
     Else
         If MetaVision_IsNeonatologie() Then ModNeoLab.NeoLab_Clear
-        If MetaVision_IsPediatrie() Then ModPedLab.PedLab_Clear
+        If MetaVision_IsPICU() Then ModPedLab.PedLab_Clear
     End If
     
 End Sub
@@ -330,7 +345,7 @@ Private Sub ClearAfspraken()
         ModPedAfspr.PedAfspr_Clear
     Else
         If MetaVision_IsNeonatologie() Then ModNeoAfspr.NeoAfspr_Clear
-        If MetaVision_IsPediatrie() Then ModPedAfspr.PedAfspr_Clear
+        If MetaVision_IsPICU() Then ModPedAfspr.PedAfspr_Clear
     End If
 
 End Sub

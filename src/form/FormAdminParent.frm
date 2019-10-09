@@ -69,30 +69,10 @@ Private Sub cboVersions_Change()
 End Sub
 
 Private Sub cmdImport_Click()
-
-    Dim objConfigWbk As Workbook
-    Dim objSrc As Range
-    Dim objDst As Range
-    Dim lngErr As Long
-    Dim strFile As String
         
     Dim objParEnt As ClassParent
-    
-    strFile = ModFile.GetFileWithDialog
-    If strFile = "" Then Exit Sub
-    
-    Dim strMsg As String
-    
-    On Error GoTo HandleError
-       
-    Application.DisplayAlerts = False
-        
-    Set objConfigWbk = Workbooks.Open(strFile, True, True)
-    Set objSrc = objConfigWbk.Sheets(CONST_TBL_PARENT).Range(CONST_TBL_PARENT)
-    Set objDst = ModRange.GetRange(CONST_TBL_PARENT)
-        
-    Sheet_CopyRangeFormulaToDst objSrc, objDst
-    
+
+    Admin_ParentImport
     Set m_ParEntCol = ModAdmin.Admin_ParEntGetCollection()
     
     lbxParenteralia.Clear
@@ -102,16 +82,6 @@ Private Sub cmdImport_Click()
     
     ClearParEntDetails
     
-    objConfigWbk.Close
-    Application.DisplayAlerts = True
-    
-    Exit Sub
-    
-HandleError:
-
-    objConfigWbk.Close
-    Application.DisplayAlerts = True
-    ModLog.LogError Err, "Could not import: " & strFile
 End Sub
 
 Private Sub optLastVersion_Click()

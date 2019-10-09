@@ -387,7 +387,7 @@ Public Sub MedDisc_ClearAll(ByVal blnShowProgress As Boolean)
 
 End Sub
 
-Public Function GetMedicationFreqs() As Dictionary
+Public Function MedDisc_GetMedicationFreqs() As Dictionary
 
     Dim objTable As Range
     Dim dictFreq As Dictionary
@@ -406,19 +406,19 @@ Public Function GetMedicationFreqs() As Dictionary
         dictFreq.Add strFreq, dblFactor
     Next
     
-    Set GetMedicationFreqs = dictFreq
+    Set MedDisc_GetMedicationFreqs = dictFreq
 
 End Function
 
-Private Sub Test_GetMedicationFreqs()
+Private Sub Test_MedDisc_GetMedicationFreqs()
 
-    GetMedicationFreqs
+    MedDisc_GetMedicationFreqs
 
 End Sub
 
-Private Sub MedicamentInvoeren(ByVal intN As Integer)
+Private Sub Util_OpenMedDiscForm(ByVal intN As Integer)
 
-    Dim objMed As ClassMedicatieDisc
+    Dim objMed As ClassMedDisc
     Dim objForm As FormMedDisc
     Dim strN As String
     Dim intOplVlst As Integer
@@ -528,7 +528,7 @@ Private Sub MedicamentInvoeren(ByVal intN As Integer)
         
 End Sub
 
-Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
+Public Sub MedDisc_SetMed(objMed As ClassMedDisc, strN As String)
     
     Dim intFreq As Integer
     Dim dblFactor As Double
@@ -584,7 +584,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedicatieDisc, strN As String)
         ModRange.SetRangeValue constTime & strN, objMed.MinInfusionTime
         
         If Not objMed.Freq = vbNullString Then
-            Set dictFreq = GetMedicationFreqs()
+            Set dictFreq = MedDisc_GetMedicationFreqs()
             intFreq = 2
             For Each varFreq In dictFreq
                 If varFreq = objMed.Freq Then Exit For
@@ -616,181 +616,181 @@ End Sub
 
 Public Sub MedDisc_EnterMed_01()
 
-    MedicamentInvoeren 1
+    Util_OpenMedDiscForm 1
 
 End Sub
 
 Public Sub MedDisc_EnterMed_02()
 
-    MedicamentInvoeren 2
+    Util_OpenMedDiscForm 2
 
 End Sub
 
 Public Sub MedDisc_EnterMed_03()
 
-    MedicamentInvoeren 3
+    Util_OpenMedDiscForm 3
 
 End Sub
 
 Public Sub MedDisc_EnterMed_04()
 
-    MedicamentInvoeren 4
+    Util_OpenMedDiscForm 4
 
 End Sub
 
 Public Sub MedDisc_EnterMed_05()
 
-    MedicamentInvoeren 5
+    Util_OpenMedDiscForm 5
 
 End Sub
 
 Public Sub MedDisc_EnterMed_06()
 
-    MedicamentInvoeren 6
+    Util_OpenMedDiscForm 6
 
 End Sub
 
 Public Sub MedDisc_EnterMed_07()
 
-    MedicamentInvoeren 7
+    Util_OpenMedDiscForm 7
 
 End Sub
 
 Public Sub MedDisc_EnterMed_08()
 
-    MedicamentInvoeren 8
+    Util_OpenMedDiscForm 8
 
 End Sub
 
 Public Sub MedDisc_EnterMed_09()
 
-    MedicamentInvoeren 9
+    Util_OpenMedDiscForm 9
 
 End Sub
 
 Public Sub MedDisc_EnterMed_10()
 
-    MedicamentInvoeren 10
+    Util_OpenMedDiscForm 10
 
 End Sub
 
 Public Sub MedDisc_EnterMed_11()
 
-    MedicamentInvoeren 11
+    Util_OpenMedDiscForm 11
 
 End Sub
 
 Public Sub MedDisc_EnterMed_12()
 
-    MedicamentInvoeren 12
+    Util_OpenMedDiscForm 12
 
 End Sub
 
 Public Sub MedDisc_EnterMed_13()
 
-    MedicamentInvoeren 13
+    Util_OpenMedDiscForm 13
 
 End Sub
 
 Public Sub MedDisc_EnterMed_14()
 
-    MedicamentInvoeren 14
+    Util_OpenMedDiscForm 14
 
 End Sub
 
 Public Sub MedDisc_EnterMed_15()
 
-    MedicamentInvoeren 15
+    Util_OpenMedDiscForm 15
 
 End Sub
 
 Public Sub MedDisc_EnterMed_16()
 
-    MedicamentInvoeren 16
+    Util_OpenMedDiscForm 16
 
 End Sub
 
 Public Sub MedDisc_EnterMed_17()
 
-    MedicamentInvoeren 17
+    Util_OpenMedDiscForm 17
 
 End Sub
 
 Public Sub MedDisc_EnterMed_18()
 
-    MedicamentInvoeren 18
+    Util_OpenMedDiscForm 18
 
 End Sub
 
 Public Sub MedDisc_EnterMed_19()
 
-    MedicamentInvoeren 19
+    Util_OpenMedDiscForm 19
 
 End Sub
 
 Public Sub MedDisc_EnterMed_20()
 
-    MedicamentInvoeren 20
+    Util_OpenMedDiscForm 20
 
 End Sub
 
 Public Sub MedDisc_EnterMed_21()
 
-    MedicamentInvoeren 21
+    Util_OpenMedDiscForm 21
 
 End Sub
 
 Public Sub MedDisc_EnterMed_22()
 
-    MedicamentInvoeren 22
+    Util_OpenMedDiscForm 22
 
 End Sub
 
 Public Sub MedDisc_EnterMed_23()
 
-    MedicamentInvoeren 23
+    Util_OpenMedDiscForm 23
 
 End Sub
 
 Public Sub MedDisc_EnterMed_24()
 
-    MedicamentInvoeren 24
+    Util_OpenMedDiscForm 24
 
 End Sub
 
 Public Sub MedDisc_EnterMed_25()
 
-    MedicamentInvoeren 25
+    Util_OpenMedDiscForm 25
 
 End Sub
 
 Public Sub MedDisc_EnterMed_26()
 
-    MedicamentInvoeren 26
+    Util_OpenMedDiscForm 26
 
 End Sub
 
 Public Sub MedDisc_EnterMed_27()
 
-    MedicamentInvoeren 27
+    Util_OpenMedDiscForm 27
 
 End Sub
 
 Public Sub MedDisc_EnterMed_28()
 
-    MedicamentInvoeren 28
+    Util_OpenMedDiscForm 28
 
 End Sub
 
 Public Sub MedDisc_EnterMed_29()
 
-    MedicamentInvoeren 29
+    Util_OpenMedDiscForm 29
 
 End Sub
 
 Public Sub MedDisc_EnterMed_30()
 
-    MedicamentInvoeren 30
+    Util_OpenMedDiscForm 30
 
 End Sub
 
@@ -1334,7 +1334,7 @@ Public Sub MedDisc_SortTableMedDisc()
     strColumn = "BW2:BW31"
     strRange = "Tbl_Glob_SortMedDisc"
     
-    Application.ScreenUpdating = False ' Prevent cycling through all windows when sheets are processed
+    ImprovePerf True ' Prevent cycling through all windows when sheets are processed
     
     shtGlobBerMedDisc.Sort.SortFields.Clear
     shtGlobBerMedDisc.Sort.SortFields.Add Key:=Range( _
@@ -1349,7 +1349,7 @@ Public Sub MedDisc_SortTableMedDisc()
         .Apply
     End With
     
-    Application.ScreenUpdating = True
+    ImprovePerf False
     
 End Sub
 
@@ -1449,7 +1449,7 @@ Private Function PrintMedDiscValidationPrev(ByVal blnPrev As Boolean, ByVal strF
     
 End Function
 
-Public Sub MedDisc_Import()
+Public Sub MedDisc_ImportFromHix()
 
     Dim intAnswer As VbMsgBoxResult
     Dim strMsg As String
@@ -1470,18 +1470,18 @@ Public Sub MedDisc_Import()
         shtGlobTemp.Range("A1").PasteSpecial xlPasteAll
         Application.DisplayAlerts = True
     
-        ImportMedications
+        ImportCopiedMedications
         shtGlobTemp.Cells.ClearContents
     End If
     
 
 End Sub
 
-Private Sub ImportMedications()
+Private Sub ImportCopiedMedications()
 
     Dim objForm As ClassFormularium
     Dim objRange As Range
-    Dim objMed As ClassMedicatieDisc
+    Dim objMed As ClassMedDisc
     Dim colMed As Collection
     Dim intN As Integer
     Dim intC As Integer
@@ -1500,14 +1500,14 @@ Private Sub ImportMedications()
     Dim strTooMany As String
     
     Set objForm = ModFormularium.Formularium_GetNewFormularium()
-    Set colMed = objForm.GetMedicamenten(False)
+    Set colMed = objForm.GetMedicationCollection(False)
     Set objRange = shtGlobTemp.Range("A1").CurrentRegion()
         
     ModProgress.StartProgress "Importeren van medicatie uit HIX"
         
-    Application.ScreenUpdating = False
+    ImprovePerf True
     MedDisc_ClearAll True
-    Application.ScreenUpdating = True
+    ImprovePerf False
         
     intC = objRange.Rows.Count + 10
     For intN = 2 To intC

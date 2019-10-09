@@ -19,7 +19,6 @@ Private m_MedCol As Collection
 Private m_PrevSel As Integer ' Holds medicament index is 1 based, note! lbxMedicamenten is 0 based
 Private m_SelectedVersion As Integer
 
-Private Const constDepartment = "Neonatologie"
 Private Const ConstCaption As String = "Neonatale Continue Medicatie Configuratie"
 
 Private Sub ClearMedDetails()
@@ -262,7 +261,7 @@ Private Sub LoadVersions()
     Dim intN As Integer
         
     cboVersions.Clear
-    Set colVersions = Database_GetConfigMedContVersions(constDepartment)
+    Set colVersions = Database_GetConfigMedContVersions(CONST_DEP_NICU)
     
     For Each objVersion In colVersions
         cboVersions.AddItem objVersion.ToString()

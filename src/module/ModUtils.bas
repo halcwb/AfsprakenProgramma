@@ -44,6 +44,23 @@ Public Sub CopyToClipboard(ByVal strText As String)
     
 End Sub
 
+Public Function PasteFromClipBoard() As String
+    
+    Dim objClip As MSForms.DataObject
+    
+    Set objClip = New MSForms.DataObject
+    objClip.GetFromClipboard
+    PasteFromClipBoard = objClip.GetText(1)
+
+End Function
+
+Private Sub Test_PasteFromClipBoard()
+
+    CopyToClipboard "Test"
+    ModMessage.ShowMsgBoxInfo PasteFromClipBoard()
+
+End Sub
+
 Public Function GetField(objRs As Recordset, ByVal strField As String) As Variant
 
     If Not IsNull(objRs.Fields(strField)) Then
@@ -327,4 +344,19 @@ Public Sub EMailMessageToBeheer(ByVal strMsg As String)
     
 End Sub
 
+Public Sub ImprovePerf(ByVal blnImprove As Boolean)
 
+    With Application
+        If blnImprove Then
+            .Calculation = xlCalculationManual
+            .ScreenUpdating = False
+            .EnableEvents = False
+        Else
+            .Calculation = xlCalculationAutomatic
+            .ScreenUpdating = True
+            .EnableEvents = True
+        End If
+    End With
+    
+
+End Sub
