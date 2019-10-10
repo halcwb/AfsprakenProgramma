@@ -153,6 +153,13 @@ Public Function Formularium_GetNewFormularium() As ClassFormularium
 
 End Function
 
+Private Sub Test_Formularium_Initialize()
+
+    Formularium_GetNewFormularium
+    ModMessage.ShowMsgBoxInfo "Formularium heeft " & m_Formularium.MedicamentCount & " medicamenten"
+
+End Sub
+
 Public Function Formularium_GetFormularium() As ClassFormularium
 
     Formularium_Initialize
@@ -166,12 +173,6 @@ Public Function Formularium_GetFormConfig() As ClassFormConfig
     Set Formularium_GetFormConfig = m_FormConfig
 
 End Function
-
-Private Sub Test_Formularium_Initialize()
-
-    Formularium_Initialize
-
-End Sub
 
 Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As String, ByVal blnShowProgress As Boolean)
 
@@ -361,7 +362,7 @@ Public Function Formularium_GetDoses(objMedCol As Collection, blnAll As Boolean)
     For Each objMed In objMedCol
         For Each objDose In objMed.Doses
         
-            If (objDose.AbsMaxDose > 0 Or objDose.MaxDose > 0 Or objDose.MinDose > 0) Or blnAll Then
+            If (objDose.NormDose > 0 Or objDose.MinDose > 0 Or objDose.MaxDose > 0 Or objDose.AbsMaxDose > 0 Or objDose.MaxPerDose > 0) Or blnAll Then
                 blnContains = False
                 For Each objItem In objDoseCol
                     blnContains = objItem.Generic = objDose.Generic
@@ -576,6 +577,8 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
     strFile = CStr(varDir) & "\" & strName & "_" & strFile & "_.xlsx"
     
     Set objWbk = Workbooks.Add()
+    objWbk.Windows(1).Visible = False
+    
     Set objMedSheet = objWbk.Sheets(1)
     objMedSheet.Name = strSheet
     
@@ -730,20 +733,13 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Value2 = .Frequencies
             objDoseSheet.Cells(intD, constDoseUnitIndx).Value2 = .Unit
             
-            If .NormDose > 0 Then
-                objDoseSheet.Cells(intD, constDoseNormDoseIndx).Value2 = .NormDose
-            End If
-            If .MinDose > 0 Then
-                objDoseSheet.Cells(intD, constDoseMinDoseIndx).Value2 = .MinDose
-            End If
-            If .MaxDose > 0 Then
-                objDoseSheet.Cells(intD, constDoseMaxDoseIndx).Value2 = .MaxDose
-            End If
-            If .AbsMaxDose > 0 Then
-                objDoseSheet.Cells(intD, constDoseAbsMaxDoseIndx).Value2 = .AbsMaxDose
-            End If
-            
+            If .NormDose > 0 Then objDoseSheet.Cells(intD, constDoseNormDoseIndx).Value2 = .NormDose
+            If .MinDose > 0 Then objDoseSheet.Cells(intD, constDoseMinDoseIndx).Value2 = .MinDose
+            If .MaxDose > 0 Then objDoseSheet.Cells(intD, constDoseMaxDoseIndx).Value2 = .MaxDose
+            If .AbsMaxDose > 0 Then objDoseSheet.Cells(intD, constDoseAbsMaxDoseIndx).Value2 = .AbsMaxDose
             If .MaxPerDose > 0 Then objDoseSheet.Cells(intD, constDoseMaxPerDoseIndx).Value2 = .MaxPerDose
+            objDoseSheet.Cells(intD, constDoseIsDosePerKgIndx).Value2 = .IsDosePerKg
+            objDoseSheet.Cells(intD, constDoseIsDosePerM2Indx).Value2 = .IsDosePerM2
         
             If Not objDose.Frequencies = vbNullString Then
                 objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Value2 = .Frequencies
@@ -918,8 +914,7 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
         If blnShowProgress Then ModProgress.SetJobPercentage "Export " & intN, intC, intN
     Next
     
-    
-    
+    objWbk.Windows(1).Visible = True
     objWbk.SaveAs strFile
     objWbk.Close
     

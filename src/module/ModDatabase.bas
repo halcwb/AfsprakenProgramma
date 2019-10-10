@@ -2136,20 +2136,23 @@ Public Sub Database_LoadFormularium(objFormularium As ClassFormularium, ByVal bl
                     If Not IsNull(objRs.Fields("Route")) Then .Route = objRs.Fields("Route").Value
                     If Not IsNull(objRs.Fields("Indication")) Then .Indication = objRs.Fields("Indication").Value
                     
-                    If Not IsNull(objRs.Fields("Gender")) Then .NormDose = objRs.Fields("NormDose").Value
-                    If Not IsNull(objRs.Fields("MinAge")) Then .NormDose = objRs.Fields("NormDose").Value
-                    If Not IsNull(objRs.Fields("MaxAge")) Then .NormDose = objRs.Fields("NormDose").Value
-                    If Not IsNull(objRs.Fields("MinWeight")) Then .NormDose = objRs.Fields("NormDose").Value
-                    If Not IsNull(objRs.Fields("MaxWeight")) Then .NormDose = objRs.Fields("NormDose").Value
-                    If Not IsNull(objRs.Fields("MinGestAge")) Then .NormDose = objRs.Fields("NormDose").Value
-                    If Not IsNull(objRs.Fields("MaxGestAge")) Then .NormDose = objRs.Fields("NormDose").Value
+                    If Not IsNull(objRs.Fields("Gender")) Then .Gender = objRs.Fields("Gender").Value
+                    If Not IsNull(objRs.Fields("MinAge")) Then .MinAgeMo = objRs.Fields("MinAge").Value
+                    If Not IsNull(objRs.Fields("MaxAge")) Then .MaxAgeMo = objRs.Fields("MaxAge").Value
+                    If Not IsNull(objRs.Fields("MinWeight")) Then .MinWeightKg = objRs.Fields("MinWeight").Value
+                    If Not IsNull(objRs.Fields("MaxWeight")) Then .MaxWeightKg = objRs.Fields("MaxWeight").Value
+                    If Not IsNull(objRs.Fields("MinGestAge")) Then .MinGestDays = objRs.Fields("MinGestAge").Value
+                    If Not IsNull(objRs.Fields("MaxGestAge")) Then .MaxGestDays = objRs.Fields("MaxGestAge").Value
                     
-                    
+                    .Unit = objMed.MultipleUnit
+                    If Not IsNull(objRs.Fields("Frequencies")) Then .Frequencies = objRs.Fields("Frequencies").Value
                     If Not IsNull(objRs.Fields("NormDose")) Then .NormDose = objRs.Fields("NormDose").Value
                     If Not IsNull(objRs.Fields("MinDose")) Then .MinDose = objRs.Fields("MinDose").Value
                     If Not IsNull(objRs.Fields("MaxDose")) Then .MaxDose = objRs.Fields("MaxDose").Value
                     If Not IsNull(objRs.Fields("AbsMaxDose")) Then .AbsMaxDose = objRs.Fields("AbsMaxDose").Value
-                    If Not IsNull(objRs.Fields("MaxPerDose")) Then .AbsMaxDose = objRs.Fields("AbsMaxDose").Value
+                    If Not IsNull(objRs.Fields("MaxPerDose")) Then .MaxPerDose = objRs.Fields("MaxPerDose").Value
+                    If Not IsNull(objRs.Fields("IsDosePerKg")) Then .IsDosePerKg = objRs.Fields("IsDosePerKg").Value
+                    If Not IsNull(objRs.Fields("IsDosePerM2")) Then .IsDosePerM2 = objRs.Fields("IsDosePerM2").Value
                 End With
                 
                 objMed.AddDose objDose
@@ -2258,6 +2261,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     Dim dblMultipleQuantity As Double
     Dim strMultipleUnit As String
     Dim strIndications As String
+    Dim intDoseAdjust As Integer
     
     Dim objMed As ClassMedDisc
     Dim objSol As ClassSolution
@@ -2295,8 +2299,8 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     objBuilder.Append "DECLARE @MaxConc float" & vbNewLine
     objBuilder.Append "DECLARE @MinInfusionTime int" & vbNewLine
     
-    objBuilder.Append "DECLARE @Route nvarchar(50)" & vbNewLine
-    objBuilder.Append "DECLARE @Indication nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @Route nvarchar(60)" & vbNewLine
+    objBuilder.Append "DECLARE @Indication nvarchar(500)" & vbNewLine
     objBuilder.Append "DECLARE @Gender nvarchar(50)" & vbNewLine
     objBuilder.Append "DECLARE @MinAge float" & vbNewLine
     objBuilder.Append "DECLARE @MaxAge float" & vbNewLine
@@ -2304,7 +2308,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     objBuilder.Append "DECLARE @MaxWeight float" & vbNewLine
     objBuilder.Append "DECLARE @MinGestAge float" & vbNewLine
     objBuilder.Append "DECLARE @MaxGestAge float" & vbNewLine
-    objBuilder.Append "DECLARE @Frequencies nvarchar(50)" & vbNewLine
+    objBuilder.Append "DECLARE @Frequencies nvarchar(500)" & vbNewLine
     objBuilder.Append "DECLARE @DoseUnit nvarchar(50)" & vbNewLine
     objBuilder.Append "DECLARE @NormDose float" & vbNewLine
     objBuilder.Append "DECLARE @MinDose float" & vbNewLine
@@ -2460,6 +2464,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     objBuilder.Append vbNewLine
     
     For Each objDose In objDoseCol
+    
         intR = intR + 1
     
         objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
@@ -2474,7 +2479,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
         
         objBuilder.Append "SET @Gender  = '" & Util_RemoveQuotes(objDose.Gender) & "'" & vbNewLine
         objBuilder.Append "SET @MinAge = " & DoubleToString(objDose.MinAgeMo) & vbNewLine
-        objBuilder.Append "SET @MaxAge = " & DoubleToString(objDose.MinAgeMo) & vbNewLine
+        objBuilder.Append "SET @MaxAge = " & DoubleToString(objDose.MaxAgeMo) & vbNewLine
         objBuilder.Append "SET @MinWeight = " & DoubleToString(objDose.MinWeightKg) & vbNewLine
         objBuilder.Append "SET @MaxWeight = " & DoubleToString(objDose.MaxWeightKg) & vbNewLine
         objBuilder.Append "SET @MinGestAge = " & objDose.MinGestDays & vbNewLine
@@ -2487,6 +2492,11 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
         objBuilder.Append "SET @MinDose = " & DoubleToString(objDose.MinDose) & vbNewLine
         objBuilder.Append "SET @MaxDose = " & DoubleToString(objDose.MaxDose) & vbNewLine
         objBuilder.Append "SET @AbsMaxDose = " & DoubleToString(objDose.AbsMaxDose) & vbNewLine
+        
+        If objDose.IsDosePerKg Then intDoseAdjust = 1 Else intDoseAdjust = 0
+        objBuilder.Append "SET @IsDosePerKg = " & intDoseAdjust & vbNewLine
+        If objDose.IsDosePerM2 Then intDoseAdjust = 1 Else intDoseAdjust = 0
+        objBuilder.Append "SET @IsDosePerM2 = " & intDoseAdjust & vbNewLine
         
         objBuilder.Append "" & vbNewLine
         objBuilder.Append "EXECUTE @RC = [dbo].[InsertConfigMedDiscDose]" & vbNewLine

@@ -76,6 +76,8 @@ Private Sub Validate(ByVal strValid As String)
         
         strValid = IIf(cboVorm.Value = vbNullString, "Voer een vorm in", strValid)
         strValid = IIf(cboGeneriek.Value = vbNullString, "Kies een generiek", strValid)
+        
+        If Not strValid = vbNullString Then ClearDose
     
     End If
     
@@ -245,7 +247,7 @@ Private Sub cboGeneriek_Change()
     If cboGeneriek.ListIndex > -1 Then
         SetToGPKMode True
         Set m_Med = Formularium_GetFormularium.Item(cboGeneriek.ListIndex + 1)
-        LoadMedicament True
+        LoadMedicament True, False
     Else
         SetToGPKMode False
         ClearForm False
@@ -279,7 +281,7 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
         blnLoad = False
     Else
         SetToGPKMode True
-        LoadMedicament True
+        LoadMedicament True, False
         m_LoadGPK = True
         cboGeneriek.Text = m_Med.Generic
         m_LoadGPK = False
@@ -342,7 +344,7 @@ Private Sub SetDoseUnit()
 
 End Sub
 
-Private Sub LoadMedicament(ByVal blnReload As Boolean)
+Private Sub LoadMedicament(ByVal blnReload As Boolean, ByVal blnApplyDose As Boolean)
     
     Dim intN As Integer
     Dim strFreq As String
@@ -411,7 +413,7 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean)
         
         cboOplVlst.Value = .Solution
         
-        If m_Med.DoseRules.Count > 1 Then
+        If Not blnApplyDose And m_Med.DoseRules.Count > 1 Then
             lblFreqTime.Visible = True
             cboFreqTime.Visible = True
             
@@ -586,6 +588,7 @@ Private Sub cboIndicatie_Change()
     Dim strValid As String
     ' strValid = ValidateCombo(cboIndicatie, False)
     Validate vbNullString
+    m_Med.Indication = Trim(LCase(cboIndicatie.Text))
     ApplyDoseRule
 
 End Sub
@@ -598,6 +601,7 @@ Private Sub ApplyDoseRule()
     Dim intGest As Integer
     
     dblAge = Patient_CorrectedAgeInMo()
+    intGest = Patient_GestationalAgeInDays()
     dblWeight = Patient_GetWeight()
     
     Set objDose = m_Med.GetDose("", "", dblAge, intGest, dblWeight)
@@ -616,7 +620,7 @@ Private Sub ApplyDoseRule()
             m_Med.SetFreqList objDose.Frequencies
         End With
         
-        LoadMedicament False
+        LoadMedicament False, True
     
     End If
 
@@ -787,7 +791,10 @@ End Sub
 
 Private Sub ClearDose()
 
+    If Not m_Med Is Nothing Then
+
         m_Med.SetFreqList ""
+        m_Med.Freq = ""
         Set m_Freq = Nothing
         LoadFreq
         
@@ -817,6 +824,8 @@ Private Sub ClearDose()
         
         txtKeerDose.Value = ""
         txtCalcDose.Value = ""
+        
+    End If
         
 End Sub
 
@@ -1006,11 +1015,13 @@ End Sub
 Private Sub cmdQuery_Click()
 
     If Not m_Med.GPK = "" Then
+        ClearDose
+
         m_Med.Route = cboRoute.Text
         m_Med.MultipleUnit = cboDosisEenheid.Text
         
         ModWeb.Web_RetrieveMedicationRules m_Med
-        LoadMedicament False
+        LoadMedicament False, False
     End If
 
 End Sub
@@ -1424,7 +1435,7 @@ Private Sub UserForm_Initialize()
     Dim strTitle As String
     Dim objMedCol As Collection
     Dim objMed As ClassMedDisc
-
+    
     m_LoadGPK = False
     m_Keer = False
     m_Mail = False

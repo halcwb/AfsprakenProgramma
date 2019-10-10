@@ -813,8 +813,8 @@ Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal
         blnIsDose = blnIsDose And (dblWeight = 0 Or dblWeight > objDose.MinWeightKg And (objDose.MaxWeightKg = 0 Or dblWeight <= objDose.MaxWeightKg))
         blnIsDose = blnIsDose And (intGestDays = 0 Or intGestDays > objDose.MinGestDays And (objDose.MaxGestDays = 0 Or intGestDays <= objDose.MaxGestDays))
         
-        blnIsDose = blnIsDose And (LCase(Me.Indication) = objDose.Indication)
-        blnIsDose = blnIsDose And (LCase(Me.Route) = objDose.Route)
+        blnIsDose = blnIsDose And (Trim(LCase(Me.Indication)) = Trim(LCase(objDose.Indication)))
+        blnIsDose = blnIsDose And (Trim(LCase(Me.Route)) = Trim(LCase(objDose.Route)))
                 
         If blnIsDose Then
             blnHasDose = False

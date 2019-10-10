@@ -21,7 +21,7 @@ Public Function Patient_BirthDate() As Date
 
 End Function
 
-Public Function Patient_CorrectedAgeInMo() As Double
+Private Function GetCorrectedAge(ByVal strDiff As String) As Double
 
     Dim dtmBD As Date
     Dim intDays As Integer
@@ -40,17 +40,55 @@ Public Function Patient_CorrectedAgeInMo() As Double
         dtmCorrBD = dtmBD
     End If
     
-    dblAge = DateDiff("m", dtmCorrBD, Now())
+    dblAge = DateDiff(strDiff, dtmCorrBD, Now())
     If dblAge < 0 Then dblAge = 0
     
-    Patient_CorrectedAgeInMo = dblAge
+    GetCorrectedAge = dblAge
 
 End Function
 
-Private Sub Test_Patient_CorrectedAgeInMo()
+Public Function Patient_GestationalAgeInDays() As Integer
 
+    Dim dtmBD As Date
+    Dim intDays As Integer
+    Dim intWeeks As Integer
+    Dim dtmCorrBD As Date
+    Dim intAge As Integer
+    
+    dtmBD = Patient_BirthDate()
+    intDays = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, 0)
+    intWeeks = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, 0)
+    intDays = (intDays + (intWeeks * 7))
+    
+    If intDays = 0 Then intDays = 37 * 7
+    
+    intAge = DateDiff("d", dtmBD, Now()) + intDays
+    
+    Patient_GestationalAgeInDays = intAge
 
-    ModMessage.ShowMsgBoxInfo Patient_CorrectedAgeInMo
+End Function
+
+Private Sub Test_Patient_GestationalAgeInDays()
+
+    ModMessage.ShowMsgBoxInfo Patient_GestationalAgeInDays
+
+End Sub
+
+Public Function Patient_CorrectedAgeInDays() As Double
+    
+    Patient_CorrectedAgeInDays = GetCorrectedAge("d")
+
+End Function
+
+Public Function Patient_CorrectedAgeInMo() As Double
+
+    Patient_CorrectedAgeInMo = GetCorrectedAge("m")
+
+End Function
+
+Private Sub Test_Patient_CorrectedAge()
+
+    ModMessage.ShowMsgBoxInfo "Age in mo: " & Patient_CorrectedAgeInMo() & vbNewLine & "Age in days: " & Patient_CorrectedAgeInDays()
 
 End Sub
 

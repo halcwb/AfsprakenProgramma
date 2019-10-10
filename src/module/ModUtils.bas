@@ -360,3 +360,13 @@ Public Sub ImprovePerf(ByVal blnImprove As Boolean)
     
 
 End Sub
+
+Public Sub Utils_MakeAllWorkbooksVisible()
+
+    Dim objWbk As Workbook
+    
+    For Each objWbk In Application.Workbooks
+        objWbk.Windows(1).Visible = True
+    Next
+
+End Sub
