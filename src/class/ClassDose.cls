@@ -283,3 +283,44 @@ Public Property Let IsDosePerM2(ByVal blnPerM2 As Boolean)
 
 End Property
 
+Public Function IsEmpty() As Boolean
+
+    Dim blnHasDose As Boolean
+    
+    blnHasDose = False
+    blnHasDose = blnHasDose Or NormDose > 0
+    blnHasDose = blnHasDose Or MinDose > 0
+    blnHasDose = blnHasDose Or MaxDose > 0
+    blnHasDose = blnHasDose Or AbsMaxDose > 0
+    blnHasDose = blnHasDose Or MaxPerDose > 0
+    
+    IsEmpty = Not blnHasDose
+
+End Function
+
+Public Function ToString() As String
+
+    Dim objBuilder As ClassStringBuilder
+    
+    Set objBuilder = New ClassStringBuilder
+    
+    objBuilder.Append "DoseRule for: " & vbNewLine
+    objBuilder.Append "Generic: " & Generic & vbNewLine
+    objBuilder.Append "Shape: " & Shape & vbNewLine
+    objBuilder.Append "Indication: " & Indication & vbNewLine
+    objBuilder.Append "Route: " & Route & vbNewLine
+    objBuilder.Append "Department: " & Department & vbNewLine
+    objBuilder.Append "Gender: " & Gender & vbNewLine
+    objBuilder.Append "Age: " & MinAgeMo & " - " & MaxAgeMo & " months" & vbNewLine
+    objBuilder.Append "Weight: " & MinWeightKg & " - " & MaxWeightKg & " kg" & vbNewLine
+    objBuilder.Append "GestAge: " & MinGestDays & " - " & MaxGestDays & " days" & vbNewLine
+    objBuilder.Append "Frequencies: " & Frequencies & vbNewLine
+    objBuilder.Append "NormDose: " & NormDose & " " & Unit & IIf(IsDosePerKg, "/kg", "") & vbNewLine
+    objBuilder.Append "DoseRange: " & MinDose & " - " & MaxDose & " " & Unit & IIf(IsDosePerKg, "/kg", "") & vbNewLine
+    objBuilder.Append "AbsMaxDose: " & AbsMaxDose & " " & Unit & vbNewLine
+    objBuilder.Append "MaxPerDose: " & MaxPerDose & Unit & vbNewLine
+    
+    
+    ToString = objBuilder.ToString()
+    
+End Function

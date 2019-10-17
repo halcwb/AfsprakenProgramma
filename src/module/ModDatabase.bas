@@ -1916,22 +1916,19 @@ Public Sub Database_SaveConfigMedDisc()
     
     Dim objMedCol As Collection
     
-    Dim objPICUSolCol As Collection
-    Dim objNICUSolCol As Collection
+    Dim objSolCol As Collection
     
     Dim objDoseCol As Collection
     
     On Error GoTo ErrorHandler
       
     Set objMedCol = Formularium_GetFormularium.GetMedicationCollection(False)
-    Set objPICUSolCol = Formularium_GetSolutions(True, objMedCol)
-    Set objNICUSolCol = Formularium_GetSolutions(False, objMedCol)
-    
     Set objDoseCol = Formularium_GetDoses(objMedCol, False)
+    Set objSolCol = Formularium_GetSolutions(objMedCol, False)
     
     ModProgress.StartProgress "Configuratie voor medicatie discontinue opslaan"
     
-    strSql = Util_GetSaveConfigMedDiscSql(objMedCol, objPICUSolCol, objNICUSolCol, objDoseCol)
+    strSql = Util_GetSaveConfigMedDiscSql(objMedCol, objSolCol, objDoseCol)
     strSql = Util_WrapTransaction(strSql, "insert_med_disc_config")
     
     ModUtils.CopyToClipboard strSql
@@ -2047,13 +2044,14 @@ Public Sub Database_LoadFormularium(objFormularium As ClassFormularium, ByVal bl
 
     Dim strSql As String
     Dim objRs As Recordset
+    Dim objRsSol As Recordset
     Dim intC As Integer
     Dim objMed As ClassMedDisc
-    Dim objPICUSol As ClassSolution
-    Dim objNICUSol As ClassSolution
+    Dim objSol As ClassSolution
     Dim objDose As ClassDose
     Dim arrSubst() As String
     Dim intN As Integer
+    Dim strGPK As String
     Dim blnIsPICU As Boolean
     Dim blnMoved As Boolean
     
@@ -2091,43 +2089,40 @@ Public Sub Database_LoadFormularium(objFormularium As ClassFormularium, ByVal bl
             
             .SetRouteList objRs.Fields("Routes").Value
             .SetIndicationList objRs.Fields("Indications").Value
+            .HasSolutions = objRs.Fields("HasSolutions").Value
+            .IsActive = objRs.Fields("IsActive").Value
             
-            Set objPICUSol = New ClassSolution
-            With objPICUSol
-                .Generic = objMed.Generic
-                .Shape = objMed.Shape
-                If Not IsNull(objRs.Fields("PICUSolution")) Then .Solution = objRs.Fields("PICUSolution").Value
-                If Not IsNull(objRs.Fields("PICUSolutionVolume")) Then .SolutionVolume = objRs.Fields("PICUSolutionVolume").Value
-                If Not IsNull(objRs.Fields("PICUMinConc")) Then .MinConc = objRs.Fields("PICUMinConc").Value
-                If Not IsNull(objRs.Fields("PICUMaxConc")) Then .MaxConc = objRs.Fields("PICUMaxConc").Value
-                If Not IsNull(objRs.Fields("PICUMinInfusionTime")) Then .MinInfusionTime = objRs.Fields("PICUMinInfusionTime").Value
-            End With
-            
-            Set objNICUSol = New ClassSolution
-            With objNICUSol
-                .Generic = objMed.Generic
-                .Shape = objMed.Shape
-                If Not IsNull(objRs.Fields("NICUSolution")) Then .Solution = objRs.Fields("NICUSolution").Value
-                If Not IsNull(objRs.Fields("NICUSolutionVolume")) Then .SolutionVolume = objRs.Fields("NICUSolutionVolume").Value
-                If Not IsNull(objRs.Fields("NICUMinConc")) Then .MinConc = objRs.Fields("NICUMinConc").Value
-                If Not IsNull(objRs.Fields("NICUMaxConc")) Then .MaxConc = objRs.Fields("NICUMaxConc").Value
-                If Not IsNull(objRs.Fields("NICUMinInfusionTime")) Then .MinInfusionTime = objRs.Fields("NICUMinInfusionTime").Value
-            End With
-                        
-            If blnIsPICU Then
-                .Solution = objPICUSol.Solution
-                .SolutionVolume = objPICUSol.SolutionVolume
-                .MaxConc = objPICUSol.MaxConc
-                .MinInfusionTime = objPICUSol.MinInfusionTime
-            Else
-                .Solution = objNICUSol.Solution
-                .SolutionVolume = objNICUSol.SolutionVolume
-                .MaxConc = objNICUSol.MaxConc
-                .MinInfusionTime = objNICUSol.MinInfusionTime
+            If objMed.HasSolutions Then
+                strSql = "SELECT * FROM [dbo].[GetConfigMedDiscSolutionForGenericAndShapeLatest] ('"
+                strSql = strSql & Util_RemoveQuotes(objMed.Generic) & "', '"
+                strSql = strSql & Util_RemoveQuotes(objMed.Shape) & "')"
+                
+                Set objRsSol = objConn.Execute(strSql)
+                
+                Do While Not objRsSol.EOF
+                    Set objSol = New ClassSolution
+                    
+                    If Not IsNull(objRsSol.Fields("Department")) Then objSol.Department = objRsSol.Fields("Department")
+                    If Not IsNull(objRsSol.Fields("Generic")) Then objSol.Generic = objRsSol.Fields("Generic")
+                    If Not IsNull(objRsSol.Fields("Shape")) Then objSol.Shape = objRsSol.Fields("Shape")
+                    If Not IsNull(objRsSol.Fields("MinGenericQuantity")) Then objSol.MinGenericQuantity = objRsSol.Fields("MinGenericQuantity")
+                    If Not IsNull(objRsSol.Fields("MaxGenericQuantity")) Then objSol.MaxGenericQuantity = objRsSol.Fields("MaxGenericQuantity")
+                    If Not IsNull(objRsSol.Fields("Solutions")) Then objSol.Solutions = objRsSol.Fields("Solutions")
+                    If Not IsNull(objRsSol.Fields("SolutionVolume")) Then objSol.SolutionVolume = objRsSol.Fields("SolutionVolume")
+                    If Not IsNull(objRsSol.Fields("MinConc")) Then objSol.MinConc = objRsSol.Fields("MinConc")
+                    If Not IsNull(objRsSol.Fields("MaxConc")) Then objSol.MaxConc = objRsSol.Fields("MaxConc")
+                    If Not IsNull(objRsSol.Fields("MinInfusionTime")) Then objSol.MinInfusionTime = objRsSol.Fields("MinInfusionTime")
+                    
+                    objMed.AddSolution objSol
+                    
+                    objRsSol.MoveNext
+                Loop
+                
             End If
-            
+                                                
             blnMoved = False
-            Do While objRs.Fields("GPK").Value = .GPK And Not objRs.EOF
+            strGPK = .GPK
+            Do While Not objRs.EOF And strGPK = .GPK
             
                 Set objDose = New ClassDose
                 With objDose
@@ -2158,6 +2153,8 @@ Public Sub Database_LoadFormularium(objFormularium As ClassFormularium, ByVal bl
                 objMed.AddDose objDose
                 
                 objRs.MoveNext
+                
+                If Not objRs.EOF Then strGPK = objRs.Fields("GPK").Value Else strGPK = vbNullString
                 blnMoved = True
             Loop
             
@@ -2240,7 +2237,7 @@ Public Function Database_GetStandardPatients() As Collection
     
 End Function
 
-Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSolCol As Collection, objNICUSolCol As Collection, objDoseCol As Collection) As String
+Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objSolCol As Collection, objDoseCol As Collection) As String
 
     Dim strSql As String
     Dim strLatest As String
@@ -2262,6 +2259,8 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     Dim strMultipleUnit As String
     Dim strIndications As String
     Dim intDoseAdjust As Integer
+    Dim intHasSolutions As Integer
+    Dim intIsActive As Integer
     
     Dim objMed As ClassMedDisc
     Dim objSol As ClassSolution
@@ -2270,7 +2269,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     Dim objBuilder As ClassStringBuilder
 
     Set objBuilder = New ClassStringBuilder
-    intC = objMedCol.Count() + objPICUSolCol.Count() + objNICUSolCol.Count() + objDoseCol.Count()
+    intC = objMedCol.Count() + objSolCol.Count() + objDoseCol.Count()
     
     objBuilder.Append "DECLARE @RC int" & vbNewLine
     objBuilder.Append "DECLARE @versionID int" & vbNewLine
@@ -2290,10 +2289,13 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     objBuilder.Append "DECLARE @MultipleQuantity float" & vbNewLine
     objBuilder.Append "DECLARE @MultipleUnit nvarchar(50)" & vbNewLine
     objBuilder.Append "DECLARE @Indications nvarchar(max)" & vbNewLine
+    objBuilder.Append "DECLARE @HasSolutions bit" & vbNewLine
     objBuilder.Append "DECLARE @IsActive bit" & vbNewLine
     
     objBuilder.Append "DECLARE @Department nvarchar(60)" & vbNewLine
-    objBuilder.Append "DECLARE @Solution nvarchar(150)" & vbNewLine
+    objBuilder.Append "DECLARE @MinGenericQuantity float" & vbNewLine
+    objBuilder.Append "DECLARE @MaxGenericQuantity float" & vbNewLine
+    objBuilder.Append "DECLARE @Solutions nvarchar(150)" & vbNewLine
     objBuilder.Append "DECLARE @SolutionVolume float" & vbNewLine
     objBuilder.Append "DECLARE @MinConc float" & vbNewLine
     objBuilder.Append "DECLARE @MaxConc float" & vbNewLine
@@ -2347,6 +2349,8 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
         dblMultipleQuantity = objMed.MultipleQuantity
         strMultipleUnit = objMed.MultipleUnit
         strIndications = Util_RemoveQuotes(objMed.Indications)
+        If objMed.HasSolutions Then intHasSolutions = 1 Else intHasSolutions = 0
+        If objMed.IsActive Then intIsActive = 1 Else intIsActive = 0
         
         objBuilder.Append "SET @GPK  = " & strGPK & "" & vbNewLine
         objBuilder.Append "SET @ATC  = '" & strATC & "'" & vbNewLine
@@ -2362,7 +2366,8 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
         objBuilder.Append "SET @MultipleQuantity  = " & DoubleToString(dblMultipleQuantity) & vbNewLine
         objBuilder.Append "SET @MultipleUnit  = '" & strMultipleUnit & "'" & vbNewLine
         objBuilder.Append "SET @Indications  = '" & strIndications & "'" & vbNewLine
-        objBuilder.Append "SET @IsActive = 1" & vbNewLine
+        objBuilder.Append "SET @HasSolutions = " & intHasSolutions & vbNewLine
+        objBuilder.Append "SET @IsActive = " & intIsActive & vbNewLine
         objBuilder.Append "" & vbNewLine
         
         objBuilder.Append "" & vbNewLine
@@ -2384,6 +2389,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
         objBuilder.Append "  ,@MultipleQuantity" & vbNewLine
         objBuilder.Append "  ,@MultipleUnit" & vbNewLine
         objBuilder.Append "  ,@Indications" & vbNewLine
+        objBuilder.Append "  ,@HasSolutions" & vbNewLine
         objBuilder.Append "  ,@IsActive" & vbNewLine
         
         ModProgress.SetJobPercentage "Opslaan", intC, intR
@@ -2392,17 +2398,19 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     
     objBuilder.Append vbNewLine
     
-    For Each objSol In objPICUSolCol
+    For Each objSol In objSolCol
         intR = intR + 1
     
         objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
         objBuilder.Append "SET @versionUTC  = @versionUTC" & vbNewLine
         objBuilder.Append "SET @versionDate  = @versionDate" & vbNewLine
         
-        objBuilder.Append "SET @Department  = 'PICU'" & vbNewLine
+        objBuilder.Append "SET @Department  = '" & Util_RemoveQuotes(objSol.Department) & "'" & vbNewLine
         objBuilder.Append "SET @Generic  = '" & Util_RemoveQuotes(objSol.Generic) & "'" & vbNewLine
         objBuilder.Append "SET @Shape  = '" & Util_RemoveQuotes(objSol.Shape) & "'" & vbNewLine
-        objBuilder.Append "SET @Solution  = '" & Util_RemoveQuotes(objSol.Solution) & "'" & vbNewLine
+        objBuilder.Append "SET @MinGenericQuantity = " & DoubleToString(objSol.MinGenericQuantity) & vbNewLine
+        objBuilder.Append "SET @MaxGenericQuantity = " & DoubleToString(objSol.MaxGenericQuantity) & vbNewLine
+        objBuilder.Append "SET @Solutions  = '" & Util_RemoveQuotes(objSol.Solutions) & "'" & vbNewLine
         objBuilder.Append "SET @SolutionVolume  = " & DoubleToString(objSol.SolutionVolume) & vbNewLine
         objBuilder.Append "SET @MinConc  = " & DoubleToString(objSol.MinConc) & vbNewLine
         objBuilder.Append "SET @MaxConc  = " & DoubleToString(objSol.MaxConc) & vbNewLine
@@ -2416,7 +2424,9 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
         objBuilder.Append "  ,@Department" & vbNewLine
         objBuilder.Append "  ,@Generic" & vbNewLine
         objBuilder.Append "  ,@Shape" & vbNewLine
-        objBuilder.Append "  ,@Solution" & vbNewLine
+        objBuilder.Append "  ,@MinGenericQuantity" & vbNewLine
+        objBuilder.Append "  ,@MaxGenericQuantity" & vbNewLine
+        objBuilder.Append "  ,@Solutions" & vbNewLine
         objBuilder.Append "  ,@SolutionVolume" & vbNewLine
         objBuilder.Append "  ,@MinConc" & vbNewLine
         objBuilder.Append "  ,@MaxConc" & vbNewLine
@@ -2426,43 +2436,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
     Next
     
     objBuilder.Append vbNewLine
-        
-    For Each objSol In objNICUSolCol
-        intR = intR + 1
-    
-        objBuilder.Append "SET @versionID  = @versionID" & vbNewLine
-        objBuilder.Append "SET @versionUTC  = @versionUTC" & vbNewLine
-        objBuilder.Append "SET @versionDate  = @versionDate" & vbNewLine
-        
-        objBuilder.Append "SET @Department  = 'NICU'" & vbNewLine
-        
-        objBuilder.Append "SET @Generic  = '" & Util_RemoveQuotes(objSol.Generic) & "'" & vbNewLine
-        objBuilder.Append "SET @Shape  = '" & Util_RemoveQuotes(objSol.Shape) & "'" & vbNewLine
-        objBuilder.Append "SET @Solution  = '" & Util_RemoveQuotes(objSol.Solution) & "'" & vbNewLine
-        objBuilder.Append "SET @SolutionVolume  = " & DoubleToString(objSol.SolutionVolume) & vbNewLine
-        objBuilder.Append "SET @MinConc  = " & DoubleToString(objSol.MinConc) & vbNewLine
-        objBuilder.Append "SET @MaxConc  = " & DoubleToString(objSol.MaxConc) & vbNewLine
-        objBuilder.Append "SET @MinInfusionTime  = " & DoubleToString(objSol.MinInfusionTime) & vbNewLine
-    
-        objBuilder.Append "" & vbNewLine
-        objBuilder.Append "EXECUTE @RC = [dbo].[InsertConfigMedDiscSolution] " & vbNewLine
-        objBuilder.Append "   @versionID" & vbNewLine
-        objBuilder.Append "  ,@versionUTC" & vbNewLine
-        objBuilder.Append "  ,@versionDate" & vbNewLine
-        objBuilder.Append "  ,@Department" & vbNewLine
-        objBuilder.Append "  ,@Generic" & vbNewLine
-        objBuilder.Append "  ,@Shape" & vbNewLine
-        objBuilder.Append "  ,@Solution" & vbNewLine
-        objBuilder.Append "  ,@SolutionVolume" & vbNewLine
-        objBuilder.Append "  ,@MinConc" & vbNewLine
-        objBuilder.Append "  ,@MaxConc" & vbNewLine
-        objBuilder.Append "  ,@MinInfusionTime" & vbNewLine
-    
-        ModProgress.SetJobPercentage "Opslaan", intC, intR
-    Next
-    
-    objBuilder.Append vbNewLine
-    
+            
     For Each objDose In objDoseCol
     
         intR = intR + 1
@@ -2492,6 +2466,7 @@ Private Function Util_GetSaveConfigMedDiscSql(objMedCol As Collection, objPICUSo
         objBuilder.Append "SET @MinDose = " & DoubleToString(objDose.MinDose) & vbNewLine
         objBuilder.Append "SET @MaxDose = " & DoubleToString(objDose.MaxDose) & vbNewLine
         objBuilder.Append "SET @AbsMaxDose = " & DoubleToString(objDose.AbsMaxDose) & vbNewLine
+        objBuilder.Append "SET @MaxPerDose = " & DoubleToString(objDose.MaxPerDose) & vbNewLine
         
         If objDose.IsDosePerKg Then intDoseAdjust = 1 Else intDoseAdjust = 0
         objBuilder.Append "SET @IsDosePerKg = " & intDoseAdjust & vbNewLine

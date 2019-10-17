@@ -31,6 +31,8 @@
 !/src/module/*.bas
 !/src/form/
 !/src/form/*.frm
+!/src/sql
+!/src/sql/*.sql
 
 # Add sheet formulas
 !/src/sheet/

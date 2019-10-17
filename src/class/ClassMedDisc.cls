@@ -46,6 +46,8 @@ Private m_SolutionVolume As Double
 Private m_MinInfusionTime As Integer
 Private m_ProductDose As Double
 Private m_DoseText As String
+Private m_HasSolutions As Boolean
+Private m_IsActive As Boolean
 
 Private m_Substances As Collection
 Private m_IndicationList As Collection
@@ -53,8 +55,31 @@ Private m_RouteList As Collection
 Private m_FreqList As Collection
 Private m_DoseRules As Collection
 Private m_Doses As Collection
-Private m_PICUSolution As ClassSolution
-Private m_NICUSolution As ClassSolution
+Private m_Solutions As Collection
+
+Public Property Get IsActive() As Boolean
+
+    IsActive = m_IsActive
+
+End Property
+
+Public Property Let IsActive(ByVal blnIsActive As Boolean)
+
+    m_IsActive = blnIsActive
+
+End Property
+
+Public Property Get HasSolutions() As Boolean
+
+    HasSolutions = m_HasSolutions
+
+End Property
+
+Public Property Let HasSolutions(ByVal blnHasSolutions As Boolean)
+
+    m_HasSolutions = blnHasSolutions
+
+End Property
 
 Public Property Get PerKg() As Boolean
 
@@ -704,39 +729,60 @@ Public Sub SetTallMan(ByVal strTallMan As String)
 
 End Sub
 
-Public Sub SetPICUSolution(objSol As ClassSolution)
-    
-    Set m_PICUSolution = objSol
+Public Sub SetSolutions(objSols As Collection)
+
+    Set m_Solutions = objSols
 
 End Sub
 
-Property Get PICUSolution() As ClassSolution
+Property Get Solutions() As Collection
 
-    If m_PICUSolution Is Nothing Then
-        Set m_PICUSolution = New ClassSolution
+    Dim objSol As ClassSolution
+    
+    If m_Solutions Is Nothing Then
+        Set m_Solutions = New Collection
+        
+        If ContainsCaseInsensitive(Routes, "iv") Then
+            Set objSol = New ClassSolution
+            With objSol
+                .Department = "NICU"
+                .Generic = Generic
+                .Shape = Shape
+            End With
+            m_Solutions.Add objSol
+            
+            Set objSol = New ClassSolution
+            With objSol
+                .Department = "PICU"
+                .Generic = Generic
+                .Shape = Shape
+            End With
+            m_Solutions.Add objSol
+            
+            Set objSol = New ClassSolution
+            With objSol
+                .Department = "AICU"
+                .Generic = Generic
+                .Shape = Shape
+            End With
+            m_Solutions.Add objSol
+        End If
+    
     End If
     
-    Set PICUSolution = m_PICUSolution
+    Set Solutions = m_Solutions
 
 End Property
 
-Public Sub SetNICUSolution(objSol As ClassSolution)
+Public Sub SetDoses(objDoses As Collection)
 
-    Set m_NICUSolution = objSol
+    Set m_Doses = objDoses
 
 End Sub
 
-Property Get NICUSolution() As ClassSolution
-
-    If m_NICUSolution Is Nothing Then
-        Set m_NICUSolution = New ClassSolution
-    End If
-    
-    Set NICUSolution = m_NICUSolution
-
-End Property
 
 Public Property Get Doses() As Collection
+
     Dim objDose As ClassDose
     Dim varIndication As Variant
     Dim varRoute As Variant
@@ -768,21 +814,28 @@ Public Sub AddDose(ByVal objDose As ClassDose)
 
     Dim objItem As ClassDose
     
+    If objDose.IsEmpty Then Exit Sub
+    
+    If objDose.Generic = "meropenem" Then
+        Debug.Print "Meropenem dosering"
+    End If
+    
     Set objItem = GetSimilarDose(objDose.Department, _
-                          objDose.Route, _
-                          objDose.Indication, _
-                          objDose.Gender, _
-                          objDose.MinAgeMo, _
-                          objDose.MaxAgeMo, _
-                          objDose.MinWeightKg, _
-                          objDose.MaxWeightKg, _
-                          objDose.MinGestDays, _
-                          objDose.MaxGestDays)
+                                 objDose.Route, _
+                                 objDose.Indication, _
+                                 objDose.Gender, _
+                                 objDose.MinAgeMo, _
+                                 objDose.MaxAgeMo, _
+                                 objDose.MinWeightKg, _
+                                 objDose.MaxWeightKg, _
+                                 objDose.MinGestDays, _
+                                 objDose.MaxGestDays)
     
     With objItem
         .Frequencies = objDose.Frequencies
         .Unit = objDose.Unit
         .IsDosePerKg = objDose.IsDosePerKg
+        .IsDosePerM2 = objDose.IsDosePerM2
         .NormDose = objDose.NormDose
         .MinDose = objDose.MinDose
         .MaxDose = objDose.MaxDose
@@ -790,41 +843,44 @@ Public Sub AddDose(ByVal objDose As ClassDose)
         .MaxPerDose = objDose.MaxPerDose
     End With
     
-    If Not ModString.StringIsZeroOrEmpty(objItem.Generic) _
-       And Not ModString.StringIsZeroOrEmpty(objItem.Shape) _
-       And Not ModString.StringIsZeroOrEmpty(objItem.Route) _
-       And Not ModString.StringIsZeroOrEmpty(objItem.Indication) Then
-        m_Doses.Add objItem
-    End If
 
 End Sub
 
-Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal dblAge As Double, ByVal intGestDays As Integer, ByVal dblWeight As Double) As ClassDose
+Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal dblAge As Double, ByVal lngGestDays As Long, ByVal dblWeight As Double) As ClassDose
 
     Dim objDose As ClassDose
     Dim blnIsDose
-    Dim blnHasDose
+    
+    Debug.Print "=== START GETTING DOSE ===" & vbNewLine
+    Debug.Print "Department: " & strDep
+    Debug.Print "Gender: " & strGender
+    Debug.Print "Age: " & dblAge
+    Debug.Print "GestAge: " & lngGestDays
+    Debug.Print "Weight: " & dblWeight
+    Debug.Print "Indicatation: " & Indication
+    Debug.Print "Route: " & Route & vbNewLine
     
     For Each objDose In Doses
-        blnIsDose = True
-        blnIsDose = blnIsDose And (strDep = vbNullString Or LCase(objDose.Department) = LCase(strDep))
-        blnIsDose = blnIsDose And (strGender = vbNullString Or LCase(objDose.Gender) = LCase(strGender))
-        blnIsDose = blnIsDose And (dblAge = 0 Or dblAge > objDose.MinAgeMo And (objDose.MaxAgeMo = 0 Or dblAge <= objDose.MaxAgeMo))
-        blnIsDose = blnIsDose And (dblWeight = 0 Or dblWeight > objDose.MinWeightKg And (objDose.MaxWeightKg = 0 Or dblWeight <= objDose.MaxWeightKg))
-        blnIsDose = blnIsDose And (intGestDays = 0 Or intGestDays > objDose.MinGestDays And (objDose.MaxGestDays = 0 Or intGestDays <= objDose.MaxGestDays))
-        
-        blnIsDose = blnIsDose And (Trim(LCase(Me.Indication)) = Trim(LCase(objDose.Indication)))
-        blnIsDose = blnIsDose And (Trim(LCase(Me.Route)) = Trim(LCase(objDose.Route)))
-                
-        If blnIsDose Then
-            blnHasDose = False
-            blnHasDose = blnHasDose Or objDose.NormDose > 0
-            blnHasDose = blnHasDose Or objDose.MinDose > 0
-            blnHasDose = blnHasDose Or objDose.MaxDose > 0
-            blnHasDose = blnHasDose Or objDose.AbsMaxDose > 0
-            blnHasDose = blnHasDose Or objDose.MaxPerDose > 0
+    
+        If Not objDose.IsEmpty() Then
+            Debug.Print "Considering: "
+            Debug.Print objDose.ToString() & vbNewLine
             
-            If blnHasDose Then
+            blnIsDose = True
+            blnIsDose = blnIsDose And (strDep = vbNullString Or LCase(objDose.Department) = LCase(strDep))
+            blnIsDose = blnIsDose And (strGender = vbNullString Or LCase(objDose.Gender) = LCase(strGender))
+            blnIsDose = blnIsDose And (dblAge = 0 Or dblAge > objDose.MinAgeMo And (objDose.MaxAgeMo = 0 Or dblAge <= objDose.MaxAgeMo))
+            blnIsDose = blnIsDose And (dblWeight = 0 Or dblWeight > objDose.MinWeightKg And (objDose.MaxWeightKg = 0 Or dblWeight <= objDose.MaxWeightKg))
+            blnIsDose = blnIsDose And (lngGestDays = 0 Or lngGestDays > objDose.MinGestDays And (objDose.MaxGestDays = 0 Or lngGestDays <= objDose.MaxGestDays))
+            
+            blnIsDose = blnIsDose And (Trim(LCase(Me.Indication)) = Trim(LCase(objDose.Indication)))
+            blnIsDose = blnIsDose And (Trim(LCase(Me.Route)) = Trim(LCase(objDose.Route)))
+                    
+            If blnIsDose Then
+                
+                Debug.Print "=== PICKED DOSE ==" & vbNewLine
+                Debug.Print objDose.ToString()
+                
                 Set GetDose = objDose
                 Exit Function
             End If
@@ -834,17 +890,16 @@ Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal
 End Function
 
 Private Function GetSimilarDose(ByVal strDep As String, _
-                         ByVal strRoute As String, _
-                         ByVal strIndication As String, _
-                         ByVal strGender As String, _
-                         ByVal dblMinAge As Double, _
-                         ByVal dblMaxAge As Double, _
-                         ByVal dblMinWeight As Double, _
-                         ByVal dblMaxWeight As Double, _
-                         ByVal intMinGest As Integer, _
-                         ByVal intMaxGest As Integer) As ClassDose
+                                ByVal strRoute As String, _
+                                ByVal strIndication As String, _
+                                ByVal strGender As String, _
+                                ByVal dblMinAge As Double, _
+                                ByVal dblMaxAge As Double, _
+                                ByVal dblMinWeight As Double, _
+                                ByVal dblMaxWeight As Double, _
+                                ByVal intMinGest As Integer, _
+                                ByVal intMaxGest As Integer) As ClassDose
 
-    Dim blnHas As Boolean
     Dim objDose As ClassDose
     
     For Each objDose In Doses
@@ -882,6 +937,144 @@ Private Function GetSimilarDose(ByVal strDep As String, _
         .MaxGestDays = intMaxGest
     End With
     
+    If Not ModString.StringIsZeroOrEmpty(objDose.Generic) _
+       And Not ModString.StringIsZeroOrEmpty(objDose.Shape) _
+       And Not ModString.StringIsZeroOrEmpty(objDose.Route) _
+       And Not ModString.StringIsZeroOrEmpty(objDose.Indication) Then
+        m_Doses.Add objDose
+        If objDose.Generic = "meropenem" Then
+            Debug.Print "Added: " & objDose.ToString
+        End If
+    End If
+    
     Set GetSimilarDose = objDose
     
 End Function
+
+Public Sub AddSolution(ByVal objSol As ClassSolution)
+
+    Dim objItem As ClassSolution
+    
+    Set objItem = GetSimilarSolution(objSol.Department, objSol.MinGenericQuantity, objSol.MaxGenericQuantity)
+    
+    With objItem
+        .Solutions = objSol.Solutions
+        .SolutionVolume = objSol.SolutionVolume
+        .MinConc = objSol.MinConc
+        .MaxConc = objSol.MaxConc
+        .MinInfusionTime = objSol.MinInfusionTime
+    End With
+    
+    If Not ModString.StringIsZeroOrEmpty(objItem.Generic) _
+       And Not ModString.StringIsZeroOrEmpty(objItem.Shape) Then
+        m_Solutions.Add objItem
+    End If
+
+End Sub
+
+Public Function GetSolution(ByVal strDep As String, ByVal dblQty As Double) As ClassSolution
+
+    Dim objSolution As ClassSolution
+    Dim blnIsSolution
+    Dim blnHasSolution
+    
+    For Each objSolution In Solutions
+        blnIsSolution = True
+        blnIsSolution = blnIsSolution And (strDep = vbNullString Or LCase(objSolution.Department) = LCase(strDep))
+        blnIsSolution = blnIsSolution And (dblQty = 0 Or dblQty > objSolution.MinGenericQuantity And (objSolution.MaxGenericQuantity = 0 Or dblQty <= objSolution.MaxGenericQuantity))
+                
+        If blnIsSolution Then
+            blnHasSolution = False
+            blnHasSolution = blnHasSolution Or objSolution.MinConc > 0
+            blnHasSolution = blnHasSolution Or objSolution.MaxConc > 0
+            blnHasSolution = blnHasSolution Or objSolution.SolutionVolume > 0
+            blnHasSolution = blnHasSolution Or objSolution.MinInfusionTime > 0
+            
+            If blnHasSolution Then
+                Set GetSolution = objSolution
+                Exit Function
+            End If
+        End If
+    Next
+
+End Function
+
+Private Function GetSimilarSolution(ByVal strDep As String, ByVal dblMinQty As Double, ByVal dblMaxQty As Double) As ClassSolution
+
+    Dim blnHas As Boolean
+    Dim objSol As ClassSolution
+    
+    For Each objSol In Solutions
+        If objSol.Department = strDep _
+           And objSol.MinGenericQuantity = dblMinQty _
+           And objSol.MaxGenericQuantity = dblMaxQty Then
+           
+            Set GetSimilarSolution = objSol
+            Exit For
+        End If
+    Next
+
+    Set objSol = New ClassSolution
+    
+    With objSol
+        .Generic = Me.Generic
+        .Shape = Me.Shape
+        
+        .Department = strDep
+        .MinGenericQuantity = dblMinQty
+        .MaxGenericQuantity = dblMaxQty
+    End With
+    
+    Set GetSimilarSolution = objSol
+    
+End Function
+
+Public Function Clone() As ClassMedDisc
+
+    Dim objMed As ClassMedDisc
+    
+    Set objMed = New ClassMedDisc
+    
+    With objMed
+        .AbsMaxDose = AbsMaxDose
+        .ATC = ATC
+        .DoseRules = DoseRules
+        .SetDoses Doses
+        .SetFreqList Freqs
+        .Generic = Generic
+        .GenericQuantity = GenericQuantity
+        .GenericUnit = GenericUnit
+        .GPK = GPK
+        .HasSolutions = HasSolutions
+        .SetIndicationList Indications
+        .IsActive = IsActive
+        .KeerDose = KeerDose
+        .Label = Label
+        .MainGroup = MainGroup
+        .MaxConc = MaxConc
+        .MaxDose = MaxDose
+        .MaxPerDose = MaxPerDose
+        .MinDose = MinDose
+        .MinInfusionTime = MinInfusionTime
+        .MultipleQuantity = MultipleQuantity
+        .MultipleUnit = MultipleUnit
+        .NormDose = NormDose
+        .PerDose = PerDose
+        .PerKg = PerKg
+        .PerM2 = PerM2
+        .Product = Product
+        .ProductDose = ProductDose
+        .SetRouteList Routes
+        .Shape = Shape
+        .Solution = Solution
+        .SetSolutions Solutions
+        .SolutionVolume = SolutionVolume
+        .SubGroup = SubGroup
+        .Substances = Substances
+    End With
+    
+    Set Clone = objMed
+
+End Function
+
+

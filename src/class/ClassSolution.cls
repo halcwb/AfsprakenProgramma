@@ -10,19 +10,27 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Private m_Department As String
-Private m_MinAge As Double
-Private m_MaxAge As Double
-Private m_MinGestDays As Integer
-Private m_MaxGestDays As Integer
-Private m_MinWeight As Double
-Private m_MaxWeight As Double
 Private m_Generic As String
 Private m_Shape As String
-Private m_Solution As String
+Private m_MinGenericQuantity As Double
+Private m_MaxGenericQuantity As Double
+Private m_Solutions As String
 Private m_MinConc As Double
 Private m_MaxConc As Double
 Private m_SolutionVolume As Double
 Private m_MinInfusionTime As Integer
+
+Public Property Get Department() As String
+
+    Department = m_Department
+
+End Property
+
+Public Property Let Department(ByVal strDepartment As String)
+
+    m_Department = strDepartment
+
+End Property
 
 Public Property Get Generic() As String
 
@@ -48,6 +56,29 @@ Public Property Let Shape(ByVal strShape As String)
 
 End Property
 
+Public Property Get MinGenericQuantity() As Double
+
+    MinGenericQuantity = m_MinGenericQuantity
+
+End Property
+
+Public Property Let MinGenericQuantity(ByVal dblGenericQuantity As Double)
+
+    m_MinGenericQuantity = dblGenericQuantity
+
+End Property
+
+Public Property Get MaxGenericQuantity() As Double
+
+    MaxGenericQuantity = m_MaxGenericQuantity
+
+End Property
+
+Public Property Let MaxGenericQuantity(ByVal dblGenericQuantity As Double)
+
+    m_MaxGenericQuantity = dblGenericQuantity
+
+End Property
 
 Public Property Get MinConc() As Double
 
@@ -61,7 +92,6 @@ Public Property Let MinConc(ByVal dblConc As Double)
 
 End Property
 
-
 Public Property Get MaxConc() As Double
 
     MaxConc = m_MaxConc
@@ -74,15 +104,15 @@ Public Property Let MaxConc(ByVal dblConc As Double)
 
 End Property
 
-Public Property Get Solution() As String
+Public Property Get Solutions() As String
 
-    Solution = m_Solution
+    Solutions = m_Solutions
 
 End Property
 
-Public Property Let Solution(ByVal strVlst As String)
+Public Property Let Solutions(ByVal strSols As String)
 
-    m_Solution = strVlst
+    m_Solutions = strSols
 
 End Property
 

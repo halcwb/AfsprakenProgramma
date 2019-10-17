@@ -10,6 +10,8 @@ Private Const constLogging As String = "SettingLogging"
 Private Const constNeoDir As String = "SettingNeoDir"
 Private Const constPedDir As String = "SettingPedDir"
 Private Const constDevDir As String = "SettingDevDir"
+Private Const constAccDir As String = "SettingAccDir"
+Private Const constProdDir As String = "SettingProdDir"
 Private Const constTestLogDir As String = "SettingTestLogDir"
 Private Const constLogDir As String = "SettingLogDir"
 Private Const constDataDir As String = "SettingDataDir"
@@ -87,7 +89,7 @@ End Function
 
 Public Function Setting_GetDatabase() As String
 
-    If IsDevelopmentDir() Then
+    If IsDevelopmentDir() Or IsTrainingDir() Then
         Setting_GetDatabase = GetSetting(constTestDatabase)
     Else
         Setting_GetDatabase = GetSetting(constProdDatabase)
@@ -181,6 +183,18 @@ End Sub
 Public Function GetDevelopmentDir() As String
 
     GetDevelopmentDir = CStr(GetSetting(constDevDir))
+
+End Function
+
+Public Function GetAcceptationDir() As String
+
+    GetAcceptationDir = CStr(GetSetting(constAccDir))
+
+End Function
+
+Public Function GetProductionDir() As String
+
+    GetProductionDir = CStr(GetSetting(constProdDir))
 
 End Function
 

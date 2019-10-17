@@ -47,24 +47,38 @@ Private Function GetCorrectedAge(ByVal strDiff As String) As Double
 
 End Function
 
-Public Function Patient_GestationalAgeInDays() As Integer
+Public Function Patient_GetAgeInDays() As Long
 
     Dim dtmBD As Date
-    Dim intDays As Integer
-    Dim intWeeks As Integer
-    Dim dtmCorrBD As Date
-    Dim intAge As Integer
+    Dim lngAge As Long
     
     dtmBD = Patient_BirthDate()
-    intDays = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, 0)
+    
+    lngAge = DateDiff("d", dtmBD, Now())
+    
+    Patient_GetAgeInDays = lngAge
+
+End Function
+
+Public Function Patient_GestationalAgeInDays() As Long
+
+    Dim dtmBD As Date
+    Dim lngDays As Long
+    Dim intWeeks As Integer
+    Dim dtmCorrBD As Date
+    Dim lngAge As Long
+    
+    dtmBD = Patient_BirthDate()
+    
+    lngDays = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, 0)
     intWeeks = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, 0)
-    intDays = (intDays + (intWeeks * 7))
+    lngDays = (lngDays + (intWeeks * 7))
     
-    If intDays = 0 Then intDays = 37 * 7
+    If lngDays = 0 Then lngDays = 37 * 7
     
-    intAge = DateDiff("d", dtmBD, Now()) + intDays
+    lngAge = DateDiff("d", dtmBD, Now()) + lngDays
     
-    Patient_GestationalAgeInDays = intAge
+    Patient_GestationalAgeInDays = lngAge
 
 End Function
 
@@ -162,6 +176,12 @@ Public Function Patient_GetWeight() As Double
     Patient_GetWeight = StringToDouble(ModRange.GetRangeValue(CONST_WEIGHT_RANGE, 0)) ' / 10
 
 End Function
+
+Private Sub Test_Patient_GetWeight()
+
+    ModMessage.ShowMsgBoxInfo Patient_GetWeight()
+
+End Sub
 
 Public Function Patient_GetHeight() As Double
 

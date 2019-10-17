@@ -2,10 +2,8 @@ Attribute VB_Name = "ModFormularium"
 Option Explicit
 
 Private m_Formularium As ClassFormularium
-Private m_FormConfig As ClassFormConfig
 
 Private Const constFormularium As String = "FormulariumDb.xlsm"
-Private Const constFormDbStart As Integer = 2
 
 '--- Formularium ---
 Private Const constGPKIndx As Integer = 1
@@ -24,16 +22,8 @@ Private Const constMultipleQuantityIndx As Integer = 12
 Private Const constMultipleQuantityUnitIndx As Integer = 13
 
 Private Const constIndicationsIndx As Integer = 14
-
-Private Const constPICU_MaxSolutionConcIndx As Integer = 23
-Private Const constPICU_SolutionIndx As Integer = 24
-Private Const constPICU_SolutionVolumeIndx As Integer = 25
-Private Const constPICU_MinInfusionTimeIndx As Integer = 26
-
-Private Const constNICU_MaxSolutionConcIndx As Integer = 27
-Private Const constNICU_SolutionIndx As Integer = 28
-Private Const constNICU_SolutionVolumeIndx As Integer = 29
-Private Const constNICU_MinInfusionTimeIndx As Integer = 30
+Private Const constHasSolutionsIndx As Integer = 15
+Private Const constIsActiveIndx As Integer = 16
 
 Private Const constDoseFreq_AN As String = "antenoctum"
 Private Const constDoseFreq_1D As String = "1 x / dag"
@@ -89,17 +79,13 @@ Private Const constDoseIsDosePerM2Indx As Integer = 21
 Private Const constSolDepartmentIndx As Integer = 1
 Private Const constSolGenericIndx As Integer = 2
 Private Const constSolShapeIndx As Integer = 3
-Private Const constSolMinAgeIndx As Integer = 4
-Private Const constSolMaxAgeIndx As Integer = 5
-Private Const constSolMinGestDaysIndx As Integer = 6
-Private Const constSolMaxGestDaysIndx As Integer = 7
-Private Const constSolMinWeightIndx As Integer = 8
-Private Const constSolMaxWeightIndx As Integer = 9
-Private Const constSolSolutionIndx As Integer = 10
-Private Const constSolMinConcIndx As Integer = 11
-Private Const constSolMaxConcIndx As Integer = 12
-Private Const constSolSolutionVolumeIndx As Integer = 13
-Private Const constSolMinInfusionTimeIndx As Integer = 14
+Private Const constSolMinGenericQuantityIndx As Integer = 4
+Private Const constSolMaxGenericQuantityIndx As Integer = 5
+Private Const constSolSolutionsIndx As Integer = 6
+Private Const constSolMinConcIndx As Integer = 7
+Private Const constSolMaxConcIndx As Integer = 8
+Private Const constSolSolutionVolumeIndx As Integer = 9
+Private Const constSolMinInfusionTimeIndx As Integer = 10
 
 Public Sub Formularium_Initialize()
 
@@ -120,24 +106,6 @@ Public Sub Formularium_Initialize()
 
 End Sub
 
-Private Sub FormConfig_Initialize()
-
-    Dim intN As Integer
-    Dim intC As Integer
-    Dim strTitle As String
-
-    If Not m_FormConfig Is Nothing Then Exit Sub
-
-    strTitle = "Formularium configuratie wordt geladen, een ogenblik geduld a.u.b. ..."
-    
-    ModProgress.StartProgress strTitle
-       
-    Set m_FormConfig = New ClassFormConfig
-    m_FormConfig.GetMedicamenten True
-      
-    ModProgress.FinishProgress
-
-End Sub
 
 Public Function Formularium_IsInitialized() As Boolean
 
@@ -167,25 +135,22 @@ Public Function Formularium_GetFormularium() As ClassFormularium
 
 End Function
 
-Public Function Formularium_GetFormConfig() As ClassFormConfig
-
-    FormConfig_Initialize
-    Set Formularium_GetFormConfig = m_FormConfig
-
-End Function
-
 Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As String, ByVal blnShowProgress As Boolean)
 
     Dim intN As Integer
     Dim intC As Integer
     Dim intD As Integer
+    Dim intS As Integer
     Dim intK As Integer
     
     Dim objFormRange As Range
     Dim arrDose As Variant
+    Dim arrSol As Variant
     Dim objMedSheet As Worksheet
     Dim objDoseSheet As Worksheet
     Dim objDoseRange As Range
+    Dim objSolSheet As Worksheet
+    Dim objSolRange As Range
     Dim objWbk As Workbook
     Dim varCell As Variant
     Dim intCell As Integer
@@ -195,8 +160,7 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
     
     Dim objMed As ClassMedDisc
     Dim objDose As ClassDose
-    Dim objPICUSolution As ClassSolution
-    Dim objNICUSolution As ClassSolution
+    Dim objSol As ClassSolution
     
     On Error GoTo ErrorHandler
     
@@ -210,20 +174,59 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
     ImprovePerf True
     
     Set objWbk = Workbooks.Open(strFileName, True, True)
+    objWbk.Windows(1).Visible = False
     
     Set objMedSheet = objWbk.Worksheets(strSheet)
+    objMedSheet.AutoFilterMode = False
+    
     Set objDoseSheet = objWbk.Worksheets("Doseringen")
+    objDoseSheet.AutoFilterMode = False
+    
+    Set objSolSheet = objWbk.Worksheets("Oplossingen")
+    objSolSheet.AutoFilterMode = False
     
     Set objFormRange = objMedSheet.Range("A1").CurrentRegion
     Set objDoseRange = objDoseSheet.Range("A1").CurrentRegion
-    shtGlobTemp.Unprotect ModConst.CONST_PASSWORD
-    
+    Set objSolRange = objSolSheet.Range("A1").CurrentRegion
         
+    If objFormRange.Rows.Count > 1 Then
+        With objMedSheet.Sort
+            .SortFields.Clear
+            .SortFields.Add Key:=objMedSheet.Range("E2"), Order:=xlAscending
+            .SortFields.Add Key:=objMedSheet.Range("H2"), Order:=xlAscending
+            .SortFields.Add Key:=objMedSheet.Range("J2"), Order:=xlAscending
+            .SetRange objMedSheet.Range("A2:P" & objFormRange.Rows.Count)
+            .Apply
+        End With
+    End If
+    
+    If objDoseRange.Rows.Count > 1 Then
+        With objDoseSheet.Sort
+            .SortFields.Clear
+            .SortFields.Add Key:=objDoseSheet.Range("A2"), Order:=xlAscending
+            .SortFields.Add Key:=objDoseSheet.Range("D2"), Order:=xlAscending
+            .SortFields.Add Key:=objDoseSheet.Range("C2"), Order:=xlAscending
+            .SetRange objDoseSheet.Range("A2:BW" & objDoseRange.Rows.Count)
+            .Apply
+        End With
+    End If
+    
+    If objSolRange.Rows.Count > 1 Then
+        With objSolSheet.Sort
+            .SortFields.Clear
+            .SortFields.Add Key:=objSolSheet.Range("B2"), Order:=xlAscending
+            .SortFields.Add Key:=objSolSheet.Range("C2"), Order:=xlAscending
+            .SortFields.Add Key:=objSolSheet.Range("A2"), Order:=xlAscending
+            .SetRange objSolSheet.Range("A2:M" & objSolRange.Rows.Count)
+            .Apply
+        End With
+    End If
+    
+    shtGlobTemp.Unprotect ModConst.CONST_PASSWORD
+            
     intC = objFormRange.Rows.Count
-    For intN = constFormDbStart To intC
+    For intN = 2 To intC
         Set objMed = New ClassMedDisc
-        Set objPICUSolution = New ClassSolution
-        Set objNICUSolution = New ClassSolution
         
         With objMed
             
@@ -243,32 +246,42 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
             
             .SetRouteList objFormRange.Cells(intN, constRouteIndx).Value2
             .SetIndicationList objFormRange.Cells(intN, constIndicationsIndx).Value2
+            .HasSolutions = IIf(Trim(objFormRange.Cells(intN, constHasSolutionsIndx).Value2) = "x", True, False)
+            .IsActive = IIf(Trim(objFormRange.Cells(intN, constIsActiveIndx).Value2) = "x", True, False)
             
-            .MaxConc = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_MaxSolutionConcIndx, constNICU_MaxSolutionConcIndx)).Value2
-            .Solution = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_SolutionIndx, constNICU_SolutionIndx)).Value2
-            .SolutionVolume = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_SolutionVolumeIndx, constNICU_SolutionVolumeIndx)).Value2
-            .MinInfusionTime = objFormRange.Cells(intN, IIf(blnIsPed, constPICU_MinInfusionTimeIndx, constNICU_MinInfusionTimeIndx)).Value2
-        
-            With objPICUSolution
-                .Generic = objFormRange.Cells(intN, constGenericIndx).Value2
-                .Shape = objFormRange.Cells(intN, constShapeIndx).Value2
-                .MaxConc = objFormRange.Cells(intN, constPICU_MaxSolutionConcIndx).Value2
-                .Solution = objFormRange.Cells(intN, constPICU_SolutionIndx).Value2
-                .SolutionVolume = objFormRange.Cells(intN, constPICU_SolutionVolumeIndx).Value2
-                .MinInfusionTime = objFormRange.Cells(intN, constPICU_MinInfusionTimeIndx).Value2
-            End With
+            If objMed.HasSolutions Then
+            
+                With objSolRange
+                    .AutoFilter 2, objMed.Generic
+                    .AutoFilter 3, objMed.Shape
+                End With
+                
+                objSolRange.SpecialCells(xlCellTypeVisible).Copy
+                shtGlobTemp.Range("A1").PasteSpecial xlPasteValues
+                arrSol = shtGlobTemp.Range("A1").CurrentRegion.Value
+                shtGlobTemp.Range("A1").CurrentRegion.Clear
+                
+                intK = UBound(arrSol, 1)
+                For intS = 2 To intK
+                    Set objSol = New ClassSolution
                     
-            With objNICUSolution
-                .Generic = objFormRange.Cells(intN, constGenericIndx).Value2
-                .Shape = objFormRange.Cells(intN, constShapeIndx).Value2
-                .MaxConc = objFormRange.Cells(intN, constNICU_MaxSolutionConcIndx).Value2
-                .Solution = objFormRange.Cells(intN, constNICU_SolutionIndx).Value2
-                .SolutionVolume = objFormRange.Cells(intN, constNICU_SolutionVolumeIndx).Value2
-                .MinInfusionTime = objFormRange.Cells(intN, constNICU_MinInfusionTimeIndx).Value2
-            End With
+                    With objSol
+                        objSol.Department = arrSol(intS, constSolDepartmentIndx)
+                        objSol.Generic = objMed.Generic
+                        objSol.Shape = objMed.Shape
+                        objSol.MinGenericQuantity = arrSol(intS, constSolMinGenericQuantityIndx)
+                        objSol.MaxGenericQuantity = arrSol(intS, constSolMaxGenericQuantityIndx)
+                        objSol.Solutions = arrSol(intS, constSolSolutionsIndx)
+                        objSol.SolutionVolume = arrSol(intS, constSolSolutionVolumeIndx)
+                        objSol.MinConc = arrSol(intS, constSolMinConcIndx)
+                        objSol.MaxConc = arrSol(intS, constSolMaxConcIndx)
+                        objSol.MinInfusionTime = arrSol(intS, constSolMinInfusionTimeIndx)
+                    End With
+                    
+                    objMed.AddSolution objSol
+                Next
             
-            objMed.SetPICUSolution objPICUSolution
-            objMed.SetNICUSolution objNICUSolution
+            End If
             
             With objDoseRange
                 .AutoFilter 1, objMed.Generic
@@ -304,8 +317,8 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
                     .MaxDose = arrDose(intD, constDoseMaxDoseIndx)
                     .AbsMaxDose = arrDose(intD, constDoseAbsMaxDoseIndx)
                     .MaxPerDose = arrDose(intD, constDoseMaxPerDoseIndx)
-                    .IsDosePerKg = Not (arrDose(intD, constDoseIsDosePerKgIndx) = vbNullString)
-                    .IsDosePerM2 = Not (arrDose(intD, constDoseIsDosePerM2Indx) = vbNullString)
+                    .IsDosePerKg = Trim(arrDose(intD, constDoseIsDosePerKgIndx)) = "x"
+                    .IsDosePerM2 = Trim(arrDose(intD, constDoseIsDosePerM2Indx)) = "x"
                 End With
                 
                 objMed.AddDose objDose
@@ -321,6 +334,7 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
     
     If blnShowProgress Then ModProgress.FinishProgress
     
+    objWbk.Windows(1).Visible = True
     objWbk.Close
     shtGlobTemp.Protect ModConst.CONST_PASSWORD
     Application.DisplayAlerts = True
@@ -337,7 +351,9 @@ ErrorHandler:
     On Error Resume Next
     
     objWbk.Close
+    shtGlobTemp.Unprotect CONST_PASSWORD
     shtGlobTemp.Range("A1").CurrentRegion.Clear
+    shtGlobTemp.Protect CONST_PASSWORD
     shtGlobTemp.Protect ModConst.CONST_PASSWORD
 
     Application.DisplayAlerts = True
@@ -392,10 +408,10 @@ Public Function Formularium_GetDoses(objMedCol As Collection, blnAll As Boolean)
 
 End Function
 
-Public Function Formularium_GetSolutions(ByVal blnIsPed As Boolean, objMedCol As Collection) As Collection
+Public Function Formularium_GetSolutions(objMedCol As Collection, ByVal blnAll As Boolean) As Collection
 
     Dim objSol As ClassSolution
-    Dim objMedSol As ClassSolution
+    Dim objItem As ClassSolution
     Dim objSolCol As Collection
     Dim objMed As ClassMedDisc
     Dim blnContains As Boolean
@@ -403,22 +419,33 @@ Public Function Formularium_GetSolutions(ByVal blnIsPed As Boolean, objMedCol As
     Set objSolCol = New Collection
     
     For Each objMed In objMedCol
-        Set objMedSol = IIf(blnIsPed, objMed.PICUSolution, objMed.NICUSolution)
-        
-        If Not objMedSol.Generic = vbNullString Then
-            blnContains = False
-            For Each objSol In objSolCol
-                If objSol.Generic = objMedSol.Generic And objSol.Shape = objMedSol.Shape Then
-                    blnContains = True
-                    Exit For
+        If objMed.HasSolutions Then
+            For Each objSol In objMed.Solutions
+            
+                If (objSol.Solutions = vbNullString Or objSol.SolutionVolume > 0 Or objSol.MinConc > 0 Or objSol.MaxConc > 0 Or objSol.MinInfusionTime > 0) Or blnAll Then
+                    blnContains = False
+                    For Each objItem In objSolCol
+                        blnContains = objItem.Generic = objSol.Generic
+                        blnContains = blnContains And (objItem.Department = objSol.Department)
+                        blnContains = blnContains And (objItem.Shape = objSol.Shape)
+                        blnContains = blnContains And (objItem.MinGenericQuantity = objSol.MinGenericQuantity)
+                        blnContains = blnContains And (objItem.MaxGenericQuantity = objSol.MaxGenericQuantity)
+                        blnContains = blnContains And (objItem.Solutions = objSol.Solutions)
+                        blnContains = blnContains And (objItem.SolutionVolume = objSol.SolutionVolume)
+                        blnContains = blnContains And (objItem.MinConc = objSol.MinConc)
+                        blnContains = blnContains And (objItem.MaxConc = objSol.MaxConc)
+                        blnContains = blnContains And (objItem.MinInfusionTime = objSol.MinInfusionTime)
+    
+                        If blnContains Then Exit For
+                    Next
+                    
+                    If Not blnContains Then
+                        objSolCol.Add objSol
+                    End If
                 End If
             Next
-            If Not blnContains And (objMedSol.MaxConc > 0 Or objMedSol.SolutionVolume > 0) Then
-                objSolCol.Add objMedSol
-            End If
         End If
     Next
-    
     Set Formularium_GetSolutions = objSolCol
 
 End Function
@@ -430,104 +457,10 @@ Private Sub Test_Formularium_GetSolutions()
     
     ModAdmin.Admin_MedDiscImport
     Set objMedCol = Formularium_GetFormularium.GetMedicationCollection(True)
-    Set objSolCol = Formularium_GetSolutions(True, objMedCol)
+    Set objSolCol = Formularium_GetSolutions(objMedCol, True)
     
     ModMessage.ShowMsgBoxInfo "Found " & objSolCol.Count & " solutions"
 
-End Sub
-
-
-Public Sub Formularium_GetMedDiscConfig(objFormularium As ClassFormConfig, ByVal blnShowProgress As Boolean)
-
-    Dim intN As Integer
-    Dim intC As Integer
-    Dim objFormRange As Range
-    Dim objSheet As Worksheet
-    
-    Dim strFileName As String
-    Dim strName As String
-    Dim strSheet As String
-    Dim blnIsPed As Boolean
-    
-    Dim objMed As ClassMedDiscConfig
-    
-    On Error GoTo GetMedicamentenError
-    
-    blnIsPed = MetaVision_IsPICU()
-    
-    strName = constFormularium
-    strSheet = "Table"
-    
-    Application.DisplayAlerts = False
-    ImprovePerf True
-    
-    strFileName = ModMedDisc.GetFormulariumDatabasePath() + strName
-
-    Workbooks.Open strFileName, True, True
-    
-    Set objSheet = Workbooks(strName).Worksheets(strSheet)
-    Set objFormRange = objSheet.Range("A1").CurrentRegion
-        
-    intC = objFormRange.Rows.Count
-    For intN = constFormDbStart To intC
-        Set objMed = New ClassMedDiscConfig
-        
-        With objMed
-            .GPK = objFormRange.Cells(intN, constGPKIndx).Value2
-            .MainGroup = objFormRange.Cells(intN, constMainGroupIndx).Value2
-            .SubGroup = objFormRange.Cells(intN, constSubGroupIndx).Value2
-            
-            .ATC = objFormRange.Cells(intN, constATCIndx).Value2
-            .Generic = objFormRange.Cells(intN, constGenericIndx).Value2
-            .Product = objFormRange.Cells(intN, constProductIndx).Value2
-            .Shape = objFormRange.Cells(intN, constShapeIndx).Value2
-            .GenericQuantity = objFormRange.Cells(intN, constGenericQuantityIndx).Value2
-            .GenericUnit = objFormRange.Cells(intN, constGenericQuantityUnitIndx).Value2
-            .Label = objFormRange.Cells(intN, constLabelIndx).Value2
-            .MultipleQuantity = objFormRange.Cells(intN, constMultipleQuantityIndx).Value2
-            .MultipleUnit = objFormRange.Cells(intN, constMultipleQuantityUnitIndx).Value2
-            
-            .SetRouteList objFormRange.Cells(intN, constRouteIndx).Value2
-            .SetIndicationList objFormRange.Cells(intN, constIndicationsIndx).Value2
-            
-            .PedMaxConc = objFormRange.Cells(intN, constPICU_MaxSolutionConcIndx).Value2
-            .PedSolutionVolume = objFormRange.Cells(intN, constPICU_SolutionVolumeIndx).Value2
-            .PedSolution = objFormRange.Cells(intN, constPICU_SolutionIndx).Value2
-            .PedMinInfusionTime = objFormRange.Cells(intN, constPICU_MinInfusionTimeIndx).Value2
-            
-            .NeoMaxConc = objFormRange.Cells(intN, constNICU_MaxSolutionConcIndx).Value2
-            .NeoSoutionVolume = objFormRange.Cells(intN, constNICU_SolutionVolumeIndx).Value2
-            .NeoSolution = objFormRange.Cells(intN, constNICU_SolutionIndx).Value2
-            .NeoMinInfustionTime = objFormRange.Cells(intN, constNICU_MinInfusionTimeIndx).Value2
-            
-        End With
-        
-        objFormularium.AddMedicament objMed
-        
-        If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", intC, intN
-        
-    Next intN
-    
-    Workbooks(strName).Close
-
-    Application.DisplayAlerts = True
-    ImprovePerf False
-    
-    Exit Sub
-    
-GetMedicamentenError:
-    
-    ModLog.LogError Err, "Could not retrieve medicament from: " & strFileName
-    
-    On Error Resume Next
-    
-    Workbooks(strName).Close
-
-    Application.DisplayAlerts = True
-    ImprovePerf False
-    
-    ModProgress.FinishProgress
-    
 End Sub
 
 ' ToDo add headings
@@ -544,6 +477,10 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
     Dim objDoseSheet As Worksheet
     Dim objSolSheet As Worksheet
     
+    Dim objFormRange As Range
+    Dim objDoseRange As Range
+    Dim objSolRange As Range
+    
     Dim strFreqForm As String
     Dim strConcat As String
     
@@ -552,6 +489,9 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
     Dim strName As String
     Dim strSheet As String
     Dim blnIsPed As Boolean
+    
+    Dim varFreq As Variant
+    Dim arrFreq As Variant
     
     Dim colMed As Collection
     Dim objMed As ClassMedDisc
@@ -588,8 +528,9 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
     Set objDoseSheet = objWbk.Sheets(3)
     objDoseSheet.Name = "Doseringen"
     
-    Set colMed = Formularium_GetFormularium().GetMedicationCollection(False)
+    Set colMed = Formularium_GetFormularium().GetMedicationCollection(True)
     Set colDose = Formularium_GetDoses(colMed, True)
+    Set colSolution = Formularium_GetSolutions(colMed, True)
     
     ModProgress.FinishProgress
     ModProgress.StartProgress "Discontinue Medicatie Exporteren"
@@ -598,19 +539,21 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
         .Cells(1, constGPKIndx).Value2 = "GPK"
         .Cells(1, constATCIndx).Value2 = "ATC"
         .Cells(1, constMainGroupIndx).Value2 = "Hoofd Groep"
-        .Cells(1, constSubGroupIndx).Value2 = "Sub Groep"
+        .Cells(1, constSubGroupIndx).Value2 = "SubGroep"
         .Cells(1, constGenericIndx).Value2 = "Generiek"
         .Cells(1, constProductIndx).Value2 = "Product"
         .Cells(1, constLabelIndx).Value2 = "Etiket"
         .Cells(1, constShapeIndx).Value2 = "Vorm"
         .Cells(1, constRouteIndx).Value2 = "Routes"
-        .Cells(1, constGenericQuantityIndx).Value2 = "Generiek Hoeveelheid"
-        .Cells(1, constGenericQuantityUnitIndx).Value2 = "Hoeveelheid Eenheid"
+        .Cells(1, constGenericQuantityIndx).Value2 = "Sterkte"
+        .Cells(1, constGenericQuantityUnitIndx).Value2 = "SterkteEenheid"
                     
         .Cells(1, constMultipleQuantityIndx).Value2 = "Veelvoud"
-        .Cells(1, constMultipleQuantityUnitIndx).Value2 = "Veelvoud Eenheid"
+        .Cells(1, constMultipleQuantityUnitIndx).Value2 = "VeelvoudEenheid"
         
         .Cells(1, constIndicationsIndx).Value2 = "Indicaties"
+        .Cells(1, constHasSolutionsIndx).Value2 = "HeeftOplossingen"
+        .Cells(1, constIsActiveIndx).Value2 = "InAssortiment"
                         
     End With
 
@@ -697,22 +640,39 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
         .Cells(1, constSolDepartmentIndx).Value2 = "Afdeling"
         .Cells(1, constSolGenericIndx).Value2 = "Generiek"
         .Cells(1, constSolShapeIndx).Value2 = "Vorm"
-        .Cells(1, constSolMinAgeIndx).Value2 = "MinLeeftijdMnd"
-        .Cells(1, constSolMaxAgeIndx).Value2 = "MaxLeeftijdMnd"
-        .Cells(1, constSolMinGestDaysIndx).Value2 = "MinGestDagen"
-        .Cells(1, constSolMaxGestDaysIndx).Value2 = "MaxGestDagen"
-        .Cells(1, constSolMinWeightIndx).Value2 = "MinGewichtKg"
-        .Cells(1, constSolMaxWeightIndx).Value2 = "MaxGewichtKg"
-        .Cells(1, constSolSolutionIndx).Value2 = "Oplossing"
+        .Cells(1, constSolMinGenericQuantityIndx).Value2 = "MinGeneriekHoev"
+        .Cells(1, constSolMaxGenericQuantityIndx).Value2 = "MaxGeneriekHoev"
+        .Cells(1, constSolSolutionsIndx).Value2 = "Oplossingen"
         .Cells(1, constSolMinConcIndx).Value2 = "MinConcentratie"
         .Cells(1, constSolMaxConcIndx).Value2 = "MaxConcentratie"
         .Cells(1, constSolSolutionVolumeIndx).Value2 = "OplossingVolume"
+        .Cells(1, constSolMinInfusionTimeIndx).Value2 = "MinInloopTijd"
     End With
 
     
-    intN = constFormDbStart
+    intN = 2
     intD = 2
     intS = 2
+    
+    intC = colSolution.Count
+    For Each objSolution In colSolution
+        With objSolution
+            objSolSheet.Cells(intS, constSolDepartmentIndx).Value2 = .Department
+            objSolSheet.Cells(intS, constSolGenericIndx).Value2 = .Generic
+            objSolSheet.Cells(intS, constSolShapeIndx).Value2 = .Shape
+            objSolSheet.Cells(intS, constSolMinGenericQuantityIndx).Value2 = .MinGenericQuantity
+            objSolSheet.Cells(intS, constSolMaxGenericQuantityIndx).Value2 = .MaxGenericQuantity
+            objSolSheet.Cells(intS, constSolSolutionsIndx).Value2 = .Solutions
+            objSolSheet.Cells(intS, constSolSolutionVolumeIndx).Value2 = .SolutionVolume
+            objSolSheet.Cells(intS, constSolMinConcIndx).Value2 = .MinConc
+            objSolSheet.Cells(intS, constSolMaxConcIndx).Value2 = .MaxConc
+            objSolSheet.Cells(intS, constSolMinInfusionTimeIndx).Value2 = .MinInfusionTime
+        End With
+        
+        intS = intS + 1
+        If blnShowProgress Then ModProgress.SetJobPercentage "Export " & intS, intC, intS
+    Next
+    
     
     intC = colDose.Count
     For Each objDose In colDose
@@ -738,122 +698,203 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             If .MaxDose > 0 Then objDoseSheet.Cells(intD, constDoseMaxDoseIndx).Value2 = .MaxDose
             If .AbsMaxDose > 0 Then objDoseSheet.Cells(intD, constDoseAbsMaxDoseIndx).Value2 = .AbsMaxDose
             If .MaxPerDose > 0 Then objDoseSheet.Cells(intD, constDoseMaxPerDoseIndx).Value2 = .MaxPerDose
-            objDoseSheet.Cells(intD, constDoseIsDosePerKgIndx).Value2 = .IsDosePerKg
-            objDoseSheet.Cells(intD, constDoseIsDosePerM2Indx).Value2 = .IsDosePerM2
+            objDoseSheet.Cells(intD, constDoseIsDosePerKgIndx).Value2 = IIf(.IsDosePerKg, "x", vbNullString)
+            objDoseSheet.Cells(intD, constDoseIsDosePerM2Indx).Value2 = IIf(.IsDosePerM2, "x", vbNullString)
         
-            If Not objDose.Frequencies = vbNullString Then
-                objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Value2 = .Frequencies
-            Else
-                intK = intF
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "W")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "X")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "Y")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "Z")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AA")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AB")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AC")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AD")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AE")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AF")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AG")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AH")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AI")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AJ")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AK")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AL")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AM")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AN")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AO")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AP")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AQ")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AR")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AS")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AT")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AU")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
-                strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AV")
-                objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-                intK = intK + 1
+            intK = intF
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "W")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "X")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "Y")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "Z")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AA")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AB")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AC")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AD")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AE")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AF")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AG")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AH")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AI")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AJ")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AK")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AL")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AM")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AN")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AO")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AP")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AQ")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AR")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AS")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AT")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AU")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AV")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
 
-                strConcat = "=IF(AW" & intD & "<>"""",AW" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(AX" & intD & "<>"""",AX" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(AY" & intD & "<>"""",AY" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(AZ" & intD & "<>"""",AZ" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BA" & intD & "<>"""",BA" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BB" & intD & "<>"""",BB" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BC" & intD & "<>"""",BC" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BD" & intD & "<>"""",BD" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BE" & intD & "<>"""",BE" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BF" & intD & "<>"""",BF" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BG" & intD & "<>"""",BG" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BH" & intD & "<>"""",BH" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BI" & intD & "<>"""",BI" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BJ" & intD & "<>"""",BJ" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BK" & intD & "<>"""",BK" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BL" & intD & "<>"""",BL" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BM" & intD & "<>"""",BM" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BN" & intD & "<>"""",BN" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BO" & intD & "<>"""",BO" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BP" & intD & "<>"""",BP" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BQ" & intD & "<>"""",BQ" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BR" & intD & "<>"""",BR" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BS" & intD & "<>"""",BS" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BT" & intD & "<>"""",BT" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BU" & intD & "<>"""",BU" & intD & "&""||"","""")"
-                strConcat = strConcat & "&IF(BV" & intD & "<>"""",BV" & intD & "&""||"","""")"
-                objDoseSheet.Cells(intD, intK).Formula = strConcat
+            strConcat = "=IF(AW" & intD & "<>"""",AW" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(AX" & intD & "<>"""",AX" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(AY" & intD & "<>"""",AY" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(AZ" & intD & "<>"""",AZ" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BA" & intD & "<>"""",BA" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BB" & intD & "<>"""",BB" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BC" & intD & "<>"""",BC" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BD" & intD & "<>"""",BD" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BE" & intD & "<>"""",BE" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BF" & intD & "<>"""",BF" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BG" & intD & "<>"""",BG" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BH" & intD & "<>"""",BH" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BI" & intD & "<>"""",BI" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BJ" & intD & "<>"""",BJ" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BK" & intD & "<>"""",BK" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BL" & intD & "<>"""",BL" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BM" & intD & "<>"""",BM" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BN" & intD & "<>"""",BN" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BO" & intD & "<>"""",BO" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BP" & intD & "<>"""",BP" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BQ" & intD & "<>"""",BQ" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BR" & intD & "<>"""",BR" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BS" & intD & "<>"""",BS" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BT" & intD & "<>"""",BT" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BU" & intD & "<>"""",BU" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BV" & intD & "<>"""",BV" & intD & "&""||"","""")"
+            objDoseSheet.Cells(intD, intK).Formula = strConcat
+            
+            objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Formula = "=IFERROR(IF(LEN(BW" & intD & ">0),MID(BW" & intD & ",1,LEN(BW" & intD & ")-2),""""),"""")"
+            
+            arrFreq = Split(objDose.Frequencies, "||")
+            For Each varFreq In arrFreq
+                Select Case varFreq
+                    Case constDoseFreq_AN
+                        objDoseSheet.Cells(intD, 23).Value2 = "x"
+                        
+                    Case constDoseFreq_1D
+                        objDoseSheet.Cells(intD, 24).Value2 = "x"
                 
-                objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Formula = "=IFERROR(IF(LEN(BW" & intD & ">0),MID(BW" & intD & ",1,LEN(BW" & intD & ")-2),""""),"""")"
-            End If
+                    Case constDoseFreq_2D
+                        objDoseSheet.Cells(intD, 25).Value2 = "x"
+                
+                    Case constDoseFreq_3D
+                        objDoseSheet.Cells(intD, 26).Value2 = "x"
+                
+                    Case constDoseFreq_4D
+                        objDoseSheet.Cells(intD, 27).Value2 = "x"
+                
+                    Case constDoseFreq_5D
+                        objDoseSheet.Cells(intD, 28).Value2 = "x"
+                
+                    Case constDoseFreq_6D
+                        objDoseSheet.Cells(intD, 29).Value2 = "x"
+                
+                    Case constDoseFreq_7D
+                        objDoseSheet.Cells(intD, 30).Value2 = "x"
+                
+                    Case constDoseFreq_8D
+                        objDoseSheet.Cells(intD, 31).Value2 = "x"
+                
+                    Case constDoseFreq_9D
+                        objDoseSheet.Cells(intD, 32).Value2 = "x"
+                
+                    Case constDoseFreq_10D
+                        objDoseSheet.Cells(intD, 33).Value2 = "x"
+                
+                    Case constDoseFreq_11D
+                        objDoseSheet.Cells(intD, 34).Value2 = "x"
+                
+                    Case constDoseFreq_12D
+                        objDoseSheet.Cells(intD, 35).Value2 = "x"
+                
+                    Case constDoseFreq_24D
+                        objDoseSheet.Cells(intD, 36).Value2 = "x"
+                
+                    Case constDoseFreq_1D2
+                        objDoseSheet.Cells(intD, 37).Value2 = "x"
+                
+                    Case constDoseFreq_1D3
+                        objDoseSheet.Cells(intD, 38).Value2 = "x"
+                
+                    Case constDoseFreq_1U36
+                        objDoseSheet.Cells(intD, 39).Value2 = "x"
+                
+                    Case constDoseFreq_1W
+                        objDoseSheet.Cells(intD, 40).Value2 = "x"
+                
+                    Case constDoseFreq_2W
+                        objDoseSheet.Cells(intD, 41).Value2 = "x"
+                
+                    Case constDoseFreq_3W
+                        objDoseSheet.Cells(intD, 42).Value2 = "x"
+                
+                    Case constDoseFreq_4W
+                        objDoseSheet.Cells(intD, 43).Value2 = "x"
+                
+                    Case constDoseFreq_1W2
+                        objDoseSheet.Cells(intD, 44).Value2 = "x"
+                
+                    Case constDoseFreq_1W4
+                        objDoseSheet.Cells(intD, 45).Value2 = "x"
+                
+                    Case constDoseFreq_1W12
+                        objDoseSheet.Cells(intD, 46).Value2 = "x"
+                
+                    Case constDoseFreq_1W13
+                        objDoseSheet.Cells(intD, 47).Value2 = "x"
+                
+                    Case constDoseFreq_1M
+                        objDoseSheet.Cells(intD, 48).Value2 = "x"
+                                
+                End Select
+                
+            Next
         
         End With
         
@@ -878,35 +919,11 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             objMedSheet.Cells(intN, constRouteIndx).Value2 = objMed.Routes
             objMedSheet.Cells(intN, constGenericQuantityIndx).Value2 = objMed.GenericQuantity
             objMedSheet.Cells(intN, constGenericQuantityUnitIndx).Value2 = objMed.GenericUnit
-                        
             If .MultipleQuantity > 0 Then objMedSheet.Cells(intN, constMultipleQuantityIndx).Value2 = .MultipleQuantity
             If Not .MultipleUnit = vbNullString Then objMedSheet.Cells(intN, constMultipleQuantityUnitIndx).Value2 = .MultipleUnit
-            
             objMedSheet.Cells(intN, constIndicationsIndx).Value2 = objMed.Indications
-                        
-            With objMed.PICUSolution
-                objSolSheet.Cells(intS, constSolDepartmentIndx).Value2 = "PICU"
-                objSolSheet.Cells(intS, constSolGenericIndx).Value2 = objMed.Generic
-                objSolSheet.Cells(intS, constSolShapeIndx).Value2 = objMed.Shape
-                If .MaxConc > 0 Then objSolSheet.Cells(intS, constSolMaxConcIndx).Value2 = .MaxConc
-                If .SolutionVolume > 0 Then objSolSheet.Cells(intS, constSolSolutionVolumeIndx).Value2 = .SolutionVolume
-                If Not .Solution = vbNullString Then objSolSheet.Cells(intS, constSolSolutionIndx).Value2 = .Solution
-                If .MinInfusionTime > 0 Then objSolSheet.Cells(intS, constSolMinInfusionTimeIndx).Value2 = .MinInfusionTime
-                
-                intS = intS + 1
-            End With
-            
-            With objMed.NICUSolution
-                objSolSheet.Cells(intS, constSolDepartmentIndx).Value2 = "NICU"
-                objSolSheet.Cells(intS, constSolGenericIndx).Value2 = objMed.Generic
-                objSolSheet.Cells(intS, constSolShapeIndx).Value2 = objMed.Shape
-                If .MaxConc > 0 Then objSolSheet.Cells(intS, constSolMaxConcIndx).Value2 = .MaxConc
-                If .SolutionVolume > 0 Then objSolSheet.Cells(intS, constSolSolutionVolumeIndx).Value2 = .SolutionVolume
-                If Not .Solution = vbNullString Then objSolSheet.Cells(intS, constSolSolutionIndx).Value2 = .Solution
-                If .MinInfusionTime > 0 Then objSolSheet.Cells(intS, constSolMinInfusionTimeIndx).Value2 = .MinInfusionTime
-                
-                intS = intS + 1
-            End With
+            objMedSheet.Cells(intN, constHasSolutionsIndx).Value2 = IIf(objMed.HasSolutions, "x", " ")
+            objMedSheet.Cells(intN, constIsActiveIndx).Value2 = IIf(objMed.IsActive, "x", " ")
             
         End With
         
@@ -914,17 +931,51 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
         If blnShowProgress Then ModProgress.SetJobPercentage "Export " & intN, intC, intN
     Next
     
+    Set objFormRange = objMedSheet.Range("A1").CurrentRegion
+    Set objDoseRange = objDoseSheet.Range("A1").CurrentRegion
+    Set objSolRange = objSolSheet.Range("A1").CurrentRegion
+    
+    If objFormRange.Rows.Count > 1 Then
+        With objMedSheet.Sort
+            .SortFields.Clear
+            .SortFields.Add Key:=objMedSheet.Range("E2"), Order:=xlAscending
+            .SortFields.Add Key:=objMedSheet.Range("H2"), Order:=xlAscending
+            .SortFields.Add Key:=objMedSheet.Range("J2"), Order:=xlAscending
+            .SetRange objMedSheet.Range("A2:P" & objFormRange.Rows.Count)
+            .Apply
+        End With
+    End If
+    
+    If objDoseRange.Rows.Count > 1 Then
+        With objDoseSheet.Sort
+            .SortFields.Clear
+            .SortFields.Add Key:=objDoseSheet.Range("A2"), Order:=xlAscending
+            .SortFields.Add Key:=objDoseSheet.Range("D2"), Order:=xlAscending
+            .SortFields.Add Key:=objDoseSheet.Range("C2"), Order:=xlAscending
+            .SetRange objDoseSheet.Range("A2:BW" & objDoseRange.Rows.Count)
+            .Apply
+        End With
+    End If
+    
+    If objSolRange.Rows.Count > 1 Then
+        With objSolSheet.Sort
+            .SortFields.Clear
+            .SortFields.Add Key:=objSolSheet.Range("B2"), Order:=xlAscending
+            .SortFields.Add Key:=objSolSheet.Range("C2"), Order:=xlAscending
+            .SortFields.Add Key:=objSolSheet.Range("A2"), Order:=xlAscending
+            .SetRange objSolSheet.Range("A2:M" & objSolRange.Rows.Count)
+            .Apply
+        End With
+    End If
+    
     objWbk.Windows(1).Visible = True
+    ImprovePerf False
+    
     objWbk.SaveAs strFile
     objWbk.Close
     
-    Set m_Formularium = Nothing
-    
     ModProgress.FinishProgress
-
     Application.DisplayAlerts = True
-    ImprovePerf False
-    
         
     ModMessage.ShowMsgBoxInfo "Het formularium is succesvol geexporteerd naar: " & strFile
     
@@ -949,11 +1000,5 @@ End Sub
 Private Sub Test_Formularium_ExportMedDiscConfig()
 
     Formularium_Export True
-    
-End Sub
-
-Public Sub Formularium_ShowConfig()
-
-    FormAdminMedDisc.Show
     
 End Sub
