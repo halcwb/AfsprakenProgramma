@@ -220,7 +220,7 @@ Public Sub App_Initialize()
     
     ' Load config tables
     If Setting_UseDatabase Then
-        If Not Util_LoadConfigTablesFromDatabase() Then Err.Raise ModConst.CONST_APP_ERROR, "App_Initialize", "Kan config tabellen niet laden"
+        If Not App_LoadConfigTablesFromDatabase() Then Err.Raise ModConst.CONST_APP_ERROR, "App_Initialize", "Kan config tabellen niet laden"
     Else
         If Not Util_LoadConfigTables() Then Err.Raise ModConst.CONST_APP_ERROR, "App_Initialize", "Kan config tabellen niet laden"
     End If
@@ -342,6 +342,7 @@ Private Sub Util_SetCaptionAndHideBars()
     App_UpdateStatusBar "Omgeving", Util_GetEnvironment()
     App_UpdateStatusBar "Afdeling", IIf(Util_IsPedDir, "PICU", "NICU")
     App_UpdateStatusBar "Login", ModRange.GetRangeValue("_User_Login", vbNullString)
+    App_UpdateStatusBar "Database", ModSetting.Setting_GetDatabase()
     
     Exit Sub
     
@@ -476,7 +477,7 @@ Private Sub Test_Util_LoadConfigTables()
 
 End Sub
 
-Private Function Util_LoadConfigTablesFromDatabase() As Boolean
+Public Function App_LoadConfigTablesFromDatabase() As Boolean
 
     On Error GoTo ErrorHandler
 
@@ -484,7 +485,7 @@ Private Function Util_LoadConfigTablesFromDatabase() As Boolean
     ModDatabase.Database_LoadPedConfigMedCont
     ModDatabase.Database_LoadConfigParEnt
     
-    Util_LoadConfigTablesFromDatabase = True
+    App_LoadConfigTablesFromDatabase = True
     
     Exit Function
     

@@ -111,7 +111,7 @@ Public Sub Test_NeoInfB_ContMed()
     
     On Error GoTo ErrorHandler
     
-    varFile = ModFile.GetFileWithDialog()
+    varFile = ModFile.GetFileWithDialog(WbkAfspraken.Path & "/db")
     
     If CStr(varFile) = vbNullString Then Exit Sub
     

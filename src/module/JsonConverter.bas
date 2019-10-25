@@ -650,13 +650,13 @@ End Function
 Private Function json_ParseKey(json_String As String, ByRef json_Index As Long) As String
     ' Parse key with single or double quotes
     If VBA.Mid$(json_String, json_Index, 1) = """" Or VBA.Mid$(json_String, json_Index, 1) = "'" Then
-        json_ParseKey = json_ParseString(json_String, json_Index)
+        json_ParseKey = LCase(json_ParseString(json_String, json_Index))
     ElseIf JsonOptions.AllowUnquotedKeys Then
         Dim json_Char As String
         Do While json_Index > 0 And json_Index <= Len(json_String)
             json_Char = VBA.Mid$(json_String, json_Index, 1)
             If (json_Char <> " ") And (json_Char <> ":") Then
-                json_ParseKey = json_ParseKey & json_Char
+                json_ParseKey = LCase(json_ParseKey & json_Char)
                 json_Index = json_Index + 1
             Else
                 Exit Do

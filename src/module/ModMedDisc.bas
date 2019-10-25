@@ -431,6 +431,8 @@ Private Sub Util_OpenMedDiscForm(ByVal intN As Integer)
     Dim strFreq As String
     Dim strTime As String
       
+    On Error GoTo ErrorHandler
+      
     strN = IntNToStrN(intN)
     
     dblWght = ModPatient.Patient_GetWeight()
@@ -452,15 +454,15 @@ Private Sub Util_OpenMedDiscForm(ByVal intN As Integer)
         
         If Not blnLoad Then                      ' Manually entered drug
             .SetNoFormMed
-            .cboGeneriek.Text = ModRange.GetRangeValue(constGeneric & strN, vbNullString)
-            .SetComboBoxIfNotEmpty .cboVorm, ModRange.GetRangeValue(constVorm & strN, vbNullString)
-            .SetTextBoxIfNotEmpty .txtSterkte, ModRange.GetRangeValue(constConc & strN, 0)
-            .SetComboBoxIfNotEmpty .cboSterkteEenheid, ModRange.GetRangeValue(constConcUnit & strN, vbNullString)
+            .cboGeneric.Text = ModRange.GetRangeValue(constGeneric & strN, vbNullString)
+            .SetComboBoxIfNotEmpty .cboShape, ModRange.GetRangeValue(constVorm & strN, vbNullString)
+            .SetTextBoxIfNotEmpty .txtGenericQuantity, ModRange.GetRangeValue(constConc & strN, 0)
+            .SetComboBoxIfNotEmpty .cboGenericQuantityUnit, ModRange.GetRangeValue(constConcUnit & strN, vbNullString)
         End If
         
         ' Edited details
         .SetComboBoxIfNotEmpty .cboRoute, ModRange.GetRangeValue(constRoute & strN, vbNullString)
-        .SetComboBoxIfNotEmpty .cboIndicatie, ModRange.GetRangeValue(constIndic & strN, vbNullString)
+        .SetComboBoxIfNotEmpty .cboIndication, ModRange.GetRangeValue(constIndic & strN, vbNullString)
         strFreq = ModRange.GetRangeValue(constFreqText & strN, vbNullString)
         
         If Not strFreq = vbNullString Then strTime = ModExcel.Excel_VLookup(strFreq, "Tbl_Glob_MedFreq", 2)
@@ -470,26 +472,26 @@ Private Sub Util_OpenMedDiscForm(ByVal intN As Integer)
         .SetComboBoxIfNotEmpty .cboFreq, strFreq
         
         .chkDose.Value = ModRange.GetRangeValue(constHasDose & strN, True)
-        .SetTextBoxIfNotEmpty .txtDeelDose, ModRange.GetRangeValue(constStandDose & strN, vbNullString)
-        .SetComboBoxIfNotEmpty .cboDosisEenheid, ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
+        .SetTextBoxIfNotEmpty .txtMultipleQuantity, ModRange.GetRangeValue(constStandDose & strN, vbNullString)
+        .SetComboBoxIfNotEmpty .cboMultipleQuantityUnit, ModRange.GetRangeValue(constDoseUnit & strN, vbNullString)
         
         dblKeer = shtGlobBerMedDisc.Range("H" & intN + 1).Value2
-        .SetTextBoxIfNotEmpty .txtKeerDose, dblKeer
+        .SetTextBoxIfNotEmpty .txtAdminDose, dblKeer
         
         .SetTextBoxIfNotEmpty .txtNormDose, ModRange.GetRangeValue(constNormDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMinDose, ModRange.GetRangeValue(constMinDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMaxDose, ModRange.GetRangeValue(constMaxDose & strN, vbNullString)
-        .SetTextBoxIfNotEmpty .txtAbsMax, ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
+        .SetTextBoxIfNotEmpty .txtAbsMaxDose, ModRange.GetRangeValue(constAbsDose & strN, vbNullString)
         .SetTextBoxIfNotEmpty .txtMaxPerDose, ModRange.GetRangeValue(constMaxKeer & strN, vbNullString)
         
-        .chkPerDosis.Value = ModRange.GetRangeValue(constPerDose & strN, False)
+        .chkPerDose.Value = ModRange.GetRangeValue(constPerDose & strN, False)
         .optKg.Value = ModRange.GetRangeValue(constPerKg & strN, False)
         .optM2.Value = ModRange.GetRangeValue(constPerM2 & strN, False)
         .optNone.Value = (Not .optKg.Value) And (Not .optM2.Value)
         
         intOplVlst = ModRange.GetRangeValue(constSolNo & strN, 1)
         strOplVlst = ModExcel.Excel_Index("Tbl_Glob_MedDisc_OplVl", intOplVlst, 1)
-        .SetComboBoxIfNotEmpty .cboOplVlst, strOplVlst
+        .SetComboBoxIfNotEmpty .cboSolutions, strOplVlst
         
         .SetTextBoxIfNotEmpty .txtTijd, ModRange.GetRangeValue(constTime & strN, vbNullString)
         
@@ -497,7 +499,7 @@ Private Sub Util_OpenMedDiscForm(ByVal intN As Integer)
         dblOplVol = ModString.FixPrecision(dblOplVol, 1)
         If dblOplVol > 0 Then
             .SetToVolume
-            .SetTextBoxIfNotEmpty .txtOplVol, dblOplVol
+            .SetTextBoxIfNotEmpty .txtSolutionVolume, dblOplVol
         End If
         
         dblFact = .GetFactorByFreq(.cboFreq)
@@ -525,6 +527,12 @@ Private Sub Util_OpenMedDiscForm(ByVal intN As Integer)
         End If
         
     End With
+    
+    Exit Sub
+    
+ErrorHandler:
+        
+    ModLog.LogError Err, "Util_OpenMedDiscForm Failed"
         
 End Sub
 
@@ -602,7 +610,7 @@ Public Sub MedDisc_SetMed(objMed As ClassMedDisc, strN As String)
             
             dblFactor = IIf(objMed.PerDose, 1, ModExcel.Excel_Index(constFreqTable, intFreq, 3))
             ' intDoseQty = objMed.CalcDose * dblAdjust / dblFactor / objMed.MultipleQuantity
-            intDoseQty = objMed.KeerDose / objMed.MultipleQuantity
+            intDoseQty = objMed.AdminDose / objMed.MultipleQuantity
             ModRange.SetRangeValue constDoseQty & strN, intDoseQty
             
         End If

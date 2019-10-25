@@ -158,7 +158,7 @@ Private Sub cmdImport_Click()
         
     Dim objMed As ClassNeoMedCont
     
-    strFile = ModFile.GetFileWithDialog
+    strFile = ModFile.GetFileWithDialog(WbkAfspraken.Path & "/db")
     
     Dim strMsg As String
     

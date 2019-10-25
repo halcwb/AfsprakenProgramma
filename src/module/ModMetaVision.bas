@@ -59,10 +59,10 @@ Private Enum TableRows
     Medicatie = 8
 End Enum
 
-Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As String) As String
+Public Function MetaVision_GetPatientBed(ByVal strPatId As String, ByVal strPatNum As String) As String
 
     Dim strServer As String
-    Dim strDb As String
+    Dim strDB As String
     Dim objRs As Recordset
     Dim strSql As String
     Dim strBed As String
@@ -70,13 +70,13 @@ Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As Stri
     Dim blnFound As Boolean
     
     strServer = MetaVision_GetServer()
-    strDb = MetaVision_GetDatabase()
+    strDB = MetaVision_GetDatabase()
     strSql = GetPatientListSql(strPatId, strPatNum)
     
-    If strServer = vbNullString Or strDb = vbNullString Or strSql = vbNullString Then
+    If strServer = vbNullString Or strDB = vbNullString Or strSql = vbNullString Then
         strBed = vbNullString
     Else
-        InitConnection strServer, strDb
+        InitConnection strServer, strDB
         
         objConn.Open
         
@@ -101,7 +101,7 @@ Private Function GetPatientBed(ByVal strPatId As String, ByVal strPatNum As Stri
         
     End If
     
-    GetPatientBed = strBed
+    MetaVision_GetPatientBed = strBed
     
     
 End Function
@@ -420,7 +420,7 @@ Public Function MetaVision_GetCurrentBedName() As String
     
     strPatId = MetaVision_GetCurrentPatientID()
     
-    MetaVision_GetCurrentBedName = GetPatientBed(strPatId, vbNullString)
+    MetaVision_GetCurrentBedName = MetaVision_GetPatientBed(strPatId, vbNullString)
 
 End Function
 
@@ -496,12 +496,12 @@ Public Function MetaVision_GetDatabase() As String
     Dim strEmpi As String
     Dim strDepartment As String
     Dim strSql As String
-    Dim strDb As String
+    Dim strDB As String
     Dim objRs As Recordset
     
     If GetBasePath() = constBasePath1 Then
         
-        strDb = ModRegistry.ReadRegistryKey(constBasePath1, constDatabase)
+        strDB = ModRegistry.ReadRegistryKey(constBasePath1, constDatabase)
     
     Else
         
@@ -517,7 +517,7 @@ Public Function MetaVision_GetDatabase() As String
                 objConn.Open
                 
                 Set objRs = objConn.Execute(strSql)
-                If Not objRs.EOF Then strDb = objRs.Fields("DatabaseName")
+                If Not objRs.EOF Then strDB = objRs.Fields("DatabaseName")
                 
                 objConn.Close
             End If
@@ -525,7 +525,7 @@ Public Function MetaVision_GetDatabase() As String
     
     End If
     
-    MetaVision_GetDatabase = strDb
+    MetaVision_GetDatabase = strDB
 
 End Function
 

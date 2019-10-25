@@ -2152,6 +2152,7 @@ SettingTestDB:	=GlobSettings!$B$15
 SettingTestLogDir:	=GlobSettings!$B$9
 SettingTestServer:	=GlobSettings!$B$14
 SettingUseDatabase:	=GlobSettings!$B$13
+SettingUseProdDB:	=GlobSettings!$B$18
 Tbl_Admin_NeoMedCont:	=NeoTblMedIV!$B$4:$T$26
 Tbl_Admin_ParEnt:	=GlobTblParEnt!$A$6:$N$47
 Tbl_Admin_PedMedCont:	=PedTblMedIV!$B$5:$S$38

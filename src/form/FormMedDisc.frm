@@ -28,9 +28,93 @@ Private m_Freq As Dictionary
 Private m_Keer As Boolean
 Private m_Conc As Boolean
 Private m_Mail As Boolean
-Private m_Valid As Boolean
+Private m_ValidMed As Boolean
 Private m_CalcVol As Boolean
 Private m_CalcDose As Boolean
+Private m_HandlingEvent As Boolean
+
+Private Enum Events
+    GenericChange = 1
+    MedicationChange = 2
+    DoseChange = 3
+    SolutionChange = 4
+    DoseRulesChange = 5
+    HasDoseChange = 6
+End Enum
+
+Private Sub HandleEvent(ByVal enmEvent As Events, _
+                        Optional ByVal strValid As String = vbNullString, _
+                        Optional ByVal blnMsg As Boolean = False)
+
+    If m_HandlingEvent Then Exit Sub
+    m_HandlingEvent = True
+    
+    Debug.Print "Handling event: " & enmEvent
+
+    Select Case enmEvent
+    
+        Case GenericChange
+            ApplyGenericChange
+            SetDoseUnit
+            Validate vbNullString, False
+            If Not m_ValidMed Then
+                ClearDose
+            Else
+                ClearDose
+                ApplyDoseRule
+                LoadMedicament False, True
+            End If
+    
+        Case MedicationChange
+            Validate strValid, blnMsg
+            If Not m_ValidMed Then
+                ClearDose
+            Else
+                ClearDose
+                ApplyDoseRule
+                LoadMedicament False, True
+            End If
+            
+        Case DoseChange
+            If frmDose.Visible Then
+                If strValid = vbNullString Then
+                    SetDoseUnit
+                    CalculateDose
+                    CalculateVolume
+                    CalculateLabel
+                    SetProductDose
+                    Validate vbNullString, True
+                Else
+                    Validate strValid, False
+                End If
+            End If
+            
+        Case HasDoseChange
+            If Not frmDose.Visible Then ClearDose
+            
+            frmDose.Visible = chkDose.Value
+            frmSolution.Visible = chkDose.Value
+            txtMultipleQuantity.Visible = chkDose.Value
+            cboMultipleQuantityUnit.Visible = chkDose.Value
+        
+            Validate vbNullString, False
+        
+        Case DoseRulesChange
+            If frmDose.Visible And m_ValidMed Then
+                LoadMedicament False, False
+                SelectDoseRule
+                CalculateDose
+                CalculateVolume
+            End If
+            
+        Case SolutionChange
+            If frmDose.Visible And m_ValidMed Then CalculateVolume
+    
+    End Select
+    
+    m_HandlingEvent = False
+
+End Sub
 
 Public Property Get Mail() As Boolean
 
@@ -52,7 +136,7 @@ End Sub
 
 Private Function IsAbsMaxInvalid() As Boolean
     
-    IsAbsMaxInvalid = txtAbsMax.Value = vbNullString And ModPatient.Patient_GetWeight() > 50 And txtNormDose.Value = vbNullString And txtMaxDose.Value = vbNullString
+    IsAbsMaxInvalid = txtAbsMaxDose.Value = vbNullString And ModPatient.Patient_GetWeight() > 50 And txtNormDose.Value = vbNullString And txtMaxDose.Value = vbNullString
 
 End Function
 
@@ -67,28 +151,25 @@ Private Sub Validate(ByVal strValid As String, ByVal blnMsg As Boolean)
     If strValid = vbNullString Then
     
         If frmDose.Visible Then
-            strValid = IIf(cboDosisEenheid.Value = vbNullString, "Voer dosering eenheid in", strValid)
-            strValid = IIf(txtDeelDose.Value = vbNullString, "Voer een deelbaarheid in", strValid)
+            strValid = IIf(cboMultipleQuantityUnit.Value = vbNullString, "Voer dosering eenheid in", strValid)
+            strValid = IIf(txtMultipleQuantity.Value = vbNullString, "Voer een deelbaarheid in", strValid)
         End If
         
-        strValid = IIf(cboIndicatie.Value = vbNullString, "Kies een indicatie", strValid)
+        strValid = IIf(cboIndication.Value = vbNullString, "Kies een indicatie", strValid)
         strValid = IIf(cboRoute.Value = vbNullString, "Kies een route", strValid)
         
-        strValid = IIf(cboSterkteEenheid.Value = vbNullString, "Voer sterkte eenheid in", strValid)
-        strValid = IIf(txtSterkte.Value = vbNullString, "Voer sterkte in", strValid)
+        strValid = IIf(cboGenericQuantityUnit.Value = vbNullString, "Voer sterkte eenheid in", strValid)
+        strValid = IIf(txtGenericQuantity.Value = vbNullString, "Voer sterkte in", strValid)
         
-        strValid = IIf(cboVorm.Value = vbNullString, "Voer een vorm in", strValid)
-        strValid = IIf(cboGeneriek.Value = vbNullString, "Kies een generiek", strValid)
+        strValid = IIf(cboShape.Value = vbNullString, "Voer een vorm in", strValid)
+        strValid = IIf(cboGeneric.Value = vbNullString, "Kies een generiek", strValid)
                 
-        m_Valid = strValid = vbNullString
+        m_ValidMed = strValid = vbNullString
         
-        If blnMsg And Not strValid = vbNullString Then
-            ' ModMessage.ShowMsgBoxInfo strValid
-            ClearDose
-        End If
     End If
     
     cmdOK.Enabled = strValid = vbNullString
+    cmdQuery.Visible = strValid = vbNullString
     
     If frmDose.Visible And strValid = vbNullString Then
         strValid = IIf(IsDoseControlInValid, "Voer of een advies dosering in en/of een max (en evt. min en abs max) dosering", strValid)
@@ -124,9 +205,9 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
     
     m_IsGPK = blnIsGPK
     
-    Me.txtSterkte.Enabled = Not blnIsGPK
-    Me.cboSterkteEenheid.Enabled = Not blnIsGPK
-    Me.cboVorm.Enabled = Not blnIsGPK
+    Me.txtGenericQuantity.Enabled = Not blnIsGPK
+    Me.cboGenericQuantityUnit.Enabled = Not blnIsGPK
+    Me.cboShape.Enabled = Not blnIsGPK
     
     cmdFormularium.Enabled = blnIsGPK
     
@@ -134,23 +215,24 @@ Private Sub SetToGPKMode(ByVal blnIsGPK As Boolean)
         lblGPK.Caption = vbNullString
         lblATC.Caption = vbNullString
         
-        FillCombo cboVorm, Formularium_GetFormularium().GetShapeCollection()
-        FillCombo cboSterkteEenheid, Formularium_GetFormularium().GetGenericQuantityUnitCollection()
-        FillCombo cboDosisEenheid, Formularium_GetFormularium.GetDoseUnitCollection()
+        FillCombo cboShape, Formularium_GetFormularium().GetShapeCollection()
+        FillCombo cboGenericQuantityUnit, Formularium_GetFormularium().GetGenericQuantityUnitCollection()
+        FillCombo cboMultipleQuantityUnit, Formularium_GetFormularium.GetDoseUnitCollection()
         FillCombo cboRoute, Formularium_GetFormularium.GetRoutes()
         
-        cboIndicatie.Clear
+        cboIndication.Clear
         
         LoadFreq
         
-        FillCombo cboOplVlst, MedDisc_GetOplVlstCol()
+        FillCombo cboSolutions, MedDisc_GetOplVlstCol()
     End If
 
 End Sub
 
-Private Sub cboDosisEenheid_Change()
+Private Sub cboMultipleQuantityUnit_Change()
 
-    SetDoseUnit
+    ' SetDoseUnit
+    HandleEvent DoseChange
 
 End Sub
 
@@ -160,19 +242,13 @@ Private Sub cboFreq_Change()
     
     strValid = ValidateCombo(cboFreq)
     
-    If strValid = vbNullString Then
-        SetDoseUnit
-        CalculateDose
-        Validate vbNullString, True
-    Else
-        Validate strValid, False
-    End If
-    
+    HandleEvent DoseChange, strValid
+        
 End Sub
 
 Private Sub cboFreqTime_Change()
 
-    SelectDoseRule
+    HandleEvent DoseRulesChange
 
 End Sub
 
@@ -223,12 +299,12 @@ Private Sub SelectDoseRule()
                     optKg = .PerKg
                     optM2 = .PerM2
                     
-                    chkPerDosis = .PerDose
+                    chkPerDose = .PerDose
                     
                     SetTextBoxNumericValue txtNormDose, .NormDose
                     SetTextBoxNumericValue txtMinDose, .MinDose
                     SetTextBoxNumericValue txtMaxDose, .MaxDose
-                    SetTextBoxNumericValue txtAbsMax, .AbsMaxDose
+                    SetTextBoxNumericValue txtAbsMaxDose, .AbsMaxDose
                     SetTextBoxNumericValue txtMaxPerDose, .MaxPerDose
                 End With
                 
@@ -236,35 +312,36 @@ Private Sub SelectDoseRule()
         Next
     End If
     
-    CalculateDose
-
 End Sub
 
 
-Private Sub cboGeneriek_Click()
+Private Sub cboGeneric_Click()
 
-    cboGeneriek_Change
+    cboGeneric_Change
 
 End Sub
 
-Private Sub cboGeneriek_Change()
+Private Sub cboGeneric_Change()
+
+    HandleEvent GenericChange
+
+End Sub
+
+Private Sub ApplyGenericChange()
 
     Dim objMed As ClassMedDisc
     
     If m_LoadGPK Then Exit Sub
 
-    If cboGeneriek.ListIndex > -1 Then
+    If cboGeneric.ListIndex > -1 Then
         SetToGPKMode True
-        Set objMed = Formularium_GetFormularium.Item(cboGeneriek.ListIndex + 1)
-        Set m_Med = objMed.Clone()
+        Set m_Med = Formularium_GetFormularium.GetMedication(cboGeneric.ListIndex + 1)
         LoadMedicament True, False
     Else
         SetToGPKMode False
         ClearForm False
     End If
     
-    SetDoseUnit
-    Validate vbNullString, False
 
 End Sub
 
@@ -293,7 +370,7 @@ Public Function LoadGPK(ByVal strGPK As String) As Boolean
         SetToGPKMode True
         LoadMedicament True, False
         m_LoadGPK = True
-        cboGeneriek.Text = m_Med.Generic
+        cboGeneric.Text = m_Med.Generic
         m_LoadGPK = False
     End If
     
@@ -320,8 +397,8 @@ Private Sub SetDoseUnit()
     Dim strTime As String
     
     strAdjust = GetAdjust()
-    strUnit = Trim(cboDosisEenheid.Text)
-    strTime = IIf(chkPerDosis.Value, "dosis", GetTimeByFreq())
+    strUnit = Trim(cboMultipleQuantityUnit.Text)
+    strTime = IIf(chkPerDose.Value, "dosis", GetTimeByFreq())
     
     If Not strUnit = vbNullString Then
         If Not strTime = vbNullString Then
@@ -330,7 +407,7 @@ Private Sub SetDoseUnit()
             cboDoseUnit.Text = strUnit & (IIf(strAdjust = "", "", "/" & strAdjust))
         End If
         
-        cboKeerUnit.Text = strUnit
+        cboAdminDoseUnit.Text = strUnit
         lblDoseUnit.Caption = cboDoseUnit.Value
         lblMinEenheid.Caption = cboDoseUnit.Value
         lblMaxEenheid.Caption = cboDoseUnit.Value
@@ -358,7 +435,7 @@ Private Sub LoadSolution()
 
     With m_Med
         SetTextBoxNumericValue txtMaxConc, .MaxConc
-        SetTextBoxNumericValue txtOplVol, .SolutionVolume
+        SetTextBoxNumericValue txtSolutionVolume, .SolutionVolume
         If (.SolutionVolume > 0 And m_Conc) Then
             ToggleConc
         ElseIf .MaxConc > 0 And .SolutionVolume = 0 And Not m_Conc Then
@@ -366,7 +443,7 @@ Private Sub LoadSolution()
         End If
         
         SetTextBoxNumericValue txtTijd, .MinInfusionTime
-        cboOplVlst.Value = .Solution
+        cboSolutions.Value = .Solution
         
     End With
     
@@ -382,21 +459,21 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean, ByVal blnApplyDose As Boo
 
     With m_Med
     
-        lblTherapieGroep.Caption = .MainGroup
-        lblSubGroep.Caption = .SubGroup
+        lblMainGroup.Caption = .MainGroup
+        lblSubGroup.Caption = .SubGroup
         lblEtiket.Caption = .Label
         lblProduct.Caption = .Product
         
         lblGPK.Caption = .GPK
         lblATC.Caption = .ATC
         
-        cboVorm.Value = .Shape
+        cboShape.Value = .Shape
         
-        txtSterkte.Text = .GenericQuantity
-        cboSterkteEenheid.Text = .GenericUnit
+        txtGenericQuantity.Text = .GenericQuantity
+        cboGenericQuantityUnit.Text = .GenericUnit
         
         If blnReload Or cboRoute.Text = "" Then FillCombo cboRoute, .GetRouteList()
-        If blnReload Or cboIndicatie.Text = "" Then FillCombo cboIndicatie, .GetIndicationList()
+        If blnReload Or cboIndication.Text = "" Then FillCombo cboIndication, .GetIndicationList()
         
         If .MultipleQuantity = 0 Then
             chkDose.Value = False
@@ -407,10 +484,10 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean, ByVal blnApplyDose As Boo
         
         FillCombo cboSubstConc, GetSubstances()
         
-        txtDeelDose.Text = .MultipleQuantity
+        txtMultipleQuantity.Text = .MultipleQuantity
         
-        FillCombo cboDosisEenheid, GetDoseUnitCollection()
-        cboDosisEenheid.Text = .MultipleUnit
+        FillCombo cboMultipleQuantityUnit, GetDoseUnitCollection()
+        cboMultipleQuantityUnit.Text = .MultipleUnit
         
         If Not .GetFreqListString = vbNullString Then
             FillCombo cboFreq, .GetFreqList()
@@ -425,12 +502,12 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean, ByVal blnApplyDose As Boo
         optKg = .PerKg
         optM2 = .PerM2
         
-        chkPerDosis = .PerDose
+        chkPerDose = .PerDose
         
         SetTextBoxNumericValue txtNormDose, .NormDose
         SetTextBoxNumericValue txtMinDose, .MinDose
         SetTextBoxNumericValue txtMaxDose, .MaxDose
-        SetTextBoxNumericValue txtAbsMax, .AbsMaxDose
+        SetTextBoxNumericValue txtAbsMaxDose, .AbsMaxDose
         SetTextBoxNumericValue txtMaxPerDose, .MaxPerDose
         
         LoadSolution
@@ -554,38 +631,38 @@ End Sub
 
 Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
 
-    lblTherapieGroep.Caption = m_TherapieGroep
-    lblSubGroep.Caption = m_SubGroep
+    lblMainGroup.Caption = m_TherapieGroep
+    lblSubGroup.Caption = m_SubGroep
     lblEtiket.Caption = m_Etiket
     lblProduct.Caption = m_Product
     
-    If blnClearGeneric Then cboGeneriek.Value = vbNullString
-    cboVorm.Value = vbNullString
+    If blnClearGeneric Then cboGeneric.Value = vbNullString
+    cboShape.Value = vbNullString
     
-    txtDeelDose.Value = vbNullString
-    cboDosisEenheid.Clear
-    cboDosisEenheid.Value = vbNullString
+    txtMultipleQuantity.Value = vbNullString
+    cboMultipleQuantityUnit.Clear
+    cboMultipleQuantityUnit.Value = vbNullString
     
-    txtSterkte.Text = vbNullString
-    cboSterkteEenheid.Text = vbNullString
+    txtGenericQuantity.Text = vbNullString
+    cboGenericQuantityUnit.Text = vbNullString
     
     FillCombo cboRoute, Formularium_GetFormularium.GetRoutes()
     
-    cboIndicatie.Clear
-    cboIndicatie.Value = vbNullString
+    cboIndication.Clear
+    cboIndication.Value = vbNullString
     
     cboFreq.Value = vbNullString
     txtNormDose.Value = vbNullString
     txtMinDose.Value = vbNullString
     txtMaxDose.Value = vbNullString
-    txtAbsMax.Value = vbNullString
+    txtAbsMaxDose.Value = vbNullString
     txtMaxPerDose.Value = vbNullString
     txtCalcDose.Value = vbNullString
     cboDoseUnit.Value = vbNullString
     lblCalcDose.Caption = vbNullString
     lblDoseUnit.Caption = vbNullString
     
-    cboGeneriek.SetFocus
+    cboGeneric.SetFocus
     
     Set m_Med = Nothing
 
@@ -605,14 +682,11 @@ Private Function ValidateCombo(objCombo As MSForms.ComboBox) As String
 
 End Function
 
-Private Sub cboIndicatie_Change()
+Private Sub cboIndication_Change()
 
-    Dim strValid As String
-    ' strValid = ValidateCombo(cboIndicatie, False)
-    Validate vbNullString, False
-    m_Med.Indication = Trim(LCase(cboIndicatie.Text))
+    If Not m_Med Is Nothing Then m_Med.Indication = Trim(LCase(cboIndication.Text))
     
-    ApplyDoseRule
+    HandleEvent MedicationChange
 
 End Sub
 
@@ -624,11 +698,11 @@ Private Sub ApplySolution()
     
     ClearSolution
     
-    If Not m_CalcVol Then Exit Sub
+    If Not m_CalcVol Or m_Med Is Nothing Then Exit Sub
     
     strDep = IIf(MetaVision_IsPICU, "PICU", "NICU")
     
-    dblQty = StringToDouble(txtKeerDose.Text)
+    dblQty = StringToDouble(txtAdminDose.Text)
     Set objSol = m_Med.GetSolution(strDep, dblQty)
     
     If Not objSol Is Nothing Then
@@ -654,9 +728,7 @@ Private Sub ApplyDoseRule()
     Dim dblWeight As Double
     Dim lngGest As Long
     
-    ClearDose
-    
-    If Not m_Valid Then Exit Sub
+    If Not m_ValidMed Then Exit Sub
     
     dblAge = Patient_GetAgeInDays() / 30
     lngGest = Patient_GestationalAgeInDays()
@@ -678,8 +750,6 @@ Private Sub ApplyDoseRule()
             m_Med.SetFreqList objDose.Frequencies
         End With
         
-        LoadMedicament False, True
-    
     End If
 
 End Sub
@@ -688,12 +758,10 @@ Private Sub cboRoute_Change()
 
     Dim strValid As String
     
-    m_Med.Route = cboRoute.Text
+    If Not m_Med Is Nothing Then m_Med.Route = cboRoute.Text
     strValid = ValidateCombo(cboRoute)
-    Validate strValid, False
+    HandleEvent MedicationChange, strValid
     
-    ApplyDoseRule
-
 End Sub
 
 Public Function GetTimeByFreq() As String
@@ -741,21 +809,21 @@ Private Sub CalculateDose()
     Dim dblDeel As Double
     Dim dblKeer As Double
     
-    If Not m_CalcDose Or Not m_Valid Then Exit Sub
+    If Not m_CalcDose Or Not m_ValidMed Then Exit Sub
     
-    dblFact = IIf(chkPerDosis.Value, 1, GetFactorByFreq(cboFreq.Text))
+    dblFact = IIf(chkPerDose.Value, 1, GetFactorByFreq(cboFreq.Text))
     dblDose = StringToDouble(txtNormDose.Value)
     dblWght = ModPatient.Patient_GetWeight()
     dblM2 = ModPatient.CalculateBSA()
-    dblDeel = StringToDouble(txtDeelDose.Value)
-    dblKeer = StringToDouble(txtKeerDose.Value)
+    dblDeel = StringToDouble(txtMultipleQuantity.Value)
+    dblKeer = StringToDouble(txtAdminDose.Value)
     dblKeer = IIf(dblDeel > 0, ModExcel.Excel_RoundBy(dblKeer, dblDeel), dblKeer)
     
     dblAdjust = IIf(optNone.Value, 1, dblWght)
     dblAdjust = IIf(optM2.Value, dblM2, dblAdjust)
     
     If dblFact = 0 Or (Not m_Keer And dblDose = 0) Or (m_Keer And dblKeer = 0) Or dblAdjust = 0 Or dblDeel = 0 Then
-        If Not m_Keer Then SetTextBoxNumericValue txtKeerDose, 0
+        If Not m_Keer Then SetTextBoxNumericValue txtAdminDose, 0
         SetTextBoxNumericValue txtCalcDose, 0
         Exit Sub
     End If
@@ -767,7 +835,7 @@ Private Sub CalculateDose()
     Else
     
         dblVal = dblDose * dblAdjust / dblFact
-        dblVal = ModExcel.Excel_RoundBy(dblVal, txtDeelDose.Value)
+        dblVal = ModExcel.Excel_RoundBy(dblVal, txtMultipleQuantity.Value)
         
         dblCalc = dblVal * dblFact / dblAdjust
         dblKeer = dblCalc * dblAdjust / dblFact
@@ -779,17 +847,14 @@ Private Sub CalculateDose()
     m_Med.Freq = cboFreq.Text
     
     txtCalcDose.Value = ModString.FixPrecision(dblCalc, 2)
-    If Not m_Keer Then txtKeerDose.Value = dblKeer
+    If Not m_Keer Then txtAdminDose.Value = dblKeer
         
-    CalculateVolume
-    CalculateLabel
-    SetProductDose
 
 End Sub
 
 Private Sub CalculateLabel()
 
-    lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtDeelDose.Value & " " & cboDosisEenheid.Text
+    lblCalcDose.Caption = "Berekende dosering met deelbaarheid: " & txtMultipleQuantity.Value & " " & cboMultipleQuantityUnit.Text
 
 End Sub
 
@@ -800,11 +865,11 @@ Private Sub CalculateVolume()
     Dim dblCalc As Double
     Dim dblVol As Double
     
-    dblKeer = StringToDouble(txtKeerDose.Value)
+    dblKeer = StringToDouble(txtAdminDose.Value)
     dblConc = StringToDouble(txtMaxConc.Value)
-    dblVol = StringToDouble(txtOplVol.Value)
+    dblVol = StringToDouble(txtSolutionVolume.Value)
     
-    If Not dblKeer > 0 Or Not m_CalcVol Or Not m_Valid Then Exit Sub
+    If Not dblKeer > 0 Or Not m_CalcVol Or Not m_ValidMed Then Exit Sub
     
     If m_Conc And dblConc > 0 Then
         dblCalc = dblKeer / dblConc
@@ -813,7 +878,7 @@ Private Sub CalculateVolume()
             dblCalc = dblCalc + 1
         Loop
         
-        txtOplVol.Value = dblCalc
+        txtSolutionVolume.Value = dblCalc
     ElseIf Not m_Conc And dblVol > 0 Then
         dblCalc = dblKeer / dblVol
         dblCalc = ModString.FixPrecision(dblCalc, 1)
@@ -829,7 +894,7 @@ End Sub
 
 Private Sub cboSubstance_Change()
 
-    SelectDoseRule
+    HandleEvent DoseRulesChange
 
 End Sub
 
@@ -837,8 +902,8 @@ Private Sub cboSubstConc_Change()
 
     Dim objSubst As ClassSubstance
 
-    lblSubstConc.Caption = cboSterkteEenheid.Text
-    If cboSubstConc.Text = cboGeneriek.Text Then txtSubstConc.Value = txtSterkte.Value
+    lblSubstConc.Caption = cboGenericQuantityUnit.Text
+    If cboSubstConc.Text = cboGeneric.Text Then txtSubstConc.Value = txtGenericQuantity.Value
     
     For Each objSubst In m_Med.Substances
         If objSubst.Substance = cboSubstConc.Text Then
@@ -853,14 +918,7 @@ End Sub
 
 Private Sub chkDose_Click()
     
-    If Not frmDose.Visible Then ClearDose
-    
-    frmDose.Visible = chkDose.Value
-    frmOpl.Visible = chkDose.Value
-    txtDeelDose.Visible = chkDose.Value
-    cboDosisEenheid.Visible = chkDose.Value
-
-    Validate vbNullString, False
+    HandleEvent HasDoseChange
 
 End Sub
 
@@ -873,8 +931,8 @@ Private Sub ClearSolution()
         m_Med.MaxConc = 0
     End If
     
-    cboOplVlst.Value = ""
-    txtOplVol.Value = ""
+    cboSolutions.Value = ""
+    txtSolutionVolume.Value = ""
     txtTijd.Value = ""
 
 End Sub
@@ -892,7 +950,7 @@ Private Sub ClearDose()
         m_Med.PerKg = True
         m_Med.PerM2 = False
         
-        chkPerDosis.Value = False
+        chkPerDose.Value = False
         optKg.Value = True
         optM2.Value = False
         
@@ -905,24 +963,26 @@ Private Sub ClearDose()
         txtNormDose.Value = ""
         txtMinDose.Value = ""
         txtMaxDose.Value = ""
-        txtAbsMax.Value = ""
+        txtAbsMaxDose.Value = ""
         txtMaxPerDose = ""
         
-        cboOplVlst.Value = ""
-        txtOplVol.Value = ""
+        cboSolutions.Value = ""
+        txtSolutionVolume.Value = ""
         txtTijd.Value = ""
         
-        txtKeerDose.Value = ""
+        txtAdminDose.Value = ""
         txtCalcDose.Value = ""
         
     End If
         
 End Sub
 
-Private Sub chkPerDosis_Click()
+Private Sub chkPerDose_Click()
 
-    SetDoseUnit
-    CalculateDose
+    ' SetDoseUnit
+    ' CalculateDose
+    
+    HandleEvent DoseChange
 
 End Sub
 
@@ -935,7 +995,7 @@ Private Sub cmdFormularium_Click()
         If Not m_Med.ATC = vbNullString Then
             strUrl = strUrl & "geneesmiddelen?atc_code=" + m_Med.ATC
         Else
-            strUrl = strUrl & "geneesmiddelen?name=" + cboGeneriek.Text
+            strUrl = strUrl & "geneesmiddelen?name=" + cboGeneric.Text
         End If
     End If
 
@@ -1018,18 +1078,18 @@ Private Sub cmdGStand_Click()
 
 End Sub
 
-Private Sub cmdKeerDose_Click()
+Private Sub cmdAdminDose_Click()
 
     Dim objPic As StdPicture
 
     m_Keer = Not m_Keer
-    Set objPic = cmdKeerDose.Picture
-    cmdKeerDose.Picture = cmdNormDose.Picture
+    Set objPic = cmdAdminDose.Picture
+    cmdAdminDose.Picture = cmdNormDose.Picture
     cmdNormDose.Picture = objPic
     
     ToggleDoseText
-
-    CalculateDose
+    HandleEvent DoseChange
+    ' CalculateDose
     
 End Sub
 
@@ -1043,7 +1103,7 @@ Private Sub cmdKompas_Click()
     
     strUrl = "https://www.farmacotherapeutischkompas.nl/bladeren/preparaatteksten/{FIRST}/{GENERIC}"
     
-    strGeneric = Trim(LCase(cboGeneriek.Text))
+    strGeneric = Trim(LCase(cboGeneric.Text))
     
     If strGeneric = vbNullString Then Exit Sub
     
@@ -1078,19 +1138,20 @@ Private Sub cmdNormDose_Click()
 
     m_Keer = Not m_Keer
     Set objPic = cmdNormDose.Picture
-    cmdNormDose.Picture = cmdKeerDose.Picture
-    cmdKeerDose.Picture = objPic
+    cmdNormDose.Picture = cmdAdminDose.Picture
+    cmdAdminDose.Picture = objPic
     
     ToggleDoseText
-    
-    CalculateDose
+    HandleEvent DoseChange
+    '    CalculateDose
 
 End Sub
 
 Private Sub cmdConc_Click()
 
     ToggleConc
-    CalculateVolume
+    HandleEvent SolutionChange
+    ' CalculateVolume
     
 End Sub
 
@@ -1100,10 +1161,10 @@ Private Sub cmdQuery_Click()
         ClearDose
 
         m_Med.Route = cboRoute.Text
-        m_Med.MultipleUnit = cboDosisEenheid.Text
+        m_Med.MultipleUnit = cboMultipleQuantityUnit.Text
         
         ModWeb.Web_RetrieveMedicationRules m_Med
-        LoadMedicament False, False
+        HandleEvent DoseRulesChange
     End If
 
 End Sub
@@ -1133,38 +1194,38 @@ Private Sub cmdOK_Click()
     
         Set m_Med = New ClassMedDisc
         
-        m_Med.Generic = cboGeneriek.Value
-        m_Med.GenericQuantity = StringToDouble(txtSterkte.Value)
-        m_Med.GenericUnit = cboSterkteEenheid.Value
-        m_Med.Shape = cboVorm.Value
+        m_Med.Generic = cboGeneric.Value
+        m_Med.GenericQuantity = StringToDouble(txtGenericQuantity.Value)
+        m_Med.GenericUnit = cboGenericQuantityUnit.Value
+        m_Med.Shape = cboShape.Value
         
     End If
     
     m_Med.Route = cboRoute.Value
-    m_Med.Indication = cboIndicatie.Value
+    m_Med.Indication = cboIndication.Value
     
     m_Med.HasDose = chkDose.Value
     If m_Med.HasDose Then
-        m_Med.MultipleQuantity = StringToDouble(txtDeelDose.Value)
-        m_Med.MultipleUnit = cboDosisEenheid.Value
+        m_Med.MultipleQuantity = StringToDouble(txtMultipleQuantity.Value)
+        m_Med.MultipleUnit = cboMultipleQuantityUnit.Value
         
         m_Med.Freq = cboFreq.Value
-        m_Med.PerDose = chkPerDosis.Value
+        m_Med.PerDose = chkPerDose.Value
         m_Med.PerKg = optKg.Value
         m_Med.PerDose = optM2.Value
         
         m_Med.NormDose = StringToDouble(txtNormDose.Value)
         m_Med.MinDose = StringToDouble(txtMinDose.Value)
         m_Med.MaxDose = StringToDouble(txtMaxDose.Value)
-        m_Med.AbsMaxDose = StringToDouble(txtAbsMax.Value)
+        m_Med.AbsMaxDose = StringToDouble(txtAbsMaxDose.Value)
         m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
         
         m_Med.Substance = cboSubstance.Text
-        m_Med.KeerDose = StringToDouble(txtKeerDose.Value)
+        m_Med.AdminDose = StringToDouble(txtAdminDose.Value)
         
-        m_Med.Solution = cboOplVlst.Value
+        m_Med.Solution = cboSolutions.Value
         m_Med.MaxConc = StringToDouble(txtMaxConc.Value)
-        m_Med.SolutionVolume = StringToDouble(txtOplVol.Value)
+        m_Med.SolutionVolume = StringToDouble(txtSolutionVolume.Value)
         m_Med.MinInfusionTime = StringToDouble(txtTijd.Value)
         
     End If
@@ -1175,9 +1236,11 @@ End Sub
 
 Private Sub SetProductDose()
 
-    m_Med.Substance = cboSubstance.Text
-    m_Med.KeerDose = StringToDouble(txtKeerDose.Value)
-
+    If Not m_Med Is Nothing Then
+        m_Med.Substance = cboSubstance.Text
+        m_Med.AdminDose = StringToDouble(txtAdminDose.Value)
+    End If
+    
 End Sub
 
 Private Function GetProductDose() As String
@@ -1195,13 +1258,13 @@ Private Function GetProductDose() As String
     For Each objSubst In m_Med.Substances
         If objSubst.Substance = strSubst Then
             dblConc = objSubst.Concentration
-            strConc = cboSterkteEenheid.Text
+            strConc = cboGenericQuantityUnit.Text
             arrConc = Split(strConc, "/")
             If UBound(arrConc) = 1 Then strUnit = arrConc(1)
         End If
         
         If dblConc > 0 And Not strUnit = "" Then
-            dblQty = dblConc * StringToDouble(txtKeerDose.Text)
+            dblQty = dblConc * StringToDouble(txtAdminDose.Text)
             strText = strText & " (= " & cboFreq.Text & " " & dblQty & " " & strUnit & ")"
         End If
     Next
@@ -1244,19 +1307,19 @@ Private Sub optM2_Change()
 
 End Sub
 
-Private Sub txtAbsMax_AfterUpdate()
+Private Sub txtAbsMaxDose_AfterUpdate()
     
-    TextBoxStringNumericValue txtAbsMax
+    TextBoxStringNumericValue txtAbsMaxDose
 
 End Sub
 
-Private Sub txtAbsMax_Change()
+Private Sub txtAbsMaxDose_Change()
 
-    Validate vbNullString, True
+    HandleEvent DoseChange
 
 End Sub
 
-Private Sub txtAbsMax_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+Private Sub txtAbsMaxDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
     
     ModUtils.OnlyNumericAscii KeyAscii
 
@@ -1281,54 +1344,54 @@ Private Sub txtCalcDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
 End Sub
 
-Private Sub txtDeelDose_AfterUpdate()
+Private Sub txtMultipleQuantity_AfterUpdate()
 
-    TextBoxStringNumericValue txtDeelDose
+    TextBoxStringNumericValue txtMultipleQuantity
 
 End Sub
 
-Private Sub txtDeelDose_Change()
+Private Sub txtMultipleQuantity_Change()
 
     CalculateDose
 
 End Sub
 
-Private Sub txtDeelDose_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+Private Sub txtMultipleQuantity_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
     Validate vbNullString, False
 
 End Sub
 
-Private Sub cboVorm_Change()
+Private Sub cboShape_Change()
 
     Dim strValid As String
     
-    strValid = ValidateCombo(cboVorm)
-    Validate strValid, False
+    strValid = ValidateCombo(cboShape)
+    HandleEvent MedicationChange, strValid
 
 End Sub
 
-Private Sub txtDeelDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+Private Sub txtMultipleQuantity_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.OnlyNumericAscii KeyAscii
 
 End Sub
 
-Private Sub txtKeerDose_AfterUpdate()
+Private Sub txtAdminDose_AfterUpdate()
 
     Dim dblDeel As Double
     Dim dblKeer As Double
     
-    dblDeel = StringToDouble(txtDeelDose.Value)
-    dblKeer = StringToDouble(txtKeerDose.Value)
+    dblDeel = StringToDouble(txtMultipleQuantity.Value)
+    dblKeer = StringToDouble(txtAdminDose.Value)
     dblKeer = IIf(dblDeel > 0, ModExcel.Excel_RoundBy(dblKeer, dblDeel), dblKeer)
 
-    SetTextBoxNumericValue txtKeerDose, dblKeer
+    SetTextBoxNumericValue txtAdminDose, dblKeer
     
     If m_Keer Then CalculateDose
     
     If dblKeer = 0 Then
-        ModMessage.ShowMsgBoxExclam "Deze keerdosering kan niet met een deelbaarheid van " & txtDeelDose.Text
+        ModMessage.ShowMsgBoxExclam "Deze keerdosering kan niet met een deelbaarheid van " & txtMultipleQuantity.Text
     End If
     
     Validate vbNullString, False
@@ -1336,7 +1399,7 @@ Private Sub txtKeerDose_AfterUpdate()
 
 End Sub
 
-Private Sub txtKeerDose_Change()
+Private Sub txtAdminDose_Change()
 
     If m_Keer Then CalculateDose
     ApplySolution
@@ -1344,7 +1407,7 @@ Private Sub txtKeerDose_Change()
 
 End Sub
 
-Private Sub txtKeerDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+Private Sub txtAdminDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.OnlyNumericAscii KeyAscii
 
@@ -1356,7 +1419,7 @@ Private Sub txtMaxConc_Change()
 
 End Sub
 
-Private Sub txtOplVol_Change()
+Private Sub txtSolutionVolume_Change()
     
     CalculateVolume
 
@@ -1411,16 +1474,16 @@ Private Sub txtNormDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
 End Sub
 
-Private Sub txtSterkte_Change()
+Private Sub txtGenericQuantity_Change()
 
     Dim strGen As String
     Dim strSub As String
     
     strSub = Trim(LCase(cboSubstConc.Text))
-    strGen = Trim(LCase(cboGeneriek.Text))
+    strGen = Trim(LCase(cboGeneric.Text))
     
     If strSub = strGen Then
-        txtSubstConc.Value = txtSterkte.Value
+        txtSubstConc.Value = txtGenericQuantity.Value
     End If
     
 
@@ -1444,24 +1507,24 @@ Private Sub txtSubstConc_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
 End Sub
 
-Private Sub txtSterkte_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+Private Sub txtGenericQuantity_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
     Validate vbNullString, False
 
 End Sub
 
-Private Sub txtSterkte_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+Private Sub txtGenericQuantity_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModUtils.OnlyNumericAscii KeyAscii
 
 End Sub
 
-Private Sub cboSterkteEenheid_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+Private Sub cboGenericQuantityUnit_Exit(ByVal Cancel As MSForms.ReturnBoolean)
 
     Dim strValid As String
     
-    strValid = ValidateCombo(cboSterkteEenheid)
-    Validate strValid, False
+    strValid = ValidateCombo(cboGenericQuantityUnit)
+    HandleEvent MedicationChange, strValid
 
 End Sub
 
@@ -1479,7 +1542,7 @@ Private Sub UserForm_Activate()
     
     Validate vbNullString, False
     
-    cboGeneriek.SetFocus
+    cboGeneric.SetFocus
 
 End Sub
 
@@ -1488,6 +1551,7 @@ Private Sub LoadFreq()
     Dim varKey As Variant
     
     cboFreq.Clear
+    cboFreqTime.Clear
     
     If m_Freq Is Nothing Then
         Set m_Freq = ModMedDisc.MedDisc_GetMedicationFreqs()
@@ -1501,8 +1565,8 @@ End Sub
 
 Public Sub CaclculateWithKeerDose(ByVal dblKeer As Double)
 
-    txtKeerDose.Value = dblKeer
-    cmdKeerDose_Click
+    txtAdminDose.Value = dblKeer
+    cmdAdminDose_Click
 
 End Sub
 
@@ -1516,36 +1580,36 @@ Private Sub UserForm_Initialize()
     m_Keer = False
     m_Mail = False
     
-    m_TherapieGroep = lblTherapieGroep.Caption
-    m_SubGroep = lblSubGroep.Caption
+    m_TherapieGroep = lblMainGroup.Caption
+    m_SubGroep = lblSubGroup.Caption
     m_Etiket = lblEtiket.Caption
     m_Product = lblProduct.Caption
         
     Set objMedCol = Formularium_GetFormularium.GetMedicationCollection(False)
     For Each objMed In objMedCol
-        cboGeneriek.AddItem objMed.Generic
+        cboGeneric.AddItem objMed.Generic
     Next
     
     LoadFreq
-    FillCombo cboOplVlst, MedDisc_GetOplVlstCol()
+    FillCombo cboSolutions, MedDisc_GetOplVlstCol()
     
     optKg.Value = True
     
-    cboGeneriek.TabIndex = 0
-    cboVorm.TabIndex = 1
-    txtSterkte.TabIndex = 2
-    cboSterkteEenheid.TabIndex = 3
-    txtDeelDose.TabIndex = 4
-    cboDosisEenheid.TabIndex = 5
+    cboGeneric.TabIndex = 0
+    cboShape.TabIndex = 1
+    txtGenericQuantity.TabIndex = 2
+    cboGenericQuantityUnit.TabIndex = 3
+    txtMultipleQuantity.TabIndex = 4
+    cboMultipleQuantityUnit.TabIndex = 5
     cboRoute.TabIndex = 6
-    cboIndicatie.TabIndex = 7
+    cboIndication.TabIndex = 7
     
     cboFreq.TabIndex = 8
-    txtKeerDose.TabIndex = 9
+    txtAdminDose.TabIndex = 9
     txtNormDose.TabIndex = 10
     txtMinDose.TabIndex = 11
     txtMaxDose.TabIndex = 12
-    txtAbsMax.TabIndex = 13
+    txtAbsMaxDose.TabIndex = 13
     
     cmdFormularium.TabIndex = 14
     cmdOK.TabIndex = 15
@@ -1553,12 +1617,12 @@ Private Sub UserForm_Initialize()
     cmdCancel.TabIndex = 17
     
     cboDoseUnit.TabStop = False
-    cboKeerUnit.TabStop = False
+    cboAdminDoseUnit.TabStop = False
     txtCalcDose.TabStop = False
        
     cboDoseUnit.Enabled = False
-    txtKeerDose.Enabled = False
-    cboKeerUnit.Enabled = False
+    txtAdminDose.Enabled = False
+    cboAdminDoseUnit.Enabled = False
     txtMaxConc.Enabled = False
     
     chkDose.Value = True
@@ -1570,7 +1634,7 @@ End Sub
 
 Private Sub ToggleDoseText()
 
-    txtKeerDose.Enabled = m_Keer
+    txtAdminDose.Enabled = m_Keer
     txtNormDose.Enabled = Not m_Keer
 
 End Sub
@@ -1582,7 +1646,7 @@ Private Sub ToggleConc()
     m_Conc = Not m_Conc
     
     If m_Conc Then
-        txtOplVol.Value = 0
+        txtSolutionVolume.Value = 0
     Else
         txtMaxConc.Value = 0
     End If
@@ -1592,7 +1656,7 @@ Private Sub ToggleConc()
     cmdVol.Picture = objPic
 
     txtMaxConc.Enabled = m_Conc
-    txtOplVol.Enabled = Not m_Conc
+    txtSolutionVolume.Enabled = Not m_Conc
 
 End Sub
 

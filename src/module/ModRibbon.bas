@@ -173,6 +173,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnExportSource"                              ' -> Export To Source
             ModUtils.ExportForSourceControl
         
+        Case "btnToggleUseProdDB"                           ' -> Toggle Use of the Production Database
+            ModSetting.Setting_ToggleUseProductionDB
+        
         'grpFB                                              ' -- ADMISTRATION FUNCTIONEEL BEHEER --
         
         Case "btnOpenSettings"                              ' -> Instellingen

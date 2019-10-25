@@ -34,7 +34,7 @@ Private m_PerDose As Boolean
 Private m_PerKg As Boolean
 Private m_PerM2 As Boolean
 Private m_CalcDose As Double
-Private m_KeerDose As Double
+Private m_AdminDose As Double
 Private m_NormDose As Double
 Private m_MinDose As Double
 Private m_MaxDose As Double
@@ -179,19 +179,19 @@ Public Property Let CalcDose(ByVal dblDose As Double)
 
 End Property
 
-Public Property Get KeerDose() As Double
+Public Property Get AdminDose() As Double
 
-    KeerDose = m_KeerDose
+    AdminDose = m_AdminDose
 
 End Property
 
-Public Property Let KeerDose(ByVal dblDose As Double)
+Public Property Let AdminDose(ByVal dblDose As Double)
 
     Dim objSubst As ClassSubstance
     
     If m_Substances Is Nothing Then Exit Property
     
-    m_KeerDose = dblDose
+    m_AdminDose = dblDose
     For Each objSubst In m_Substances
         If objSubst.Substance = m_Substance And objSubst.Concentration > 0 Then
             ProductDose = dblDose / objSubst.Concentration
@@ -253,13 +253,13 @@ Public Property Get DoseText() As String
     Dim strProdUnit As String
     Dim objSubst As ClassSubstance
     
-    If m_KeerDose > 0 Then
+    If m_AdminDose > 0 Then
         intSubstCount = 0
         For Each objSubst In m_Substances
             If objSubst.Concentration > 0 Then
                 intSubstCount = intSubstCount + 1
                 If objSubst.Substance = m_Substance Then
-                    dblProdDose = m_KeerDose / objSubst.Concentration
+                    dblProdDose = m_AdminDose / objSubst.Concentration
                 End If
             End If
         Next
@@ -1048,7 +1048,7 @@ Public Function Clone() As ClassMedDisc
         .HasSolutions = HasSolutions
         .SetIndicationList Indications
         .IsActive = IsActive
-        .KeerDose = KeerDose
+        .AdminDose = AdminDose
         .Label = Label
         .MainGroup = MainGroup
         .MaxConc = MaxConc

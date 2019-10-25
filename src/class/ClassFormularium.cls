@@ -153,9 +153,12 @@ Public Function GPK(ByVal v_GPK As String) As ClassMedDisc
 
 End Function
 
-Public Function Item(ByVal v_intIndex As Integer) As ClassMedDisc
+Public Function GetMedication(ByVal intIndex As Integer) As ClassMedDisc
 
-    Set Item = m_MedicationCollection.Item(v_intIndex)
+    Dim objMed As ClassMedDisc
+    
+    Set objMed = m_MedicationCollection.Item(intIndex)
+    Set GetMedication = objMed.Clone()
     
 End Function
 

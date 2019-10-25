@@ -161,7 +161,7 @@ Private Sub Test_CanReadFormulariumDb()
     
     AssertEqual intCount, objForm.MedicamentCount, "Medicament count should be: " + CStr(intCount), Not blnDontDisplay
     
-    Set objMed = objForm.Item(100)
+    Set objMed = objForm.GetMedication(100)
     AssertTrue objMed.Generic <> vbNullString, "Medicament should have a generic name", Not blnDontDisplay
     
 End Sub

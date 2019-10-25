@@ -1912,7 +1912,9 @@ End Sub
 Public Sub Database_SaveConfigMedDisc()
     
     Dim strSql As String
-    Dim intVersion As Integer
+    Dim strMsg As String
+    Dim intOld As Integer
+    Dim intNew As Integer
     
     Dim objMedCol As Collection
     
@@ -1921,6 +1923,8 @@ Public Sub Database_SaveConfigMedDisc()
     Dim objDoseCol As Collection
     
     On Error GoTo ErrorHandler
+    
+    intOld = Util_GetLatestConfigMedDiscVersion()
       
     Set objMedCol = Formularium_GetFormularium.GetMedicationCollection(False)
     Set objDoseCol = Formularium_GetDoses(objMedCol, False)
@@ -1940,8 +1944,14 @@ Public Sub Database_SaveConfigMedDisc()
     
     ModProgress.FinishProgress
     
-    intVersion = Util_GetLatestConfigMedDiscVersion
-    ModMessage.ShowMsgBoxInfo "De discontinue medicatie is opgeslagen en de laatste versie is nu: " & intVersion
+    intNew = Util_GetLatestConfigMedDiscVersion()
+    If intOld = intNew Then
+        strMsg = "Opslaan is mislukt" & vbNewLine
+        
+        ModMessage.ShowMsgBoxInfo strMsg
+    Else
+        ModMessage.ShowMsgBoxInfo "De discontinue medicatie is opgeslagen en de laatste versie is nu: " & intNew
+    End If
     
     Exit Sub
     

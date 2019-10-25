@@ -21,6 +21,7 @@ Private Const constTestServer As String = "SettingTestServer"
 Private Const constTestDatabase As String = "SettingTestDB"
 Private Const constProdServer As String = "SettingProdServer"
 Private Const constProdDatabase As String = "SettingProdDB"
+Private Const constUseProdDB As String = "SettingUseProdDB"
 
 Private Const constPreData As String = vbNullString
 Private Const constPostData As String = "_Data"
@@ -77,9 +78,46 @@ Private Sub Test_Setting_UseDatabase()
 
 End Sub
 
+Public Function Setting_UseProductionDb() As Boolean
+
+    Setting_UseProductionDb = GetSetting(constUseProdDB)
+
+End Function
+
+Public Sub Setting_UseTestDB()
+
+    SetSetting constUseProdDB, False
+
+End Sub
+
+Public Sub Setting_ToggleUseProductionDB()
+    
+    Dim strMsg As String
+    Dim strDB As String
+    Dim strOld As String
+    
+    
+    Formularium_GetNewFormularium
+    App_LoadConfigTablesFromDatabase
+    SetSetting constUseProdDB, (Not GetSetting(constUseProdDB))
+    
+    strDB = IIf(Setting_UseProductionDb, "Productie Database", "Test Database")
+    strOld = IIf(Setting_UseProductionDb, "Test Database", "Productie Database")
+    
+    strMsg = "De " & strDB & " wordt gebruikt op: " & vbNewLine
+    strMsg = strMsg & Setting_GetServer() & vbNewLine
+    strMsg = strMsg & Setting_GetDatabase() & vbNewLine
+    strMsg = strMsg & vbNewLine
+    strMsg = strMsg & "De configuratie (medicatie en parenteralia) van de " & strOld & " is geladen"
+    
+    ModMessage.ShowMsgBoxInfo strMsg
+    App_UpdateStatusBar "Database", ModSetting.Setting_GetDatabase()
+
+End Sub
+
 Public Function Setting_GetServer() As String
 
-    If IsDevelopmentDir() Then
+    If (IsDevelopmentDir() Or IsTrainingDir()) And Not Setting_UseProductionDb() Then
         Setting_GetServer = GetSetting(constTestServer)
     Else
         Setting_GetServer = GetSetting(constProdServer)
@@ -89,7 +127,7 @@ End Function
 
 Public Function Setting_GetDatabase() As String
 
-    If IsDevelopmentDir() Or IsTrainingDir() Then
+    If (IsDevelopmentDir() Or IsTrainingDir()) And Not Setting_UseProductionDb() Then
         Setting_GetDatabase = GetSetting(constTestDatabase)
     Else
         Setting_GetDatabase = GetSetting(constProdDatabase)
@@ -149,6 +187,7 @@ Public Sub SetDevelopmentMode(ByVal blnMode As Boolean)
 
     SetSetting constDevMode, blnMode
     ModApplication.App_UpdateStatusBar "DevelopmentMode", IIf(blnMode, "Aan", "Uit")
+    If Not blnMode Then Setting_UseTestDB
 
 End Sub
 

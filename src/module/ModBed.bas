@@ -171,6 +171,75 @@ Private Sub Test_Bed_OpenBed()
 
 End Sub
 
+Public Sub Bed_Import(ByVal strHospNum As String)
+
+    Dim strFile As String
+    Dim strMsg As String
+    Dim strBed As String
+    Dim strBookName As String
+    Dim strRange As String
+    Dim strTitle As String
+    Dim objWbk As Workbook
+    Dim objPat As ClassPatientDetails
+    Dim blnAll As Boolean
+    Dim blnNeo As Boolean
+        
+    strFile = ModFile.GetFileWithDialog(WbkAfspraken.Path & "/../Data")
+    If strFile = "" Then Exit Sub
+        
+    strMsg = "Dit bestand importeren?" & vbNewLine & strFile
+    If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
+    
+    Set objWbk = Workbooks.Open(strFile, True, True)
+    strBookName = objWbk.Name
+    objWbk.Close
+    
+    strRange = "A1"
+    
+    ModProgress.StartProgress "Importeer patient"
+
+    If ModWorkBook.CopyWorkbookRangeToSheet(strFile, strBookName, strRange, shtGlobTemp, True) Then
+        strBed = ModMetaVision.MetaVision_GetPatientBed(vbNullString, strHospNum)
+        Bed_SetBed strBed
+        
+        If shtGlobTemp.Range("A1").CurrentRegion.Rows.Count <= 1 Then
+            ModPatient.Patient_ClearData vbNullString, False, True               ' Patient data was empty so clean all current data
+            
+            Patient_SetHospitalNumber strHospNum
+            Bed_SetBed strBed
+        End If
+        
+        blnAll = ModRange.CopyTempSheetToNamedRanges(True)
+        
+        Patient_SetHospitalNumber strHospNum
+        Set objPat = New ClassPatientDetails
+        ModMetaVision.MetaVision_GetPatientDetails objPat, vbNullString, strHospNum
+        Patient_WritePatientDetails objPat
+        
+        If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True       ' Make sure that infuusbrief data is updated
+        
+        If Not blnAll Then
+            If True Then
+                strTitle = FormProgress.Caption
+                ModProgress.FinishProgress
+            End If
+        
+            ModMessage.ShowMsgBoxExclam "Niet alle data kon worden teruggezet!" & vbNewLine & "Controleer de afspraken goed"
+        
+            If True Then ModProgress.StartProgress strTitle
+            
+            ModApplication.App_SetApplicationTitle
+        End If
+    End If
+
+    ModMetaVision.MetaVision_SyncLab
+    ModSheet.SelectPedOrNeoStartSheet False
+    
+    ModProgress.FinishProgress
+
+
+End Sub
+
 Public Sub Bed_CloseBed(ByVal blnAsk As Boolean)
 
     Dim strBed As String

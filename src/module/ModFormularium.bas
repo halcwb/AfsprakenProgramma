@@ -135,7 +135,7 @@ Public Function Formularium_GetFormularium() As ClassFormularium
 
 End Function
 
-Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As String, ByVal blnShowProgress As Boolean)
+Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As String)
 
     Dim intN As Integer
     Dim intC As Integer
@@ -162,16 +162,21 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
     Dim objDose As ClassDose
     Dim objSol As ClassSolution
     
+    Dim objGPK As Dictionary
+    Dim strMsg As String
+    
     On Error GoTo ErrorHandler
     
     blnIsPed = MetaVision_IsPICU()
     
     strSheet = "Medicatie"
     
-    If blnShowProgress Then ModProgress.StartProgress "Formularium importeren"
+    ModProgress.StartProgress "Formularium importeren"
     
     Application.DisplayAlerts = False
     ImprovePerf True
+    
+    Set objGPK = New Dictionary
     
     Set objWbk = Workbooks.Open(strFileName, True, True)
     objWbk.Windows(1).Visible = False
@@ -326,13 +331,24 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
             
         End With
                 
-        objFormularium.AddMedication objMed
+        If objGPK.Exists(objMed.GPK) Then
+            strMsg = "Dubbele GPK " & objMed.GPK & " voor: " & vbNewLine
+            strMsg = strMsg & objMed.Label & vbNewLine & vbNewLine
+            strMsg = strMsg & "Dit product zal niet worden opgeslagen!"
+            
+            ModLog.LogInfo strMsg
+            ModMessage.ShowMsgBoxExclam strMsg
+        Else
         
-        If blnShowProgress Then ModProgress.SetJobPercentage "Formularium laden", intC, intN
+            objGPK.Add objMed.GPK, vbNullString
+            objFormularium.AddMedication objMed
+        End If
+        
+        ModProgress.SetJobPercentage "Importeren", intC, intN
         
     Next intN
     
-    If blnShowProgress Then ModProgress.FinishProgress
+    ModProgress.FinishProgress
     
     objWbk.Windows(1).Visible = True
     objWbk.Close

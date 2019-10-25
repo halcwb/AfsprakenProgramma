@@ -58,6 +58,15 @@ Private Sub cmdCancel_Click()
 
 End Sub
 
+Private Sub cmdImport_Click()
+
+    m_Cancel = True
+    Me.Hide
+    
+    ModBed.Bed_Import GetSelectedHospNum()
+
+End Sub
+
 Private Sub cmdOK_Click()
 
     SetSelectedHospNumAndVersion
@@ -68,6 +77,9 @@ End Sub
 
 Private Sub lstPatienten_Click()
 
+    cmdImport.Enabled = True
+    cmdExport.Enabled = True
+    
     If Not m_LatestVersion Then
         LoadVersions
     End If
@@ -185,7 +197,6 @@ Public Sub LoadDbPatients(ByVal colPats As Collection, ByVal blnStandard As Bool
 End Sub
 
 Private Function GetSelectedHospNum() As String
-
     
     Dim objPat As ClassPatientDetails
     Dim strId As String
@@ -281,6 +292,9 @@ End Sub
 Private Sub UserForm_Activate()
 
     CenterForm
+    
+    cmdImport.Enabled = False
+    cmdExport.Enabled = False
 
 End Sub
 

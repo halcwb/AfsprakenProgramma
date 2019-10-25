@@ -394,7 +394,7 @@ Public Sub Admin_ParentImport()
     Dim lngErr As Long
     Dim strFile As String
     
-    strFile = ModFile.GetFileWithDialog
+    strFile = ModFile.GetFileWithDialog(WbkAfspraken.Path & "/db")
     If strFile = "" Then Exit Sub
     
     Dim strMsg As String
@@ -444,15 +444,15 @@ Public Sub Admin_MedDiscImport()
     Dim strFile As String
     Dim strMsg As String
     
-    strFile = ModFile.GetFileWithDialog
+    strFile = ModFile.GetFileWithDialog(WbkAfspraken.Path & "/db")
     If strFile = "" Then Exit Sub
         
     strMsg = "Dit bestand importeren?" & vbNewLine & strFile
     If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
         
-    Set objForm = Formularium_GetNewFormularium()
+    Set objForm = Formularium_GetFormularium()
     objForm.Reset
-    Formularium_Import objForm, strFile, True
+    Formularium_Import objForm, strFile
 
 End Sub
 
@@ -513,7 +513,7 @@ Public Sub Admin_MedContPedImport()
     strMsg = "Kies een Excel bestand met de PICU configuratie voor continue medicatie"
     ModMessage.ShowMsgBoxInfo strMsg
     
-    strFile = ModFile.GetFileWithDialog
+    strFile = ModFile.GetFileWithDialog(WbkAfspraken.Path & "/db")
         
     strMsg = "Dit bestand importeren?" & vbNewLine & strFile
     If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub
@@ -563,7 +563,7 @@ Private Sub Util_ParentContMedNeoPedImport(ByVal strTable, ByVal intTable As Con
     
     ModMessage.ShowMsgBoxInfo strMsg
     
-    strFile = ModFile.GetFileWithDialog
+    strFile = ModFile.GetFileWithDialog(WbkAfspraken.Path & "/db")
         
     strMsg = "Dit bestand importeren?" & vbNewLine & strFile
     If ModMessage.ShowMsgBoxYesNo(strMsg) = vbNo Then Exit Sub

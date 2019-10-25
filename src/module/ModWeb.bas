@@ -3,6 +3,7 @@ Option Explicit
 
 
 Private Const constHost = "http://vpxap-meta01.ds.umcutrecht.nl"
+Private Const constGenForm = "http://genform.nl"
 Private Const constUrl As String = "/request?age=AGE&wth=WTH&hgt=HGT&gpk=GPK&gen=GEN&shp=SHP&rte=RTE&unt=UNT"
 
 Public Sub Web_RetrieveMedicationRules(objMed As ClassMedDisc)
@@ -23,7 +24,7 @@ Public Sub Web_RetrieveMedicationRules(objMed As ClassMedDisc)
     Dim objClient As New WebClient
     Dim objResponse As WebResponse
     
-    objClient.BaseUrl = constHost & "/genform"
+    objClient.BaseUrl = constGenForm ' constHost & "/genform"
         
     strAge = Patient_CorrectedAgeInMo()
     
@@ -70,7 +71,7 @@ Private Sub Test_GetJson()
     Dim objResponse As WebResponse
     Dim objMed As New ClassMedDisc
     
-    objClient.BaseUrl = "http://iis2503.ds.umcutrecht.nl/genform"
+    objClient.BaseUrl = "http://genform.nl"
     
     Set objResponse = objClient.GetJson("/request?age=0&wth=1.0&hgt=50&gpk=3689&rte=iv")
     
@@ -93,16 +94,16 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedDisc)
     Set objDict = JsonConverter.ParseJson(strJson)
         
     objMed.ATC = NotEmpty(objMed.ATC, objDict("atc"))
-    objMed.MainGroup = NotEmpty(objMed.MainGroup, objDict("therapyGroup"))
-    objMed.SubGroup = NotEmpty(objMed.SubGroup, objDict("therapySubGroup"))
+    objMed.MainGroup = NotEmpty(objMed.MainGroup, objDict("therapygroup"))
+    objMed.SubGroup = NotEmpty(objMed.SubGroup, objDict("therapysubGroup"))
     objMed.Generic = NotEmpty(objMed.Generic, objDict("generic"))
-    objMed.Product = NotEmpty(objMed.Product, objDict("tradeProduct"))
+    objMed.Product = NotEmpty(objMed.Product, objDict("tradeproduct"))
     objMed.Shape = NotEmpty(objMed.Shape, objDict("shape"))
     objMed.Label = NotEmpty(objMed.Label, objDict("label"))
     objMed.GenericQuantity = NotEmpty(objMed.GenericQuantity, objDict("concentration"))
-    objMed.GenericUnit = NotEmpty(objMed.GenericUnit, objDict("concentrationUnit"))
+    objMed.GenericUnit = NotEmpty(objMed.GenericUnit, objDict("concentrationunit"))
     objMed.MultipleQuantity = NotEmpty(objMed.MultipleQuantity, objDict("multiple"))
-    objMed.MultipleUnit = NotEmpty(objMed.MultipleUnit, objDict("multipleUnit"))
+    objMed.MultipleUnit = NotEmpty(objMed.MultipleUnit, objDict("multipleunit"))
     objMed.Indication = NotEmpty(objMed.Indication, objDict("indication"))
         
     Set colJson = objDict("rules")
@@ -114,24 +115,24 @@ Private Sub ProcessJson(objResponse As WebResponse, objMed As ClassMedDisc)
         objRule.Substance = objDict("substance")
         objRule.Freq = objDict("frequency")
         
-        objRule.NormDose = objDict("normTotalDose")
-        objRule.MinDose = objDict("minTotalDose")
-        objRule.MaxDose = objDict("maxTotalDose")
-        objRule.MaxPerDose = objDict("maxPerDose")
-        objRule.AbsMaxDose = objDict("maxTotalDose")
+        objRule.NormDose = objDict("normtotaldose")
+        objRule.MinDose = objDict("mintotaldose")
+        objRule.MaxDose = objDict("maxtotaldose")
+        objRule.MaxPerDose = objDict("maxperdose")
+        objRule.AbsMaxDose = objDict("maxtotaldose")
         
-        If objDict("normTotalDosePerKg") > 0 Or objDict("minTotalDosePerKg") > 0 Or objDict("maxTotalDosePerKg") > 0 Then
+        If objDict("normtotaldoseperkg") > 0 Or objDict("mintotaldoseperkg") > 0 Or objDict("maxtotaldoseperkg") > 0 Then
             objRule.PerKg = True
-            objRule.NormDose = objDict("normTotalDosePerKg")
-            objRule.MinDose = objDict("minTotalDosePerKg")
-            objRule.MaxDose = objDict("maxTotalDosePerKg")
+            objRule.NormDose = objDict("normtotaldoseperkg")
+            objRule.MinDose = objDict("mintotaldoseperkg")
+            objRule.MaxDose = objDict("maxtotaldoseperkg")
         End If
             
-        If objDict("normTotalDosePerM2") > 0 Or objDict("minTotalDosePerM2") > 0 Or objDict("maxTotalDosePerM2") > 0 Then
+        If objDict("normtotaldoseperm2") > 0 Or objDict("mintotaldoseperm2") > 0 Or objDict("maxtotaldoseperm2") > 0 Then
             objRule.PerM2 = True
-            objRule.NormDose = objDict("normTotalDosePerM2")
-            objRule.MinDose = objDict("minTotalDosePerM2")
-            objRule.MaxDose = objDict("maxTotalDosePerM2")
+            objRule.NormDose = objDict("normtotaldoseperm2")
+            objRule.MinDose = objDict("mintotaldoseperm2")
+            objRule.MaxDose = objDict("maxtotaldoseperm2")
         End If
         
         If Not objMed.HasSubstance(objRule.Substance) Then objMed.AddSubstance objRule.Substance, 0

@@ -374,7 +374,7 @@ Private Sub GetPatientDetails(objPat As ClassPatientDetails)
     
 End Sub
 
-Private Sub WritePatientDetails(objPat As ClassPatientDetails)
+Public Sub Patient_WritePatientDetails(objPat As ClassPatientDetails)
 
     ModRange.SetRangeValue CONST_PATHOSPNUM_RANGE, objPat.HospitalNumber
     ModRange.SetRangeValue CONST_LASTNAME_RANGE, objPat.AchterNaam
@@ -411,7 +411,7 @@ Public Sub Patient_EnterDetails()
     frmPat.SetPatient objPat
     frmPat.Show
     
-    If Not frmPat.IsCanceled Then WritePatientDetails objPat
+    If Not frmPat.IsCanceled Then Patient_WritePatientDetails objPat
 
 End Sub
 
