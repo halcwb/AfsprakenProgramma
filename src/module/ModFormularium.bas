@@ -66,15 +66,17 @@ Private Const constDoseMinWeightKgIndx As Integer = 9
 Private Const constDoseMaxWeightKgIndx As Integer = 10
 Private Const constDoseMinGestDaysIndx As Integer = 11
 Private Const constDoseMaxGestDaysIndx As Integer = 12
-Private Const constDoseFrequenciesIndx As Integer = 13
-Private Const constDoseUnitIndx As Integer = 14
-Private Const constDoseNormDoseIndx As Integer = 15
-Private Const constDoseMinDoseIndx As Integer = 16
-Private Const constDoseMaxDoseIndx As Integer = 17
-Private Const constDoseAbsMaxDoseIndx As Integer = 18
-Private Const constDoseMaxPerDoseIndx As Integer = 19
-Private Const constDoseIsDosePerKgIndx As Integer = 20
-Private Const constDoseIsDosePerM2Indx As Integer = 21
+Private Const constDoseMinPMDaysIndx As Integer = 13
+Private Const constDoseMaxPMDaysIndx As Integer = 14
+Private Const constDoseFrequenciesIndx As Integer = 15
+Private Const constDoseUnitIndx As Integer = 16
+Private Const constDoseNormDoseIndx As Integer = 17
+Private Const constDoseMinDoseIndx As Integer = 18
+Private Const constDoseMaxDoseIndx As Integer = 19
+Private Const constDoseAbsMaxDoseIndx As Integer = 20
+Private Const constDoseMaxPerDoseIndx As Integer = 21
+Private Const constDoseIsDosePerKgIndx As Integer = 22
+Private Const constDoseIsDosePerM2Indx As Integer = 23
 
 Private Const constSolDepartmentIndx As Integer = 1
 Private Const constSolGenericIndx As Integer = 2
@@ -106,7 +108,6 @@ Public Sub Formularium_Initialize()
 
 End Sub
 
-
 Public Function Formularium_IsInitialized() As Boolean
 
     Formularium_IsInitialized = Not m_Formularium Is Nothing
@@ -137,11 +138,11 @@ End Function
 
 Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As String)
 
-    Dim intN As Integer
-    Dim intC As Integer
-    Dim intD As Integer
-    Dim intS As Integer
-    Dim intK As Integer
+    Dim lngN As Long
+    Dim lngC As Long
+    Dim lngD As Long
+    Dim lngS As Long
+    Dim lngK As Long
     
     Dim objFormRange As Range
     Dim arrDose As Variant
@@ -211,7 +212,7 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
             .SortFields.Add Key:=objDoseSheet.Range("A2"), Order:=xlAscending
             .SortFields.Add Key:=objDoseSheet.Range("D2"), Order:=xlAscending
             .SortFields.Add Key:=objDoseSheet.Range("C2"), Order:=xlAscending
-            .SetRange objDoseSheet.Range("A2:BW" & objDoseRange.Rows.Count)
+            .SetRange objDoseSheet.Range("A2:BY" & objDoseRange.Rows.Count)
             .Apply
         End With
     End If
@@ -229,30 +230,30 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
     
     shtGlobTemp.Unprotect ModConst.CONST_PASSWORD
             
-    intC = objFormRange.Rows.Count
-    For intN = 2 To intC
+    lngC = objFormRange.Rows.Count
+    For lngN = 2 To lngC
         Set objMed = New ClassMedDisc
         
         With objMed
             
-            .GPK = objFormRange.Cells(intN, constGPKIndx).Value2
-            .MainGroup = objFormRange.Cells(intN, constMainGroupIndx).Value2
-            .SubGroup = objFormRange.Cells(intN, constSubGroupIndx).Value2
+            .GPK = objFormRange.Cells(lngN, constGPKIndx).Value2
+            .MainGroup = objFormRange.Cells(lngN, constMainGroupIndx).Value2
+            .SubGroup = objFormRange.Cells(lngN, constSubGroupIndx).Value2
             
-            .ATC = objFormRange.Cells(intN, constATCIndx).Value2
-            .Generic = objFormRange.Cells(intN, constGenericIndx).Value2
-            .Product = objFormRange.Cells(intN, constProductIndx).Value2
-            .Shape = objFormRange.Cells(intN, constShapeIndx).Value2
-            .GenericQuantity = objFormRange.Cells(intN, constGenericQuantityIndx).Value2
-            .GenericUnit = objFormRange.Cells(intN, constGenericQuantityUnitIndx).Value2
-            .Label = objFormRange.Cells(intN, constLabelIndx).Value2
-            .MultipleQuantity = objFormRange.Cells(intN, constMultipleQuantityIndx).Value2
-            .MultipleUnit = objFormRange.Cells(intN, constMultipleQuantityUnitIndx).Value2
+            .ATC = objFormRange.Cells(lngN, constATCIndx).Value2
+            .Generic = objFormRange.Cells(lngN, constGenericIndx).Value2
+            .Product = objFormRange.Cells(lngN, constProductIndx).Value2
+            .Shape = objFormRange.Cells(lngN, constShapeIndx).Value2
+            .GenericQuantity = objFormRange.Cells(lngN, constGenericQuantityIndx).Value2
+            If IsNumeric(objFormRange.Cells(lngN, constGenericQuantityIndx).Value2) Then .GenericUnit = objFormRange.Cells(lngN, constGenericQuantityUnitIndx).Value2
+            .Label = objFormRange.Cells(lngN, constLabelIndx).Value2
+            If IsNumeric(objFormRange.Cells(lngN, constMultipleQuantityIndx).Value2) Then .MultipleQuantity = objFormRange.Cells(lngN, constMultipleQuantityIndx).Value2
+            .MultipleUnit = objFormRange.Cells(lngN, constMultipleQuantityUnitIndx).Value2
             
-            .SetRouteList objFormRange.Cells(intN, constRouteIndx).Value2
-            .SetIndicationList objFormRange.Cells(intN, constIndicationsIndx).Value2
-            .HasSolutions = IIf(Trim(objFormRange.Cells(intN, constHasSolutionsIndx).Value2) = "x", True, False)
-            .IsActive = IIf(Trim(objFormRange.Cells(intN, constIsActiveIndx).Value2) = "x", True, False)
+            .SetRouteList objFormRange.Cells(lngN, constRouteIndx).Value2
+            .SetIndicationList objFormRange.Cells(lngN, constIndicationsIndx).Value2
+            .HasSolutions = IIf(Trim(objFormRange.Cells(lngN, constHasSolutionsIndx).Value2) = "x", True, False)
+            .IsActive = IIf(Trim(objFormRange.Cells(lngN, constIsActiveIndx).Value2) = "x", True, False)
             
             If objMed.HasSolutions Then
             
@@ -266,21 +267,21 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
                 arrSol = shtGlobTemp.Range("A1").CurrentRegion.Value
                 shtGlobTemp.Range("A1").CurrentRegion.Clear
                 
-                intK = UBound(arrSol, 1)
-                For intS = 2 To intK
+                lngK = UBound(arrSol, 1)
+                For lngS = 2 To lngK
                     Set objSol = New ClassSolution
                     
                     With objSol
-                        objSol.Department = arrSol(intS, constSolDepartmentIndx)
+                        objSol.Department = arrSol(lngS, constSolDepartmentIndx)
                         objSol.Generic = objMed.Generic
                         objSol.Shape = objMed.Shape
-                        objSol.MinGenericQuantity = arrSol(intS, constSolMinGenericQuantityIndx)
-                        objSol.MaxGenericQuantity = arrSol(intS, constSolMaxGenericQuantityIndx)
-                        objSol.Solutions = arrSol(intS, constSolSolutionsIndx)
-                        objSol.SolutionVolume = arrSol(intS, constSolSolutionVolumeIndx)
-                        objSol.MinConc = arrSol(intS, constSolMinConcIndx)
-                        objSol.MaxConc = arrSol(intS, constSolMaxConcIndx)
-                        objSol.MinInfusionTime = arrSol(intS, constSolMinInfusionTimeIndx)
+                        If IsNumeric(arrSol(lngS, constSolMinGenericQuantityIndx)) Then objSol.MinGenericQuantity = arrSol(lngS, constSolMinGenericQuantityIndx)
+                        If IsNumeric(arrSol(lngS, constSolMaxGenericQuantityIndx)) Then objSol.MaxGenericQuantity = arrSol(lngS, constSolMaxGenericQuantityIndx)
+                        objSol.Solutions = arrSol(lngS, constSolSolutionsIndx)
+                        If IsNumeric(arrSol(lngS, constSolSolutionVolumeIndx)) Then objSol.SolutionVolume = arrSol(lngS, constSolSolutionVolumeIndx)
+                        If IsNumeric(arrSol(lngS, constSolMinConcIndx)) Then objSol.MinConc = arrSol(lngS, constSolMinConcIndx)
+                        If IsNumeric(arrSol(lngS, constSolMaxConcIndx)) Then objSol.MaxConc = arrSol(lngS, constSolMaxConcIndx)
+                        If IsNumeric(arrSol(lngS, constSolMinInfusionTimeIndx)) Then objSol.MinInfusionTime = arrSol(lngS, constSolMinInfusionTimeIndx)
                     End With
                     
                     objMed.AddSolution objSol
@@ -298,32 +299,34 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
             arrDose = shtGlobTemp.Range("A1").CurrentRegion.Value
             shtGlobTemp.Range("A1").CurrentRegion.Clear
             
-            intK = UBound(arrDose, 1)
-            For intD = 2 To intK
+            lngK = UBound(arrDose, 1)
+            For lngD = 2 To lngK
                 Set objDose = New ClassDose
                 
                 With objDose
-                    .Department = arrDose(intD, constDoseDepartmentIndx)
-                    .Generic = arrDose(intD, constDoseGenericIndx)
-                    .Shape = arrDose(intD, constDoseShapeIndx)
-                    .Route = arrDose(intD, constDoseRouteIndx)
-                    .Indication = arrDose(intD, constDoseIndicationIndx)
-                    .Gender = arrDose(intD, constDoseGenderIndx)
-                    .MinAgeMo = arrDose(intD, constDoseMinAgeMoIndx)
-                    .MaxAgeMo = arrDose(intD, constDoseMaxAgeMoIndx)
-                    .MinWeightKg = arrDose(intD, constDoseMinWeightKgIndx)
-                    .MaxWeightKg = arrDose(intD, constDoseMaxWeightKgIndx)
-                    .MinGestDays = arrDose(intD, constDoseMinGestDaysIndx)
-                    .MaxGestDays = arrDose(intD, constDoseMaxGestDaysIndx)
-                    .Frequencies = arrDose(intD, constDoseFrequenciesIndx)
+                    .Department = arrDose(lngD, constDoseDepartmentIndx)
+                    .Generic = arrDose(lngD, constDoseGenericIndx)
+                    .Shape = arrDose(lngD, constDoseShapeIndx)
+                    .Route = arrDose(lngD, constDoseRouteIndx)
+                    .Indication = arrDose(lngD, constDoseIndicationIndx)
+                    .Gender = arrDose(lngD, constDoseGenderIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMinAgeMoIndx)) Then .MinAgeMo = arrDose(lngD, constDoseMinAgeMoIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMaxAgeMoIndx)) Then .MaxAgeMo = arrDose(lngD, constDoseMaxAgeMoIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMinWeightKgIndx)) Then .MinWeightKg = arrDose(lngD, constDoseMinWeightKgIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMaxWeightKgIndx)) Then .MaxWeightKg = arrDose(lngD, constDoseMaxWeightKgIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMinGestDaysIndx)) Then .MinGestDays = arrDose(lngD, constDoseMinGestDaysIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMaxGestDaysIndx)) Then .MaxGestDays = arrDose(lngD, constDoseMaxGestDaysIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMinPMDaysIndx)) Then .MinPMDays = arrDose(lngD, constDoseMinPMDaysIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMaxPMDaysIndx)) Then .MaxPMDays = arrDose(lngD, constDoseMaxPMDaysIndx)
+                    .Frequencies = arrDose(lngD, constDoseFrequenciesIndx)
                     .Unit = objMed.MultipleUnit
-                    .NormDose = arrDose(intD, constDoseNormDoseIndx)
-                    .MinDose = arrDose(intD, constDoseMinDoseIndx)
-                    .MaxDose = arrDose(intD, constDoseMaxDoseIndx)
-                    .AbsMaxDose = arrDose(intD, constDoseAbsMaxDoseIndx)
-                    .MaxPerDose = arrDose(intD, constDoseMaxPerDoseIndx)
-                    .IsDosePerKg = Trim(arrDose(intD, constDoseIsDosePerKgIndx)) = "x"
-                    .IsDosePerM2 = Trim(arrDose(intD, constDoseIsDosePerM2Indx)) = "x"
+                    If IsNumeric(arrDose(lngD, constDoseNormDoseIndx)) Then .NormDose = arrDose(lngD, constDoseNormDoseIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMinDoseIndx)) Then .MinDose = arrDose(lngD, constDoseMinDoseIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMaxDoseIndx)) Then .MaxDose = arrDose(lngD, constDoseMaxDoseIndx)
+                    If IsNumeric(arrDose(lngD, constDoseAbsMaxDoseIndx)) Then .AbsMaxDose = arrDose(lngD, constDoseAbsMaxDoseIndx)
+                    If IsNumeric(arrDose(lngD, constDoseMaxPerDoseIndx)) Then .MaxPerDose = arrDose(lngD, constDoseMaxPerDoseIndx)
+                    .IsDosePerKg = Trim(arrDose(lngD, constDoseIsDosePerKgIndx)) = "x"
+                    .IsDosePerM2 = Trim(arrDose(lngD, constDoseIsDosePerM2Indx)) = "x"
                 End With
                 
                 objMed.AddDose objDose
@@ -344,9 +347,11 @@ Public Sub Formularium_Import(objFormularium As ClassFormularium, strFileName As
             objFormularium.AddMedication objMed
         End If
         
-        ModProgress.SetJobPercentage "Importeren", intC, intN
+        ModProgress.SetJobPercentage "Importeren", lngC, lngN
+        strMsg = Now() & ": " & objMed.Label
+        If GetIsLoggingEnabled() Then ModLog.LogInfo strMsg
         
-    Next intN
+    Next lngN
     
     ModProgress.FinishProgress
     
@@ -409,6 +414,8 @@ Public Function Formularium_GetDoses(objMedCol As Collection, blnAll As Boolean)
                     blnContains = blnContains And (objItem.MaxWeightKg = objDose.MaxWeightKg)
                     blnContains = blnContains And (objItem.MinGestDays = objDose.MinGestDays)
                     blnContains = blnContains And (objItem.MaxGestDays = objDose.MaxGestDays)
+                    blnContains = blnContains And (objItem.MinPMDays = objDose.MinPMDays)
+                    blnContains = blnContains And (objItem.MaxPMDays = objDose.MaxPMDays)
                     
                     If blnContains Then Exit For
                 Next
@@ -586,6 +593,8 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
         .Cells(1, constDoseMaxWeightKgIndx).Value2 = "MaxGewichtKg"
         .Cells(1, constDoseMinGestDaysIndx).Value2 = "MinGestDagen"
         .Cells(1, constDoseMaxGestDaysIndx).Value2 = "MaxGestDagen"
+        .Cells(1, constDoseMinPMDaysIndx).Value2 = "MinPMDagen"
+        .Cells(1, constDoseMaxPMDaysIndx).Value2 = "MaxPMDagen"
         .Cells(1, constDoseFrequenciesIndx).Value2 = "Frequenties"
         .Cells(1, constDoseUnitIndx).Value2 = "Eenheid"
         .Cells(1, constDoseNormDoseIndx).Value2 = "NormDose"
@@ -706,6 +715,8 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             If .MaxWeightKg > 0 Then objDoseSheet.Cells(intD, constDoseMaxWeightKgIndx).Value2 = .MaxWeightKg
             If .MinGestDays > 0 Then objDoseSheet.Cells(intD, constDoseMinGestDaysIndx).Value2 = .MinGestDays
             If .MaxGestDays > 0 Then objDoseSheet.Cells(intD, constDoseMaxGestDaysIndx).Value2 = .MaxGestDays
+            If .MinPMDays > 0 Then objDoseSheet.Cells(intD, constDoseMinPMDaysIndx).Value2 = .MinPMDays
+            If .MaxPMDays > 0 Then objDoseSheet.Cells(intD, constDoseMaxPMDaysIndx).Value2 = .MaxPMDays
             objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Value2 = .Frequencies
             objDoseSheet.Cells(intD, constDoseUnitIndx).Value2 = .Unit
             
@@ -718,12 +729,6 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             objDoseSheet.Cells(intD, constDoseIsDosePerM2Indx).Value2 = IIf(.IsDosePerM2, "x", vbNullString)
         
             intK = intF
-            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "W")
-            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-            intK = intK + 1
-            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "X")
-            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
-            intK = intK + 1
             strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "Y")
             objDoseSheet.Cells(intD, intK).Formula = strFreqForm
             intK = intK + 1
@@ -796,10 +801,14 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AV")
             objDoseSheet.Cells(intD, intK).Formula = strFreqForm
             intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AW")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
+            strFreqForm = Replace(Replace(constDoseFreqFormula, "{2}", intD), "{W}", "AX")
+            objDoseSheet.Cells(intD, intK).Formula = strFreqForm
+            intK = intK + 1
 
-            strConcat = "=IF(AW" & intD & "<>"""",AW" & intD & "&""||"","""")"
-            strConcat = strConcat & "&IF(AX" & intD & "<>"""",AX" & intD & "&""||"","""")"
-            strConcat = strConcat & "&IF(AY" & intD & "<>"""",AY" & intD & "&""||"","""")"
+            strConcat = "=IF(AY" & intD & "<>"""",AY" & intD & "&""||"","""")"
             strConcat = strConcat & "&IF(AZ" & intD & "<>"""",AZ" & intD & "&""||"","""")"
             strConcat = strConcat & "&IF(BA" & intD & "<>"""",BA" & intD & "&""||"","""")"
             strConcat = strConcat & "&IF(BB" & intD & "<>"""",BB" & intD & "&""||"","""")"
@@ -823,90 +832,92 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             strConcat = strConcat & "&IF(BT" & intD & "<>"""",BT" & intD & "&""||"","""")"
             strConcat = strConcat & "&IF(BU" & intD & "<>"""",BU" & intD & "&""||"","""")"
             strConcat = strConcat & "&IF(BV" & intD & "<>"""",BV" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BW" & intD & "<>"""",BW" & intD & "&""||"","""")"
+            strConcat = strConcat & "&IF(BX" & intD & "<>"""",BX" & intD & "&""||"","""")"
             objDoseSheet.Cells(intD, intK).Formula = strConcat
             
-            objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Formula = "=IFERROR(IF(LEN(BW" & intD & ">0),MID(BW" & intD & ",1,LEN(BW" & intD & ")-2),""""),"""")"
+            objDoseSheet.Cells(intD, constDoseFrequenciesIndx).Formula = "=IFERROR(IF(LEN(BY" & intD & ">0),MID(BY" & intD & ",1,LEN(BY" & intD & ")-2),""""),"""")"
             
             arrFreq = Split(objDose.Frequencies, "||")
             For Each varFreq In arrFreq
                 Select Case varFreq
                     Case constDoseFreq_AN
-                        objDoseSheet.Cells(intD, 23).Value2 = "x"
+                        objDoseSheet.Cells(intD, 25).Value2 = "x"
                         
                     Case constDoseFreq_1D
-                        objDoseSheet.Cells(intD, 24).Value2 = "x"
-                
-                    Case constDoseFreq_2D
-                        objDoseSheet.Cells(intD, 25).Value2 = "x"
-                
-                    Case constDoseFreq_3D
                         objDoseSheet.Cells(intD, 26).Value2 = "x"
                 
-                    Case constDoseFreq_4D
+                    Case constDoseFreq_2D
                         objDoseSheet.Cells(intD, 27).Value2 = "x"
                 
-                    Case constDoseFreq_5D
+                    Case constDoseFreq_3D
                         objDoseSheet.Cells(intD, 28).Value2 = "x"
                 
-                    Case constDoseFreq_6D
+                    Case constDoseFreq_4D
                         objDoseSheet.Cells(intD, 29).Value2 = "x"
                 
-                    Case constDoseFreq_7D
+                    Case constDoseFreq_5D
                         objDoseSheet.Cells(intD, 30).Value2 = "x"
                 
-                    Case constDoseFreq_8D
+                    Case constDoseFreq_6D
                         objDoseSheet.Cells(intD, 31).Value2 = "x"
                 
-                    Case constDoseFreq_9D
+                    Case constDoseFreq_7D
                         objDoseSheet.Cells(intD, 32).Value2 = "x"
                 
-                    Case constDoseFreq_10D
+                    Case constDoseFreq_8D
                         objDoseSheet.Cells(intD, 33).Value2 = "x"
                 
-                    Case constDoseFreq_11D
+                    Case constDoseFreq_9D
                         objDoseSheet.Cells(intD, 34).Value2 = "x"
                 
-                    Case constDoseFreq_12D
+                    Case constDoseFreq_10D
                         objDoseSheet.Cells(intD, 35).Value2 = "x"
                 
-                    Case constDoseFreq_24D
+                    Case constDoseFreq_11D
                         objDoseSheet.Cells(intD, 36).Value2 = "x"
                 
-                    Case constDoseFreq_1D2
+                    Case constDoseFreq_12D
                         objDoseSheet.Cells(intD, 37).Value2 = "x"
                 
-                    Case constDoseFreq_1D3
+                    Case constDoseFreq_24D
                         objDoseSheet.Cells(intD, 38).Value2 = "x"
                 
-                    Case constDoseFreq_1U36
+                    Case constDoseFreq_1D2
                         objDoseSheet.Cells(intD, 39).Value2 = "x"
                 
-                    Case constDoseFreq_1W
+                    Case constDoseFreq_1D3
                         objDoseSheet.Cells(intD, 40).Value2 = "x"
                 
-                    Case constDoseFreq_2W
+                    Case constDoseFreq_1U36
                         objDoseSheet.Cells(intD, 41).Value2 = "x"
                 
-                    Case constDoseFreq_3W
+                    Case constDoseFreq_1W
                         objDoseSheet.Cells(intD, 42).Value2 = "x"
                 
-                    Case constDoseFreq_4W
+                    Case constDoseFreq_2W
                         objDoseSheet.Cells(intD, 43).Value2 = "x"
                 
-                    Case constDoseFreq_1W2
+                    Case constDoseFreq_3W
                         objDoseSheet.Cells(intD, 44).Value2 = "x"
                 
-                    Case constDoseFreq_1W4
+                    Case constDoseFreq_4W
                         objDoseSheet.Cells(intD, 45).Value2 = "x"
                 
-                    Case constDoseFreq_1W12
+                    Case constDoseFreq_1W2
                         objDoseSheet.Cells(intD, 46).Value2 = "x"
                 
-                    Case constDoseFreq_1W13
+                    Case constDoseFreq_1W4
                         objDoseSheet.Cells(intD, 47).Value2 = "x"
                 
-                    Case constDoseFreq_1M
+                    Case constDoseFreq_1W12
                         objDoseSheet.Cells(intD, 48).Value2 = "x"
+                
+                    Case constDoseFreq_1W13
+                        objDoseSheet.Cells(intD, 49).Value2 = "x"
+                
+                    Case constDoseFreq_1M
+                        objDoseSheet.Cells(intD, 50).Value2 = "x"
                                 
                 End Select
                 
@@ -968,7 +979,7 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
             .SortFields.Add Key:=objDoseSheet.Range("A2"), Order:=xlAscending
             .SortFields.Add Key:=objDoseSheet.Range("D2"), Order:=xlAscending
             .SortFields.Add Key:=objDoseSheet.Range("C2"), Order:=xlAscending
-            .SetRange objDoseSheet.Range("A2:BW" & objDoseRange.Rows.Count)
+            .SetRange objDoseSheet.Range("A2:BY" & objDoseRange.Rows.Count)
             .Apply
         End With
     End If

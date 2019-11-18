@@ -163,7 +163,7 @@ End Property
 
 Public Property Let MaxPerDose(ByVal dblDose As Double)
 
-    m_MaxPerDose = dblDose
+    m_MaxPerDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -175,7 +175,7 @@ End Property
 
 Public Property Let CalcDose(ByVal dblDose As Double)
 
-    m_CalcDose = dblDose
+    m_CalcDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -189,7 +189,7 @@ Public Property Let AdminDose(ByVal dblDose As Double)
 
     Dim objSubst As ClassSubstance
     
-    If m_Substances Is Nothing Then Exit Property
+    If m_Substances Is Nothing Or dblDose < 0 Then Exit Property
     
     m_AdminDose = dblDose
     For Each objSubst In m_Substances
@@ -214,7 +214,7 @@ End Property
 
 Public Sub SetFreqList(ByVal strFreqList As String)
 
-    m_Freqs = strFreqList
+    m_Freqs = Trim(strFreqList)
     FillCollection m_FreqList, strFreqList
 
 End Sub
@@ -289,7 +289,7 @@ End Property
 
 Public Property Let DoseText(ByVal strDoseText As String)
 
-    m_DoseText = strDoseText
+    m_DoseText = Trim(strDoseText)
 
 End Property
 
@@ -301,7 +301,7 @@ End Property
 
 Public Property Let Substance(ByVal strSubstance As String)
 
-    m_Substance = strSubstance
+    m_Substance = Trim(strSubstance)
 
 End Property
 
@@ -319,7 +319,7 @@ End Property
 
 Public Property Let Freq(ByVal strFreq As String)
 
-    m_Freq = strFreq
+    m_Freq = Trim(strFreq)
 
 End Property
 
@@ -331,7 +331,7 @@ End Property
 
 Public Property Let MaxConc(ByVal dblConc As Double)
 
-    m_MaxConc = dblConc
+    m_MaxConc = IIf(dblConc < 0, 0, dblConc)
 
 End Property
 
@@ -343,7 +343,7 @@ End Property
 
 Public Property Let Solution(ByVal strVlst As String)
 
-    m_Solution = strVlst
+    m_Solution = Trim(strVlst)
 
 End Property
 
@@ -355,7 +355,7 @@ End Property
 
 Public Property Let SolutionVolume(ByVal dblVol As Double)
 
-    m_SolutionVolume = dblVol
+    m_SolutionVolume = IIf(dblVol < 0, 0, dblVol)
 
 End Property
 
@@ -379,7 +379,7 @@ End Property
 
 Public Property Let MinDose(ByVal dblDose As Double)
 
-    m_MinDose = dblDose
+    m_MinDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -391,7 +391,7 @@ End Property
 
 Public Property Let AbsMaxDose(ByVal dblDose As Double)
 
-    m_AbsMaxDose = dblDose
+    m_AbsMaxDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -403,7 +403,7 @@ End Property
 
 Public Property Let GPK(ByVal strGPK As String)
 
-    m_GPK = strGPK
+    m_GPK = Trim(strGPK)
 
 End Property
 
@@ -415,7 +415,7 @@ End Property
 
 Public Property Let ATC(ByVal strATC As String)
 
-    m_ATC = strATC
+    m_ATC = Trim(strATC)
 
 End Property
 
@@ -427,7 +427,7 @@ End Property
 
 Public Property Let Product(ByVal strProduct As String)
 
-    m_Product = strProduct
+    m_Product = Trim(strProduct)
 
 End Property
 
@@ -439,7 +439,7 @@ End Property
 
 Public Property Let MainGroup(ByVal strTherapieGroep As String)
 
-    m_MainGroup = strTherapieGroep
+    m_MainGroup = Trim(strTherapieGroep)
 
 End Property
 
@@ -451,7 +451,7 @@ End Property
 
 Public Property Let SubGroup(ByVal strTherapieSubgroep As String)
 
-    m_SubGroup = strTherapieSubgroep
+    m_SubGroup = Trim(strTherapieSubgroep)
 
 End Property
 
@@ -503,7 +503,7 @@ End Property
 
 Public Property Let Shape(ByVal strShape As String)
     
-    m_Shape = strShape
+    m_Shape = Trim(strShape)
 
 End Property
 
@@ -515,7 +515,7 @@ End Property
 
 Public Property Let Route(ByVal strRoute As String)
 
-    m_Route = strRoute
+    m_Route = Trim(strRoute)
 
 End Property
 
@@ -531,9 +531,9 @@ Public Property Get GenericQuantity() As Double
 
 End Property
 
-Public Property Let GenericQuantity(ByVal strSterkte As Double)
+Public Property Let GenericQuantity(ByVal dblQty As Double)
 
-    m_GenericQuantity = strSterkte
+    m_GenericQuantity = IIf(dblQty < 0, 0, dblQty)
 
 End Property
 
@@ -543,9 +543,9 @@ Public Property Get GenericUnit() As String
 
 End Property
 
-Public Property Let GenericUnit(ByVal strSterkteEenheid As String)
+Public Property Let GenericUnit(ByVal strUnit As String)
 
-    m_GenericUnit = strSterkteEenheid
+    m_GenericUnit = Trim(strUnit)
 
 End Property
 
@@ -557,7 +557,7 @@ End Property
 
 Public Property Let MultipleQuantity(ByVal dblDose As Double)
 
-    m_MultipleQuantity = dblDose
+    m_MultipleQuantity = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -567,9 +567,9 @@ Public Property Get MultipleUnit() As String
 
 End Property
 
-Public Property Let MultipleUnit(ByVal strDosisEenheid As String)
+Public Property Let MultipleUnit(ByVal strUnit As String)
 
-    m_MultipleUnit = strDosisEenheid
+    m_MultipleUnit = Trim(strUnit)
 
 End Property
 
@@ -587,7 +587,7 @@ End Property
 
 Public Property Let Indication(ByVal strIndicatie As String)
 
-    m_Indication = Strings.LCase(strIndicatie)
+    m_Indication = Strings.LCase(Trim(strIndicatie))
 
 End Property
 
@@ -617,8 +617,8 @@ End Sub
 
 Public Sub SetRouteList(ByVal strRoutes As String)
 
-    m_Routes = strRoutes
-    FillCollection m_RouteList, strRoutes
+    m_Routes = Trim(strRoutes)
+    FillCollection m_RouteList, m_Routes
 
 End Sub
 
@@ -630,9 +630,9 @@ End Function
 
 Public Sub SetIndicationList(ByVal strIndicaties As String)
     
-    m_Indications = strIndicaties
-    m_Indication = strIndicaties
-    FillCollection m_IndicationList, strIndicaties
+    m_Indications = Trim(strIndicaties)
+    m_Indication = m_Indications
+    FillCollection m_IndicationList, m_Indications
     
 End Sub
 
@@ -725,7 +725,7 @@ End Function
 
 Public Sub SetTallMan(ByVal strTallMan As String)
 
-    m_TallMan = strTallMan
+    m_TallMan = Trim(strTallMan)
 
 End Sub
 
@@ -829,7 +829,9 @@ Public Sub AddDose(ByVal objDose As ClassDose)
                                  objDose.MinWeightKg, _
                                  objDose.MaxWeightKg, _
                                  objDose.MinGestDays, _
-                                 objDose.MaxGestDays)
+                                 objDose.MaxGestDays, _
+                                 objDose.MinPMDays, _
+                                 objDose.MaxPMDays)
     
     With objItem
         .Frequencies = objDose.Frequencies
@@ -846,7 +848,7 @@ Public Sub AddDose(ByVal objDose As ClassDose)
 
 End Sub
 
-Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal dblAge As Double, ByVal lngGestDays As Long, ByVal dblWeight As Double) As ClassDose
+Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal dblAge As Double, ByVal lngGestDays As Long, ByVal lngPMAge As Long, ByVal dblWeight As Double) As ClassDose
 
     Dim objDose As ClassDose
     Dim blnIsDose
@@ -856,6 +858,7 @@ Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal
     Debug.Print "Gender: " & strGender
     Debug.Print "Age: " & dblAge
     Debug.Print "GestAge: " & lngGestDays
+    Debug.Print "PMAge: " & lngPMAge
     Debug.Print "Weight: " & dblWeight
     Debug.Print "Indicatation: " & Indication
     Debug.Print "Route: " & Route & vbNewLine
@@ -869,9 +872,10 @@ Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal
             blnIsDose = True
             blnIsDose = blnIsDose And (strDep = vbNullString Or LCase(objDose.Department) = LCase(strDep))
             blnIsDose = blnIsDose And (strGender = vbNullString Or LCase(objDose.Gender) = LCase(strGender))
-            blnIsDose = blnIsDose And (dblAge = 0 Or dblAge > objDose.MinAgeMo And (objDose.MaxAgeMo = 0 Or dblAge <= objDose.MaxAgeMo))
-            blnIsDose = blnIsDose And (dblWeight = 0 Or dblWeight > objDose.MinWeightKg And (objDose.MaxWeightKg = 0 Or dblWeight <= objDose.MaxWeightKg))
-            blnIsDose = blnIsDose And (lngGestDays = 0 Or lngGestDays > objDose.MinGestDays And (objDose.MaxGestDays = 0 Or lngGestDays <= objDose.MaxGestDays))
+            blnIsDose = blnIsDose And (dblAge >= objDose.MinAgeMo And (objDose.MaxAgeMo = 0 Or dblAge < objDose.MaxAgeMo))
+            blnIsDose = blnIsDose And (dblWeight = 0 Or dblWeight >= objDose.MinWeightKg And (objDose.MaxWeightKg = 0 Or dblWeight < objDose.MaxWeightKg))
+            blnIsDose = blnIsDose And (lngGestDays = 0 Or lngGestDays >= objDose.MinGestDays And (objDose.MaxGestDays = 0 Or lngGestDays < objDose.MaxGestDays))
+            blnIsDose = blnIsDose And (lngPMAge = 0 Or lngPMAge >= objDose.MinPMDays And (objDose.MaxPMDays = 0 Or lngPMAge < objDose.MaxPMDays))
             
             blnIsDose = blnIsDose And (Trim(LCase(Me.Indication)) = Trim(LCase(objDose.Indication)))
             blnIsDose = blnIsDose And (Trim(LCase(Me.Route)) = Trim(LCase(objDose.Route)))
@@ -898,7 +902,9 @@ Private Function GetSimilarDose(ByVal strDep As String, _
                                 ByVal dblMinWeight As Double, _
                                 ByVal dblMaxWeight As Double, _
                                 ByVal intMinGest As Integer, _
-                                ByVal intMaxGest As Integer) As ClassDose
+                                ByVal intMaxGest As Integer, _
+                                ByVal intMinPM As Integer, _
+                                ByVal intMaxPM As Integer) As ClassDose
 
     Dim objDose As ClassDose
     
@@ -912,7 +918,9 @@ Private Function GetSimilarDose(ByVal strDep As String, _
            And objDose.MinWeightKg = dblMinWeight _
            And objDose.MaxWeightKg = dblMaxWeight _
            And objDose.MinGestDays = intMinGest _
-           And objDose.MaxGestDays = intMaxGest Then
+           And objDose.MaxGestDays = intMaxGest _
+           And objDose.MinPMDays = intMinPM _
+           And objDose.MaxPMDays = intMaxPM Then
            
             Set GetSimilarDose = objDose
             Exit For
@@ -935,6 +943,8 @@ Private Function GetSimilarDose(ByVal strDep As String, _
         .MaxWeightKg = dblMaxWeight
         .MinGestDays = intMinGest
         .MaxGestDays = intMaxGest
+        .MinPMDays = intMinPM
+        .MaxPMDays = intMaxPM
     End With
     
     If Not ModString.StringIsZeroOrEmpty(objDose.Generic) _

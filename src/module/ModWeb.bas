@@ -189,3 +189,13 @@ Private Sub Test_NotEmpty()
     ModMessage.ShowMsgBoxInfo NotEmpty(1, 0)
 
 End Sub
+
+Public Sub Web_OpenLinkToRenalFailureDrugs()
+
+    Dim strUrl As String
+    
+    strUrl = "https://kdpnet.kdp.louisville.edu/drugbook/pediatric/"
+    
+    ActiveWorkbook.FollowHyperlink strUrl
+    
+End Sub

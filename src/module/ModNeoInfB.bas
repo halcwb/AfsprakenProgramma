@@ -188,7 +188,7 @@ Public Sub NeoInfB_SelectInfB(ByVal bln1700 As Boolean, ByVal blnStartProgress A
     ElseIf Not bln1700 And Is1700() Then         ' Infb is currently 1700
         If blnStartProgress Then ModProgress.StartProgress "Infuus brief klaar maken"
         
-        CopyVarData True, False, True   ' First copy var data to act data
+        CopyVarData True, False, True   ' First copy var data to 1700 data
         CopyVarData False, True, True   ' Then copy act data to var data
         shtNeoBerInfB.Range(constInfbVersie).Value2 = constActInfB
         

@@ -1,5 +1,5 @@
 "$F$3: 	=IF(C3<100,C3/10,C3-90)
-$G$3: 	=ROUND(G8+G6+G5+G9+G10+G12+G13,1)-(IF(D11,G12+G13,0))
+$G$3: 	=ROUND((G5+G6+G8+G9+G10+G12+G13)-IF(D11,G12+G13,0)-IF(D5,G5,0)-IF(D6,G6,0),1)
 $H$3: 	=IF(F3=0,"""",A3)
 $I$3: 	=IF(F3*24>G3,G3,F3*24)
 $W$3: 	=IF(F3>0,F3&"" ml/uur"","""")
@@ -10,8 +10,8 @@ $AB$3: 	=IF(G3>0,""in ""&ROUND(G3/F3,1)&"" uur"","""")
 $AC$3: 	=IF(Y3="""","""",Y3&"" ""&AB3)
 $AE$3: 	=IF(F3>0,G3/F3>25,FALSE)
 $AC$4: 	=IF(Y4="""","""",Y4&"" ""&AB4)
-$D$5: 	=_Ped_TPN_Keuze=6
-$F$5: 	=IF((_Ped_TPN_Keuze=6),G5/24,0)
+$D$5: 	=_Ped_TPN_Keuze=7
+$F$5: 	=IF((_Ped_TPN_Keuze=7),G5/24,0)
 $G$5: 	=ROUND(IF(AND(OR(_Ped_TPN_SST1Keuze<12,_Ped_TPN_Keuze=6),_Ped_TPN_Keuze>1),_Ped_TPN_Vol,0),1)
 $H$5: 	=IF(B5=1,"""",INDEX(Tbl_Ped_TPN,B5,1))
 $I$5: 	=IF($G$3=0,0,IF($I$3/$G$3<1,G5*$I$3/$G$3,G5))
@@ -34,7 +34,7 @@ $Z$5: 	=IF(_Ped_TPN_Keuze=1,"""",""verw"")
 $AA$5: 	=IF(OR(_Ped_TPN_Keuze=GetPedTPNIndexForWeight(),_Ped_TPN_Keuze=1),"""",""stand"")
 $AB$5: 	=IF(F5>0,""in ""&ROUND(G5/IF(F5>10,ROUNDUP(F5,0),ROUNDUP(F5,1)),1)&"" uur"","""")
 $AC$5: 	=IF(Y5="""","""",Y5&"" ""&AB5)
-$D$6: 	=_Ped_TPN_Keuze=6
+$D$6: 	=_Ped_TPN_Keuze=7
 $F$6: 	=IF(D6,(G6+G7)/24,0)
 $G$6: 	=ROUND(IF(AND(_Ped_TPN_Keuze>3),C6,0),1)
 $H$6: 	=IF(G6=0,"""",A6)
@@ -74,7 +74,7 @@ $T$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,T$1,FALSE))*$I7
 $U$7: 	=IF($H7="""",0,VLOOKUP($H7,Tbl_Glob_ParEnt,U$1,FALSE))*$I7
 $X$7: 	=IF(G7=0,"""",G7&"" ml"")
 $AC$7: 	=IF(Y7="""","""",Y7&"" ""&AB7)
-$G$8: 	=C8
+$G$8: 	=C8+IF(D11,0,G12*E12+G13*E13)+E9*G9+E10*G10
 $H$8: 	=IF(B8=1,"""",INDEX(Tbl_Ped_SST,B8,1))
 $I$8: 	=IF($G$3=0,0,IF($I$3/$G$3<1,G8*$I$3/$G$3,G8))
 $J$8: 	=IF($H8="""",0,VLOOKUP($H8,Tbl_Glob_ParEnt,J$1,FALSE))*$I8
@@ -132,7 +132,7 @@ $W$10: 	=IF(F10>0,IF(F10>10,ROUNDUP(F10,0),ROUNDUP(F10,1))&"" ml/uur"","""")
 $X$10: 	=IF(G10=0,"""",G10&"" ml"")
 $Z$10: 	=IF(G10=0,"""",""verw"")
 $AC$10: 	=IF(Y10="""","""",Y10&"" ""&AB10)
-$D$11: 	=AND(_Ped_TPN_Keuze>1,_Ped_TPN_Keuze<6,_Ped_TPN_SST1Keuze<=12)
+$D$11: 	=AND(_Ped_TPN_Keuze>1,_Ped_TPN_Keuze<7,_Ped_TPN_SST1Keuze<=12)
 $F$11: 	=ROUND(IF(G11>0,(G11+G12+G13)/24,0),1)
 $G$11: 	=IF(D11,E12*G12+E13*G13,0)
 $H$11: 	=IF(G11=0,"""",A11)
@@ -376,7 +376,7 @@ $X$23: 	=IF(G23=0,"""",G23&"" ml"")
 $Z$23: 	=IF(G23=0,"""",""verw"")
 $AC$23: 	=IF(Y23="""","""",Y23&"" ""&AB23)
 $G$25: 	=SUM(G5:G23)-G20-G16
-$I$25: 	=SUM(I5:I23)
+$I$25: 	=SUM(I3,I11,I14,I16,I20)+IF(D5,I5,0)+IF(D6,I6+I7,0)
 $J$25: 	=SUM(J3:J23)
 $K$25: 	=SUM(K3:K23)
 $L$25: 	=SUM(L3:L23)

@@ -161,6 +161,12 @@ Public Sub GoToSheet(shtSheet As Worksheet, ByVal strRange As String)
 
 End Sub
 
+Public Sub Sheet_GoToCVL()
+
+    ModSheet.GoToSheet shtPedGuiLijnPM, "A6"
+
+End Sub
+
 Public Function GetInterfaceSheetCount() As Integer
 
     Dim intN As Integer

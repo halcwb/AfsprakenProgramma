@@ -107,6 +107,7 @@ Public Sub PedEntTPN_ClearSST2()
 
     ModRange.SetRangeValue constSST2Stand, 0
     ModRange.SetRangeValue constSST2Keuze, 1
+    ModRange.SetRangeValue "_Ped_TPN_SST2Vol", 0
     
     ModRange.SetRangeValue constNaCl2, False
     ModRange.SetRangeValue constNaCl2Vol, 0
@@ -739,16 +740,16 @@ Public Sub PedEntTPN_TPNText()
 
 End Sub
 
-Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String)
+Private Sub EnterHoeveelheid(ByVal strRange As String, ByVal strItem As String, Optional ByVal dblExtra As Double = 0)
 
     Dim frmInvoer As FormInvoerNumeriek
     Dim dblValue As Double
-    
+        
     Set frmInvoer = New FormInvoerNumeriek
     frmInvoer.lblText.Caption = "Voer hoeveelheid in voor " & strItem
     
-    dblValue = ModRange.GetRangeValue(strRange, 0)
-    frmInvoer.SetValue strRange, strItem, dblValue, "mL", vbNullString
+    dblValue = ModRange.GetRangeValue(strRange, 0) + dblExtra
+    frmInvoer.SetValue strRange, strItem, dblValue, "mL", vbNullString, dblExtra
     
     frmInvoer.Show
     
@@ -772,9 +773,19 @@ Public Sub PedEntTPN_ChangeTPNVol()
 End Sub
 
 Public Sub PedEntTPN_SST1()
+    
+    Dim dblTot As Double
+    Dim dblVol As Double
+    
+    dblVol = ModRange.GetRangeValue("_Ped_TPN_SST1Vol", 0)
+    dblTot = ModRange.GetRangeValue("Var_Ped_TPN_SST1Tot", 0)
+    EnterHoeveelheid "_Ped_TPN_SST1Vol", "SST1", (dblTot - dblVol)
+    
+End Sub
 
-    EnterHoeveelheid "_Ped_TPN_SST1Vol", "SST1"
-    ModRange.SetRangeValue constNaCl1, True
+Public Sub PedEntTPN_SST2()
+
+    EnterHoeveelheid "_Ped_TPN_SST2Vol", "SST2"
     
 End Sub
 
@@ -783,12 +794,16 @@ Public Sub PedEntTPN_NaCL1()
     EnterHoeveelheid constNaCl1Vol, "NaCl"
     ModRange.SetRangeValue constNaCl1, True
     
+    PedTPN_SetSST1Stand
+    
 End Sub
 
 Public Sub PedEntTPN_KCl1()
 
     EnterHoeveelheid constKCl1Vol, "KCl"
     ModRange.SetRangeValue constKCl1, True
+    
+    PedTPN_SetSST1Stand
 
 End Sub
 
@@ -797,6 +812,8 @@ Public Sub PedEntTPN_NaCL2()
     EnterHoeveelheid constNaCl2Vol, "NaCl"
     ModRange.SetRangeValue constNaCl2, True
     
+    PedTPN_SetSST2Stand
+    
 End Sub
 
 Public Sub PedEntTPN_KCl2()
@@ -804,6 +821,8 @@ Public Sub PedEntTPN_KCl2()
     EnterHoeveelheid constKCl2Vol, "KCl"
     ModRange.SetRangeValue constKCl2, True
 
+    PedTPN_SetSST2Stand
+    
 End Sub
 
 Public Sub PedEntTPN_CaGlucVol()

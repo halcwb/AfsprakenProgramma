@@ -963,16 +963,16 @@ $A$96: 	=D96&"".""&E96
 $B$96: 	=IF(_Ped_Lab_Opm=0,"""",_Ped_Lab_Opm)
 $C$96: 	=A96&""**""&B96
 $A$97: 	=D97&"".""&E97
-$B$97: 	=IF(PedBerAfspr!B47=0,"""",PedBerAfspr!A47&"": ""&PedBerAfspr!B47)
+$B$97: 	=PedBerAfspr!C47
 $C$97: 	=A97&""**""&B97
 $A$98: 	=D98&"".""&E98
-$B$98: 	=IF(PedBerAfspr!B48=0,"""",PedBerAfspr!A48&"": ""&PedBerAfspr!B48)
+$B$98: 	=PedBerAfspr!C48
 $C$98: 	=A98&""**""&B98
 $A$99: 	=D99&"".""&E99
-$B$99: 	=IF(PedBerAfspr!B49=0,"""",PedBerAfspr!A49&"": ""&PedBerAfspr!B49)
+$B$99: 	=PedBerAfspr!C49
 $C$99: 	=A99&""**""&B99
 $A$100: 	=D100&"".""&E100
-$B$100: 	=IF(PedBerAfspr!B50=0,"""",PedBerAfspr!A50&"": ""&PedBerAfspr!B50)
+$B$100: 	=PedBerAfspr!C50
 $C$100: 	=A100&""**""&B100
 $A$101: 	=D101&"".""&E101
 $B$101: 	=PedBerTot!M3
@@ -1336,6 +1336,6 @@ $A$169: 	=D169&"".""&E169
 $B$169: 	=IF(NeoGuiAfspr!D48="""","""",NeoGuiAfspr!C48&"": ""&NeoGuiAfspr!D48)
 $C$169: 	=A169&""**""&B169
 $A$170: 	=D170&"".""&E170
-$B$170: 	=IF(_Neo_AfsprD_OverigTekst="""","""",NeoGuiAfspr!C49&"": ""&_Neo_AfsprD_OverigTekst)
+$B$170: 	=IF(NeoGuiAfspr!D49="""","""",NeoGuiAfspr!C49&"": ""&NeoGuiAfspr!D49)
 $C$170: 	=A170&""**""&B170
 "

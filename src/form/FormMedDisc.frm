@@ -40,6 +40,7 @@ Private Enum Events
     SolutionChange = 4
     DoseRulesChange = 5
     HasDoseChange = 6
+    HasSolutionChange = 7
 End Enum
 
 Private Sub HandleEvent(ByVal enmEvent As Events, _
@@ -93,7 +94,7 @@ Private Sub HandleEvent(ByVal enmEvent As Events, _
             If Not frmDose.Visible Then ClearDose
             
             frmDose.Visible = chkDose.Value
-            frmSolution.Visible = chkDose.Value
+            frmSolution.Visible = chkSol.Value
             txtMultipleQuantity.Visible = chkDose.Value
             cboMultipleQuantityUnit.Visible = chkDose.Value
         
@@ -109,6 +110,11 @@ Private Sub HandleEvent(ByVal enmEvent As Events, _
             
         Case SolutionChange
             If frmDose.Visible And m_ValidMed Then CalculateVolume
+            
+        Case HasSolutionChange
+        
+            frmSolution.Visible = chkSol.Value
+            If Not chkSol.Value Then ClearSolution
     
     End Select
     
@@ -270,8 +276,10 @@ Private Sub SelectDoseRule()
                 strFreq = Replace(strFreq, "antenoctum||", "")
             End If
             
-            strTime = Replace(strTime, "antenoctum||", "")
-            strTime = Trim(Split(Split(strFreq, "||")(0), "/")(1))
+            If Not strTime = vbNullString Then
+                strTime = Replace(strTime, "antenoctum||", "")
+                strTime = Trim(Split(Split(strFreq, "||")(0), "/")(1))
+            End If
             
             If cboFreqTime.Value = vbNullString Then cboFreqTime.Value = strTime
             If cboFreqTime.Value = strTime And cboSubstance.Value = objRule.Substance Then
@@ -433,6 +441,11 @@ End Sub
 
 Private Sub LoadSolution()
 
+    If Not chkSol.Value Then
+        chkSol.Value = True
+        frmSolution.Visible = True
+    End If
+    
     With m_Med
         SetTextBoxNumericValue txtMaxConc, .MaxConc
         SetTextBoxNumericValue txtSolutionVolume, .SolutionVolume
@@ -504,13 +517,13 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean, ByVal blnApplyDose As Boo
         
         chkPerDose = .PerDose
         
-        SetTextBoxNumericValue txtNormDose, .NormDose
         SetTextBoxNumericValue txtMinDose, .MinDose
         SetTextBoxNumericValue txtMaxDose, .MaxDose
         SetTextBoxNumericValue txtAbsMaxDose, .AbsMaxDose
         SetTextBoxNumericValue txtMaxPerDose, .MaxPerDose
+        SetTextBoxNumericValue txtNormDose, .NormDose
         
-        LoadSolution
+        If .HasSolutions Then LoadSolution
         
         If Not blnApplyDose And m_Med.DoseRules.Count > 1 Then
             lblFreqTime.Visible = True
@@ -727,14 +740,16 @@ Private Sub ApplyDoseRule()
     Dim dblAge As Double
     Dim dblWeight As Double
     Dim lngGest As Long
+    Dim lngPM As Long
     
     If Not m_ValidMed Then Exit Sub
     
     dblAge = Patient_GetAgeInDays() / 30
-    lngGest = Patient_GestationalAgeInDays()
+    lngPM = Patient_GetPostMenstrAgeInDays()
+    lngGest = Patient_GetGestationalAgeInDays()
     dblWeight = Patient_GetWeight()
     
-    Set objDose = m_Med.GetDose("", "", dblAge, lngGest, dblWeight)
+    Set objDose = m_Med.GetDose("", "", dblAge, lngGest, lngPM, dblWeight)
     
     If Not objDose Is Nothing Then
         
@@ -808,6 +823,7 @@ Private Sub CalculateDose()
     Dim dblFact As Double
     Dim dblDeel As Double
     Dim dblKeer As Double
+    Dim dblMaxKeer As Double
     
     If Not m_CalcDose Or Not m_ValidMed Then Exit Sub
     
@@ -818,6 +834,10 @@ Private Sub CalculateDose()
     dblDeel = StringToDouble(txtMultipleQuantity.Value)
     dblKeer = StringToDouble(txtAdminDose.Value)
     dblKeer = IIf(dblDeel > 0, ModExcel.Excel_RoundBy(dblKeer, dblDeel), dblKeer)
+    If IsNumeric(txtMaxPerDose) Then
+        dblMaxKeer = txtMaxPerDose.Value
+        If dblMaxKeer > 0 Then dblKeer = IIf(dblKeer > dblMaxKeer, dblMaxKeer, dblKeer)
+    End If
     
     dblAdjust = IIf(optNone.Value, 1, dblWght)
     dblAdjust = IIf(optM2.Value, dblM2, dblAdjust)
@@ -839,6 +859,7 @@ Private Sub CalculateDose()
         
         dblCalc = dblVal * dblFact / dblAdjust
         dblKeer = dblCalc * dblAdjust / dblFact
+        If dblMaxKeer > 0 Then dblKeer = IIf(dblKeer > dblMaxKeer, dblMaxKeer, dblKeer)
     
     End If
         
@@ -986,9 +1007,17 @@ Private Sub chkPerDose_Click()
 
 End Sub
 
+Private Sub chkSol_Click()
+
+    HandleEvent HasSolutionChange
+ 
+End Sub
+
 Private Sub cmdFormularium_Click()
     
     Dim strUrl As String
+    
+    On Error GoTo ErrorHandler
     
     strUrl = "https://www.kinderformularium.nl/"
     If Not m_Med Is Nothing Then
@@ -1000,6 +1029,12 @@ Private Sub cmdFormularium_Click()
     End If
 
     ActiveWorkbook.FollowHyperlink strUrl
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    ModLog.LogError Err, strUrl
 
 End Sub
 
@@ -1034,6 +1069,8 @@ Private Sub cmdGStand_Click()
     Dim strSHP As String
     Dim strUNT As String
     Dim strMsg As String
+    
+    On Error GoTo ErrorHandler
     
     strUrl = "http://vpxap-meta01.ds.umcutrecht.nl/GenForm/html?"
     
@@ -1075,6 +1112,12 @@ Private Sub cmdGStand_Click()
         
     ModUtils.CopyToClipboard strUrl
     ActiveWorkbook.FollowHyperlink strUrl
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    ModLog.LogError Err, strUrl
 
 End Sub
 
@@ -1121,7 +1164,7 @@ Private Sub cmdKompas_Click()
     
 ErrorHandler:
 
-    ActiveWorkbook.FollowHyperlink "https://www.farmacotherapeutischkompas.nl"
+    ModLog.LogError Err, "https://www.farmacotherapeutischkompas.nl"
 
 End Sub
 
@@ -1218,6 +1261,7 @@ Private Sub cmdOK_Click()
         m_Med.MinDose = StringToDouble(txtMinDose.Value)
         m_Med.MaxDose = StringToDouble(txtMaxDose.Value)
         m_Med.AbsMaxDose = StringToDouble(txtAbsMaxDose.Value)
+        m_Med.MaxPerDose = StringToDouble(txtMaxPerDose.Value)
         m_Med.CalcDose = StringToDouble(txtCalcDose.Value)
         
         m_Med.Substance = cboSubstance.Text
@@ -1341,6 +1385,18 @@ Private Sub txtCalcDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
 
     ModMessage.ShowMsgBoxInfo "Deze waarde is berekend en kan niet worden gewijzigd!"
     KeyAscii = 0
+
+End Sub
+
+Private Sub txtMaxPerDose_Change()
+
+    HandleEvent DoseChange
+
+End Sub
+
+Private Sub txtMaxPerDose_KeyPress(ByVal KeyAscii As MSForms.ReturnInteger)
+
+    ModUtils.OnlyNumericAscii KeyAscii
 
 End Sub
 

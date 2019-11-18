@@ -37,8 +37,10 @@ End Sub
 Public Function GetItemIndex(lstList As MSForms.ListBox, ByVal strItem As Variant) As Integer
 
     Dim intN As Integer
+    Dim intC As Integer
     
-    For intN = 0 To lstList.ListCount
+    intC = lstList.ListCount - 1
+    For intN = 0 To intC
         If lstList.List(intN) = strItem Then
             GetItemIndex = intN
             Exit Function

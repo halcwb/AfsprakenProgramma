@@ -49,7 +49,7 @@ Public Sub LogError(objErr As ErrObject, ByVal strError As String)
     strFile = ModSetting.GetLogFilePath()
     strError = strError & vbNewLine & ErrorToString(objErr)
     
-    blnLog = ModSetting.GetEnableLogging()
+    blnLog = ModSetting.GetIsLoggingEnabled()
 
     EnableLogging
     LogToFile strFile, Error, strError
@@ -107,7 +107,7 @@ End Sub
 
 Public Sub LogToFile(ByVal strFile As String, ByVal enmLevel As LogLevel, ByVal strMsg As String)
     
-    If Not ModSetting.GetEnableLogging() Then Exit Sub
+    If Not ModSetting.GetIsLoggingEnabled() Then Exit Sub
     
     strMsg = Replace(strMsg, vbNewLine, ". ")
     AppendToFile strFile, Strings.Format(DateTime.Now, vbNullString) + ": " + LogLevelToString(enmLevel) + ": " + strMsg

@@ -254,6 +254,11 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnNeoMedPrintTests"                          ' -> Neo Werkbrief en Apotheek prints
              ModNeoInfB_Tests.Test_NeoInfB_Print
                 
+        'grpHelp                                            ' -- HELP --
+        Case "btnHelp"
+            ActiveWorkbook.FollowHyperlink "https://picuwkz.nl/protocollen/werkafspraken/afsprakenprogramma-2019/"
+        
+        
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
             
@@ -264,6 +269,12 @@ End Sub
 Public Sub RibbonOnLoad(ByRef objRibbon As IRibbonUI)
 
     ModLog.LogInfo "RibbonOnLoad"
+
+End Sub
+
+Public Sub GetVisibleHelp(ByRef ctrContr As IRibbonControl, ByRef blnVisible As Variant)
+
+    blnVisible = True
 
 End Sub
 
@@ -289,7 +300,7 @@ Public Sub GetVisibleNeo(ByRef ctrContr As IRibbonControl, ByRef blnVisible As V
     Dim blnIsNeo As Boolean
 
     blnIsDevelop = ModSetting.IsDevelopmentDir()
-    blnIsNeo = MetaVision_IsNeonatologie()
+    blnIsNeo = MetaVision_IsNICU()
     
     If blnIsNeo Or blnIsDevelop Then
         blnVisible = True
@@ -320,11 +331,11 @@ End Sub
 Private Sub ClearAll()
 
     If ModSetting.IsDevelopmentDir Then
-        ModPatient.Patient_ClearNeoData
-        ModPatient.Patient_ClearPedData
+        ModPatient.Patient_ClearNICUData
+        ModPatient.Patient_ClearPICUData
     Else
-        If MetaVision_IsNeonatologie() Then ModPatient.Patient_ClearNeoData
-        If MetaVision_IsPICU() Then ModPatient.Patient_ClearPedData
+        If MetaVision_IsNICU() Then ModPatient.Patient_ClearNICUData
+        If MetaVision_IsPICU() Then ModPatient.Patient_ClearPICUData
     End If
     
 End Sub
@@ -335,7 +346,7 @@ Private Sub ClearLab()
         ModNeoLab.NeoLab_Clear
         ModPedLab.PedLab_Clear
     Else
-        If MetaVision_IsNeonatologie() Then ModNeoLab.NeoLab_Clear
+        If MetaVision_IsNICU() Then ModNeoLab.NeoLab_Clear
         If MetaVision_IsPICU() Then ModPedLab.PedLab_Clear
     End If
     
@@ -347,7 +358,7 @@ Private Sub ClearAfspraken()
         ModNeoAfspr.NeoAfspr_Clear
         ModPedAfspr.PedAfspr_Clear
     Else
-        If MetaVision_IsNeonatologie() Then ModNeoAfspr.NeoAfspr_Clear
+        If MetaVision_IsNICU() Then ModNeoAfspr.NeoAfspr_Clear
         If MetaVision_IsPICU() Then ModPedAfspr.PedAfspr_Clear
     End If
 

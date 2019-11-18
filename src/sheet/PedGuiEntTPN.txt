@@ -46,6 +46,7 @@ $B$18: 	=PedBerEnt!$G9
 $F$18: 	=_Ped_Ent_Opm
 $K$18: 	=PedBerEnt!A19
 $L$18: 	=PedBerEnt!B19
+$D$20: 	=""Intraveneus"" & "" ""& IF(Var_Ped_HasCVL,""via CVL"",""via Perifeer Infuus"")
 $B$22: 	=PedBerTPN!Z3
 $F$22: 	=PedBerTPN!W3
 $I$22: 	=PedBerTPN!AC3

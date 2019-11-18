@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModMetaVision"
 Option Explicit
 
-Private objConn As ADODB.Connection
+Private m_objConn As ADODB.Connection
 
 Private Const constSecret As String = "secret"
 
@@ -78,9 +78,9 @@ Public Function MetaVision_GetPatientBed(ByVal strPatId As String, ByVal strPatN
     Else
         InitConnection strServer, strDB
         
-        objConn.Open
+        m_objConn.Open
         
-        Set objRs = objConn.Execute(strSql)
+        Set objRs = m_objConn.Execute(strSql)
         
         blnFound = False
         Do While Not objRs.EOF And Not blnFound
@@ -96,7 +96,7 @@ Public Function MetaVision_GetPatientBed(ByVal strPatId As String, ByVal strPatN
             objRs.MoveNext
         Loop
         
-        objConn.Close
+        m_objConn.Close
         Set objRs = Nothing
         
     End If
@@ -250,9 +250,9 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
     
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     
     If Not objRs.EOF Then
         If Not IsNull(objRs.Fields("BirthDate")) Then dtmBD = ModString.StringToDate(objRs.Fields("BirthDate"))
@@ -288,7 +288,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
         
     End If
     
-    objConn.Close
+    m_objConn.Close
     
     Database_LogAction "Get MetaVision patient details", ModUser.User_GetCurrent().Login, ModPatient.Patient_GetHospitalNumber()
     
@@ -296,7 +296,7 @@ Public Sub MetaVision_GetPatientDetails(objPat As ClassPatientDetails, ByVal str
 
 ErrorHandler:
     
-    objConn.Close
+    m_objConn.Close
     
     ModUtils.CopyToClipboard strSql
     ModLog.LogError Err, "MetaVision_GetPatientDetails with Sql: " & strSql
@@ -340,9 +340,9 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
         
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     
     Do While Not objRs.EOF
         Set objPat = New ClassPatientDetails
@@ -383,7 +383,7 @@ Public Sub MetaVision_GetPatientsForDepartment(objCol As Collection, ByVal strDe
         If blnDep Then objCol.Add objPat
     Loop
     
-    objConn.Close
+    m_objConn.Close
     
     Exit Sub
     
@@ -391,7 +391,7 @@ HandleError:
 
     ModUtils.CopyToClipboard strSql
     ModLog.LogError Err, "Could not get patient no: " & intN & " with SQL : " & vbNewLine & strSql
-    objConn.Close
+    m_objConn.Close
     
 End Sub
 
@@ -435,13 +435,19 @@ Public Function MetaVision_GetCurrentPatientID() As String
     Dim strKeyPath As String
     Dim strValue As String
     Dim strBasePath As String
+    Dim strPatientId As String
     
-    strBasePath = GetBasePath()
-    strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constSettings)
-    strValue = IIf(strBasePath = constBasePath1, constPatientId, constCurrentPatient)
+    strPatientId = Database_RegistryPatientId()
     
-    MetaVision_GetCurrentPatientID = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    If strPatientId = vbNullString Then
+        strBasePath = GetBasePath()
+        strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constSettings)
+        strValue = IIf(strBasePath = constBasePath1, constPatientId, constCurrentPatient)
+        
+        strPatientId = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    End If
 
+    MetaVision_GetCurrentPatientID = strPatientId
 End Function
 
 Private Sub Test_MetaVision_GetCurrentPatient()
@@ -455,12 +461,19 @@ Public Function MetaVision_GetUserLogin() As String
     Dim strKeyPath As String
     Dim strValue As String
     Dim strBasePath As String
+    Dim strUserLogin As String
     
-    strBasePath = GetBasePath()
-    strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constSettings)
-    strValue = IIf(strBasePath = constBasePath1, constUserLogin, constUserId)
+    strUserLogin = Database_RegistryUserLogin()
     
-    MetaVision_GetUserLogin = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    If strUserLogin = vbNullString Then
+        strBasePath = GetBasePath()
+        strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constSettings)
+        strValue = IIf(strBasePath = constBasePath1, constUserLogin, constUserId)
+        
+        strUserLogin = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    End If
+    
+    MetaVision_GetUserLogin = strUserLogin
 
 End Function
 
@@ -499,33 +512,36 @@ Public Function MetaVision_GetDatabase() As String
     Dim strDB As String
     Dim objRs As Recordset
     
-    If GetBasePath() = constBasePath1 Then
-        
-        strDB = ModRegistry.ReadRegistryKey(constBasePath1, constDatabase)
+    strDB = Database_RegistryDatabaseName()
     
-    Else
-        
-        strServer = MetaVision_GetServer()
-        strEmpi = GetEmpiDb()
-        strDepartment = MetaVision_GetDepartment()
-        strSql = GetDatabaseNameSQL(strDepartment)
-        
-        If strServer <> vbNullString And strEmpi <> vbNullString Then
-            InitConnection strServer, strEmpi
+    If strDB = vbNullString Then
+        If GetBasePath() = constBasePath1 Then
+            strDB = ModRegistry.ReadRegistryKey(constBasePath1, constDatabase)
+        Else
+            strServer = MetaVision_GetServer()
+            strEmpi = GetEmpiDb()
+            strDepartment = MetaVision_GetDepartment()
+            strSql = GetDatabaseNameSQL(strDepartment)
             
-            If Not objConn Is Nothing Then
-                objConn.Open
+            If strServer <> vbNullString And strEmpi <> vbNullString Then
+                InitConnection strServer, strEmpi
                 
-                Set objRs = objConn.Execute(strSql)
-                If Not objRs.EOF Then strDB = objRs.Fields("DatabaseName")
-                
-                objConn.Close
+                If Not m_objConn Is Nothing Then
+                    m_objConn.Open
+                    
+                    Set objRs = m_objConn.Execute(strSql)
+                    If Not objRs.EOF Then strDB = objRs.Fields("DatabaseName")
+                    
+                    m_objConn.Close
+                End If
             End If
+        
         End If
-    
+        
     End If
     
     MetaVision_GetDatabase = strDB
+
 
 End Function
 
@@ -550,12 +566,19 @@ Public Function MetaVision_GetServer() As String
     Dim strKeyPath As String
     Dim strValue As String
     Dim strBasePath As String
+    Dim strServer As String
     
-    strBasePath = GetBasePath()
-    strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constConnection)
-    strValue = IIf(strBasePath = constBasePath1, constServer, constEmpiServer)
+    strServer = Database_RegistryServer()
     
-    MetaVision_GetServer = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    If strServer = vbNullString Then
+        strBasePath = GetBasePath()
+        strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constConnection)
+        strValue = IIf(strBasePath = constBasePath1, constServer, constEmpiServer)
+        
+        strServer = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    End If
+
+    MetaVision_GetServer = strServer
 
 End Function
 
@@ -570,11 +593,18 @@ Public Function MetaVision_GetDepartment() As String
     Dim strKeyPath As String
     Dim strValue As String
     Dim strBasePath As String
+    Dim strDepartment As String
     
-    strBasePath = GetBasePath()
-    strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constConnection)
-    strValue = IIf(strBasePath = constBasePath1, constDepartment, constDomain)
-    MetaVision_GetDepartment = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    strDepartment = Database_RegistryDepartment()
+    
+    If strDepartment = vbNullString Then
+        strBasePath = GetBasePath()
+        strKeyPath = IIf(strBasePath = constBasePath1, strBasePath, strBasePath & constConnection)
+        strValue = IIf(strBasePath = constBasePath1, constDepartment, constDomain)
+        strDepartment = ModRegistry.ReadRegistryKey(strKeyPath, strValue)
+    End If
+
+    MetaVision_GetDepartment = strDepartment
 
 End Function
 
@@ -584,9 +614,9 @@ Public Function MetaVision_IsPICU() As Boolean
 
 End Function
 
-Public Function MetaVision_IsNeonatologie() As Boolean
+Public Function MetaVision_IsNICU() As Boolean
 
-    MetaVision_IsNeonatologie = Not MetaVision_IsPICU()
+    MetaVision_IsNICU = Not MetaVision_IsPICU()
 
 End Function
 
@@ -626,9 +656,9 @@ Private Sub GetLab(ByVal strHospNum As String)
     
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     Set objRange = shtGlobBerLab.Range("Tbl_Glob_Lab")
     
     If Not (objRs.BOF And objRs.EOF) Then
@@ -645,7 +675,7 @@ Private Sub GetLab(ByVal strHospNum As String)
         Next
     End If
     
-    objConn.Close
+    m_objConn.Close
 
 
 End Sub
@@ -685,9 +715,9 @@ Public Sub GetLeverNierFunctie(ByVal strHospNum As String)
     
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     Set objRange = shtGlobBerLab.Range("Tbl_Glob_Lab")
     
     If Not (objRs.BOF And objRs.EOF) Then
@@ -704,7 +734,7 @@ Public Sub GetLeverNierFunctie(ByVal strHospNum As String)
         Next
     End If
     
-    objConn.Close
+    m_objConn.Close
     
 End Sub
 
@@ -766,10 +796,10 @@ Private Function GetLatestTextSignalInPeriod(ByVal intPatId As Long, ByVal intPa
     
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
     ModUtils.CopyToClipboard strSql
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     
     Set objSignal = New ClassSignal
     If Not (objRs.BOF And objRs.EOF) Then
@@ -780,7 +810,7 @@ Private Function GetLatestTextSignalInPeriod(ByVal intPatId As Long, ByVal intPa
         End With
     End If
     
-    objConn.Close
+    m_objConn.Close
 
     Set GetLatestTextSignalInPeriod = objSignal
 
@@ -852,16 +882,16 @@ Private Function GetSumNumSignalInPeriod(ByVal intPatId As Long, ByVal strDescr 
     
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
     ModUtils.CopyToClipboard strSql
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     
     If Not (objRs.BOF And objRs.EOF) Then
         If Not IsNull(objRs.Fields("Sum").Value) Then dblSum = objRs.Fields("Sum").Value
     End If
     
-    objConn.Close
+    m_objConn.Close
 
     GetSumNumSignalInPeriod = dblSum
 
@@ -932,10 +962,10 @@ Private Function GetLatestNumSignalInPeriod(ByVal intPatId As Long, ByVal intPar
     
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
     ModUtils.CopyToClipboard strSql
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     
     Set objSignal = New ClassSignal
     If Not (objRs.BOF And objRs.EOF) Then
@@ -947,7 +977,7 @@ Private Function GetLatestNumSignalInPeriod(ByVal intPatId As Long, ByVal intPar
         End With
     End If
     
-    objConn.Close
+    m_objConn.Close
 
     Set GetLatestNumSignalInPeriod = objSignal
 
@@ -1076,10 +1106,10 @@ Public Function MetaVision_eGFRWarning() As String
     
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
     ModUtils.CopyToClipboard strSql
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
         
     blnAKI = False
     dblCreat = 0
@@ -1117,7 +1147,7 @@ Public Function MetaVision_eGFRWarning() As String
         objRs.MoveNext
     Loop
     
-    objConn.Close
+    m_objConn.Close
 
 
     ' Determine if there is AKI
@@ -1239,9 +1269,9 @@ Public Sub MetaVision_GetMedicatieOpdrachten()
     strDatabase = MetaVision_GetDatabase()
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
     
     intN = 1
     intC = shtGlobTblMedOpdr.Range("A1").CurrentRegion.Rows.Count
@@ -1262,8 +1292,8 @@ Public Sub MetaVision_GetMedicatieOpdrachten()
     
     ModProgress.FinishProgress
     
-    objConn.Close
-    Set objConn = Nothing
+    m_objConn.Close
+    Set m_objConn = Nothing
     
     Exit Sub
     
@@ -1275,8 +1305,8 @@ GetMedicatieOpdrachtenError:
     
     ModMessage.ShowMsgBoxError "Kan medicatie opdrachten niet ophalen"
     
-    objConn.Close
-    Set objConn = Nothing
+    m_objConn.Close
+    Set m_objConn = Nothing
 
 End Sub
 
@@ -1317,9 +1347,9 @@ Public Sub MetaVision_SetUser()
     strDatabase = MetaVision_GetDatabase()
     InitConnection strServer, strDatabase
     
-    objConn.Open
+    m_objConn.Open
     
-    Set objRs = objConn.Execute(strSql)
+    Set objRs = m_objConn.Execute(strSql)
 
     With objUser
         .Login = strLogin
@@ -1331,8 +1361,8 @@ Public Sub MetaVision_SetUser()
     End With
     ModUser.User_SetUser objUser
     
-    objConn.Close
-    Set objConn = Nothing
+    m_objConn.Close
+    Set m_objConn = Nothing
     
     Exit Sub
 
@@ -1342,8 +1372,8 @@ SetUser_Error:
     
     On Error Resume Next
     
-    objConn.Close
-    Set objConn = Nothing
+    m_objConn.Close
+    Set m_objConn = Nothing
 
 End Sub
 
@@ -1368,7 +1398,6 @@ GetMedicatieOpdrachtenError:
     ModMessage.ShowMsgBoxError "Kan medicatie opdrachten niet ophalen"
 End Sub
 
-
 Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As String)
 
     Dim strSecret As String
@@ -1378,15 +1407,17 @@ Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As Strin
     
     On Error GoTo InitConnectionError
     
+    If Not m_objConn Is Nothing Then Exit Sub
+    
     strSecret = ModFile.ReadFile(WbkAfspraken.Path & "/" & constSecret)
     
     If strSecret <> vbNullString Then
         strUser = Split(strSecret, vbLf)(0)
         strPw = Split(strSecret, vbLf)(1)
     
-        Set objConn = New ADODB.Connection
+        Set m_objConn = New ADODB.Connection
         
-        objConn.ConnectionString = "Provider=SQLOLEDB.1;" _
+        m_objConn.ConnectionString = "Provider=SQLOLEDB.1;" _
                  & "Server=" & strServer & ";" _
                  & "Database=" & strDatabase & ";" _
                  & "User ID=" & strUser & ";" _
@@ -1394,8 +1425,8 @@ Private Sub InitConnection(ByVal strServer As String, ByVal strDatabase As Strin
                  & "DataTypeCompatibility=80;" _
                  & "MARS Connection=True;"
         ' Test de connectie
-        objConn.Open
-        objConn.Close
+        m_objConn.Open
+        m_objConn.Close
     Else
         MsgBox "Geen toegang tot de database!"
         ModLog.LogError Err, "Bestand secret niet aanwezig"

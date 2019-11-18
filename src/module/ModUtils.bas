@@ -1,6 +1,19 @@
 Attribute VB_Name = "ModUtils"
 Option Explicit
 
+Public Function GetComputerName() As String
+
+    Dim objWshNetwork As Object
+    Dim strComputerName As String
+    
+    Set objWshNetwork = CreateObject("WScript.Network")
+    strComputerName = objWshNetwork.ComputerName
+    Set objWshNetwork = Nothing
+    
+    GetComputerName = strComputerName
+
+End Function
+
 ' Exports all vba source code and
 ' formulas in sheets to source tree
 ' to facilitate source control

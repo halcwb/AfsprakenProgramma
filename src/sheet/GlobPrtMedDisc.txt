@@ -1,7 +1,6 @@
-"$A$1: 	=Txt_Pat_FullName
-$B$1: 	=Txt_Pat_GeboorteDat
-$D$1: 	=Txt_Pat_Gewicht
-$E$1: 	=Txt_Pat_Gewicht
+"$A$1: 	=Txt_Pat_PatNo&"": ""& Txt_Pat_FullName
+$B$1: 	=""Geb: "" &Txt_Pat_GeboorteDat
+$D$1: 	=Txt_Pat_Gewicht&"", Leeftijd: ""&Txt_Pat_Leeftijd
 $H$1: 	=""Arts: "" &_User_LastName&"", ""&_User_FirstName
 $A$3: 	=GlobBerMedDisc!AR2
 $B$3: 	=IF(GlobGuiMedDisc!J9<>"""",GlobGuiMedDisc!J9,"""")

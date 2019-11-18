@@ -343,6 +343,7 @@ Private Sub Util_SetCaptionAndHideBars()
     App_UpdateStatusBar "Afdeling", IIf(Util_IsPedDir, "PICU", "NICU")
     App_UpdateStatusBar "Login", ModRange.GetRangeValue("_User_Login", vbNullString)
     App_UpdateStatusBar "Database", ModSetting.Setting_GetDatabase()
+    App_UpdateStatusBar "Logging", IIf(GetIsLoggingEnabled(), "Aan", "Uit")
     
     Exit Sub
     

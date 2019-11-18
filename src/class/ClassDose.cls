@@ -21,6 +21,8 @@ Private m_MinWeightKg As Double
 Private m_MaxWeightKg As Double
 Private m_MinGestDays As Integer
 Private m_MaxGestDays As Integer
+Private m_MinPMDays As Integer
+Private m_MaxPMDays As Integer
 Private m_Frequencies As String
 Private m_Unit As String
 Private m_NormDose As Double
@@ -39,7 +41,7 @@ End Property
 
 Public Property Let Department(ByVal strDep As String)
 
-    m_Department = strDep
+    m_Department = Trim(strDep)
 
 End Property
 
@@ -51,7 +53,7 @@ End Property
 
 Public Property Let Generic(ByVal strGeneric As String)
 
-    m_Generic = strGeneric
+    m_Generic = Trim(strGeneric)
 
 End Property
 
@@ -63,7 +65,7 @@ End Property
 
 Public Property Let Route(ByVal strRoute As String)
 
-    m_Route = strRoute
+    m_Route = Trim(strRoute)
 
 End Property
 
@@ -75,7 +77,7 @@ End Property
 
 Public Property Let Indication(ByVal strIndication As String)
 
-    m_Indication = strIndication
+    m_Indication = Trim(strIndication)
 
 End Property
 
@@ -85,9 +87,9 @@ Public Property Get Shape() As String
 
 End Property
 
-Public Property Let Shape(ByVal strGPK As String)
+Public Property Let Shape(ByVal strShape As String)
 
-    m_Shape = strGPK
+    m_Shape = Trim(strShape)
 
 End Property
 
@@ -99,7 +101,7 @@ End Property
 
 Public Property Let Gender(ByVal strGender As String)
 
-    m_Gender = strGender
+    m_Gender = Trim(strGender)
 
 End Property
 
@@ -111,7 +113,7 @@ End Property
 
 Public Property Let MinAgeMo(ByVal dblMinAgeMo As Double)
 
-    m_MinAgeMo = dblMinAgeMo
+    m_MinAgeMo = IIf(dblMinAgeMo < 0, 0, dblMinAgeMo)
 
 End Property
 
@@ -123,7 +125,7 @@ End Property
 
 Public Property Let MaxAgeMo(ByVal dblMaxAgeMo As Double)
 
-    m_MaxAgeMo = dblMaxAgeMo
+    m_MaxAgeMo = IIf(dblMaxAgeMo < 0, 0, dblMaxAgeMo)
 
 End Property
 
@@ -135,7 +137,7 @@ End Property
 
 Public Property Let MinWeightKg(ByVal dblMinWeightKg As Double)
 
-    m_MinWeightKg = dblMinWeightKg
+    m_MinWeightKg = IIf(dblMinWeightKg < 0, 0, dblMinWeightKg)
 
 End Property
 
@@ -147,7 +149,7 @@ End Property
 
 Public Property Let MaxWeightKg(ByVal dblMaxWeightKg As Double)
 
-    m_MaxWeightKg = dblMaxWeightKg
+    m_MaxWeightKg = IIf(dblMaxWeightKg < 0, 0, dblMaxWeightKg)
 
 End Property
 
@@ -159,7 +161,7 @@ End Property
 
 Public Property Let MinGestDays(ByVal intMinGestDays As Integer)
 
-    m_MinGestDays = intMinGestDays
+    m_MinGestDays = IIf(intMinGestDays < 0, 0, intMinGestDays)
 
 End Property
 
@@ -171,7 +173,31 @@ End Property
 
 Public Property Let MaxGestDays(ByVal intMaxGestDays As Integer)
 
-    m_MaxGestDays = intMaxGestDays
+    m_MaxGestDays = IIf(intMaxGestDays < 0, 0, intMaxGestDays)
+
+End Property
+
+Public Property Get MinPMDays() As Integer
+
+    MinPMDays = m_MinPMDays
+
+End Property
+
+Public Property Let MinPMDays(ByVal intMinPMDays As Integer)
+
+    m_MinPMDays = IIf(intMinPMDays < 0, 0, intMinPMDays)
+
+End Property
+
+Public Property Get MaxPMDays() As Integer
+
+    MaxPMDays = m_MaxPMDays
+
+End Property
+
+Public Property Let MaxPMDays(ByVal intMaxPMDays As Integer)
+
+    m_MaxPMDays = IIf(intMaxPMDays < 0, 0, intMaxPMDays)
 
 End Property
 
@@ -183,7 +209,7 @@ End Property
 
 Public Property Let Frequencies(ByVal strFreq As String)
 
-    m_Frequencies = strFreq
+    m_Frequencies = Trim(strFreq)
 
 End Property
 
@@ -195,7 +221,7 @@ End Property
 
 Public Property Let Unit(ByVal strUnit As String)
 
-    m_Unit = strUnit
+    m_Unit = Trim(strUnit)
 
 End Property
 
@@ -207,7 +233,7 @@ End Property
 
 Public Property Let NormDose(ByVal dblDose As Double)
 
-    m_NormDose = dblDose
+    m_NormDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -219,7 +245,7 @@ End Property
 
 Public Property Let MinDose(ByVal dblDose As Double)
 
-    m_MinDose = dblDose
+    m_MinDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -231,7 +257,7 @@ End Property
 
 Public Property Let MaxDose(ByVal dblDose As Double)
 
-    m_MaxDose = dblDose
+    m_MaxDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -243,7 +269,7 @@ End Property
 
 Public Property Let AbsMaxDose(ByVal dblDose As Double)
 
-    m_AbsMaxDose = dblDose
+    m_AbsMaxDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 
@@ -255,7 +281,7 @@ End Property
 
 Public Property Let MaxPerDose(ByVal dblDose As Double)
 
-    m_MaxPerDose = dblDose
+    m_MaxPerDose = IIf(dblDose < 0, 0, dblDose)
 
 End Property
 

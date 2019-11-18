@@ -95,7 +95,7 @@ Public Sub Bed_OpenBedAndAsk(ByVal blnAsk As Boolean, ByVal blnShowProgress As B
     Dim blnNeo As Boolean
     
     strBed = Bed_GetBedName()
-    blnNeo = MetaVision_IsNeonatologie()
+    blnNeo = MetaVision_IsNICU()
     
     If blnAsk Then
         If blnShowProgress Then
@@ -199,6 +199,8 @@ Public Sub Bed_Import(ByVal strHospNum As String)
     ModProgress.StartProgress "Importeer patient"
 
     If ModWorkBook.CopyWorkbookRangeToSheet(strFile, strBookName, strRange, shtGlobTemp, True) Then
+        Patient_ClearAll False, True
+        
         strBed = ModMetaVision.MetaVision_GetPatientBed(vbNullString, strHospNum)
         Bed_SetBed strBed
         
@@ -214,8 +216,9 @@ Public Sub Bed_Import(ByVal strHospNum As String)
         Patient_SetHospitalNumber strHospNum
         Set objPat = New ClassPatientDetails
         ModMetaVision.MetaVision_GetPatientDetails objPat, vbNullString, strHospNum
-        Patient_WritePatientDetails objPat
+        Patient_WritePatientDetails objPat, False
         
+        blnNeo = MetaVision_IsNICU()
         If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True       ' Make sure that infuusbrief data is updated
         
         If Not blnAll Then
@@ -256,7 +259,7 @@ Public Sub Bed_CloseBed(ByVal blnAsk As Boolean)
     On Error GoTo CloseBedError
     
     strBed = Bed_GetBedName()
-    blnNeo = MetaVision_IsNeonatologie()
+    blnNeo = MetaVision_IsNICU()
     
     strAction = "ModBed.Bed_CloseBed"
     strParams = Array(blnAsk, strBed)

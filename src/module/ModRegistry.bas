@@ -14,6 +14,8 @@ Public Function ReadRegistryKey(ByVal strKeyPath As String, ByVal strValueName A
 
     Dim objShell As Object
     
+    ModLog.LogInfo "Read: " & strKeyPath & vbNewLine & "Value: " & strValueName
+    
     Set objShell = CreateObject("WScript.Shell")
     
     If RegistryKeyExists(strKeyPath, strValueName) Then

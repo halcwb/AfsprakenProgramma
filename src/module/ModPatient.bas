@@ -60,7 +60,24 @@ Public Function Patient_GetAgeInDays() As Long
 
 End Function
 
-Public Function Patient_GestationalAgeInDays() As Long
+Public Function Patient_GetGestationalAgeInDays() As Integer
+
+    Dim intDays As Integer
+    Dim intWeeks As Integer
+    Dim intAge As Integer
+    
+    
+    intDays = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, 0)
+    intWeeks = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, 0)
+    intDays = (intDays + (intWeeks * 7))
+    
+    If intDays = 0 Then intDays = 37 * 7
+    
+    Patient_GetGestationalAgeInDays = intAge
+
+End Function
+
+Public Function Patient_GetPostMenstrAgeInDays() As Long
 
     Dim dtmBD As Date
     Dim lngDays As Long
@@ -78,13 +95,13 @@ Public Function Patient_GestationalAgeInDays() As Long
     
     lngAge = DateDiff("d", dtmBD, Now()) + lngDays
     
-    Patient_GestationalAgeInDays = lngAge
+    Patient_GetPostMenstrAgeInDays = lngAge
 
 End Function
 
-Private Sub Test_Patient_GestationalAgeInDays()
+Private Sub Test_Patient_GetPostMenstrAgeInDays()
 
-    ModMessage.ShowMsgBoxInfo Patient_GestationalAgeInDays
+    ModMessage.ShowMsgBoxInfo Patient_GetPostMenstrAgeInDays
 
 End Sub
 
@@ -250,18 +267,21 @@ Public Function Patient_OpenDatabaseList(ByVal strCaption As String) As Boolean
     Dim colPats As Collection
     Dim colStand As Collection
     Dim blnCancel As Boolean
+    Dim strHospNum As String
     
     On Error GoTo OpenPatientListError
     
     Set colPats = GetMetaVisionPatients()
     Set colStand = ModDatabase.Database_GetStandardPatients()
     Set frmPats = New FormPatLijst
+    strHospNum = Patient_GetHospitalNumber()
     
     With frmPats
         .Caption = ModConst.CONST_APPLICATION_NAME & " " & strCaption
         .SetOnlyAdmittedTrue
         .LoadDbPatients colStand, True
         .LoadDbPatients colPats, False
+        If Not strHospNum = vbNullString Then .SelectPatient strHospNum
         .Show
     End With
     
@@ -374,7 +394,7 @@ Private Sub GetPatientDetails(objPat As ClassPatientDetails)
     
 End Sub
 
-Public Sub Patient_WritePatientDetails(objPat As ClassPatientDetails)
+Public Sub Patient_WritePatientDetails(objPat As ClassPatientDetails, ByVal blnSetWeightHeight As Boolean)
 
     ModRange.SetRangeValue CONST_PATHOSPNUM_RANGE, objPat.HospitalNumber
     ModRange.SetRangeValue CONST_LASTNAME_RANGE, objPat.AchterNaam
@@ -388,12 +408,14 @@ Public Sub Patient_WritePatientDetails(objPat As ClassPatientDetails)
         ModRange.SetRangeValue CONST_ADMISSIONDATE_RANGE, objPat.OpnameDatum
     End If
     
-    ModRange.SetRangeValue CONST_WEIGHT_RANGE, objPat.Gewicht ' * 10
-    ModRange.SetRangeValue CONST_HEIGHT_RANGE, objPat.Lengte
-    ModRange.SetRangeValue CONST_GENDER_RANGE, objPat.Geslacht
-    ModRange.SetRangeValue CONST_BIRTHWEIGHT_RANGE, objPat.GeboorteGewicht
-    ModRange.SetRangeValue CONST_GESTWEEKS_RANGE, objPat.Weeks
-    ModRange.SetRangeValue CONST_GESTDAYS_RANGE, objPat.Days
+    If blnSetWeightHeight Then
+        ModRange.SetRangeValue CONST_WEIGHT_RANGE, objPat.Gewicht ' * 10
+        ModRange.SetRangeValue CONST_HEIGHT_RANGE, objPat.Lengte
+        ModRange.SetRangeValue CONST_GENDER_RANGE, objPat.Geslacht
+        ModRange.SetRangeValue CONST_BIRTHWEIGHT_RANGE, objPat.GeboorteGewicht
+        ModRange.SetRangeValue CONST_GESTWEEKS_RANGE, objPat.Weeks
+        ModRange.SetRangeValue CONST_GESTDAYS_RANGE, objPat.Days
+    End If
     
     ModBed.Bed_SetBed objPat.Bed
 
@@ -404,6 +426,8 @@ Public Sub Patient_EnterDetails()
     Dim frmPat As FormPatient
     Dim objPat As ClassPatientDetails
     
+    On Error Resume Next
+    
     Set objPat = New ClassPatientDetails
     GetPatientDetails objPat
     Set frmPat = New FormPatient
@@ -411,7 +435,7 @@ Public Sub Patient_EnterDetails()
     frmPat.SetPatient objPat
     frmPat.Show
     
-    If Not frmPat.IsCanceled Then Patient_WritePatientDetails objPat
+    If Not frmPat.IsCanceled Then Patient_WritePatientDetails objPat, True
 
 End Sub
 
@@ -434,7 +458,7 @@ Public Sub Patient_ClearData(ByVal strStartWith As String, ByVal blnShowWarn As 
     
     On Error GoTo ErrorHandler
     
-    blnInfB = (MetaVision_IsNeonatologie() Or ModSetting.IsDevelopmentDir()) And Not (strStartWith = "_Ped" Or strStartWith = "_Glob")
+    blnInfB = (MetaVision_IsNICU() Or ModSetting.IsDevelopmentDir()) And Not (strStartWith = "_Ped" Or strStartWith = "_Glob")
             
     If blnShowWarn Then
         If blnShowProgress Then
@@ -505,39 +529,33 @@ ErrorHandler:
 
 End Sub
 
-Public Sub Patient_ClearPedData()
+Public Sub Patient_ClearPICUData()
 
     ModProgress.StartProgress "Verwijder PICU Data"
     Patient_ClearData "_Ped", False, True
     Patient_ClearData "_Glob", False, True
     ModProgress.FinishProgress
-    
-    ModApplication.App_SetPrescriptionsDate
-    ModApplication.App_SetApplicationTitle
 
 End Sub
 
 Private Sub Test_Patient_ClearPedData()
 
-    Patient_ClearPedData
+    Patient_ClearPICUData
 
 End Sub
 
-Public Sub Patient_ClearNeoData()
+Public Sub Patient_ClearNICUData()
 
     ModProgress.StartProgress "Verwijder Neo Data"
     Patient_ClearData "_Neo", False, True
     Patient_ClearData "_Glob", False, True
     ModProgress.FinishProgress
     
-    ModApplication.App_SetPrescriptionsDate
-    ModApplication.App_SetApplicationTitle
-
 End Sub
 
 Private Sub Test_Patient_ClearNeoData()
 
-    Patient_ClearNeoData
+    Patient_ClearNICUData
 
 End Sub
 
@@ -545,6 +563,7 @@ Public Sub Patient_ClearAll(ByVal blnShowWarn As Boolean, ByVal blnShowProgress 
     
     Patient_ClearData vbNullString, blnShowWarn, blnShowProgress
     
+    ModBed.Bed_PrescriptionsVersionSet 0
     ModApplication.App_SetPrescriptionsDate
     ModApplication.App_SetApplicationTitle
         
@@ -555,6 +574,19 @@ Private Sub TestClearPatient()
     ModProgress.StartProgress "Test Patient Gegevens Verwijderen"
     Patient_ClearAll False, True
     ModProgress.FinishProgress
+
+End Sub
+
+Public Sub Patient_ClearNICUorPICU()
+
+    Dim blnIsNICU As Boolean
+    
+    blnIsNICU = MetaVision_IsNICU()
+    If blnIsNICU Then
+        Patient_ClearNICUData
+    Else
+        Patient_ClearPICUData
+    End If
 
 End Sub
 
@@ -637,7 +669,7 @@ Public Sub Patient_SavePatient()
         End If
     End If
     
-    blnNeo = MetaVision_IsNeonatologie()
+    blnNeo = MetaVision_IsNICU()
     
     strAction = "Patient_SavePatient"
     strParams = Array()
@@ -835,6 +867,7 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     Dim strRange As String
     Dim blnAll As Boolean
     Dim blnNeo As Boolean
+    Dim blnGet As Boolean
     Dim strHospNum As String
     Dim strStandard As String
     Dim intVersion As Integer
@@ -844,52 +877,48 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     On Error GoTo ErrorHandler
     
     Set objPat = New ClassPatientDetails
-    ModMetaVision.MetaVision_GetPatientDetails objPat, ModMetaVision.MetaVision_GetCurrentPatientID, vbNullString
-    blnNeo = MetaVision_IsNeonatologie()
-    
-    strHospNum = Patient_GetHospitalNumber()
-    strHospNum = IIf(strHospNum = vbNullString, objPat.HospitalNumber, strHospNum)
-    intVersion = ModBed.Bed_PrescriptionsVersionGet()
-    ModBed.Bed_PrescriptionsVersionSet 0
-    If blnAsk Then
+    blnNeo = MetaVision_IsNICU()
+        
+    If blnAsk Then ' Open a patient selected by the patient list
+        
+        ' First stop a running progress bar
         If blnShowProgress Then
             strTitle = FormProgress.Caption
             ModProgress.FinishProgress
         End If
     
-        If Patient_OpenDatabaseList("Selecteer een patient") Then
-            If Patient_GetHospitalNumber() = vbNullString Then  ' No patient was selected
-                Patient_SetHospitalNumber strHospNum            ' Put back the old hospital number
-                Bed_PrescriptionsVersionSet intVersion          ' Put back current version
-                Exit Sub                                        ' And exit sub
+        blnGet = Patient_OpenDatabaseList("Selecteer een patient")
+        
+        If blnGet Then
+            If Patient_IsStandard(Patient_GetHospitalNumber()) Then
+                strStandard = Patient_GetHospitalNumber()
+                Patient_SetHospitalNumber strHospNum
+                strHospNum = vbNullString
             Else
-                If Patient_IsStandard(Patient_GetHospitalNumber()) Then
-                    strStandard = Patient_GetHospitalNumber()
-                    Patient_SetHospitalNumber strHospNum
-                    strHospNum = vbNullString
-                Else
-                    strHospNum = Patient_GetHospitalNumber()
-                    intVersion = ModBed.Bed_PrescriptionsVersionGet()
-                    
-                    If blnShowProgress Then ModProgress.StartProgress strTitle
-                End If
+                strHospNum = Patient_GetHospitalNumber()
+                intVersion = ModBed.Bed_PrescriptionsVersionGet()
+                
+                ModMetaVision.MetaVision_GetPatientDetails objPat, vbNullString, strHospNum
+                
+                If blnShowProgress Then ModProgress.StartProgress strTitle
             End If
-        Else                                                ' Patientlist has been canceled so do nothing
-            Patient_SetHospitalNumber strHospNum            ' Put back the old hospital number
-            Bed_PrescriptionsVersionSet intVersion          ' Put back current version
-            
-            If blnShowProgress Then ModProgress.FinishProgress
-            Exit Sub                                        ' And exit sub
         End If
+    
+    Else ' Open a patient from the registry
+        ModMetaVision.MetaVision_GetPatientDetails objPat, ModMetaVision.MetaVision_GetCurrentPatientID, vbNullString
+        strHospNum = IIf(strHospNum = vbNullString, objPat.HospitalNumber, strHospNum)
+        blnGet = True
     End If
     
-    If Not strHospNum = vbNullString Then
-        Patient_ClearAll False, True
-        GetPatientDataFromDatabase strHospNum, ModDatabase.Database_GetLatestPrescriptionVersion(strHospNum)
-    End If
-    
-    If Not strStandard = vbNullString Then
-        GetPatientDataFromDatabase strStandard, ModDatabase.Database_GetLatestPrescriptionVersion(strStandard)
+    If blnGet Then
+        If Not strHospNum = vbNullString Then
+            GetPatientDataFromDatabase strHospNum, intVersion
+            Patient_WritePatientDetails objPat, False
+        End If
+        
+        If Not strStandard = vbNullString Then
+            GetPatientDataFromDatabase strStandard, ModDatabase.Database_GetLatestPrescriptionVersion(strStandard)
+        End If
     End If
         
     ModDatabase.Database_LogAction "Open Patient", ModUser.User_GetCurrent().Login, strHospNum
@@ -917,6 +946,21 @@ Private Sub Test_OpenPatient()
 
 End Sub
 
+Public Sub Patient_RefreshData()
+
+    Dim varAnswer As Variant
+    Dim strHospNum As String
+    Dim blnIsNICU As Boolean
+    
+    strHospNum = Patient_GetHospitalNumber()
+    If strHospNum = vbNullString Then Exit Sub
+    
+    varAnswer = ModMessage.ShowMsgBoxOKCancel("Patient data verversen?")
+    
+    If varAnswer = vbOK Then GetPatientDataFromDatabase strHospNum
+
+End Sub
+
 Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVal intVersion As Integer = 0)
     
     On Error GoTo GetPatientDataFromDatabaseError
@@ -924,20 +968,20 @@ Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVa
     Dim strTitle As String
     Dim strAction As String
     Dim strParams() As Variant
-    Dim blnNeo As Boolean
+    Dim blnIsNICU As Boolean
     
     ModProgress.StartProgress "Patient data ophalen voor " & strHospNum
     
-    blnNeo = MetaVision_IsNeonatologie()
+    blnIsNICU = MetaVision_IsNICU()
     
     strAction = "ModPatient.GetPatientDataFromDatabase"
     
     ModLog.LogActionStart strAction, strParams
             
-    If blnNeo Then
-        ModPatient.Patient_ClearNeoData
+    If blnIsNICU Then
+        ModPatient.Patient_ClearNICUData
     Else
-        ModPatient.Patient_ClearPedData
+        ModPatient.Patient_ClearPICUData
     End If
     
     If intVersion = 0 Then
@@ -947,7 +991,7 @@ Private Sub GetPatientDataFromDatabase(ByVal strHospNum As String, Optional ByVa
     End If
     If Not Patient_IsStandard(strHospNum) Then ModRange.SetRangeValue CONST_PATHOSPNUM_RANGE, strHospNum 'Have to set hospitalnumber if leading zero got lost from transfer from database
     
-    If blnNeo Then ModNeoInfB.CopyCurrentInfDataToVar True ' Make sure that infuusbrief data is updated
+    If blnIsNICU Then ModNeoInfB.CopyCurrentInfDataToVar True ' Make sure that infuusbrief data is updated
             
     ModApplication.App_SetApplicationTitle
 

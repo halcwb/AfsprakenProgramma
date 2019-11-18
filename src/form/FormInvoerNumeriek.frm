@@ -17,9 +17,9 @@ Option Explicit
 Private m_Range As String
 Private m_Validate As String
 Private m_IsSST1 As Boolean
+Private m_Extra As Double
 
 Private Const constSST1Vol As String = "_Ped_TPN_SST1Vol"
-
 
 Public Sub SetIsSST1()
 
@@ -61,12 +61,16 @@ Private Sub cmdClear_Click()
 End Sub
 
 Private Sub cmdOK_Click()
+
+    Dim dblValue As Double
     
+    dblValue = StringToDouble(txtWaarde.Value) - m_Extra
+    dblValue = IIf(dblValue < 0, 0, dblValue)
     If Not m_Range = vbNullString Then
         If m_IsSST1 Then
-            ModRange.SetRangeValue constSST1Vol, Round(StringToDouble(txtWaarde.Value), 1)
+            ModRange.SetRangeValue constSST1Vol, dblValue
         Else
-            ModRange.SetRangeValue m_Range, StringToDouble(txtWaarde.Value)
+            ModRange.SetRangeValue m_Range, dblValue
         End If
     End If
     Me.Hide
@@ -104,9 +108,11 @@ Private Sub UserForm_Activate()
 
 End Sub
 
-Public Sub SetValue(ByVal strRange As String, ByVal strItem As String, ByVal varValue As Variant, ByVal strUnit As String, ByVal strValidate As String)
+Public Sub SetValue(ByVal strRange As String, ByVal strItem As String, ByVal varValue As Variant, ByVal strUnit As String, ByVal strValidate As String, Optional ByVal dblExtra As Double = 0)
     
     Dim strError As String
+    
+    m_Extra = dblExtra
 
     If varValue = vbNullString Then varValue = 0
     If Not IsNumeric(varValue) Then GoTo SetValueError

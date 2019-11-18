@@ -168,7 +168,7 @@ Public Function SetRangeValue(ByVal strRange As String, ByVal varValue As Varian
         WbkAfspraken.Names(strRange).RefersToRange.Value2 = varValue
         
     Else
-        blnLog = ModSetting.GetEnableLogging()
+        blnLog = ModSetting.GetIsLoggingEnabled()
         blnSet = False
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogFilePath(), Error, "Could not set " & varValue & " to range: " & strRange
@@ -188,7 +188,7 @@ Public Sub SetRangeFormula(ByVal strRange As String, ByVal strFormula As String)
 
     Dim blnLog As Boolean
     
-    blnLog = ModSetting.GetEnableLogging()
+    blnLog = ModSetting.GetIsLoggingEnabled()
 
     If NameExists(strRange) Then
         WbkAfspraken.Names(strRange).RefersToRange.Formula = strFormula
@@ -207,7 +207,7 @@ Public Function GetRange(ByVal strRange As String) As Range
     If NameExists(strRange) Then
         Set GetRange = WbkAfspraken.Names(strRange).RefersToRange
     Else
-        blnLog = ModSetting.GetEnableLogging()
+        blnLog = ModSetting.GetIsLoggingEnabled()
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogFilePath(), Error, "Could not get range value from: " & strRange
         If Not blnLog Then ModLog.DisableLogging
@@ -224,7 +224,7 @@ Public Function GetRangeValue(ByVal strRange As String, ByVal varDefault As Vari
     If NameExists(strRange) Then
         GetRangeValue = WbkAfspraken.Names(strRange).RefersToRange.Value2
     Else
-        blnLog = ModSetting.GetEnableLogging()
+        blnLog = ModSetting.GetIsLoggingEnabled()
         ModLog.EnableLogging
         ModLog.LogToFile ModSetting.GetLogFilePath(), Error, "Could not get range value from: " & strRange
         If Not blnLog Then ModLog.DisableLogging

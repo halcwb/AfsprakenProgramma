@@ -213,7 +213,7 @@ $K$56: 	=IF(NeoBerInfB!$D$41=3,NeoBerInfB!C47&"" ml"","""")
 $M$56: 	=IF(NeoBerInfB!B47>0,NeoBerInfB!B47&"" ml"","""")
 $A$57: 	=NeoBerInfB!AI48
 $G$57: 	=IF(NeoBerInfB!D41=1,NeoBerInfB!C48&"" ml"","""")
-$H$57: 	=IF(G57<>"""",""(""&ROUND(NeoBerInfB!C48/(_Pat_Gewicht),0)&"" ml/kg)"","""")
+$H$57: 	=IF(AND(G57<>"""",_Pat_Gewicht<>0),""(""&ROUND(NeoBerInfB!C48/(_Pat_Gewicht),0)&"" ml/kg)"","""")
 $M$57: 	=IF(NeoBerInfB!B48>0,NeoBerInfB!B48&"" ml"","""")
 $I$58: 	=IF(NeoBerInfB!$D$41=2,NeoBerInfB!C49&"" ml"","""")
 $J$58: 	=IF(I58<>"""",""(""&ROUND(NeoBerInfB!C49/(_Pat_Gewicht),0)&"" ml/kg)"","""")

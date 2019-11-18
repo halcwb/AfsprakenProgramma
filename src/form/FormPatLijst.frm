@@ -25,6 +25,27 @@ Private m_UseDatabase As Boolean
 Private m_Cancel As Boolean
 Private m_Standard As Boolean
 
+Public Sub SelectPatient(ByVal strHospNum)
+
+    Dim varIndx As Variant
+    Dim objPat As ClassPatientDetails
+    Dim strPat As String
+    Dim intN As Integer
+    
+    For Each objPat In m_Pats
+        If objPat.HospitalNumber = strHospNum Then
+            strPat = objPat.Bed & " - " & objPat.ToString()
+            intN = ModList.GetItemIndex(lstPatienten, strPat)
+            If intN >= 0 Then
+                ModList.SelectListItem lstPatienten, intN + 2
+                cmdImport.Enabled = True
+            End If
+        End If
+    Next
+
+End Sub
+
+
 Public Function GetCancel() As Boolean
 
     GetCancel = m_Cancel
@@ -69,8 +90,9 @@ End Sub
 
 Private Sub cmdOK_Click()
 
-    SetSelectedHospNumAndVersion
     m_Cancel = False
+    
+    SetSelectedHospNumAndVersion
     Me.Hide
 
 End Sub
@@ -217,7 +239,11 @@ Private Sub SetSelectedHospNum()
 
     strId = GetSelectedHospNum()
     
-    Patient_SetHospitalNumber strId
+    If Not strId = vbNullString Then
+        Patient_SetHospitalNumber strId
+    Else
+        m_Cancel = True
+    End If
 
 End Sub
 
@@ -293,7 +319,6 @@ Private Sub UserForm_Activate()
 
     CenterForm
     
-    cmdImport.Enabled = False
     cmdExport.Enabled = False
 
 End Sub
@@ -313,7 +338,8 @@ Private Sub UserForm_Initialize()
     
     frmPatSel.Visible = False
     frmVersion.Visible = False
-
+    cmdImport.Enabled = False
+    
 End Sub
 
 Public Sub SetOnlyAdmittedTrue()

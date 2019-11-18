@@ -78,15 +78,21 @@ Private Sub Test_Setting_UseDatabase()
 
 End Sub
 
-Public Function Setting_UseProductionDb() As Boolean
+Public Function Setting_GetUseProductionDB() As Boolean
 
-    Setting_UseProductionDb = GetSetting(constUseProdDB)
+    Setting_GetUseProductionDB = GetSetting(constUseProdDB)
 
 End Function
 
-Public Sub Setting_UseTestDB()
+Public Sub Setting_SetUseTestDB()
 
     SetSetting constUseProdDB, False
+
+End Sub
+
+Public Sub Setting_SetUseProductionDB()
+
+    SetSetting constUseProdDB, True
 
 End Sub
 
@@ -96,13 +102,12 @@ Public Sub Setting_ToggleUseProductionDB()
     Dim strDB As String
     Dim strOld As String
     
-    
     Formularium_GetNewFormularium
     App_LoadConfigTablesFromDatabase
     SetSetting constUseProdDB, (Not GetSetting(constUseProdDB))
     
-    strDB = IIf(Setting_UseProductionDb, "Productie Database", "Test Database")
-    strOld = IIf(Setting_UseProductionDb, "Test Database", "Productie Database")
+    strDB = IIf(Setting_GetUseProductionDB, "Productie Database", "Test Database")
+    strOld = IIf(Setting_GetUseProductionDB, "Test Database", "Productie Database")
     
     strMsg = "De " & strDB & " wordt gebruikt op: " & vbNewLine
     strMsg = strMsg & Setting_GetServer() & vbNewLine
@@ -117,7 +122,7 @@ End Sub
 
 Public Function Setting_GetServer() As String
 
-    If (IsDevelopmentDir() Or IsTrainingDir()) And Not Setting_UseProductionDb() Then
+    If (IsDevelopmentDir() Or IsTrainingDir()) And Not Setting_GetUseProductionDB() Then
         Setting_GetServer = GetSetting(constTestServer)
     Else
         Setting_GetServer = GetSetting(constProdServer)
@@ -127,7 +132,7 @@ End Function
 
 Public Function Setting_GetDatabase() As String
 
-    If (IsDevelopmentDir() Or IsTrainingDir()) And Not Setting_UseProductionDb() Then
+    If (IsDevelopmentDir() Or IsTrainingDir()) And Not Setting_GetUseProductionDB() Then
         Setting_GetDatabase = GetSetting(constTestDatabase)
     Else
         Setting_GetDatabase = GetSetting(constProdDatabase)
@@ -186,14 +191,15 @@ End Sub
 Public Sub SetDevelopmentMode(ByVal blnMode As Boolean)
 
     SetSetting constDevMode, blnMode
+    If Not blnMode Then Setting_SetUseTestDB
+    
     ModApplication.App_UpdateStatusBar "DevelopmentMode", IIf(blnMode, "Aan", "Uit")
-    If Not blnMode Then Setting_UseTestDB
 
 End Sub
 
-Public Function GetEnableLogging() As Boolean
+Public Function GetIsLoggingEnabled() As Boolean
 
-    GetEnableLogging = CBool(GetSetting(constLogging))
+    GetIsLoggingEnabled = CBool(GetSetting(constLogging))
 
 End Function
 
@@ -208,7 +214,7 @@ Public Sub ToggleLogging()
 
     Dim blnLog As Boolean
     
-    blnLog = Not GetEnableLogging()
+    blnLog = Not GetIsLoggingEnabled()
     SetEnableLogging blnLog
     
     If blnLog Then

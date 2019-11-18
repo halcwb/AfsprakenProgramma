@@ -1,12 +1,22 @@
 Attribute VB_Name = "ModProgress"
 Option Explicit
 
-Public Sub SetJobPercentage(ByVal strJob As String, ByVal intTot As Long, ByVal intProg As Long)
+Public Sub SetJobPercentage(ByVal strJob As String, ByVal lngTot As Long, ByVal lngProg As Long)
     
     Dim intPerc As Integer
+    Dim dblPerc As Double
     
-    intPerc = Int((CDbl(intProg) / CDbl(intTot)) * 100)
-
+    On Error Resume Next
+    
+    dblPerc = (CDbl(lngProg) / CDbl(lngTot)) * 100
+    If dblPerc > 100 Then
+        intPerc = 100
+    ElseIf dblPerc < 0 Then
+        intPerc = 0
+    Else
+        intPerc = Int((CDbl(lngProg) / CDbl(lngTot)) * 100)
+    End If
+    
     If intPerc <= 100 Then FormProgress.SetJobPercentage strJob, intPerc
 
 End Sub
