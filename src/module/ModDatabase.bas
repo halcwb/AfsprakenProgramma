@@ -195,7 +195,7 @@ Private Function Util_PrescriberExists(strUser As String) As Boolean
     
     Set objConn = Util_InitConnection(strServer, strDatabase)
     
-    strSql = "SELECT * FROM " & CONST_GET_PRESCRIBERS & " (" & strUser & ")"
+    strSql = "SELECT * FROM " & CONST_GET_PRESCRIBERS & " (" & Util_WrapString(strUser) & ")"
         
     objConn.Open
     blnExists = Not objConn.Execute(strSql).EOF
@@ -213,7 +213,10 @@ End Sub
 
 Private Function Util_WrapString(varItem As Variant) As Variant
 
-    Util_WrapString = "'" & varItem & "'"
+    Dim strEscaped  As String
+    
+    strEscaped = Replace(varItem, "'", "''")
+    Util_WrapString = "'" & strEscaped & "'"
 
 End Function
 
@@ -241,18 +244,10 @@ Private Function Util_WrapTransaction(ByVal strSql As String, ByVal strName As S
 End Function
 
 Public Sub Database_SavePatient()
-
-    Dim strHN As String
-    Dim strBD As String
-    Dim strVN As String
-    Dim strAN As String
-    Dim strGN As String
-    Dim intGW As Integer
-    Dim intGD As Integer
-    Dim dblBW As Double
+    
+    Dim objBuilder As ClassStringBuilder
     
     Dim strSql As String
-    Dim arrSql() As Variant
     
     Dim strServer As String
     Dim strDatabase As String
@@ -266,17 +261,17 @@ Public Sub Database_SavePatient()
     
     On Error GoTo SavePatientError
     
-    strHN = Util_WrapString(ModPatient.Patient_GetHospitalNumber)
-    strBD = Util_WrapString(ModDate.FormatDateYearMonthDay(ModPatient.Patient_BirthDate))
-    strAN = Util_WrapString(ModPatient.Patient_GetLastName)
-    strVN = Util_WrapString(ModPatient.Patient_GetFirstName)
-    strGN = Util_WrapString(ModRange.GetRangeValue(CONST_GENDER_RANGE, Null))
-    intGW = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, Null)
-    intGD = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, Null)
-    dblBW = ModRange.GetRangeValue(CONST_BIRTHWEIGHT_RANGE, Null)
-        
-    arrSql = Array(strHN, strBD, strAN, strVN, strGN, intGW, intGD, dblBW)
-        
+    Set objBuilder = New ClassStringBuilder
+    
+    objBuilder.Append Util_WrapString(ModPatient.Patient_GetHospitalNumber)
+    objBuilder.Append ", " & Util_WrapString(ModDate.FormatDateYearMonthDay(ModPatient.Patient_BirthDate))
+    objBuilder.Append ", " & Util_WrapString(ModPatient.Patient_GetLastName)
+    objBuilder.Append ", " & Util_WrapString(ModPatient.Patient_GetFirstName)
+    objBuilder.Append ", " & Util_WrapString(ModRange.GetRangeValue(CONST_GENDER_RANGE, Null))
+    objBuilder.Append ", " & ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, Null)
+    objBuilder.Append ", " & ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, Null)
+    objBuilder.Append ", " & ModRange.GetRangeValue(CONST_BIRTHWEIGHT_RANGE, Null)
+                
     objConn.Open
     
     If Util_PatientExists(ModPatient.Patient_GetHospitalNumber()) Then
@@ -285,9 +280,10 @@ Public Sub Database_SavePatient()
         strSql = "EXEC " & CONST_INSERT_PATIENT & " "
     End If
     
-    strSql = strSql + (Join(arrSql, ", "))
+    strSql = strSql + objBuilder.ToString()
     strSql = Util_WrapTransaction(strSql, "save_patient")
     
+    ModUtils.CopyToClipboard strSql
     objConn.Execute strSql
     
     objConn.Close
@@ -345,19 +341,14 @@ End Sub
 Public Sub Database_SavePrescriber()
 
     Dim strUser As String
-    Dim strLN As String
-    Dim strFN As String
-    Dim strRole As String
-    Dim strPIN As String
-    
     Dim strSql As String
-    Dim arrSql() As Variant
     
     Dim strServer As String
     Dim strDatabase As String
     
     Dim objConn As ADODB.Connection
-
+    Dim objBuilder As ClassStringBuilder
+    
     strServer = ModSetting.Setting_GetServer()
     strDatabase = ModSetting.Setting_GetDatabase()
     
@@ -365,13 +356,13 @@ Public Sub Database_SavePrescriber()
     
     On Error GoTo SavePrescriberError
     
-    strUser = Util_WrapString(ModRange.GetRangeValue("_User_Login", ""))
-    strLN = Util_WrapString(ModRange.GetRangeValue("_User_FirstName", ""))
-    strFN = Util_WrapString(ModRange.GetRangeValue("_User_LastName", ""))
-    strRole = Util_WrapString(ModRange.GetRangeValue("_User_Type", ""))
-        
-    arrSql = Array(strUser, strLN, strFN, strRole)
-    
+    Set objBuilder = New ClassStringBuilder
+    strUser = ModRange.GetRangeValue("_User_Login", "")
+    objBuilder.Append Util_WrapString(strUser)
+    objBuilder.Append ", " & Util_WrapString(ModRange.GetRangeValue("_User_FirstName", ""))
+    objBuilder.Append ", " & Util_WrapString(ModRange.GetRangeValue("_User_LastName", ""))
+    objBuilder.Append ", " & Util_WrapString(ModRange.GetRangeValue("_User_Type", ""))
+            
     objConn.Open
     
     If Util_PrescriberExists(strUser) Then
@@ -380,7 +371,7 @@ Public Sub Database_SavePrescriber()
         strSql = "EXEC " & CONST_INSERT_PRESCRIBER & " "
     End If
     
-    strSql = strSql & (Join(arrSql, ", "))
+    strSql = strSql & objBuilder.ToString
     strSql = Util_WrapTransaction(strSql, "save_prescriber")
     
     ModUtils.CopyToClipboard strSql
@@ -437,7 +428,7 @@ Private Sub Test_SavePrescriber()
 
 End Sub
 
-Public Function Database_GetLatestPrescriptionVersion(strHospNum) As String
+Public Function Database_GetLatestPrescriptionVersion(ByVal strHospNum) As String
 
     Dim strSql As String
     Dim objRs As Recordset
@@ -455,7 +446,8 @@ Public Function Database_GetLatestPrescriptionVersion(strHospNum) As String
     
     On Error GoTo Database_GetLatestVersionError
     
-    strSql = "SELECT " & CONST_GET_LATEST_PRESCRIPTION_VERSION & "('" & strHospNum & "')"
+    strHospNum = Util_WrapString(strHospNum)
+    strSql = "SELECT " & CONST_GET_LATEST_PRESCRIPTION_VERSION & "(" & strHospNum & ")"
     
     objConn.Open
     
@@ -488,7 +480,7 @@ Private Sub Test_Database_GetLatestPrescriptionVersion()
 
 End Sub
 
-Public Sub Database_SaveData(ByVal strHospNum As String, ByVal strPrescriber As String, objData As Range, objText As Range, ByVal blnProgress As Boolean)
+Public Sub Database_SaveData(ByVal strHospitalNumber As String, ByVal strPrescriber As String, objData As Range, objText As Range, ByVal blnProgress As Boolean)
 
     Dim strParam As String
     Dim strSql As String
@@ -496,6 +488,7 @@ Public Sub Database_SaveData(ByVal strHospNum As String, ByVal strPrescriber As 
     Dim varVal As Variant
     Dim varEmp As Variant
     Dim intVersion As Integer
+    Dim strHospNum As String
     
     Dim strServer As String
     Dim strDatabase As String
@@ -515,39 +508,43 @@ Public Sub Database_SaveData(ByVal strHospNum As String, ByVal strPrescriber As 
     objBuilder.Append "DECLARE @versionUTC datetime" & vbNewLine
     objBuilder.Append "DECLARE @versionDate datetime" & vbNewLine
     
-    strLatest = "SELECT @versionID = " & CONST_GET_LATEST_PRESCRIPTION_VERSION & "('" & strHospNum & "')"
+    strHospNum = Util_WrapString(strHospitalNumber)
+    strPrescriber = Util_WrapString(strPrescriber)
+    
+    strLatest = "SELECT @versionID = " & CONST_GET_LATEST_PRESCRIPTION_VERSION & "(" & strHospNum & ")"
     strLatest = Util_GetVersionSQL(strLatest) & vbNewLine
     objBuilder.Append vbNewLine & strLatest
        
     intC = objData.Rows.Count
     For intN = 2 To intC
-        strParam = objData.Cells(intN, 1).Value2
+        strParam = Util_WrapString(objData.Cells(intN, 1).Value2)
         varVal = objData.Cells(intN, 2).Value2
         varEmp = objData.Cells(intN, 3).Value2
         
         If Not varVal = varEmp Then
-            objBuilder.Append vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONDATA & " '" & strHospNum & "', @versionID, @versionUTC, @versionDate, '" & strPrescriber & "', 0, ' " & strParam & " ', '" & varVal & " '"
+            varVal = Util_WrapString(varVal)
+            objBuilder.Append vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONDATA & " " & strHospNum & ", @versionID, @versionUTC, @versionDate, " & strPrescriber & ", 0, " & strParam & ", " & varVal
         End If
         
         If blnProgress Then ModProgress.SetJobPercentage "Data wegschrijven", intC, intN
     Next intN
     
-    objBuilder.Append Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionData")
+    objBuilder.Append Util_GetLogSQL("Save patient data", False, strHospitalNumber, "PrescriptionData")
     objBuilder.Append vbNewLine
     objBuilder.Append vbNewLine
     
     intC = objText.Rows.Count
     For intN = 2 To intC
         If Not (Format(objText.Cells(intN, 2).Value2) = vbNullString Or Format(objText.Cells(intN, 2).Value2) = "0") Then
-            strParam = objText.Cells(intN, 1).Value2
-            varVal = objText.Cells(intN, 2).Value2
-            objBuilder.Append vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONTEXT & " '" & strHospNum & "', @versionID, @versionUTC, @versionDate, '" & strPrescriber & "', 0, ' " & strParam & " ', '" & varVal & " '"
+            strParam = Util_WrapString(objText.Cells(intN, 1).Value2)
+            varVal = Util_WrapString(objText.Cells(intN, 2).Value2)
+            objBuilder.Append vbNewLine & "EXEC " & CONST_INSERT_PRESCRIPTIONTEXT & " " & strHospNum & ", @versionID, @versionUTC, @versionDate, " & strPrescriber & ", 0, " & strParam & ", " & varVal
         End If
         
         If blnProgress Then ModProgress.SetJobPercentage "Text wegschrijven naar de database", intC, intN
     Next intN
     
-    objBuilder.Append Util_GetLogSQL("Save patient data", False, strHospNum, "PrescriptionText")
+    objBuilder.Append Util_GetLogSQL("Save patient data", False, strHospitalNumber, "PrescriptionText")
     objBuilder.Append vbNewLine
     objBuilder.Append vbNewLine
     
@@ -633,8 +630,8 @@ Private Sub Util_GetPatientDataForHospNumAndVersion(ByVal strHospNum, Optional B
             
             strPar = Trim(objRs.Fields("Parameter").Value)
             varVal = Trim(objRs.Fields("Data").Value)
-            
-            If IsNumeric(varVal) Then varVal = CDbl(varVal)
+            ' quick fix
+            If IsNumeric(varVal) Then varVal = Val(Replace(varVal, ",", "."))
             If Util_IsLogical(varVal) Then varVal = CBool(varVal)
             
             If Patient_IsStandard(strHospNum) And ModString.StartsWith(strPar, "__") And Not blnIsStandard Then
@@ -2285,7 +2282,7 @@ Public Sub Database_LoadFormularium(objFormularium As ClassFormularium, ByVal bl
     If blnShowProgress Then ModProgress.StartProgress "Formularium"
     
     strSql = "SELECT * FROM [dbo].[GetConfigMedDiscLatest] () AS md" & vbNewLine
-    strSql = strSql & "ORDER BY md.Generic, md.Shape, md.GenericQuantity"
+    strSql = strSql & "ORDER BY md.Generic, md.Shape, md.GenericQuantity, md.GPK"
 
     objConn.Open
     Set objRs = objConn.Execute(strSql)
@@ -2345,43 +2342,43 @@ Public Sub Database_LoadFormularium(objFormularium As ClassFormularium, ByVal bl
                                                 
             blnMoved = False
             strGPK = .GPK
-            Do While Not objRs.EOF And strGPK = .GPK
-            
-                Set objDose = New ClassDose
-                With objDose
-                    .Generic = objMed.Generic
-                    .Shape = objMed.Shape
-                    If Not IsNull(objRs.Fields("Route")) Then .Route = objRs.Fields("Route").Value
-                    If Not IsNull(objRs.Fields("Indication")) Then .Indication = objRs.Fields("Indication").Value
-                    
-                    If Not IsNull(objRs.Fields("Gender")) Then .Gender = objRs.Fields("Gender").Value
-                    If Not IsNull(objRs.Fields("MinAge")) Then .MinAgeMo = objRs.Fields("MinAge").Value
-                    If Not IsNull(objRs.Fields("MaxAge")) Then .MaxAgeMo = objRs.Fields("MaxAge").Value
-                    If Not IsNull(objRs.Fields("MinWeight")) Then .MinWeightKg = objRs.Fields("MinWeight").Value
-                    If Not IsNull(objRs.Fields("MaxWeight")) Then .MaxWeightKg = objRs.Fields("MaxWeight").Value
-                    If Not IsNull(objRs.Fields("MinGestAge")) Then .MinGestDays = objRs.Fields("MinGestAge").Value
-                    If Not IsNull(objRs.Fields("MaxGestAge")) Then .MaxGestDays = objRs.Fields("MaxGestAge").Value
-                    If Not IsNull(objRs.Fields("MinPMAge")) Then .MinPMDays = objRs.Fields("MinPMAge").Value
-                    If Not IsNull(objRs.Fields("MaxPMAge")) Then .MaxPMDays = objRs.Fields("MaxPMAge").Value
-                    
-                    .Unit = objMed.MultipleUnit
-                    If Not IsNull(objRs.Fields("Frequencies")) Then .Frequencies = objRs.Fields("Frequencies").Value
-                    If Not IsNull(objRs.Fields("NormDose")) Then .NormDose = objRs.Fields("NormDose").Value
-                    If Not IsNull(objRs.Fields("MinDose")) Then .MinDose = objRs.Fields("MinDose").Value
-                    If Not IsNull(objRs.Fields("MaxDose")) Then .MaxDose = objRs.Fields("MaxDose").Value
-                    If Not IsNull(objRs.Fields("AbsMaxDose")) Then .AbsMaxDose = objRs.Fields("AbsMaxDose").Value
-                    If Not IsNull(objRs.Fields("MaxPerDose")) Then .MaxPerDose = objRs.Fields("MaxPerDose").Value
-                    If Not IsNull(objRs.Fields("IsDosePerKg")) Then .IsDosePerKg = objRs.Fields("IsDosePerKg").Value
-                    If Not IsNull(objRs.Fields("IsDosePerM2")) Then .IsDosePerM2 = objRs.Fields("IsDosePerM2").Value
-                End With
-                
-                objMed.AddDose objDose
-                
-                objRs.MoveNext
-                
-                If Not objRs.EOF Then strGPK = objRs.Fields("GPK").Value Else strGPK = vbNullString
-                blnMoved = True
-            Loop
+'            Do While Not objRs.EOF And strGPK = .GPK
+'
+'                Set objDose = New ClassDose
+'                With objDose
+'                    .Generic = objMed.Generic
+'                    .Shape = objMed.Shape
+'                    If Not IsNull(objRs.Fields("Route")) Then .Route = objRs.Fields("Route").Value
+'                    If Not IsNull(objRs.Fields("Indication")) Then .Indication = objRs.Fields("Indication").Value
+'
+'                    If Not IsNull(objRs.Fields("Gender")) Then .Gender = objRs.Fields("Gender").Value
+'                    If Not IsNull(objRs.Fields("MinAge")) Then .MinAgeMo = objRs.Fields("MinAge").Value
+'                    If Not IsNull(objRs.Fields("MaxAge")) Then .MaxAgeMo = objRs.Fields("MaxAge").Value
+'                    If Not IsNull(objRs.Fields("MinWeight")) Then .MinWeightKg = objRs.Fields("MinWeight").Value
+'                    If Not IsNull(objRs.Fields("MaxWeight")) Then .MaxWeightKg = objRs.Fields("MaxWeight").Value
+'                    If Not IsNull(objRs.Fields("MinGestAge")) Then .MinGestDays = objRs.Fields("MinGestAge").Value
+'                    If Not IsNull(objRs.Fields("MaxGestAge")) Then .MaxGestDays = objRs.Fields("MaxGestAge").Value
+'                    If Not IsNull(objRs.Fields("MinPMAge")) Then .MinPMDays = objRs.Fields("MinPMAge").Value
+'                    If Not IsNull(objRs.Fields("MaxPMAge")) Then .MaxPMDays = objRs.Fields("MaxPMAge").Value
+'
+'                    .Unit = objMed.MultipleUnit
+'                    If Not IsNull(objRs.Fields("Frequencies")) Then .Frequencies = objRs.Fields("Frequencies").Value
+'                    If Not IsNull(objRs.Fields("NormDose")) Then .NormDose = objRs.Fields("NormDose").Value
+'                    If Not IsNull(objRs.Fields("MinDose")) Then .MinDose = objRs.Fields("MinDose").Value
+'                    If Not IsNull(objRs.Fields("MaxDose")) Then .MaxDose = objRs.Fields("MaxDose").Value
+'                    If Not IsNull(objRs.Fields("AbsMaxDose")) Then .AbsMaxDose = objRs.Fields("AbsMaxDose").Value
+'                    If Not IsNull(objRs.Fields("MaxPerDose")) Then .MaxPerDose = objRs.Fields("MaxPerDose").Value
+'                    If Not IsNull(objRs.Fields("IsDosePerKg")) Then .IsDosePerKg = objRs.Fields("IsDosePerKg").Value
+'                    If Not IsNull(objRs.Fields("IsDosePerM2")) Then .IsDosePerM2 = objRs.Fields("IsDosePerM2").Value
+'                End With
+'
+'                objMed.AddDose objDose
+'
+'                objRs.MoveNext
+'
+'                If Not objRs.EOF Then strGPK = objRs.Fields("GPK").Value Else strGPK = vbNullString
+'                blnMoved = True
+'            Loop
             
                         
         End With
@@ -2429,6 +2426,86 @@ Private Sub Test_LoadFormularium()
 
 End Sub
 
+Public Sub Database_LoadDoseRules(objMed As ClassMedDisc)
+
+    Dim strSql As String
+    Dim objRs As Recordset
+    Dim intC As Integer
+    Dim objDose As ClassDose
+    Dim blnIsPICU As Boolean
+    
+    Dim strServer As String
+    Dim strDatabase As String
+
+    strServer = ModSetting.Setting_GetServer()
+    strDatabase = ModSetting.Setting_GetDatabase()
+    Dim objConn As ADODB.Connection
+    
+    Set objConn = Util_InitConnection(strServer, strDatabase)
+    
+    On Error GoTo ErrorHandler
+    
+    Application.DisplayAlerts = False
+    ImprovePerf True
+    
+    strSql = "SELECT DISTINCT * FROM [dbo].[GetConfigMedDiscDoseLatestForGenericShape] ('"
+    strSql = strSql & Util_RemoveQuotes(objMed.Generic) & "', '"
+    strSql = strSql & Util_RemoveQuotes(objMed.Shape) & "')"
+    ModUtils.CopyToClipboard strSql
+
+    objConn.Open
+    Set objRs = objConn.Execute(strSql)
+    blnIsPICU = MetaVision_IsPICU()
+    Do While Not objRs.EOF
+        Set objDose = New ClassDose
+        With objDose
+            .Generic = objMed.Generic
+            .Shape = objMed.Shape
+            If Not IsNull(objRs.Fields("Route")) Then .Route = objRs.Fields("Route").Value
+            If Not IsNull(objRs.Fields("Indication")) Then .Indication = objRs.Fields("Indication").Value
+
+            If Not IsNull(objRs.Fields("Gender")) Then .Gender = objRs.Fields("Gender").Value
+            If Not IsNull(objRs.Fields("MinAge")) Then .MinAgeMo = objRs.Fields("MinAge").Value
+            If Not IsNull(objRs.Fields("MaxAge")) Then .MaxAgeMo = objRs.Fields("MaxAge").Value
+            If Not IsNull(objRs.Fields("MinWeight")) Then .MinWeightKg = objRs.Fields("MinWeight").Value
+            If Not IsNull(objRs.Fields("MaxWeight")) Then .MaxWeightKg = objRs.Fields("MaxWeight").Value
+            If Not IsNull(objRs.Fields("MinGestAge")) Then .MinGestDays = objRs.Fields("MinGestAge").Value
+            If Not IsNull(objRs.Fields("MaxGestAge")) Then .MaxGestDays = objRs.Fields("MaxGestAge").Value
+            If Not IsNull(objRs.Fields("MinPMAge")) Then .MinPMDays = objRs.Fields("MinPMAge").Value
+            If Not IsNull(objRs.Fields("MaxPMAge")) Then .MaxPMDays = objRs.Fields("MaxPMAge").Value
+
+            .Unit = objMed.MultipleUnit
+            If Not IsNull(objRs.Fields("Frequencies")) Then .Frequencies = objRs.Fields("Frequencies").Value
+            If Not IsNull(objRs.Fields("NormDose")) Then .NormDose = objRs.Fields("NormDose").Value
+            If Not IsNull(objRs.Fields("MinDose")) Then .MinDose = objRs.Fields("MinDose").Value
+            If Not IsNull(objRs.Fields("MaxDose")) Then .MaxDose = objRs.Fields("MaxDose").Value
+            If Not IsNull(objRs.Fields("AbsMaxDose")) Then .AbsMaxDose = objRs.Fields("AbsMaxDose").Value
+            If Not IsNull(objRs.Fields("MaxPerDose")) Then .MaxPerDose = objRs.Fields("MaxPerDose").Value
+            If Not IsNull(objRs.Fields("IsDosePerKg")) Then .IsDosePerKg = objRs.Fields("IsDosePerKg").Value
+            If Not IsNull(objRs.Fields("IsDosePerM2")) Then .IsDosePerM2 = objRs.Fields("IsDosePerM2").Value
+        End With
+
+        objMed.AddDose objDose
+
+        objRs.MoveNext
+    Loop
+    
+    objConn.Close
+
+    Application.DisplayAlerts = True
+    ImprovePerf False
+    
+    Exit Sub
+    
+ErrorHandler:
+
+    objConn.Close
+    ModLog.LogError Err, "Database_LoadDoseRules"
+
+    Application.DisplayAlerts = True
+    ImprovePerf False
+
+End Sub
 
 Public Function Database_GetStandardPatients() As Collection
 

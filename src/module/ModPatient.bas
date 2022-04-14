@@ -9,6 +9,9 @@ Private Const constOpnameDate As String = "Var_Pat_OpnameDat"
 
 Private Const constStandardPrefix As String = "standaard_"
 
+Public Patient_Version As Integer
+
+
 Public Sub Patient_SetHospitalNumber(ByVal strHospNum As String)
 
     ModRange.SetRangeValue CONST_PATHOSPNUM_RANGE, strHospNum
@@ -64,8 +67,6 @@ Public Function Patient_GetGestationalAgeInDays() As Integer
 
     Dim intDays As Integer
     Dim intWeeks As Integer
-    Dim intAge As Integer
-    
     
     intDays = ModRange.GetRangeValue(CONST_GESTDAYS_RANGE, 0)
     intWeeks = ModRange.GetRangeValue(CONST_GESTWEEKS_RANGE, 0)
@@ -73,7 +74,7 @@ Public Function Patient_GetGestationalAgeInDays() As Integer
     
     If intDays = 0 Then intDays = 37 * 7
     
-    Patient_GetGestationalAgeInDays = intAge
+    Patient_GetGestationalAgeInDays = intDays
 
 End Function
 
@@ -857,6 +858,17 @@ Public Sub Patient_OpenPatientAndAsk()
 
 End Sub
 
+Public Sub Patient_ClearDetails()
+
+    ModRange.SetRangeValue "__1_Bed", ""
+    ModRange.SetRangeValue "__2_AchterNaam", ""
+    ModRange.SetRangeValue "__3_VoorNaam", ""
+    ModRange.SetRangeValue "__4_GebDatum", ""
+    ModRange.SetRangeValue "Var_Glob_Versie", 0
+    Patient_ClearData "_Pat", False, False
+
+End Sub
+
 Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolean)
     
     Dim strTitle As String
@@ -890,18 +902,20 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
         blnGet = Patient_OpenDatabaseList("Selecteer een patient")
         
         If blnGet Then
+            Patient_ClearDetails 'Fiks bug with persisting patient details from previous patient
             If Patient_IsStandard(Patient_GetHospitalNumber()) Then
                 strStandard = Patient_GetHospitalNumber()
                 Patient_SetHospitalNumber strHospNum
                 strHospNum = vbNullString
             Else
                 strHospNum = Patient_GetHospitalNumber()
-                intVersion = ModBed.Bed_PrescriptionsVersionGet()
-                
+                ' intVersion = ModBed.Bed_PrescriptionsVersionGet()
                 ModMetaVision.MetaVision_GetPatientDetails objPat, vbNullString, strHospNum
                 
                 If blnShowProgress Then ModProgress.StartProgress strTitle
             End If
+        Else
+            Patient_Version = 0
         End If
     
     Else ' Open a patient from the registry
@@ -912,6 +926,11 @@ Private Sub OpenPatient(ByVal blnAsk As Boolean, ByVal blnShowProgress As Boolea
     
     If blnGet Then
         If Not strHospNum = vbNullString Then
+            If Patient_Version > 0 Then
+                intVersion = Patient_Version
+                Patient_Version = 0
+            End If
+            
             GetPatientDataFromDatabase strHospNum, intVersion
             Patient_WritePatientDetails objPat, False
         End If

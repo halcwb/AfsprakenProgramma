@@ -92,3 +92,8 @@ Daniel
 
 benzyl penicilline niet het juiste dosering advies (MIU vs IU)
 
+clear formularium cache bij verwisselen van patient
+check bij laden van formularium de versie, anders meest recente laden.
+discontinue medicatie controle per dosis optie
+
+

@@ -780,7 +780,6 @@ Public Sub SetDoses(objDoses As Collection)
 
 End Sub
 
-
 Public Property Get Doses() As Collection
 
     Dim objDose As ClassDose
@@ -789,21 +788,24 @@ Public Property Get Doses() As Collection
 
     If m_Doses Is Nothing Then
         Set m_Doses = New Collection
+        ModDatabase.Database_LoadDoseRules Me
         
-        For Each varIndication In GetIndicationList()
-            For Each varRoute In GetRouteList()
-                Set objDose = New ClassDose
-                
-                objDose.Generic = Me.Generic
-                objDose.Shape = Me.Shape
-                objDose.Indication = varIndication
-                objDose.Route = varRoute
-                objDose.Unit = Me.MultipleUnit
-                
-                m_Doses.Add objDose
-                
+        If m_Doses.Count = 0 Then
+            For Each varIndication In GetIndicationList()
+                For Each varRoute In GetRouteList()
+                    Set objDose = New ClassDose
+                    
+                    objDose.Generic = Me.Generic
+                    objDose.Shape = Me.Shape
+                    objDose.Indication = varIndication
+                    objDose.Route = varRoute
+                    objDose.Unit = Me.MultipleUnit
+                    
+                    m_Doses.Add objDose
+                    
+                Next
             Next
-        Next
+        End If
     End If
     
     Set Doses = m_Doses
@@ -873,9 +875,9 @@ Public Function GetDose(ByVal strDep As String, ByVal strGender As String, ByVal
             blnIsDose = blnIsDose And (strDep = vbNullString Or LCase(objDose.Department) = LCase(strDep))
             blnIsDose = blnIsDose And (strGender = vbNullString Or LCase(objDose.Gender) = LCase(strGender))
             blnIsDose = blnIsDose And (dblAge >= objDose.MinAgeMo And (objDose.MaxAgeMo = 0 Or dblAge < objDose.MaxAgeMo))
-            blnIsDose = blnIsDose And (dblWeight = 0 Or dblWeight >= objDose.MinWeightKg And (objDose.MaxWeightKg = 0 Or dblWeight < objDose.MaxWeightKg))
-            blnIsDose = blnIsDose And (lngGestDays = 0 Or lngGestDays >= objDose.MinGestDays And (objDose.MaxGestDays = 0 Or lngGestDays < objDose.MaxGestDays))
-            blnIsDose = blnIsDose And (lngPMAge = 0 Or lngPMAge >= objDose.MinPMDays And (objDose.MaxPMDays = 0 Or lngPMAge < objDose.MaxPMDays))
+            blnIsDose = blnIsDose And (dblWeight >= objDose.MinWeightKg And (objDose.MaxWeightKg = 0 Or dblWeight < objDose.MaxWeightKg))
+            blnIsDose = blnIsDose And (lngGestDays >= objDose.MinGestDays And (objDose.MaxGestDays = 0 Or lngGestDays < objDose.MaxGestDays))
+            blnIsDose = blnIsDose And (lngPMAge >= objDose.MinPMDays And (objDose.MaxPMDays = 0 Or lngPMAge < objDose.MaxPMDays))
             
             blnIsDose = blnIsDose And (Trim(LCase(Me.Indication)) = Trim(LCase(objDose.Indication)))
             blnIsDose = blnIsDose And (Trim(LCase(Me.Route)) = Trim(LCase(objDose.Route)))

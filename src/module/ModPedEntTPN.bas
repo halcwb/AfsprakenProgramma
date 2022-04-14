@@ -1,7 +1,7 @@
 Attribute VB_Name = "ModPedEntTPN"
 Option Explicit
 
-Private Const CONST_TPN_1 As Integer = 2
+Private Const CONST_TPN_1 As Integer = 1
 Private Const CONST_TPN_2 As Integer = 7
 Private Const CONST_TPN_3 As Integer = 16
 Private Const CONST_TPN_4 As Integer = 31
@@ -22,6 +22,7 @@ Private Const constTpnText As String = "_Ped_TPN_Opm"
 Private Const constLipidStand As String = "_Ped_TPN_LipidStand"
 Private Const constSST1Stand As String = "_Ped_TPN_SST1Stand"
 Private Const constSST1Vol As String = "_Ped_TPN_SST1Vol"
+Private Const constSST2Vol As String = "_Ped_TPN_SST2Vol"
 Private Const constSST1Keuze As String = "_Ped_TPN_SST1Keuze"
 Private Const constSST2Stand As String = "_Ped_TPN_SST2Stand"
 Private Const constSST2Keuze As String = "_Ped_TPN_SST2Keuze"
@@ -101,6 +102,20 @@ Public Sub PedEntTPN_ClearSST1()
     ModRange.SetRangeValue constMgCl, False
     ModRange.SetRangeValue constMgClVol, 0
     
+End Sub
+
+Public Sub PedEntTPN_ClearSST1Vol()
+    
+    ModRange.SetRangeValue constSST1Vol, 0
+    ModRange.SetRangeValue constSST1Keuze, 1
+    
+    ModRange.SetRangeValue constNaCl1, False
+    ModRange.SetRangeValue constNaCl1Vol, 0
+    
+    ModRange.SetRangeValue constKCl1, False
+    ModRange.SetRangeValue constKCl1Vol, 0
+
+
 End Sub
 
 Public Sub PedEntTPN_ClearSST2()
@@ -419,6 +434,60 @@ Public Sub PedTPN_SetSST2Stand()
 
 End Sub
 
+Public Sub PedTPN_SetSST1Vol()
+    
+    Dim dblTot As Double
+    Dim dblVol As Double
+    Dim dblDay As Double
+    Dim dblStand As Double
+    
+    Dim strMsg As String
+    
+    If ModRange.GetRangeValue(constSST1Keuze, 0) = 1 Then
+        strMsg = "Kies eerste een IV vloeistof"
+        ModMessage.ShowMsgBoxExclam strMsg
+    Else
+    
+        dblStand = 24 * ModRange.GetRangeValue("Var_Ped_TPN_SST1CalcStand", 0)
+        
+        dblTot = ModRange.GetRangeValue("Var_Ped_TPN_SST1Vol", 0)
+        dblVol = ModRange.GetRangeValue(constSST1Vol, 0)
+        dblVol = dblVol + dblStand - dblTot
+        dblVol = IIf(dblVol < 0, 0, dblVol)
+        
+        ModRange.SetRangeValue constSST1Vol, dblVol
+        
+    End If
+
+End Sub
+
+Public Sub PedTPN_SetSST2Vol()
+    
+    Dim dblTot As Double
+    Dim dblVol As Double
+    Dim dblDay As Double
+    Dim dblStand As Double
+    
+    Dim strMsg As String
+    
+    If ModRange.GetRangeValue(constSST2Keuze, 0) = 1 Then
+        strMsg = "Kies eerste een IV vloeistof"
+        ModMessage.ShowMsgBoxExclam strMsg
+    Else
+    
+        dblStand = 24 * ModRange.GetRangeValue("Var_Ped_TPN_SST2CalcStand", 0)
+        
+        dblTot = ModRange.GetRangeValue("Var_Ped_TPN_SST2Vol", 0)
+        dblVol = ModRange.GetRangeValue(constSST2Vol, 0)
+        dblVol = dblVol + dblStand - dblTot
+        dblVol = IIf(dblVol < 0, 0, dblVol)
+        
+        ModRange.SetRangeValue constSST2Vol, dblVol
+        
+    End If
+
+End Sub
+
 Private Sub ClearRangeColor(objRange As Range)
 
     With objRange.Interior
@@ -474,10 +543,10 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
         Exit Sub
     End If
 
-    If dblGewicht < 2 Then Exit Sub
+    If dblGewicht < 1 Then Exit Sub
     
     Select Case Int(dblGewicht)
-    Case 2 To 6
+    Case 1 To 6
         Set objSheet = shtPedPrtTPN2tot6
     
         intTPN = IIf(intTPN = 2, 2, 3) ' Samenstelling B of NICU Mix
@@ -672,10 +741,20 @@ Private Sub TPNAdvies(ByVal intDag As Integer, Optional ByVal varTPN As Variant)
     SetTPNAdvies constSST1Vol, dblSSTVol
     
     ModRange.SetRangeValue constNaCl1, blnNaCl
-    SetTPNAdvies constNaCl1Vol, dblNaCl
+    ' If not NICUmix
+    If intTPN > 2 Then
+        SetTPNAdvies constNaCl1Vol, dblNaCl
+    Else
+        ModRange.SetRangeValue constNaCl1, False
+    End If
     
     ModRange.SetRangeValue constKCl1, blnKCl
-    SetTPNAdvies constKCl1Vol, dblKCl
+    ' If not NICUmix
+    If intTPN > 2 Then
+        SetTPNAdvies constKCl1Vol, dblKCl
+    Else
+        ModRange.SetRangeValue constKCl1, False
+    End If
     
     SetTPNAdvies constLipidVol, dblLipid
     
@@ -785,7 +864,12 @@ End Sub
 
 Public Sub PedEntTPN_SST2()
 
-    EnterHoeveelheid "_Ped_TPN_SST2Vol", "SST2"
+    Dim dblTot As Double
+    Dim dblVol As Double
+    
+    dblVol = ModRange.GetRangeValue("_Ped_TPN_SST2Vol", 0)
+    dblTot = ModRange.GetRangeValue("Var_Ped_TPN_SST2Tot", 0)
+    EnterHoeveelheid "_Ped_TPN_SST2Vol", "SST2", (dblTot - dblVol)
     
 End Sub
 
@@ -795,6 +879,7 @@ Public Sub PedEntTPN_NaCL1()
     ModRange.SetRangeValue constNaCl1, True
     
     PedTPN_SetSST1Stand
+    PedEntTPN_CheckNaCl1
     
 End Sub
 
@@ -804,6 +889,7 @@ Public Sub PedEntTPN_KCl1()
     ModRange.SetRangeValue constKCl1, True
     
     PedTPN_SetSST1Stand
+    PedEntTPN_CheckKCl1
 
 End Sub
 
@@ -879,16 +965,83 @@ Public Sub PedEntTPN_ChangeTPN()
 
 End Sub
 
+Public Sub PedEntTPN_CheckKCl1()
+
+    Dim intTPN As Integer
+    
+    intTPN = ModRange.GetRangeValue(constTPN, 1)
+
+    If intTPN = 2 Then
+        ModMessage.ShowMsgBoxExclam "NICU mix kan niet gecombineerd met electrolyten, enkel met een glucose oplossing"
+        ModRange.SetRangeValue constKCl1, False
+    End If
+
+End Sub
+
+Public Sub PedEntTPN_CheckNaCl1()
+
+    Dim intTPN As Integer
+    
+    intTPN = ModRange.GetRangeValue(constTPN, 1)
+
+    If intTPN = 2 Then
+        ModMessage.ShowMsgBoxExclam "NICU mix kan niet gecombineerd met electrolyten, enkel met een glucose oplossing"
+        ModRange.SetRangeValue constNaCl1, False
+    End If
+
+End Sub
+
 Public Sub PedEntTPN_ChangeNaCl1()
 
-    ModRange.SetRangeValue constNaCl1, True
+    Dim intTPN As Integer
+    
+    intTPN = ModRange.GetRangeValue(constTPN, 1)
+
+    If intTPN = 2 Then
+        ModMessage.ShowMsgBoxExclam "NICU mix kan niet gecombineerd met electrolyten, enkel met een glucose oplossing"
+    Else
+        ModRange.SetRangeValue constNaCl1, True
+    End If
+    
+End Sub
+
+Public Sub PedEntTPN_ChangeSST1Vol()
+
+    Dim strMsg As String
+    
+    If ModRange.GetRangeValue(constSST1Keuze, 1) = 1 Then
+        strMsg = "Kies eerst een IV vloeistof"
+        ModMessage.ShowMsgBoxExclam strMsg
+        
+        ModRange.SetRangeValue constSST1Vol, 0
+    End If
+
+End Sub
+
+Public Sub PedEntTPN_ChangeSST2Vol()
+
+    Dim strMsg As String
+    
+    If ModRange.GetRangeValue(constSST2Keuze, 1) = 1 Then
+        strMsg = "Kies eerst een IV vloeistof"
+        ModMessage.ShowMsgBoxExclam strMsg
+        
+        ModRange.SetRangeValue constSST2Vol, 0
+    End If
 
 End Sub
 
 Public Sub PedEntTPN_ChangeKCl1()
+    Dim intTPN As Integer
+    
+    intTPN = ModRange.GetRangeValue(constTPN, 1)
 
-    ModRange.SetRangeValue constKCl1, True
-
+    If intTPN = 2 Then
+        ModMessage.ShowMsgBoxExclam "NICU mix kan niet gecombineerd met electrolyten, enkel met een glucose oplossing"
+    Else
+        ModRange.SetRangeValue constKCl1, True
+    End If
+    
 End Sub
 
 Public Sub PedEntTPN_ChangeNaCl2()

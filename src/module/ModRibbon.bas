@@ -258,7 +258,9 @@ Public Sub ButtonOnAction(ctrlMenuItem As IRibbonControl)
         Case "btnHelp"
             ActiveWorkbook.FollowHyperlink "https://picuwkz.nl/protocollen/werkafspraken/afsprakenprogramma-2019/"
         
-        
+        Case "btnFAQ"
+            ActiveWorkbook.FollowHyperlink "https://picuwkz.nl/protocollen/werkafspraken/afsprakenprogramma-2019/afsprakenprogramma-faq/"
+                
         Case Else
             ModMessage.ShowMsgBoxError ctrlMenuItem.Id & " has no select case"
             

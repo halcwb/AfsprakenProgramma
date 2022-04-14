@@ -52,25 +52,32 @@ Public Function GetCancel() As Boolean
 
 End Function
 
-Private Sub SetSelectedHospNumAndVersion()
+Private Function SetSelectedHospNumAndVersion() As Boolean
 
+    Dim blnSelected As Boolean
+
+    blnSelected = True
     If Not m_LatestVersion Then
         If cboVersions.Value = vbNullString Then
             ModMessage.ShowMsgBoxExclam "Selecteer eerst een afspraken versie"
-            Exit Sub
+            blnSelected = False
         Else
-            ModBed.Bed_PrescriptionsVersionSet Database_GetVersionIDFromString(cboVersions.Value)
+            Patient_Version = Database_GetVersionIDFromString(cboVersions.Value)
+            ' ModBed.Bed_PrescriptionsVersionSet Database_GetVersionIDFromString(cboVersions.Value)
         End If
     End If
     
-    If m_UseDatabase Then
-        SetSelectedHospNum
-    Else
-        SetSelectedBed
+    If blnSelected Then
+        If m_UseDatabase Then
+            SetSelectedHospNum
+        Else
+            SetSelectedBed
+        End If
     End If
+    
+    SetSelectedHospNumAndVersion = blnSelected
 
-
-End Sub
+End Function
 
 Private Sub cmdCancel_Click()
 
@@ -92,8 +99,7 @@ Private Sub cmdOK_Click()
 
     m_Cancel = False
     
-    SetSelectedHospNumAndVersion
-    Me.Hide
+    If SetSelectedHospNumAndVersion() Then Me.Hide
 
 End Sub
 
@@ -110,9 +116,9 @@ End Sub
 
 Private Sub lstPatienten_DblClick(ByVal blnCancel As MSForms.ReturnBoolean)
         
-    SetSelectedVersion
+    ' SetSelectedVersion
     If m_UseDatabase Then SetSelectedHospNum
-    Me.Hide
+    cmdOK_Click
 
 End Sub
 
@@ -244,12 +250,6 @@ Private Sub SetSelectedHospNum()
     Else
         m_Cancel = True
     End If
-
-End Sub
-
-Private Sub SetSelectedVersion()
-
-    ModBed.Bed_PrescriptionsVersionSet IIf(cboVersions.Value = vbNullString, 0, cboVersions.Value)
 
 End Sub
 

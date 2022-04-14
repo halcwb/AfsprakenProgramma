@@ -64,6 +64,7 @@ $G$24: 	=PedBerTPN!X6
 $H$24: 	=IF(PedBerTPN!X7="""","""","" + ""&PedBerTPN!X7&"" gluc 10%"")
 $I$24: 	=PedBerTPN!AC6
 $L$24: 	=PedBerTPN!X21
+$B$25: 	=PedBerTPN!Z8
 $G$25: 	=PedBerTPN!X8
 $B$26: 	=PedBerTPN!Z9
 $G$26: 	=PedBerTPN!X9

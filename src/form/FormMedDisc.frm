@@ -469,7 +469,9 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean, ByVal blnApplyDose As Boo
     Dim arrFreq() As String
     Dim strTime As String
     Dim objRule As ClassDoseRule
-
+    
+    If m_Med Is Nothing Then Exit Sub
+        
     With m_Med
     
         lblMainGroup.Caption = .MainGroup
@@ -548,7 +550,7 @@ Private Sub LoadMedicament(ByVal blnReload As Boolean, ByVal blnApplyDose As Boo
         End If
         
     End With
-
+    
 End Sub
 
 Private Function ComboContainsStringValue(objCombo As MSForms.ComboBox, strVal As String) As Boolean
@@ -650,6 +652,9 @@ Public Sub ClearForm(ByVal blnClearGeneric As Boolean)
     lblProduct.Caption = m_Product
     
     If blnClearGeneric Then cboGeneric.Value = vbNullString
+    cboSubstance.Clear
+    cboSubstConc.Clear
+    txtSubstConc.Value = vbNullString
     cboShape.Value = vbNullString
     
     txtMultipleQuantity.Value = vbNullString
@@ -742,7 +747,7 @@ Private Sub ApplyDoseRule()
     Dim lngGest As Long
     Dim lngPM As Long
     
-    If Not m_ValidMed Then Exit Sub
+    If Not m_ValidMed Or m_Med Is Nothing Then Exit Sub
     
     dblAge = Patient_GetAgeInDays() / 30
     lngPM = Patient_GetPostMenstrAgeInDays()
@@ -1072,7 +1077,7 @@ Private Sub cmdGStand_Click()
     
     On Error GoTo ErrorHandler
     
-    strUrl = "http://vpxap-meta01.ds.umcutrecht.nl/GenForm/html?"
+    strUrl = "http://GenForm.nl/html?"
     
     If Not Patient_BirthDate() = ModDate.EmptyDate Then
         dblAge = Patient_CorrectedAgeInMo()

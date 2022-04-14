@@ -545,10 +545,19 @@ Public Sub Formularium_Export(ByVal blnShowProgress As Boolean)
     Set objMedSheet = objWbk.Sheets(1)
     objMedSheet.Name = strSheet
     
-    Set objSolSheet = objWbk.Sheets(2)
+    If objWbk.Sheets.Count <= 1 Then
+        Set objSolSheet = objWbk.Sheets.Add
+    Else
+        Set objSolSheet = objWbk.Sheets(2)
+    End If
     objSolSheet.Name = "Oplossingen"
     
-    Set objDoseSheet = objWbk.Sheets(3)
+    If objWbk.Sheets.Count <= 2 Then
+        Set objDoseSheet = objWbk.Sheets.Add
+    Else
+        Set objDoseSheet = objWbk.Sheets(3)
+    End If
+    
     objDoseSheet.Name = "Doseringen"
     
     Set colMed = Formularium_GetFormularium().GetMedicationCollection(True)
