@@ -61,7 +61,7 @@ README leaves implicit.
   (see *Data layer & persistence*).
 - **Clear scopes:** PICU-only, NICU-only, patient-only, or everything.
 - **Launch context** *(docs)*: the program is normally opened *from* the MetaVision
-  Voorschrijven form (direct opening needs an admin password); it loads MetaVision's
+  Voorschrijven (Prescribing) form (direct opening needs an admin password); it loads MetaVision's
   selected patient, authorizes by MetaVision login, and recognizes the department.
   Demographics sync keys on the patient number, falling back to bed location when
   the number is empty; lab sync pulls the last 24 hours.
@@ -114,10 +114,10 @@ README leaves implicit.
   to 48 ml, start 4 ml/h; > 48 kg undiluted, start 4 ml/h. Auto-rounding of the
   epidural volume can misfire at multi-decimal weights (1.25 kg → 1.3 ml); correct
   by editing the amount or rounding the weight.
-- **NICU side-lines ("zijlijnen")** carry glucose, NaCl, sodium bicarbonate, or
+- **NICU side-lines** (*zijlijnen*) carry glucose, NaCl, sodium bicarbonate, or
   albumin, alongside an arterial line and free-text medication *(docs)*.
 - **PICU non-standard meds (slots 16–20)** compute the dose in **both**
-  Eenheid/kg/uur and Eenheid/kg/min *(docs)*.
+  Eenheid/kg/uur (Unit/kg/hour) and Eenheid/kg/min (Unit/kg/minute) *(docs)*.
 
 ### 4. Discontinue medicatie (intermittent medication)
 
@@ -135,7 +135,8 @@ README leaves implicit.
   norm / min / max / absolute-max / max-per-dose, on a per-kg, per-m², or
   per-dose basis.
 - **Two-way dose calculation** (norm dose × frequency ⇄ per-administration
-  "keer" dose), capped at max-per-dose and rounded to product divisibility;
+  "keer" dose — Dutch *keer* = "time/instance", i.e. the dose given per
+  administration), capped at max-per-dose and rounded to product divisibility;
   combination-product splitting into substances with per-substance dosing text.
 - Standard **frequency table**; dissolving/administration setup (department-
   specific solution selection, volume ⇄ max-concentration, minimum infusion time),
@@ -161,14 +162,16 @@ README leaves implicit.
   generics previously prescribed in MetaVision; the multi-select method auto-removes
   duplicates (use single-line entry to keep duplicates).
 - **"Deelbaarheid" (divisibility):** the smallest indivisible unit of a product
-  (suppository strength, half-tablet, mL step). The keer-dose is always a multiple
-  of it, and the **deelbaarheid unit sets the unit** for keer-dose, calculated
-  dose, and the advice/min/max/abs-max doses. It is tunable to better approximate
-  the advice dose (e.g. set to 1 mg, or 0.1 mL to dose in millilitres).
+  (suppository strength, half-tablet, mL step). The per-administration (keer) dose
+  is always a multiple of it, and the **divisibility unit sets the unit** for the
+  per-administration dose, the calculated dose, and the advice/min/max/abs-max
+  doses. It is tunable to better approximate the advice dose (e.g. set to 1 mg, or
+  0.1 mL to dose in millilitres).
 - **±10 % tolerance rule:** when no min/max dose is configured, the calculated dose
   must lie within 10 % of the advice dose (relative orange warning only).
-- **Solution volume formula:** `Berekend Volume = Keer Dosering / Max Conc`.
-  Common antibiotics ship with pre-filled solvent / Max Conc / infusion time
+- **Solution volume formula:** `Berekend Volume = Keer Dosering / Max Conc`
+  (Calculated Volume = Per-administration Dose / Max Concentration). Common
+  antibiotics ship with pre-filled solvent / Max Conc / infusion time
   (e.g. gentamicine 10 mg/ml).
 - **Six dose-control checks:** (1) wrong frequency (only when the frequency list is
   restricted); (2) > 10 % off advice dose; (3) exceeds min/max/abs-max (red);
@@ -181,12 +184,14 @@ README leaves implicit.
 - **Blue-marked drug** = a generic/form combination not yet known in MetaVision,
   needing a one-time action by the on-duty functional admin before planning.
 - **Non-assortment / study drugs** can be entered manually (generic and indication
-  become free-text). Parenteralia solutions are split PICU vs NICU.
+  become free-text). Parenteralia (parenteral preparations) solutions are split
+  PICU vs NICU.
 
 **Combination-preparation policy** *(docs: Voorstel ... combinatiepreparaten)* —
 adopted after MIP incidents from inconsistent practice:
 
-- **Non-parenteral forms:** prescribe and monitor in **stuks / mL / doses (not mg)**.
+- **Non-parenteral forms:** prescribe and monitor in **stuks (pieces) / mL / doses
+  (not mg)**.
 - **Parenteral forms:** dose and monitor on the **sum in (milli)grams**, with
   products renamed to make the sum explicit (e.g. "Imipenem + cilastatine 1000 mg
   (500+500)", "Piperacilline + tazobactam 4500 mg (4000+500)").
@@ -199,7 +204,8 @@ Implementatie ...)*:
   expressions (2×/3 days ⇄ 1×/36 h), and shows limits **live at prescribing time**,
   per body weight **or per body surface (m²)**.
 - **Four definable limits:** min and max per kg/m² per time, max per time, max per
-  keer, with a selector for per-kg / per-m² / no-correction and per-dose / per-time.
+  keer (per administration), with a selector for per-kg / per-m² / no-correction
+  and per-dose / per-time.
 - **Webservice architecture:** the GenForm request carries birth date, weight,
   length, gestation, GPK, route, and indication and returns JSON dose rules; backed
   by three components — **ZIndex.TypeProvider** (GPK → generics + ATC),
@@ -227,8 +233,8 @@ Implementatie ...)*:
 - **Special-nutrition configuration:** 9 nutrient values (kcal, protein,
   carbohydrate, fat, Na, K, Ca, phosphate, Mg) rolled into nutritional totals.
 - **TPN:** automatic selection of the correct standardized amino-acid composition
-  **by weight** (Samenstelling B/C/D/E, NICU Mix, Nutriflex), with a safety rule
-  blocking electrolyte additions to NICU Mix.
+  **by weight** (Samenstelling [Composition] B/C/D/E, NICU Mix, Nutriflex), with a
+  safety rule blocking electrolyte additions to NICU Mix.
 - **Automatic 3-day TPN build-up:** per-day, per-weight calculation of TPN volume,
   lipid dose, glucose concentration & base-fluid volume, electrolytes (NaCl, KCl,
   Ca-gluconate, MgCl, phosphate), trace elements (Peditrace) and vitamins
@@ -243,10 +249,11 @@ Implementatie ...)*:
 - **"Extra" exclusion:** feeding (and the arterial line, continuous medication, and
   side-lines) marked "extra" is excluded from the totals.
 - **TPN rest-volume (glucose base) formula:** `Totale Vocht Intake × Gewicht −
-  Σ(orale voeding) − Σ(lijnen) − Σ(medicatie) − Σ(overige TPN)`; a negative result
-  is flagged red.
+  Σ(orale voeding) − Σ(lijnen) − Σ(medicatie) − Σ(overige TPN)` — i.e.
+  *Total Fluid Intake × Weight − Σ(oral feeding) − Σ(lines) − Σ(medication) −
+  Σ(other TPN)*; a negative result is flagged red.
 - **PICU TPN component model:** five definable infusions — SST1 (protein *or*
-  electrolyte), SST2 (electrolyte), CalcGluc + MgCl, KNaP, and Lipiden.
+  electrolyte), SST2 (electrolyte), CalcGluc + MgCl, KNaP, and Lipiden (lipids).
 - **Minimum solvent-volume floor:** the system auto-sets a minimum glucose solvent
   volume so concentrations don't fall below their minimums; the pump rate cannot be
   lowered past it (reduce electrolytes/protein first).
@@ -282,17 +289,19 @@ Implementatie ...)*:
   kg/day.
 - **Phototherapy / glucose fluid correction** (intake auto-adjusted when TPN
   glucose changes).
-- **Dual "Actueel" / "17:00" versions** with selective copy-forward / copy-back of
-  feeding, continuous medication and TPN (`FormCopy1700`, showing only the
-  differences).
+- **Dual "Actueel" (Current) / "17:00" versions** with selective copy-forward /
+  copy-back of feeding, continuous medication and TPN (`FormCopy1700`, showing only
+  the differences). ("Actueel" = the currently active orders; "17:00" = the
+  reference set fixed at the 17:00 ward round.)
 - Enteral vs parenteral totals; arterial-line handling; one-click standard TPN +
   lipid composition.
-- **Copy 17:00 → Actueel** defaults to only "TPN overnemen" checked; on taking over
-  the TPN, rest-volume differences are compensated in the fluid intake so the TPN
-  composition stays identical to the 17:00 version. Pharmacy printing is blocked
-  from the Actueel version (must be the 17:00 version) *(docs)*.
+- **Copy 17:00 → Actueel** defaults to only "TPN overnemen" (take over TPN) checked;
+  on taking over the TPN, rest-volume differences are compensated in the fluid
+  intake so the TPN composition stays identical to the 17:00 version. Pharmacy
+  printing is blocked from the Actueel (Current) version (must be the 17:00
+  version) *(docs)*.
 
-### 10. Infuusbrief voor elektroliet-oplossingen en TPN
+### 10. Infuusbrief voor elektroliet-oplossingen en TPN (infusion chart for electrolyte solutions and TPN)
 
 *Code: `ModPedPrint`, `ModNeoInfB`.* — Generation of the TPN / electrolyte
 infusion chart (see §14, printing).
@@ -303,7 +312,10 @@ infusion chart (see §14, printing).
 nursing worksheet, validated for the 17:00 version and for valid continuous meds
 and TPN.
 
-### 12. Bereidingsvoorschriften apotheek (pharmacy preparation / VTGM)
+### 12. Bereidingsvoorschriften apotheek (pharmacy preparation instructions / VTGM)
+
+*VTGM = "Voor Toediening Gereed Maken" (preparing a medicine ready for
+administration).*
 
 *Code: `ModNeoPrint`.* — `PrintApotheekWerkBrief` produces one pharmacy
 preparation letter **per continuous-medication item** (loops the 10 infusion-chart
@@ -337,7 +349,7 @@ The integration is **two-way but asymmetric**, using two different mechanisms:
   (connection from a `secret` credentials file plus registry keys). This path is
   read-only against MetaVision (SELECT only).
 - **Outbound (push, file handoff — NOT a SQL write-back):** generated orders are
-  exported to a key-value data/"Tekst" file that **MetaVision imports**. The app
+  exported to a key-value data / "Tekst" (Text) file that **MetaVision imports**. The app
   does not INSERT into MetaVision's database; the write path is the shared file the
   MetaVision side reads. *(docs: Interface specification — see dedicated section
   below)*
@@ -357,49 +369,63 @@ The integration is **two-way but asymmetric**, using two different mechanisms:
 *Source: docs `Interface_AfsprakenProgramma_MetaVision_versie_1_0`,
 `Interface_Definities_..._V5` (the two are near-identical design docs).*
 
-- **Mechanism:** the app writes all generated orders to an Excel data/"Tekst"
-  workbook named after the patient's MetaVision bed; MetaVision imports that file.
-- **Serialization:** key-value (column 1 = key, column 2 = value). Hierarchical
-  keys are `Group.Element` (e.g. `Patient.Nummer`); nested key-value pairs are
-  separated by `||` with `^^` between key and value; a deeper sublevel uses `##`
-  between pairs and `::` between key and value.
-- **Exported data dictionary (21 groups):** `Afspraak` (timestamp), `Patient`,
-  `Lab`, `MedDisc` (shared NICU + PICU); department-split groups `PedMedCont`,
-  `PedEnt`, `PedTPN`, `PedAccess`, `PedPM`, `PedLab`, `PedAfspr`, `PedIntake`,
-  `NeoEnt`, `NeoArtLijn`, `NeoMedCont`, `NeoZijLijn`, `NeoTPN`, `NeoIntake`,
-  `NeoLab`, `NeoAfspr`.
-- **Field-level payload (selected):** each `MedDisc` order carries Indic, Generiek,
-  Vorm, Sterkte, Freq, Hoev, Route, Dose, OplHoev, OplKeuze, Tijd, PRN, Opm, **ATC**,
-  **GPK**, and **Etiket** (official G-Standaard label text). Continuous-med groups
-  carry Medicament/Sterkte/Volume/Oplossing/Stand/Dosering/Totaal/Advies plus
-  `Extra` (does the volume count toward fluid balance) and `Tijd` (pump run-time).
-  TPN groups serialize the full ingredient list with Stand and TotDag; Lab and
-  Intake groups export computed per-kg/day totals.
+- **Mechanism:** the app writes all generated orders to an Excel data / "Tekst"
+  (Text) workbook named after the patient's MetaVision bed; MetaVision imports that
+  file.
+- **Serialization:** key-value (column 1 = key, column 2 = value;
+  `Nummer` = number). Hierarchical keys are `Group.Element` (e.g. `Patient.Nummer`
+  = Patient.Number); nested key-value pairs are separated by `||` with `^^` between
+  key and value; a deeper sublevel uses `##` between pairs and `::` between key and
+  value.
+- **Exported data dictionary (21 groups):** `Afspraak` (order — timestamp),
+  `Patient`, `Lab`, `MedDisc` (discontinuous/intermittent medication; shared
+  NICU + PICU); department-split groups `PedMedCont` (Ped continuous medication),
+  `PedEnt` (Ped enteral nutrition), `PedTPN`, `PedAccess` (Ped vascular access),
+  `PedPM` (Ped pacemaker), `PedLab`, `PedAfspr` (Ped other orders & controls),
+  `PedIntake` (Ped calculated intake totals), `NeoEnt` (Neo enteral nutrition),
+  `NeoArtLijn` (Neo arterial line), `NeoMedCont` (Neo continuous medication),
+  `NeoZijLijn` (Neo side-lines), `NeoTPN`, `NeoIntake`, `NeoLab`,
+  `NeoAfspr` (Neo other orders & controls).
+- **Field-level payload (selected), with English glosses:** each `MedDisc` order
+  carries Indic (indication), Generiek (generic name), Vorm (form/shape), Sterkte
+  (strength), Freq (frequency), Hoev (Hoeveelheid = quantity), Route, Dose, OplHoev
+  (solution volume), OplKeuze (solvent choice), Tijd (time / infusion time), PRN,
+  Opm (Opmerking = remark), **ATC**, **GPK**, and **Etiket** (label — official
+  G-Standaard label text). Continuous-med groups carry Medicament (drug) / Sterkte
+  (strength) / Volume / Oplossing (solution/solvent) / Stand (pump rate) / Dosering
+  (dose) / Totaal (total) / Advies (advice) plus `Extra` (does the volume count
+  toward fluid balance) and `Tijd` (pump run-time). TPN groups serialize the full
+  ingredient list with Stand (rate) and TotDag (total per day); Lab and Intake
+  groups export computed per-kg/day totals.
 - **Status:** these are interface *specifications*, but the export path is at least
   partially live — a release note records "imports powders correctly into
   MetaVision," and the order text the spec relies on is actually produced by the
   code (stored in the `PrescriptionText` table).
 
-## MetaVision-side workflow: Valideren, Tekenen & Plannen
+## MetaVision-side workflow: Valideren, Tekenen & Plannen (Validate, Sign & Plan)
 
-*Source: docs `Afspraken_Voorschrijven`, `Afspraken_Plannen`, user manual. These
-forms live in MetaVision (not in the `src/` VBA tree) and complete the round-trip.*
+*Source: docs `Afspraken_Voorschrijven` (Prescribing orders), `Afspraken_Plannen`
+(Planning orders), user manual. These forms live in MetaVision (not in the `src/`
+VBA tree) and complete the round-trip.*
 
-- **Voorschrijven / Valideren / Tekenen:** the "Medische Afspraken Voorschrijven"
-  form is where imported orders are validated and electronically signed. Signing
-  requires three fields — **Supervisor, Voorschrijver, Besproken met**; unsigned
-  orders show in red. A "Veranderingen" tab contrasts `== NIEUWE AFSPRAKEN ==` vs
-  `== VERVALLEN AFSPRAKEN ==`. One-off ("Eenmalige") orders are a separate tab.
+- **Voorschrijven / Valideren / Tekenen (Prescribe / Validate / Sign):** the
+  "Medische Afspraken Voorschrijven" (Prescribe Medical Orders) form is where
+  imported orders are validated and electronically signed. Signing requires three
+  fields — **Supervisor, Voorschrijver (Prescriber), Besproken met (Discussed
+  with)**; unsigned orders show in red. A "Veranderingen" (Changes) tab contrasts
+  `== NIEUWE AFSPRAKEN ==` (NEW ORDERS) vs `== VERVALLEN AFSPRAKEN ==` (LAPSED
+  ORDERS). One-off ("Eenmalige") orders are a separate tab.
 - **Medication-history rule:** every change stops the current prescription and
   starts a new one; an order dropping out of the actual list automatically gets a
   stop date/time; active prescriptions have no stop date. Full change history is
   kept (who/what/when).
-- **Plannen:** signing creates a "Taak Medische Afspraak Wijziging" notifying the
-  nurse. The "Medische Afspraken Plannen" form reconciles not-yet-planned vs
-  no-longer-current orders (lapsed planned orders must be cancelled first).
-  Administration times must match the order frequency (mismatch warns); PRN orders
-  are planned via "Zo nodig." A clean Plannen form is the guarantee that everything
-  ordered was processed; a Planning Log records all planning actions.
+- **Plannen (Planning):** signing creates a "Taak Medische Afspraak Wijziging"
+  (Medical Order Change Task) notifying the nurse. The "Medische Afspraken Plannen"
+  (Plan Medical Orders) form reconciles not-yet-planned vs no-longer-current orders
+  (lapsed planned orders must be cancelled first). Administration times must match
+  the order frequency (mismatch warns); PRN orders are planned via "Zo nodig" (as
+  needed). A clean Plannen (Planning) form is the guarantee that everything ordered
+  was processed; a Planning Log records all planning actions.
 
 ---
 
@@ -445,11 +471,11 @@ forms live in MetaVision (not in the `src/` VBA tree) and complete the round-tri
 `FormFontPicker`.* (The README's "Beheer" section is currently empty; this is what
 the code provides.)
 
-- Role-gated ribbon groups (Beheerders / Apotheek).
+- Role-gated ribbon groups (Beheerders [Administrators] / Apotheek [Pharmacy]).
 - **Editors for the medication knowledge base:**
   - NICU/PICU continuous-medication formulary (`FormAdminNeoMedCont`), with
     min/max consistency validation.
-  - Parenteralia composition (`FormAdminParent`).
+  - Parenteralia (parenteral preparations) composition (`FormAdminParent`).
   - Discontinue-medication formulary.
   - Each supports **DB version selection, external xlsx import/export, and
     save-to-database-or-file**.
@@ -461,7 +487,7 @@ the code provides.)
 **Deployment & provisioning** *(docs: Applicatie_Beheer_Manual, Beheerdocument)*:
 
 - Distributed as a GitHub release ZIP into one of three recognized folders
-  (`AfsprakenProgramma_Productie` / `_Training` / `_Test`), unpacking to
+  (`AfsprakenProgramma_Productie` [Production] / `_Training` / `_Test`), unpacking to
   `AfsprakenProgramma.xlsm` + a `db` config folder, with the runnable copy under an
   `App` subfolder and a sibling `Data` folder.
 - Requires the `secret` MetaVision credentials file and read access to registry
@@ -481,11 +507,12 @@ the code provides.)
 
 ## Governance & change management
 
-*Source: docs `Beheerdocument`, `Besluit Stuurgroep`, `Gebruikers groep`. Not code
-functionality, but the operational regime the application runs under.*
+*Source: docs `Beheerdocument` (Management document), `Besluit Stuurgroep`
+(Steering Group Decision), `Gebruikers groep` (User group). Not code functionality,
+but the operational regime the application runs under.*
 
 - **Three-tier environment promotion:** Test (development + initial test) →
-  Training (training + acceptance/FAT) → Productie; every change flows
+  Training (training + acceptance/FAT) → Productie (Production); every change flows
   Test → Acceptance → Production.
 - **Change classification:** *Fix* (no regression risk, no CAB), *Minor* (warrants
   regression tests — e.g. adding/removing continuous IV meds — no CAB), *Major*
@@ -541,3 +568,23 @@ functionality, but the operational regime the application runs under.*
 | **Neonatology** | Acuut, Afspr, InfB, Lab | Advies, Afspr, InfB, Lab | Ent, Lijst, MedIV; DataInfB | Afspr, Apoth, MedDisc, Werkbr |
 | **Pediatrics** | Acuut, Afspr, EntTPN, Lab, LijnPM, MedIV | Afspr, Ent, IVenPM, Lab, MedIV, TPN, Tot | Afspr, Ent, IV, MedIV, ParEnt, Gewicht, Lengte | Afspr, MedDisc, TPN×5 (2–6/7–15/16–30/31–50/>50 kg) |
 | **Patient** | — | — | Data, Details, Text | — |
+
+**Abbreviation key (Dutch → English):**
+
+- **Sheet types:** `Gui` = user interface · `Ber` (Berekening) = calculation ·
+  `Tbl` = lookup table · `Prt` = print · `Div` = divider.
+- **Scopes:** `Glob` = global/shared · `Neo` = neonatology (NICU) · `Ped` =
+  pediatrics (PICU) · `Pat` = patient.
+- **Topic codes:** `Afspr` (Afspraken) = orders/appointments · `Acuut` = acute
+  (emergency) · `InfB` (Infuusbrief) = infusion chart · `Advies` = (dosing) advice ·
+  `MedIV` = continuous IV medication · `MedDisc` = discontinuous/intermittent
+  medication · `MedDiscMail` = MedDisc e-mail · `MedOpdr` (Medicatie Opdrachten) =
+  medication-order catalog · `Ent` (Enteralia) = enteral nutrition · `ParEnt`
+  (Parenteralia) = parenteral nutrition · `EntTPN` = enteral nutrition + TPN ·
+  `TPN` = total parenteral nutrition · `Lab` = laboratory · `LijnPM` /
+  `IVenPM` (Lijnen + PM) = IV lines + pacemaker · `IV` = intravascular lines ·
+  `Lijst` = list · `Tot` (Totaal) = totals · `Conv` = unit conversions · `Norm` =
+  reference/norm values · `Sql` = database query staging · `Apoth` (Apotheek) =
+  pharmacy · `Werkbr` (Werkbrief) = nursing worksheet · `Gewicht` = weight ·
+  `Lengte` = length · `Names`/`Settings`/`Temp`/`Data`/`Details`/`Text` = as
+  written (English).
